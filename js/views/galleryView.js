@@ -609,13 +609,20 @@ export default class GalleryView {
     const copyBtn = document.getElementById('copy-button');
     const stickyCopyBtn = document.getElementById('sticky-copy-button');
     
+    console.log('bindCopyButton called');
+    console.log('Main copy button found:', copyBtn);
+    console.log('Sticky copy button found:', stickyCopyBtn);
+    
     function animateBothCopyButtons() {
+      console.log('animateBothCopyButtons called');
+      
       // Animate main button
       if (copyBtn) {
         copyBtn.classList.add('active');
         const icon = copyBtn.querySelector('i');
         if (icon) {
           icon.className = 'fas fa-clipboard';
+          console.log('Main button animated to filled');
         }
       }
       
@@ -625,10 +632,12 @@ export default class GalleryView {
         const stickyIcon = stickyCopyBtn.querySelector('i');
         if (stickyIcon) {
           stickyIcon.className = 'fas fa-clipboard';
+          console.log('Sticky button animated to filled');
         }
       }
       
       // Call the handler
+      console.log('Calling copy handler');
       handler();
       
       // Remove active class and change back to outline icon after animation
@@ -638,6 +647,7 @@ export default class GalleryView {
           const icon = copyBtn.querySelector('i');
           if (icon) {
             icon.className = 'far fa-clipboard';
+            console.log('Main button reset to outline');
           }
         }
         if (stickyCopyBtn) {
@@ -645,6 +655,7 @@ export default class GalleryView {
           const stickyIcon = stickyCopyBtn.querySelector('i');
           if (stickyIcon) {
             stickyIcon.className = 'far fa-clipboard';
+            console.log('Sticky button reset to outline');
           }
         }
       }, 300);
@@ -652,10 +663,12 @@ export default class GalleryView {
     
     if (copyBtn) {
       copyBtn.addEventListener('click', animateBothCopyButtons);
+      console.log('Added click listener to main copy button');
     }
     
     if (stickyCopyBtn) {
       stickyCopyBtn.addEventListener('click', animateBothCopyButtons);
+      console.log('Added click listener to sticky copy button');
     }
   }
 
