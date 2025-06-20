@@ -221,6 +221,7 @@
         position: fixed;
         font-size: 1.5rem;
         animation: swim 15s linear infinite;
+        z-index: -1;
       }
       
       .fish:nth-child(1) {
@@ -325,7 +326,7 @@
       }
       
       @keyframes swim {
-        from {
+        0% {
           left: -5%;
           transform: scaleX(1);
         }
@@ -339,7 +340,7 @@
         99% {
           transform: scaleX(-1);
         }
-        to {
+        100% {
           left: -5%;
           transform: scaleX(1);
         }
