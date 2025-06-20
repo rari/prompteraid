@@ -17,6 +17,8 @@
 !.gitignore
 !.nojekyll
 !404.html
+!summary-card-generator.html
+!summary-card-generator-images.html
 
 # But still ignore these even if they're in allowed folders
 node_modules/

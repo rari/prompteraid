@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrompterAid Summary Card Generator</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+        
+        input, textarea, select {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e1e5e9;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        
+        .card-preview {
+            border: 2px dashed #e1e5e9;
+            border-radius: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            margin-bottom: 20px;
+        }
+        
+        .card-container {
+            width: 600px;
+            height: 315px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .card-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        }
+        
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+        }
+        
+        .card-content {
+            position: relative;
+            z-index: 2;
+            padding: 40px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+        
+        .card-subtitle {
+            font-size: 1.1rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .card-emoji {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .floating-fish {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .fish1 { top: 20%; right: 10%; animation-delay: 0s; }
+        .fish2 { top: 60%; right: 15%; animation-delay: 2s; }
+        .fish3 { top: 40%; right: 5%; animation-delay: 4s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        .download-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1rem;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+        
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .preset-btn {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .preset-btn:hover {
+            background: #cbd5e0;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-container {
+                width: 100%;
+                max-width: 400px;
+                height: 210px;
+            }
+            
+            .card-title {
+                font-size: 1.8rem;
+            }
+            
+            .card-subtitle {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧜‍♀️ PrompterAid Summary Card Generator</h1>
+        
+        <div class="preset-buttons">
+            <button class="preset-btn" onclick="loadPreset('default')">Default</button>
+            <button class="preset-btn" onclick="loadPreset('cute')">Cute</button>
+            <button class="preset-btn" onclick="loadPreset('professional')">Professional</button>
+            <button class="preset-btn" onclick="loadPreset('ocean')">Ocean Theme</button>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="title">Card Title</label>
+                <input type="text" id="title" value="PrompterAid" placeholder="Enter card title">
+            </div>
+            <div class="control-group">
+                <label for="subtitle">Subtitle</label>
+                <input type="text" id="subtitle" value="NijiJourney 6 Visual Style Library" placeholder="Enter subtitle">
+            </div>
+            <div class="control-group">
+                <label for="mainEmoji">Main Emoji</label>
+                <select id="mainEmoji">
+                    <option value="🧜‍♀️">🧜‍♀️ Mermaid</option>
+                    <option value="🎨">🎨 Artist</option>
+                    <option value="✨">✨ Sparkles</option>
+                    <option value="🌊">🌊 Wave</option>
+                    <option value="🐚">🐚 Shell</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="gradient">Gradient Theme</label>
+                <select id="gradient">
+                    <option value="pink">Pink Dream</option>
+                    <option value="ocean">Ocean Blue</option>
+                    <option value="sunset">Sunset</option>
+                    <option value="lavender">Lavender</option>
+                    <option value="coral">Coral Reef</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-primary" onclick="updateCard()">Update Preview</button>
+            <button class="btn-secondary" onclick="randomizeFish()">Randomize Fish</button>
+        </div>
+        
+        <div class="card-preview">
+            <div class="card-container" id="cardContainer">
+                <div class="card-bg" id="cardBg"></div>
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <div class="card-emoji" id="mainEmojiDisplay">🧜‍♀️</div>
+                    <div class="card-title" id="titleDisplay">PrompterAid</div>
+                    <div class="card-subtitle" id="subtitleDisplay">NijiJourney 6 Visual Style Library</div>
+                </div>
+                <div class="floating-fish fish1">🐠</div>
+                <div class="floating-fish fish2">🐟</div>
+                <div class="floating-fish fish3">🐡</div>
+            </div>
+        </div>
+        
+        <div class="download-section">
+            <button class="download-btn" onclick="downloadCard()">Download Summary Card</button>
+        </div>
+    </div>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        const gradients = {
+            pink: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)',
+            ocean: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            sunset: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+            lavender: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+            coral: 'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)'
+        };
+        
+        const fishEmojis = ['🐠', '🐟', '🐡', '🦈', '🐙', '🦀', '🦑', '🐚'];
+        
+        function updateCard() {
+            const title = document.getElementById('title').value;
+            const subtitle = document.getElementById('subtitle').value;
+            const mainEmoji = document.getElementById('mainEmoji').value;
+            const gradient = document.getElementById('gradient').value;
+            
+            document.getElementById('titleDisplay').textContent = title;
+            document.getElementById('subtitleDisplay').textContent = subtitle;
+            document.getElementById('mainEmojiDisplay').textContent = mainEmoji;
+            document.getElementById('cardBg').style.background = gradients[gradient];
+        }
+        
+        function randomizeFish() {
+            const fishElements = document.querySelectorAll('.floating-fish');
+            fishElements.forEach(fish => {
+                const randomFish = fishEmojis[Math.floor(Math.random() * fishEmojis.length)];
+                fish.textContent = randomFish;
+            });
+        }
+        
+        function loadPreset(preset) {
+            const presets = {
+                default: {
+                    title: 'PrompterAid',
+                    subtitle: 'NijiJourney 6 Visual Style Library',
+                    mainEmoji: '🧜‍♀️',
+                    gradient: 'pink'
+                },
+                cute: {
+                    title: '✨ PrompterAid ✨',
+                    subtitle: 'Create magical AI art prompts with mermaid themes',
+                    mainEmoji: '🧜‍♀️',
+                    gradient: 'lavender'
+                },
+                professional: {
+                    title: 'PrompterAid',
+                    subtitle: 'Professional NijiJourney 6 Style Reference Tool',
+                    mainEmoji: '🎨',
+                    gradient: 'ocean'
+                },
+                ocean: {
+                    title: '🌊 PrompterAid 🌊',
+                    subtitle: 'Dive into AI art with ocean-inspired style references',
+                    mainEmoji: '🐚',
+                    gradient: 'coral'
+                }
+            };
+            
+            const config = presets[preset];
+            document.getElementById('title').value = config.title;
+            document.getElementById('subtitle').value = config.subtitle;
+            document.getElementById('mainEmoji').value = config.mainEmoji;
+            document.getElementById('gradient').value = config.gradient;
+            
+            updateCard();
+        }
+        
+        async function downloadCard() {
+            const cardContainer = document.getElementById('cardContainer');
+            
+            try {
+                const canvas = await html2canvas(cardContainer, {
+                    width: 1200,
+                    height: 630,
+                    scale: 2,
+                    backgroundColor: null,
+                    useCORS: true
+                });
+                
+                const link = document.createElement('a');
+                link.download = 'prompteraid-summary-card.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (error) {
+                console.error('Error generating card:', error);
+                alert('Error generating card. Please try again.');
+            }
+        }
+        
+        // Initialize with default values
+        updateCard();
+    </script>
+</body>
+</html> 
