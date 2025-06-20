@@ -777,41 +777,59 @@ export default class GalleryView {
   }
 
   bindFavoritesToggle(handler) {
-    if (this.favoritesToggle) {
-    this.favoritesToggle.addEventListener('click', () => {
-        // Call the handler first to check if warning should be shown
-        const shouldProceed = handler();
-        
-        // Only add bounce animation if the handler didn't show a warning
-        if (shouldProceed !== false) {
-          // Add bounce animation
-          this.favoritesToggle.classList.add('bounce');
-          setTimeout(() => {
-            this.favoritesToggle.classList.remove('bounce');
-          }, 600);
+    const favoritesBtn = this.favoritesToggle;
+    const stickyFavoritesBtn = document.getElementById('sticky-favorites-toggle');
+    
+    function animateBothFavoritesButtons() {
+      // Call the handler first to check if warning should be shown
+      const shouldProceed = handler();
+      
+      // Only animate if the handler didn't show a warning
+      if (shouldProceed !== false) {
+        // Animate main button
+        if (favoritesBtn) {
+          favoritesBtn.classList.add('active');
+          const icon = favoritesBtn.querySelector('i');
+          if (icon) {
+            icon.className = 'fas fa-star';
+          }
         }
-      });
+        
+        // Animate sticky button
+        if (stickyFavoritesBtn) {
+          stickyFavoritesBtn.classList.add('active');
+          const stickyIcon = stickyFavoritesBtn.querySelector('i');
+          if (stickyIcon) {
+            stickyIcon.className = 'fas fa-star';
+          }
+        }
+        
+        // Remove active class and change back to outline icon after animation
+        setTimeout(() => {
+          if (favoritesBtn) {
+            favoritesBtn.classList.remove('active');
+            const icon = favoritesBtn.querySelector('i');
+            if (icon) {
+              icon.className = 'far fa-star';
+            }
+          }
+          if (stickyFavoritesBtn) {
+            stickyFavoritesBtn.classList.remove('active');
+            const stickyIcon = stickyFavoritesBtn.querySelector('i');
+            if (stickyIcon) {
+              stickyIcon.className = 'far fa-star';
+            }
+          }
+        }, 300);
+      }
     }
     
-    // Also bind in sticky bar if present
-    const sticky = document.getElementById('sticky-action-bar');
-    if (sticky) {
-      const stickyFavoritesBtn = sticky.querySelector('#sticky-favorites-toggle');
-      if (stickyFavoritesBtn) {
-        stickyFavoritesBtn.addEventListener('click', () => {
-          // Call the handler first to check if warning should be shown
-          const shouldProceed = handler();
-          
-          // Only add bounce animation if the handler didn't show a warning
-          if (shouldProceed !== false) {
-            // Add bounce animation to sticky button
-            stickyFavoritesBtn.classList.add('bounce');
-            setTimeout(() => {
-              stickyFavoritesBtn.classList.remove('bounce');
-            }, 600);
-          }
-        });
-      }
+    if (favoritesBtn) {
+      favoritesBtn.addEventListener('click', animateBothFavoritesButtons);
+    }
+    
+    if (stickyFavoritesBtn) {
+      stickyFavoritesBtn.addEventListener('click', animateBothFavoritesButtons);
     }
   }
 
@@ -893,29 +911,58 @@ export default class GalleryView {
 
   bindShowSelectedToggle(handler) {
     const eyeBtn = document.getElementById('show-selected-btn');
-    if (eyeBtn) {
-      eyeBtn.addEventListener('click', () => {
-        // Call the handler first to check if warning should be shown
-        const shouldProceed = handler();
+    const stickyEyeBtn = document.getElementById('sticky-show-selected-btn');
+    
+    function animateBothEyeButtons() {
+      // Call the handler first to check if warning should be shown
+      const shouldProceed = handler();
+      
+      // Only animate if the handler didn't show a warning
+      if (shouldProceed !== false) {
+        // Animate main button
+        if (eyeBtn) {
+          eyeBtn.classList.add('active');
+          const icon = eyeBtn.querySelector('i');
+          if (icon) {
+            icon.className = 'fas fa-eye';
+          }
+        }
         
-        // The updateShowSelectedToggle method will be called by the controller
-        // to properly update the icon state based on the actual selected view state
-      });
+        // Animate sticky button
+        if (stickyEyeBtn) {
+          stickyEyeBtn.classList.add('active');
+          const stickyIcon = stickyEyeBtn.querySelector('i');
+          if (stickyIcon) {
+            stickyIcon.className = 'fas fa-eye';
+          }
+        }
+        
+        // Remove active class and change back to outline icon after animation
+        setTimeout(() => {
+          if (eyeBtn) {
+            eyeBtn.classList.remove('active');
+            const icon = eyeBtn.querySelector('i');
+            if (icon) {
+              icon.className = 'far fa-eye';
+            }
+          }
+          if (stickyEyeBtn) {
+            stickyEyeBtn.classList.remove('active');
+            const stickyIcon = stickyEyeBtn.querySelector('i');
+            if (stickyIcon) {
+              stickyIcon.className = 'far fa-eye';
+            }
+          }
+        }, 300);
+      }
     }
     
-    // Also bind in sticky bar if present
-    const sticky = document.getElementById('sticky-action-bar');
-    if (sticky) {
-      const stickyEyeBtn = sticky.querySelector('#sticky-show-selected-btn');
-      if (stickyEyeBtn) {
-        stickyEyeBtn.addEventListener('click', () => {
-          // Call the handler first to check if warning should be shown
-          const shouldProceed = handler();
-          
-          // The updateShowSelectedToggle method will be called by the controller
-          // to properly update the icon state based on the actual selected view state
-        });
-      }
+    if (eyeBtn) {
+      eyeBtn.addEventListener('click', animateBothEyeButtons);
+    }
+    
+    if (stickyEyeBtn) {
+      stickyEyeBtn.addEventListener('click', animateBothEyeButtons);
     }
   }
 
