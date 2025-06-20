@@ -3,7 +3,9 @@
 
 # Except these folders and files
 !api/
+!api/**
 !img/
+!img/**
 !js/
 !js/**/*
 !styles/
