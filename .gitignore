@@ -1,0 +1,28 @@
+# Ignore everything
+*
+
+# Except these folders and files
+!api/
+!img/
+!js/
+!js/**/*
+!styles/
+!styles/**/*
+!index.html
+!debug.html
+!package.json
+!README.md
+!.gitignore
+!.nojekyll
+!404.html
+
+# But still ignore these even if they're in allowed folders
+node_modules/
+node_modules/**
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+package-lock.json
+server.js

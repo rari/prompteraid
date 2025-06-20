@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost at Sea - PrompterAid</title>
+    <style>
+      :root {
+        --background: hsl(210, 30%, 95%);
+        --text-primary: hsl(210, 30%, 20%);
+        --primary: hsl(330, 100%, 70%);
+        --secondary: hsl(190, 100%, 50%);
+        --accent: hsl(280, 100%, 80%);
+        --ocean-dark: hsl(200, 100%, 20%);
+        --ocean-medium: hsl(195, 100%, 40%);
+        --ocean-light: hsl(190, 100%, 80%);
+        --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --background: hsl(210, 30%, 8%);
+          --text-primary: hsl(210, 20%, 92%);
+          --ocean-light: hsl(190, 70%, 40%);
+        }
+      }
+      
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-family);
+        background-color: var(--background);
+        color: var(--text-primary);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        overflow-x: hidden;
+      }
+      
+      .container {
+        max-width: 600px;
+        padding: 2rem;
+        z-index: 10;
+      }
+      
+      h1 {
+        font-size: 4rem;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: gradient-rotate 6s ease infinite;
+      }
+      
+      .emoji {
+        font-size: 6rem;
+        margin: 1rem 0;
+        animation: float 3s ease-in-out infinite;
+      }
+      
+      .emoji-small {
+        font-size: 1.5rem;
+        display: inline-block;
+        margin: 0 0.3rem;
+        animation: float 3s ease-in-out infinite;
+      }
+      
+      .emoji-small:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+      
+      .emoji-small:nth-child(3) {
+        animation-delay: 1s;
+      }
+      
+      p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+      
+      .home-link {
+        display: inline-block;
+        padding: 0.8rem 1.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        text-decoration: none;
+        border-radius: 2rem;
+        font-weight: 600;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      
+      .home-link:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 10px rgba(0, 0, 0, 0.15);
+      }
+      
+      .ocean {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 40%;
+        background: linear-gradient(0deg, var(--ocean-dark) 0%, var(--ocean-medium) 50%, transparent 100%);
+        opacity: 0.2;
+        z-index: -2;
+      }
+      
+      .wave {
+        position: fixed;
+        bottom: 30%;
+        left: 0;
+        width: 200%;
+        height: 10%;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' fill='%23a0e4f1' opacity='.25'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+        background-size: 100% 100%;
+        animation: wave 15s linear infinite;
+        z-index: -1;
+      }
+      
+      .wave:nth-child(2) {
+        bottom: 25%;
+        animation: wave 17s linear reverse infinite;
+        opacity: 0.3;
+      }
+      
+      .wave:nth-child(3) {
+        bottom: 20%;
+        animation: wave 20s linear infinite;
+        opacity: 0.2;
+      }
+      
+      .bubbles {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+      
+      .bubble {
+        position: absolute;
+        bottom: -100px;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        opacity: 0.5;
+        animation: rise 10s infinite ease-in;
+      }
+      
+      .bubble:nth-child(1) {
+        width: 40px;
+        height: 40px;
+        left: 10%;
+        animation-duration: 8s;
+      }
+      
+      .bubble:nth-child(2) {
+        width: 20px;
+        height: 20px;
+        left: 20%;
+        animation-duration: 5s;
+        animation-delay: 1s;
+      }
+      
+      .bubble:nth-child(3) {
+        width: 50px;
+        height: 50px;
+        left: 35%;
+        animation-duration: 7s;
+        animation-delay: 2s;
+      }
+      
+      .bubble:nth-child(4) {
+        width: 80px;
+        height: 80px;
+        left: 50%;
+        animation-duration: 11s;
+        animation-delay: 0s;
+      }
+      
+      .bubble:nth-child(5) {
+        width: 35px;
+        height: 35px;
+        left: 55%;
+        animation-duration: 6s;
+        animation-delay: 1s;
+      }
+      
+      .bubble:nth-child(6) {
+        width: 45px;
+        height: 45px;
+        left: 65%;
+        animation-duration: 8s;
+        animation-delay: 3s;
+      }
+      
+      .bubble:nth-child(7) {
+        width: 25px;
+        height: 25px;
+        left: 75%;
+        animation-duration: 7s;
+        animation-delay: 2s;
+      }
+      
+      .bubble:nth-child(8) {
+        width: 80px;
+        height: 80px;
+        left: 80%;
+        animation-duration: 10s;
+        animation-delay: 4s;
+      }
+      
+      .fish {
+        position: fixed;
+        font-size: 1.5rem;
+        animation: swim 15s linear infinite;
+      }
+      
+      .fish:nth-child(1) {
+        top: 20%;
+        left: -5%;
+        animation-duration: 15s;
+      }
+      
+      .fish:nth-child(2) {
+        top: 40%;
+        left: -5%;
+        animation-duration: 20s;
+        animation-delay: 5s;
+      }
+      
+      .fish:nth-child(3) {
+        top: 60%;
+        left: -5%;
+        animation-duration: 18s;
+        animation-delay: 8s;
+      }
+      
+      @keyframes swim {
+        from {
+          left: -5%;
+          transform: scaleX(1);
+        }
+        49% {
+          transform: scaleX(1);
+        }
+        50% {
+          left: 105%;
+          transform: scaleX(-1);
+        }
+        99% {
+          transform: scaleX(-1);
+        }
+        to {
+          left: -5%;
+          transform: scaleX(1);
+        }
+      }
+      
+      @keyframes wave {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+      
+      @keyframes rise {
+        0% {
+          bottom: -100px;
+          transform: translateX(0);
+        }
+        50% {
+          transform: translateX(100px);
+        }
+        100% {
+          bottom: 100%;
+          transform: translateX(-20px);
+        }
+      }
+      
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+      
+      @keyframes gradient-rotate {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+    
+    <!-- GitHub Pages SPA routing fix - delayed to show the cute 404 page first -->
+    <script type="text/javascript">
+      // Check if this is a direct 404 or a GitHub Pages SPA routing issue
+      function checkAndRedirect() {
+        // Get the path excluding the domain
+        var path = window.location.pathname;
+        
+        // If this is likely a GitHub Pages routing issue (not a direct 404 access)
+        if (path.indexOf('/_next/') !== -1 || path.indexOf('/api/') !== -1 || path.length > 1) {
+          console.log("Detected GitHub Pages routing issue, redirecting...");
+          
+          var pathSegmentsToKeep = 1;
+          var l = window.location;
+          
+          // Allow the page to be seen briefly before redirecting
+          setTimeout(function() {
+            l.replace(
+              l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+              l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+              l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+              (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+              l.hash
+            );
+          }, 2000); // Show the page for 2 seconds before redirecting
+        }
+      }
+      
+      // Run the check when the page loads
+      window.addEventListener('DOMContentLoaded', checkAndRedirect);
+    </script>
+  </head>
+  <body>
+    <div class="ocean"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    
+    <div class="fish">🐠</div>
+    <div class="fish">🐟</div>
+    <div class="fish">🐡</div>
+    
+    <div class="bubbles">
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+    </div>
+    
+    <div class="container">
+      <h1>404</h1>
+      <div class="emoji">🧜‍♀️</div>
+      <p>Oh no! You've swum too far from shore and got lost at sea! This mermaid can't find the page you're looking for.</p>
+      <p>Let's swim back to familiar waters... <span class="emoji-small">🐙</span><span class="emoji-small">🦀</span><span class="emoji-small">🦑</span></p>
+      <a href="./index.html" class="home-link">Return to Shore ✨</a>
+    </div>
+  </body>
+</html> 
