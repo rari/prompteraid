@@ -185,14 +185,19 @@ export default class GalleryView {
     stickyBtn.id = stickyId;
     stickyBtn.className = mainBtn.className;
     
-    // Add event delegation
-    stickyBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const originalButton = document.getElementById(mainId);
-      if (originalButton) {
-        originalButton.click();
-      }
-    });
+    // Don't add event listeners for these buttons - they'll be handled by their bind methods
+    if (mainId === 'favorites-toggle' || mainId === 'show-selected-btn') {
+      console.log(`Skipping event listener for ${mainId} - will be handled by bind method`);
+    } else {
+      // Add event delegation for other buttons
+      stickyBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const originalButton = document.getElementById(mainId);
+        if (originalButton) {
+          originalButton.click();
+        }
+      });
+    }
     
     // Insert in the same position as in main menu
     const stickyInputGroup = sticky.querySelector('.input-group');
@@ -262,6 +267,9 @@ export default class GalleryView {
             e.preventDefault();
             this.togglePreview();
           });
+        } else if (originalId === 'favorites-toggle' || originalId === 'show-selected-btn') {
+          // Don't add event listeners for these buttons here - they'll be handled by their bind methods
+          console.log(`Skipping event listener for ${originalId} - will be handled by bind method`);
         } else {
           // Delegate other button events to main menu
           button.addEventListener('click', (e) => {
@@ -331,14 +339,8 @@ export default class GalleryView {
       stickyEyeBtn.id = 'sticky-show-selected-btn';
       stickyEyeBtn.className = mainShowSelectedBtn.className;
       
-      // Add event delegation
-      stickyEyeBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const originalButton = document.getElementById('show-selected-btn');
-        if (originalButton) {
-          originalButton.click();
-        }
-      });
+      // Don't add event listener here - it will be handled by bindShowSelectedToggle
+      console.log('Created sticky show-selected button - event listener will be added by bind method');
       
       // Insert in the same position as in main menu
       const starBtn = stickyInputGroup.querySelector('#sticky-favorites-toggle');
