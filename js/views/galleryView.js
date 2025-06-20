@@ -100,14 +100,14 @@ export default class GalleryView {
           // Fill icon on second click (no shake animation)
           const icon = trashBtn.querySelector('i');
           if (icon) {
-            icon.className = 'fas fa-trash-alt';
+            icon.className = 'fas fa-trash-can';
           }
           trashBtn.classList.add('filled');
           
           setTimeout(() => {
             trashBtn.classList.remove('filled');
             if (icon) {
-              icon.className = 'far fa-trash-alt';
+              icon.className = 'far fa-trash-can';
             }
           }, 2000);
         }
@@ -921,14 +921,14 @@ export default class GalleryView {
       // Remove shake animation after it completes
       setTimeout(() => {
         button.classList.remove('shake-animation');
-      }, 1100);
+      }, 500);
     };
     
     const applySecondClickState = (button) => {
       // Change to solid icon on second click (no shake animation)
       const icon = button.querySelector('i');
       if (icon) {
-        icon.className = 'fas fa-trash-alt';
+        icon.className = 'fas fa-trash-can';
       }
       button.classList.add('clear-button-active');
     };
@@ -936,7 +936,7 @@ export default class GalleryView {
     const resetButtonState = (button) => {
       const icon = button.querySelector('i');
       if (icon) {
-        icon.className = 'far fa-trash-alt';
+        icon.className = 'far fa-trash-can';
       }
       button.classList.remove('clear-button-active');
     };
@@ -956,7 +956,7 @@ export default class GalleryView {
         // Also update sticky bar button if present
         const sticky = document.getElementById('sticky-action-bar');
         if (sticky) {
-          const stickyClearBtn = sticky.querySelector('#clear-button');
+          const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
           if (stickyClearBtn) {
             applyFirstClickState(stickyClearBtn);
           }
@@ -969,7 +969,7 @@ export default class GalleryView {
           // Also reset sticky bar button
           const sticky = document.getElementById('sticky-action-bar');
           if (sticky) {
-            const stickyClearBtn = sticky.querySelector('#clear-button');
+            const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
             if (stickyClearBtn) {
               resetButtonState(stickyClearBtn);
             }
@@ -986,7 +986,7 @@ export default class GalleryView {
         // Also update sticky bar button
         const sticky = document.getElementById('sticky-action-bar');
         if (sticky) {
-          const stickyClearBtn = sticky.querySelector('#clear-button');
+          const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
           if (stickyClearBtn) {
             applySecondClickState(stickyClearBtn);
           }
@@ -999,7 +999,7 @@ export default class GalleryView {
           
           // Also reset sticky bar button
           if (sticky) {
-            const stickyClearBtn = sticky.querySelector('#clear-button');
+            const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
             if (stickyClearBtn) {
               resetButtonState(stickyClearBtn);
             }
@@ -1013,7 +1013,7 @@ export default class GalleryView {
     // Also bind in sticky bar if present
     const sticky = document.getElementById('sticky-action-bar');
     if (sticky) {
-      const stickyClearBtn = sticky.querySelector('#clear-button');
+      const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
       if (stickyClearBtn) {
         stickyClearBtn.addEventListener('click', () => {
           this.clearButton.click();

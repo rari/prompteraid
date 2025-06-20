@@ -578,6 +578,12 @@ a:hover {
   animation: pop 0.3s ease-in-out;
 }
 
+/* Clear button active state for two-click behavior */
+.input-group .button-trash.clear-button-active i {
+  font-weight: 900; /* Switch to filled */
+  color: var(--neon-pink) !important;
+}
+
 .input-group .button-refresh i {
   font-family: 'Font Awesome 5 Free';
   font-weight: 900; /* Always filled for better spin visibility */
@@ -1482,7 +1488,7 @@ button:hover i {
   width: 1.5rem;
   text-align: center;
 }
-.menu-icon-style.fa-trash-alt { color: var(--neon-pink); }
+.menu-icon-style.fa-trash-can { color: var(--neon-pink); }
 .menu-icon-style.fa-sync-alt { color: var(--neon-orange); }
 .menu-icon-style.fa-star { color: var(--neon-yellow); }
 .menu-icon-style.fa-eye { color: var(--neon-green); }
