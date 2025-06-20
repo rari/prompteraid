@@ -102,7 +102,7 @@ export default class GalleryController {
     
     // Copy button
     this.view.bindCopyButton(() => {
-      const finalPrompt = this.model.getFinalPrompt();
+      const finalPrompt = this.model.generateFinalPrompt();
       navigator.clipboard.writeText(finalPrompt)
         .then(() => {
           // Show notification that text was copied
