@@ -37,7 +37,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PrompterAid</title>
+
+  <!-- SEO -->
+  <title>PrompterAid - NijiJourney 6 Visual Style Library</title>
+  <meta name="description" content="A visual style reference tool for the NijiJourney 6 AI model. Easily compare and combine --sref style codes to fine-tune your prompts.">
+  <meta name="keywords" content="NijiJourney, NijiJourney 6, MidJourney, AI Art, AI Generator, sref, style reference, visual library, prompt helper, prompt builder">
+  <link rel="canonical" href="https://rari.github.io/prompteraid/">
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rari.github.io/prompteraid/">
+  <meta property="og:title" content="PrompterAid - NijiJourney 6 Visual Style Library">
+  <meta property="og:description" content="A visual style reference tool for the NijiJourney 6 AI model. Easily compare and combine --sref style codes to fine-tune your prompts.">
+  <meta property="og:image" content="https://rari.github.io/prompteraid/img/favicon.ico">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://rari.github.io/prompteraid/">
+  <meta property="twitter:title" content="PrompterAid - NijiJourney 6 Visual Style Library">
+  <meta property="twitter:description" content="A visual style reference tool for the NijiJourney 6 AI model. Easily compare and combine --sref style codes to fine-tune your prompts.">
+  <meta property="twitter:image" content="https://rari.github.io/prompteraid/img/favicon.ico">
+
   <link rel="stylesheet" href="styles/main.css">
   <link rel="stylesheet" href="styles/no-hover.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -61,168 +82,172 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="cute-title-container">
-      <span class="emoji-prefix">✨🎨</span>
-      <span class="cute-title">PrompterAid</span>
-      <span class="emoji-suffix">🧜‍♀️✨</span>
-    </h1>
-    
-    <div id="image-count-subheader" class="image-count-subheader">
-      <!-- Image count will be dynamically inserted here -->
-    </div>
-    
-    <div class="prompt-container">
-      <div class="input-group">
-        <!-- Discord/Website Toggle moved to the left -->
-        <div class="mode-toggle-container">
-          <button id="mode-toggle" class="mode-toggle" title="Toggle between Discord and Website modes">
-            <i class="fab fa-discord discord-icon active"></i>
-            <i class="fas fa-globe website-icon"></i>
-          </button>
-        </div>
-        
-        <input type="text" id="prompt-input" placeholder="Enter your base prompt...">
-        
-        <!-- Theme toggle moved inside input group on the right -->
-        <div class="theme-toggle-container">
-          <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
-            <i class="fas fa-moon"></i>
-          </button>
-        </div>
-        
-        <!-- Action buttons moved to second row -->
-        <div class="action-buttons-row">
-          <button id="clear-button" class="action-button button-trash" title="Clear selected images">
-            <i class="far fa-trash-can"></i>
-          </button>
-          <button id="refresh-button" class="action-button button-refresh" title="Shuffle image display">
-            <i class="fas fa-sync-alt"></i>
-          </button>
-          <button id="favorites-toggle" class="action-button button-star" title="Toggle favorites">
-            <i class="far fa-star"></i>
-          </button>
-          <button id="show-selected-btn" class="action-button button-eye" title="Show selected">
-            <i class="far fa-eye"></i>
-          </button>
-          <button id="randomize-button" class="action-button button-randomize" title="Randomize selection">
-            <i class="far fa-lightbulb"></i>
-          </button>
-          <button id="copy-button" class="action-button button-clipboard" title="Copy to clipboard">
-            <i class="far fa-clipboard"></i>
-          </button>
-          <button id="toggle-preview-button" class="action-button button-toggle" title="Toggle prompt preview">
-            <i class="fas fa-chevron-down"></i>
-          </button>
-        </div>
+    <header>
+      <h1 class="cute-title-container">
+        <span class="emoji-prefix">✨🎨</span>
+        <span class="cute-title">PrompterAid</span>
+        <span class="emoji-suffix">🧜‍♀️✨</span>
+      </h1>
+      
+      <div id="image-count-subheader" class="image-count-subheader">
+        <!-- Image count will be dynamically inserted here -->
       </div>
-      <div class="prompt-preview hidden">
-        <p id="final-prompt"></p>
-      </div>
-    </div>
-
-    <div class="more-info-container">
-      <details open>
-        <summary>
-          <span>✨ Information</span>
-          <button id="close-more-info" class="close-button" title="Hide this section">&times;</button>
-        </summary>
-        
-        <div class="more-info-content">
-          <div class="info-section about-section">
-            <h4>About</h4>
-            <p><strong>PrompterAid</strong> is a visual reference tool for users of the NijiJourney 6 AI model. It displays pregenerated style references (<code>--sref</code> codes) using a consistent series of mermaid-themed images, all created with the same seed and a simple <code>mermaid</code> prompt. This uniform approach makes it easy to compare styles directly and combine them to fine-tune your prompts with precision.</p>
-          </div>
-
-          <div class="info-section how-to-use-section">
-            <h4>How to Use</h4>
-            <ul>
-              <li>Enter your base prompt in the text field.</li>
-              <li>Click one or more images to select their styles.</li>
-              <li>The final prompt, including <code>--sref</code> and <code>--niji 6</code>, is auto-generated.</li>
-              <li>Click <i class="far fa-clipboard inline-icon"></i> or press 'C' to copy the prompt to your clipboard.</li>
-            </ul>
+    </header>
+    
+    <main>
+      <div class="prompt-container">
+        <div class="input-group">
+          <!-- Discord/Website Toggle moved to the left -->
+          <div class="mode-toggle-container">
+            <button id="mode-toggle" class="mode-toggle" title="Toggle between Discord and Website modes">
+              <i class="fab fa-discord discord-icon active"></i>
+              <i class="fas fa-globe website-icon"></i>
+            </button>
           </div>
           
-          <div class="info-section platform-section">
-            <h4>Platform</h4>
-            <ul class="tool-guide-list">
-              <li><i class="fab fa-discord menu-icon-style"></i><div><strong>Discord</strong>: Paste the prompt into the MidJourney or NijiJourney Discord bot, just like any other prompt.</div></li>
-              <li><i class="fas fa-globe menu-icon-style"></i><div><strong>Website</strong>: Use the generated prompt directly on the <a href="https://www.midjourney.com" target="_blank">Midjourney</a> or <a href="https://nijijourney.com" target="_blank">NijiJourney</a> website.</div></li>
-            </ul>
-            <p>Both bots and websites can accept the same <code>--sref</code> and <code>--niji 6</code> parameters!</p>
+          <input type="text" id="prompt-input" placeholder="Enter your base prompt...">
+          
+          <!-- Theme toggle moved inside input group on the right -->
+          <div class="theme-toggle-container">
+            <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+              <i class="fas fa-moon"></i>
+            </button>
           </div>
-
-          <div class="info-section tool-guide-section">
-            <h4>Menu Tools</h4>
-            <ul class="tool-guide-list">
-              <li><i class="far fa-trash-can menu-icon-style"></i><div><strong>Deselect:</strong> Clear all selected images.</div></li>
-              <li><i class="fas fa-sync-alt menu-icon-style"></i><div><strong>Refresh:</strong> Shuffle the order of all images and randomize their starting view.</div></li>
-              <li><i class="far fa-star menu-icon-style"></i><div><strong>Favorites View:</strong> Show only your starred images.</div></li>
-              <li><i class="far fa-eye menu-icon-style"></i><div><strong>Selected View:</strong> Show only your currently selected images.</div></li>
-              <li><i class="far fa-lightbulb menu-icon-style"></i><div><strong>Randomize:</strong> Randomly select an unselected image.</div></li>
-              <li><i class="far fa-clipboard menu-icon-style"></i><div><strong>Copy:</strong> Copy the final generated prompt to your clipboard.</div></li>
-            </ul>
+          
+          <!-- Action buttons moved to second row -->
+          <div class="action-buttons-row">
+            <button id="clear-button" class="action-button button-trash" title="Clear selected images">
+              <i class="far fa-trash-can"></i>
+            </button>
+            <button id="refresh-button" class="action-button button-refresh" title="Shuffle image display">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+            <button id="favorites-toggle" class="action-button button-star" title="Toggle favorites">
+              <i class="far fa-star"></i>
+            </button>
+            <button id="show-selected-btn" class="action-button button-eye" title="Show selected">
+              <i class="far fa-eye"></i>
+            </button>
+            <button id="randomize-button" class="action-button button-randomize" title="Randomize selection">
+              <i class="far fa-lightbulb"></i>
+            </button>
+            <button id="copy-button" class="action-button button-clipboard" title="Copy to clipboard">
+              <i class="far fa-clipboard"></i>
+            </button>
+            <button id="toggle-preview-button" class="action-button button-toggle" title="Toggle prompt preview">
+              <i class="fas fa-chevron-down"></i>
+            </button>
           </div>
+        </div>
+        <div class="prompt-preview hidden">
+          <p id="final-prompt"></p>
+        </div>
+      </div>
 
-          <div class="info-section image-tools-section">
-            <h4>Image Tools</h4>
-            <ul class="tool-guide-list">
-              <li><i class="far fa-star menu-icon-style"></i><div><strong>Favorite:</strong> Add the image to your favorites collection.</div></li>
-              <li><i class="fas fa-sync-alt menu-icon-style"></i><div><strong>Rotate:</strong> Cycle through other visual examples from the same style reference code.</div></li>
-              <li><i class="fas fa-hand-pointer menu-icon-style"></i><div><strong>Select:</strong> Left-click the image to add its style code to your prompt. Selected images are shown with a colored border.</div></li>
-            </ul>
-          </div>
+      <div class="more-info-container">
+        <details open>
+          <summary>
+            <span>✨ Information</span>
+            <button id="close-more-info" class="close-button" title="Hide this section">&times;</button>
+          </summary>
+          
+          <div class="more-info-content">
+            <div class="info-section about-section">
+              <h4>About</h4>
+              <p><strong>PrompterAid</strong> is a visual reference tool for users of the NijiJourney 6 AI model. It displays pregenerated style references (<code>--sref</code> codes) using a consistent series of mermaid-themed images, all created with the same seed and a simple <code>mermaid</code> prompt. This uniform approach makes it easy to compare styles directly and combine them to fine-tune your prompts with precision.</p>
+            </div>
 
-          <div class="info-section shortcuts-section">
-            <h4>Keyboard Shortcuts</h4>
-            <div class="shortcuts-grid">
-              <div class="shortcut-item">
-                <kbd>C</kbd>
-                <span>Copy prompt to clipboard</span>
-              </div>
-              <div class="shortcut-item">
-                <kbd>R</kbd>
-                <span>Refresh all images</span>
-              </div>
-              <div class="shortcut-item">
-                <kbd>D</kbd>
-                <span>Deselect all images</span>
-              </div>
-              <div class="shortcut-item">
-                <kbd>F</kbd>
-                <span>Toggle favorites view</span>
-              </div>
-              <div class="shortcut-item">
-                <kbd>V</kbd>
-                <span>Toggle selected view</span>
+            <div class="info-section how-to-use-section">
+              <h4>How to Use</h4>
+              <ul>
+                <li>Enter your base prompt in the text field.</li>
+                <li>Click one or more images to select their styles.</li>
+                <li>The final prompt, including <code>--sref</code> and <code>--niji 6</code>, is auto-generated.</li>
+                <li>Click <i class="far fa-clipboard inline-icon"></i> or press 'C' to copy the prompt to your clipboard.</li>
+              </ul>
+            </div>
+            
+            <div class="info-section platform-section">
+              <h4>Platform</h4>
+              <ul class="tool-guide-list">
+                <li><i class="fab fa-discord menu-icon-style"></i><div><strong>Discord</strong>: Paste the prompt into the MidJourney or NijiJourney Discord bot, just like any other prompt.</div></li>
+                <li><i class="fas fa-globe menu-icon-style"></i><div><strong>Website</strong>: Use the generated prompt directly on the <a href="https://www.midjourney.com" target="_blank">Midjourney</a> or <a href="https://nijijourney.com" target="_blank">NijiJourney</a> website.</div></li>
+              </ul>
+              <p>Both bots and websites can accept the same <code>--sref</code> and <code>--niji 6</code> parameters!</p>
+            </div>
+
+            <div class="info-section tool-guide-section">
+              <h4>Menu Tools</h4>
+              <ul class="tool-guide-list">
+                <li><i class="far fa-trash-can menu-icon-style"></i><div><strong>Deselect:</strong> Clear all selected images.</div></li>
+                <li><i class="fas fa-sync-alt menu-icon-style"></i><div><strong>Refresh:</strong> Shuffle the order of all images and randomize their starting view.</div></li>
+                <li><i class="far fa-star menu-icon-style"></i><div><strong>Favorites View:</strong> Show only your starred images.</div></li>
+                <li><i class="far fa-eye menu-icon-style"></i><div><strong>Selected View:</strong> Show only your currently selected images.</div></li>
+                <li><i class="far fa-lightbulb menu-icon-style"></i><div><strong>Randomize:</strong> Randomly select an unselected image.</div></li>
+                <li><i class="far fa-clipboard menu-icon-style"></i><div><strong>Copy:</strong> Copy the final generated prompt to your clipboard.</div></li>
+              </ul>
+            </div>
+
+            <div class="info-section image-tools-section">
+              <h4>Image Tools</h4>
+              <ul class="tool-guide-list">
+                <li><i class="far fa-star menu-icon-style"></i><div><strong>Favorite:</strong> Add the image to your favorites collection.</div></li>
+                <li><i class="fas fa-sync-alt menu-icon-style"></i><div><strong>Rotate:</strong> Cycle through other visual examples from the same style reference code.</div></li>
+                <li><i class="fas fa-hand-pointer menu-icon-style"></i><div><strong>Select:</strong> Left-click the image to add its style code to your prompt. Selected images are shown with a colored border.</div></li>
+              </ul>
+            </div>
+
+            <div class="info-section shortcuts-section">
+              <h4>Keyboard Shortcuts</h4>
+              <div class="shortcuts-grid">
+                <div class="shortcut-item">
+                  <kbd>C</kbd>
+                  <span>Copy prompt to clipboard</span>
+                </div>
+                <div class="shortcut-item">
+                  <kbd>R</kbd>
+                  <span>Refresh all images</span>
+                </div>
+                <div class="shortcut-item">
+                  <kbd>D</kbd>
+                  <span>Deselect all images</span>
+                </div>
+                <div class="shortcut-item">
+                  <kbd>F</kbd>
+                  <span>Toggle favorites view</span>
+                </div>
+                <div class="shortcut-item">
+                  <kbd>V</kbd>
+                  <span>Toggle selected view</span>
+                </div>
               </div>
             </div>
+            
+            <div class="info-section hints-section">
+              <h4>Hints</h4>
+              <ul>
+                <li>You can pick more than one style at a time!</li>
+                <li>We save your preferences and favorites to your local browser storage!</li>
+                <li>You can add <a href="https://docs.midjourney.com/hc/en-us/articles/32859204029709-Parameter-List" target="_blank">extra parameters</a> to your base prompt like <code>--ar</code> or <code>--p</code>.</li>
+                <li>Use the rotate button to see different examples of the same style.</li>
+                <li>Try combining complementary styles for unique results.</li>
+                <li>Toggle dark mode for better nighttime viewing.</li>
+                <li>You can close this info menu by clicking on the colorful bar at the top of it.</li>
+              </ul>
+            </div>
           </div>
-          
-          <div class="info-section hints-section">
-            <h4>Hints</h4>
-            <ul>
-              <li>You can pick more than one style at a time!</li>
-              <li>We save your preferences and favorites to your local browser storage!</li>
-              <li>You can add <a href="https://docs.midjourney.com/hc/en-us/articles/32859204029709-Parameter-List" target="_blank">extra parameters</a> to your base prompt like <code>--ar</code> or <code>--p</code>.</li>
-              <li>Use the rotate button to see different examples of the same style.</li>
-              <li>Try combining complementary styles for unique results.</li>
-              <li>Toggle dark mode for better nighttime viewing.</li>
-              <li>You can close this info menu by clicking on the colorful bar at the top of it.</li>
-            </ul>
+        </details>
+      </div>
+      
+      <div class="gallery-container">
+        <div id="image-gallery" class="image-gallery">
+          <!-- Images will be dynamically loaded here -->
+          <div id="no-favorites" class="hidden">
+            <p>No favorite images selected. Star some images to see them here.</p>
           </div>
-        </div>
-      </details>
-    </div>
-    
-    <div class="gallery-container">
-      <div id="image-gallery" class="image-gallery">
-        <!-- Images will be dynamically loaded here -->
-        <div id="no-favorites" class="hidden">
-          <p>No favorite images selected. Star some images to see them here.</p>
         </div>
       </div>
-    </div>
+    </main>
     
     <footer class="site-footer">
       <div class="footer-content">
