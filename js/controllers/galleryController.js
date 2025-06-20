@@ -38,7 +38,7 @@ export default class GalleryController {
       const visibleImages = favoritedImages.filter(img => this.model.selectedImages.has(img.id));
 
       if (visibleImages.length === 0) {
-        this.view.showInfoNotification("No images match both 'favorites' and 'selected' filters. Both views have been disabled.");
+        this.view.showErrorNotification("No images match both 'favorites' and 'selected' filters. Both views have been disabled.");
         
         // Disable both filters
         this.model.toggleFavoritesOnly(); // it will be true, so this toggles to false
