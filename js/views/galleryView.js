@@ -67,6 +67,9 @@ export default class GalleryView {
 
     // Initialize buttons
     this.initializeButtons();
+    
+    // Sync sticky menu with main menu to ensure all buttons work
+    this.syncStickyMenu();
   }
 
   initializeButtons() {
@@ -134,13 +137,55 @@ export default class GalleryView {
 
     // Initialize clipboard button
     const clipboardBtn = document.getElementById('copy-button');
-    if (clipboardBtn) {
-      clipboardBtn.addEventListener('click', () => {
+    const stickyCopyBtn = document.getElementById('sticky-copy-button');
+    
+    function animateBothCopyButtons() {
+      // Animate main button
+      if (clipboardBtn) {
         clipboardBtn.classList.add('active');
-        setTimeout(() => {
+        const icon = clipboardBtn.querySelector('i');
+        if (icon) {
+          icon.className = 'fas fa-clipboard';
+        }
+      }
+      
+      // Animate sticky button
+      if (stickyCopyBtn) {
+        stickyCopyBtn.classList.add('active');
+        const stickyIcon = stickyCopyBtn.querySelector('i');
+        if (stickyIcon) {
+          stickyIcon.className = 'fas fa-clipboard';
+        }
+      }
+      
+      // Call the handler
+      handler();
+      
+      // Remove active class and change back to outline icon after animation
+      setTimeout(() => {
+        if (clipboardBtn) {
           clipboardBtn.classList.remove('active');
-        }, 300);
-      });
+          const icon = clipboardBtn.querySelector('i');
+          if (icon) {
+            icon.className = 'far fa-clipboard';
+          }
+        }
+        if (stickyCopyBtn) {
+          stickyCopyBtn.classList.remove('active');
+          const stickyIcon = stickyCopyBtn.querySelector('i');
+          if (stickyIcon) {
+            stickyIcon.className = 'far fa-clipboard';
+          }
+        }
+      }, 300);
+    }
+    
+    if (clipboardBtn) {
+      clipboardBtn.addEventListener('click', animateBothCopyButtons);
+    }
+    
+    if (stickyCopyBtn) {
+      stickyCopyBtn.addEventListener('click', animateBothCopyButtons);
     }
 
     // Handle the click event for the back-to-top button
@@ -149,6 +194,35 @@ export default class GalleryView {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
     }
+  }
+
+  syncStickyMenu() {
+    const sticky = document.getElementById('sticky-action-bar');
+    if (!sticky) return;
+    
+    console.log('Syncing sticky menu with main menu...');
+    
+    // Get all buttons from main menu
+    const mainButtons = document.querySelector('.input-group').querySelectorAll('button');
+    const stickyButtons = sticky.querySelectorAll('button');
+    
+    console.log('Main menu buttons:', Array.from(mainButtons).map(btn => btn.id));
+    console.log('Sticky menu buttons:', Array.from(stickyButtons).map(btn => btn.id));
+    
+    // Ensure all main menu buttons have corresponding sticky buttons
+    mainButtons.forEach(mainBtn => {
+      const mainId = mainBtn.id;
+      const stickyId = `sticky-${mainId}`;
+      const stickyBtn = sticky.querySelector(`#${stickyId}`);
+      
+      if (stickyBtn) {
+        console.log(`Found sticky button for ${mainId}: ${stickyId}`);
+        // Ensure the sticky button has the same classes as the main button
+        stickyBtn.className = mainBtn.className;
+      } else {
+        console.log(`Missing sticky button for ${mainId}`);
+      }
+    });
   }
 
   /*
@@ -583,89 +657,109 @@ export default class GalleryView {
 
   bindCopyButton(handler) {
     const copyBtn = document.getElementById('copy-button');
-    if (copyBtn) {
-      copyBtn.addEventListener('click', () => {
-        // Add active class and change to filled icon
+    const stickyCopyBtn = document.getElementById('sticky-copy-button');
+    
+    function animateBothCopyButtons() {
+      // Animate main button
+      if (copyBtn) {
         copyBtn.classList.add('active');
         const icon = copyBtn.querySelector('i');
         if (icon) {
           icon.className = 'fas fa-clipboard';
         }
-        
-        // Call the handler
-        handler();
-        
-        // Remove active class and change back to outline icon after animation
-        setTimeout(() => {
+      }
+      
+      // Animate sticky button
+      if (stickyCopyBtn) {
+        stickyCopyBtn.classList.add('active');
+        const stickyIcon = stickyCopyBtn.querySelector('i');
+        if (stickyIcon) {
+          stickyIcon.className = 'fas fa-clipboard';
+        }
+      }
+      
+      // Call the handler
+      handler();
+      
+      // Remove active class and change back to outline icon after animation
+      setTimeout(() => {
+        if (copyBtn) {
           copyBtn.classList.remove('active');
+          const icon = copyBtn.querySelector('i');
           if (icon) {
             icon.className = 'far fa-clipboard';
           }
-        }, 300);
-      });
+        }
+        if (stickyCopyBtn) {
+          stickyCopyBtn.classList.remove('active');
+          const stickyIcon = stickyCopyBtn.querySelector('i');
+          if (stickyIcon) {
+            stickyIcon.className = 'far fa-clipboard';
+          }
+        }
+      }, 300);
     }
     
-    // Also bind in sticky bar if present
-    const sticky = document.getElementById('sticky-action-bar');
-    if (sticky) {
-      const stickyCopyBtn = sticky.querySelector('#copy-button');
-      if (stickyCopyBtn) {
-        stickyCopyBtn.addEventListener('click', () => {
-          copyBtn.click();
-        });
-      }
+    if (copyBtn) {
+      copyBtn.addEventListener('click', animateBothCopyButtons);
+    }
+    
+    if (stickyCopyBtn) {
+      stickyCopyBtn.addEventListener('click', animateBothCopyButtons);
     }
   }
 
   bindRandomizeButton(handler) {
     const randomizeBtn = document.getElementById('randomize-button');
-    if (randomizeBtn) {
-      randomizeBtn.addEventListener('click', () => {
-        // Add active class and change to filled icon
+    const stickyRandomizeBtn = document.getElementById('sticky-randomize-button');
+    
+    function animateBothRandomizeButtons() {
+      // Animate main button
+      if (randomizeBtn) {
         randomizeBtn.classList.add('active');
         const icon = randomizeBtn.querySelector('i');
         if (icon) {
           icon.className = 'fas fa-lightbulb';
         }
-        
-        // Call the handler
-        handler();
-        
-        // Remove active class and change back to outline icon after animation
-        setTimeout(() => {
+      }
+      
+      // Animate sticky button
+      if (stickyRandomizeBtn) {
+        stickyRandomizeBtn.classList.add('active');
+        const stickyIcon = stickyRandomizeBtn.querySelector('i');
+        if (stickyIcon) {
+          stickyIcon.className = 'fas fa-lightbulb';
+        }
+      }
+      
+      // Call the handler
+      handler();
+      
+      // Remove active class and change back to outline icon after animation
+      setTimeout(() => {
+        if (randomizeBtn) {
           randomizeBtn.classList.remove('active');
+          const icon = randomizeBtn.querySelector('i');
           if (icon) {
             icon.className = 'far fa-lightbulb';
           }
-        }, 300);
-      });
+        }
+        if (stickyRandomizeBtn) {
+          stickyRandomizeBtn.classList.remove('active');
+          const stickyIcon = stickyRandomizeBtn.querySelector('i');
+          if (stickyIcon) {
+            stickyIcon.className = 'far fa-lightbulb';
+          }
+        }
+      }, 300);
     }
     
-    // Also bind in sticky bar if present
-    const sticky = document.getElementById('sticky-action-bar');
-    if (sticky) {
-      const stickyRandomizeBtn = sticky.querySelector('#sticky-randomize-button');
-      if (stickyRandomizeBtn) {
-        stickyRandomizeBtn.addEventListener('click', () => {
-          // Add active class and change to filled icon
-          stickyRandomizeBtn.classList.add('active');
-          const icon = stickyRandomizeBtn.querySelector('i');
-          if (icon) {
-            icon.className = 'fas fa-lightbulb';
-          }
-          
-          // Call the handler
-          handler();
-          
-          // Remove active class and change back to outline icon after animation
-          setTimeout(() => {
-            stickyRandomizeBtn.classList.remove('active');
-            if (icon) {
-              icon.className = 'far fa-lightbulb';
-            }
-          }, 300);
-        });
-      }
+    if (randomizeBtn) {
+      randomizeBtn.addEventListener('click', animateBothRandomizeButtons);
+    }
+    
+    if (stickyRandomizeBtn) {
+      stickyRandomizeBtn.addEventListener('click', animateBothRandomizeButtons);
     }
   }
 
