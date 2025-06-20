@@ -472,18 +472,22 @@ export default class GalleryView {
   }
 
   updateFavoritesToggle(showOnlyFavorites) {
+    console.log('updateFavoritesToggle called with:', showOnlyFavorites);
     // Update main button
     if (this.favoritesToggle) {
       const icon = this.favoritesToggle.querySelector('i');
-    if (showOnlyFavorites) {
+      console.log('Main favorites toggle icon:', icon);
+      if (showOnlyFavorites) {
         this.favoritesToggle.classList.add('active');
         if (icon) {
           icon.className = 'fas fa-star';
+          console.log('Set main icon to filled star');
         }
-    } else {
+      } else {
         this.favoritesToggle.classList.remove('active');
         if (icon) {
           icon.className = 'far fa-star';
+          console.log('Set main icon to outlined star');
         }
       }
     }
@@ -494,15 +498,18 @@ export default class GalleryView {
       const stickyFavoritesBtn = sticky.querySelector('#sticky-favorites-toggle');
       if (stickyFavoritesBtn) {
         const stickyIcon = stickyFavoritesBtn.querySelector('i');
+        console.log('Sticky favorites toggle icon:', stickyIcon);
         if (showOnlyFavorites) {
           stickyFavoritesBtn.classList.add('active');
           if (stickyIcon) {
             stickyIcon.className = 'fas fa-star';
+            console.log('Set sticky icon to filled star');
           }
         } else {
           stickyFavoritesBtn.classList.remove('active');
           if (stickyIcon) {
             stickyIcon.className = 'far fa-star';
+            console.log('Set sticky icon to outlined star');
           }
         }
       }
@@ -666,10 +673,14 @@ export default class GalleryView {
   }
 
   bindFavoritesToggle(handler) {
+    console.log('Binding favorites toggle...');
     if (this.favoritesToggle) {
-    this.favoritesToggle.addEventListener('click', () => {
+      console.log('Main favorites toggle found:', this.favoritesToggle);
+      this.favoritesToggle.addEventListener('click', () => {
+        console.log('Main favorites toggle clicked');
         // Call the handler first to check if warning should be shown
         const shouldProceed = handler();
+        console.log('Handler result:', shouldProceed);
         
         // Only add bounce animation if the handler didn't show a warning
         if (shouldProceed !== false) {
@@ -680,6 +691,8 @@ export default class GalleryView {
           }, 600);
         }
       });
+    } else {
+      console.error('Main favorites toggle not found!');
     }
     
     // Also bind in sticky bar if present
@@ -687,9 +700,12 @@ export default class GalleryView {
     if (sticky) {
       const stickyFavoritesBtn = sticky.querySelector('#sticky-favorites-toggle');
       if (stickyFavoritesBtn) {
+        console.log('Sticky favorites toggle found:', stickyFavoritesBtn);
         stickyFavoritesBtn.addEventListener('click', () => {
+          console.log('Sticky favorites toggle clicked');
           // Call the handler first to check if warning should be shown
           const shouldProceed = handler();
+          console.log('Handler result:', shouldProceed);
           
           // Only add bounce animation if the handler didn't show a warning
           if (shouldProceed !== false) {
@@ -700,7 +716,11 @@ export default class GalleryView {
             }, 600);
           }
         });
+      } else {
+        console.error('Sticky favorites toggle not found!');
       }
+    } else {
+      console.log('Sticky action bar not found');
     }
   }
 
