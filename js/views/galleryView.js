@@ -168,8 +168,47 @@ export default class GalleryView {
         stickyBtn.className = mainBtn.className;
       } else {
         console.log(`Missing sticky button for ${mainId}`);
+        // Try to add the missing button
+        this.addMissingStickyButton(mainBtn, sticky);
       }
     });
+  }
+
+  addMissingStickyButton(mainBtn, sticky) {
+    const mainId = mainBtn.id;
+    const stickyId = `sticky-${mainId}`;
+    
+    console.log(`Adding missing sticky button: ${stickyId}`);
+    
+    // Create the sticky button
+    const stickyBtn = mainBtn.cloneNode(true);
+    stickyBtn.id = stickyId;
+    stickyBtn.className = mainBtn.className;
+    
+    // Add event delegation
+    stickyBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const originalButton = document.getElementById(mainId);
+      if (originalButton) {
+        originalButton.click();
+      }
+    });
+    
+    // Insert in the same position as in main menu
+    const stickyInputGroup = sticky.querySelector('.input-group');
+    if (stickyInputGroup) {
+      // Try to find the right position by looking at the main button's position
+      const mainParent = mainBtn.parentNode;
+      const mainButtons = Array.from(mainParent.children);
+      const mainIndex = mainButtons.indexOf(mainBtn);
+      
+      // Insert at the same index in sticky menu
+      if (mainIndex >= 0 && mainIndex < stickyInputGroup.children.length) {
+        stickyInputGroup.insertBefore(stickyBtn, stickyInputGroup.children[mainIndex]);
+      } else {
+        stickyInputGroup.appendChild(stickyBtn);
+      }
+    }
   }
 
   /*
@@ -212,7 +251,10 @@ export default class GalleryView {
         button.id = buttonMap[originalId];
         console.log('Mapped button ID from', originalId, 'to', buttonMap[originalId]);
         // Preserve styling classes
-        button.className = origInputGroup.querySelector(`#${originalId}`).className;
+        const originalButton = origInputGroup.querySelector(`#${originalId}`);
+        if (originalButton) {
+          button.className = originalButton.className;
+        }
         
         // Special handling for toggle preview button
         if (originalId === 'toggle-preview-button') {
@@ -220,20 +262,21 @@ export default class GalleryView {
             e.preventDefault();
             this.togglePreview();
           });
-      } else {
+        } else {
           // Delegate other button events to main menu
           button.addEventListener('click', (e) => {
             e.preventDefault();
             const originalButton = document.getElementById(originalId);
             if (originalButton) {
               originalButton.click();
-      }
+            }
           });
         }
       }
     });
     
-    // No need to add separate theme toggle since it's already in the input group
+    // Ensure the show-selected button exists in sticky menu
+    this.ensureStickyShowSelectedButton(stickyInputGroup);
     
     stickyWrapper.appendChild(stickyInputGroup);
     
@@ -253,24 +296,58 @@ export default class GalleryView {
     // Sync prompt input value
     const mainInput = document.getElementById('prompt-input');
     const stickyInput = stickyInputGroup.querySelector('#prompt-input');
-    stickyInput.id = 'sticky-prompt-input';
-    
-    mainInput.addEventListener('input', () => {
-      stickyInput.value = mainInput.value;
-    });
-    
-    stickyInput.addEventListener('input', () => {
-      mainInput.value = stickyInput.value;
-      // Trigger input event on main input to update preview
-      const event = new Event('input', { bubbles: true });
-      mainInput.dispatchEvent(event);
-    });
+    if (stickyInput) {
+      stickyInput.id = 'sticky-prompt-input';
+      
+      mainInput.addEventListener('input', () => {
+        stickyInput.value = mainInput.value;
+      });
+      
+      stickyInput.addEventListener('input', () => {
+        mainInput.value = stickyInput.value;
+        // Trigger input event on main input to update preview
+        const event = new Event('input', { bubbles: true });
+        mainInput.dispatchEvent(event);
+      });
+    }
     
     // Handle scroll events for sticky header visibility
     window.addEventListener('scroll', () => this.handleStickyBarVisibility());
     
     // Initial position check
     this.handleStickyBarVisibility();
+  }
+
+  ensureStickyShowSelectedButton(stickyInputGroup) {
+    // Check if the show-selected button exists in main menu but not in sticky
+    const mainShowSelectedBtn = document.getElementById('show-selected-btn');
+    const stickyShowSelectedBtn = stickyInputGroup.querySelector('#sticky-show-selected-btn');
+    
+    if (mainShowSelectedBtn && !stickyShowSelectedBtn) {
+      console.log('Adding missing show-selected button to sticky menu');
+      
+      // Create the sticky show-selected button
+      const stickyEyeBtn = mainShowSelectedBtn.cloneNode(true);
+      stickyEyeBtn.id = 'sticky-show-selected-btn';
+      stickyEyeBtn.className = mainShowSelectedBtn.className;
+      
+      // Add event delegation
+      stickyEyeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const originalButton = document.getElementById('show-selected-btn');
+        if (originalButton) {
+          originalButton.click();
+        }
+      });
+      
+      // Insert in the same position as in main menu
+      const starBtn = stickyInputGroup.querySelector('#sticky-favorites-toggle');
+      if (starBtn && starBtn.parentNode) {
+        starBtn.parentNode.insertBefore(stickyEyeBtn, starBtn.nextSibling);
+      } else {
+        stickyInputGroup.appendChild(stickyEyeBtn);
+      }
+    }
   }
 
   togglePreview() {
