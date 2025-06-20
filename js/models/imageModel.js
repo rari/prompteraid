@@ -105,9 +105,16 @@ export default class ImageModel {
             // Remove BOM if present
             const cleanText = text.replace(/^\uFEFF/, '');
             const data = JSON.parse(cleanText);
-            if (Array.isArray(data) && data.length > 0) {
-              console.log(`Successfully loaded ${data.length} images from ${path}`);
-              return data;
+            
+            // Handle both direct array and object with "images" property
+            let imageArray = data;
+            if (data && typeof data === 'object' && data.images && Array.isArray(data.images)) {
+              imageArray = data.images;
+            }
+            
+            if (Array.isArray(imageArray) && imageArray.length > 0) {
+              console.log(`Successfully loaded ${imageArray.length} images from ${path}`);
+              return imageArray;
             }
           }
         } catch (error) {
