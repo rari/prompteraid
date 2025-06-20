@@ -186,8 +186,10 @@ export default class GalleryView {
     // Update button IDs and maintain event delegation
     Array.from(stickyInputGroup.querySelectorAll('button')).forEach(button => {
       const originalId = button.id;
+      console.log('Processing sticky button with original ID:', originalId);
       if (buttonMap[originalId]) {
         button.id = buttonMap[originalId];
+        console.log('Mapped button ID from', originalId, 'to', buttonMap[originalId]);
         // Preserve styling classes
         button.className = origInputGroup.querySelector(`#${originalId}`).className;
         
@@ -473,45 +475,53 @@ export default class GalleryView {
 
   updateFavoritesToggle(showOnlyFavorites) {
     console.log('updateFavoritesToggle called with:', showOnlyFavorites);
+    
     // Update main button
     if (this.favoritesToggle) {
       const icon = this.favoritesToggle.querySelector('i');
-      console.log('Main favorites toggle icon:', icon);
+      console.log('Main favorites toggle found:', this.favoritesToggle);
       if (showOnlyFavorites) {
         this.favoritesToggle.classList.add('active');
         if (icon) {
           icon.className = 'fas fa-star';
-          console.log('Set main icon to filled star');
+          console.log('Main button set to filled star');
         }
       } else {
         this.favoritesToggle.classList.remove('active');
         if (icon) {
           icon.className = 'far fa-star';
-          console.log('Set main icon to outlined star');
+          console.log('Main button set to outlined star');
         }
       }
     }
     
     // Update sticky button if present
     const sticky = document.getElementById('sticky-action-bar');
+    console.log('Sticky action bar found:', sticky);
     if (sticky) {
       const stickyFavoritesBtn = sticky.querySelector('#sticky-favorites-toggle');
+      console.log('Sticky favorites button found:', stickyFavoritesBtn);
       if (stickyFavoritesBtn) {
         const stickyIcon = stickyFavoritesBtn.querySelector('i');
-        console.log('Sticky favorites toggle icon:', stickyIcon);
+        console.log('Sticky icon found:', stickyIcon);
         if (showOnlyFavorites) {
           stickyFavoritesBtn.classList.add('active');
           if (stickyIcon) {
             stickyIcon.className = 'fas fa-star';
-            console.log('Set sticky icon to filled star');
+            console.log('Sticky button set to filled star');
           }
         } else {
           stickyFavoritesBtn.classList.remove('active');
           if (stickyIcon) {
             stickyIcon.className = 'far fa-star';
-            console.log('Set sticky icon to outlined star');
+            console.log('Sticky button set to outlined star');
           }
         }
+      } else {
+        console.log('Sticky favorites button NOT found!');
+        // Let's see what buttons are actually in the sticky bar
+        const allStickyButtons = sticky.querySelectorAll('button');
+        console.log('All sticky buttons:', Array.from(allStickyButtons).map(btn => btn.id));
       }
     }
   }
@@ -673,14 +683,10 @@ export default class GalleryView {
   }
 
   bindFavoritesToggle(handler) {
-    console.log('Binding favorites toggle...');
     if (this.favoritesToggle) {
-      console.log('Main favorites toggle found:', this.favoritesToggle);
-      this.favoritesToggle.addEventListener('click', () => {
-        console.log('Main favorites toggle clicked');
+    this.favoritesToggle.addEventListener('click', () => {
         // Call the handler first to check if warning should be shown
         const shouldProceed = handler();
-        console.log('Handler result:', shouldProceed);
         
         // Only add bounce animation if the handler didn't show a warning
         if (shouldProceed !== false) {
@@ -691,8 +697,6 @@ export default class GalleryView {
           }, 600);
         }
       });
-    } else {
-      console.error('Main favorites toggle not found!');
     }
     
     // Also bind in sticky bar if present
@@ -700,12 +704,9 @@ export default class GalleryView {
     if (sticky) {
       const stickyFavoritesBtn = sticky.querySelector('#sticky-favorites-toggle');
       if (stickyFavoritesBtn) {
-        console.log('Sticky favorites toggle found:', stickyFavoritesBtn);
         stickyFavoritesBtn.addEventListener('click', () => {
-          console.log('Sticky favorites toggle clicked');
           // Call the handler first to check if warning should be shown
           const shouldProceed = handler();
-          console.log('Handler result:', shouldProceed);
           
           // Only add bounce animation if the handler didn't show a warning
           if (shouldProceed !== false) {
@@ -716,11 +717,7 @@ export default class GalleryView {
             }, 600);
           }
         });
-      } else {
-        console.error('Sticky favorites toggle not found!');
       }
-    } else {
-      console.log('Sticky action bar not found');
     }
   }
 
