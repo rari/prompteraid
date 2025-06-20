@@ -940,6 +940,16 @@ export default class GalleryView {
     };
     
     this.clearButton.addEventListener('click', () => {
+      // Check if there are any selected images before proceeding
+      const selectedImages = document.querySelectorAll('.gallery-item.selected');
+      const hasSelectedImages = selectedImages.length > 0;
+      
+      // If no images are selected, show warning and don't proceed
+      if (!hasSelectedImages) {
+        this.showNoSelectedWarning();
+        return; // Exit early, don't proceed with click behavior
+      }
+      
       this.clearButtonClickCount++;
       
       // Clear any existing timeout
