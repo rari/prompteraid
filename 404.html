@@ -221,26 +221,78 @@
         position: fixed;
         font-size: 1.5rem;
         animation: swim 15s linear infinite;
+        z-index: -1;
       }
       
-      .fish:nth-child(1) {
+      .fish-container .fish:nth-child(1) {
         top: 20%;
         left: -5%;
+        font-size: 1.5rem;
         animation-duration: 15s;
       }
       
-      .fish:nth-child(2) {
+      .fish-container .fish:nth-child(2) {
         top: 40%;
         left: -5%;
+        font-size: 1.2rem;
         animation-duration: 20s;
         animation-delay: 5s;
       }
       
-      .fish:nth-child(3) {
+      .fish-container .fish:nth-child(3) {
         top: 60%;
         left: -5%;
+        font-size: 1.8rem;
         animation-duration: 18s;
         animation-delay: 8s;
+      }
+      
+      .fish-container .fish:nth-child(4) {
+        top: 10%;
+        left: -5%;
+        font-size: 1rem;
+        animation-duration: 25s;
+        animation-delay: 2s;
+      }
+      
+      .fish-container .fish:nth-child(5) {
+        top: 30%;
+        left: -5%;
+        font-size: 1.6rem;
+        animation-duration: 16s;
+        animation-delay: 10s;
+      }
+      
+      .fish-container .fish:nth-child(6) {
+        top: 50%;
+        left: -5%;
+        font-size: 2.5rem;
+        animation-duration: 30s;
+        animation-delay: 1s;
+      }
+      
+      .fish-container .fish:nth-child(7) {
+        top: 70%;
+        left: -5%;
+        font-size: 2rem;
+        animation-duration: 14s;
+        animation-delay: 12s;
+      }
+      
+      .fish-container .fish:nth-child(8) {
+        top: 80%;
+        left: -5%;
+        font-size: 2.2rem;
+        animation-duration: 22s;
+        animation-delay: 6s;
+      }
+
+      .fish-container .fish:nth-child(9) {
+        top: 85%;
+        left: -5%;
+        font-size: 1.7rem;
+        animation-duration: 19s;
+        animation-delay: 3s;
       }
       
       @keyframes swim {
@@ -309,35 +361,12 @@
       }
     </style>
     
-    <!-- GitHub Pages SPA routing fix - delayed to show the cute 404 page first -->
+    <!-- GitHub Pages redirect - delayed to show the cute 404 page first -->
     <script type="text/javascript">
-      // Check if this is a direct 404 or a GitHub Pages SPA routing issue
-      function checkAndRedirect() {
-        // Get the path excluding the domain
-        var path = window.location.pathname;
-        
-        // If this is likely a GitHub Pages routing issue (not a direct 404 access)
-        if (path.indexOf('/_next/') !== -1 || path.indexOf('/api/') !== -1 || path.length > 1) {
-          console.log("Detected GitHub Pages routing issue, redirecting...");
-          
-          var pathSegmentsToKeep = 1;
-          var l = window.location;
-          
-          // Allow the page to be seen briefly before redirecting
-          setTimeout(function() {
-            l.replace(
-              l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-              l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-              l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-              (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-              l.hash
-            );
-          }, 2000); // Show the page for 2 seconds before redirecting
-        }
-      }
-      
-      // Run the check when the page loads
-      window.addEventListener('DOMContentLoaded', checkAndRedirect);
+      // After a delay, redirect users from a broken link back to the project repository.
+      setTimeout(function() {
+        window.location.replace("https://github.com/rari/prompteraid");
+      }, 5000); // Show the page for 5 seconds before redirecting
     </script>
   </head>
   <body>
@@ -346,9 +375,17 @@
     <div class="wave"></div>
     <div class="wave"></div>
     
-    <div class="fish">🐠</div>
-    <div class="fish">🐟</div>
-    <div class="fish">🐡</div>
+    <div class="fish-container">
+      <div class="fish">🐠</div>
+      <div class="fish">🐟</div>
+      <div class="fish">🐡</div>
+      <div class="fish">🦐</div>
+      <div class="fish">🦑</div>
+      <div class="fish">🐋</div>
+      <div class="fish">🐬</div>
+      <div class="fish">🦈</div>
+      <div class="fish">🐙</div>
+    </div>
     
     <div class="bubbles">
       <div class="bubble"></div>
