@@ -186,7 +186,7 @@ export default class GalleryView {
     stickyBtn.className = mainBtn.className;
     
     // Don't add event listeners for these buttons - they'll be handled by their bind methods
-    if (mainId === 'favorites-toggle' || mainId === 'show-selected-btn') {
+    if (mainId === 'favorites-toggle' || mainId === 'show-selected-btn' || mainId === 'copy-button') {
       console.log(`Skipping event listener for ${mainId} - will be handled by bind method`);
     } else {
       // Add event delegation for other buttons
@@ -267,7 +267,7 @@ export default class GalleryView {
             e.preventDefault();
             this.togglePreview();
           });
-        } else if (originalId === 'favorites-toggle' || originalId === 'show-selected-btn') {
+        } else if (originalId === 'favorites-toggle' || originalId === 'show-selected-btn' || originalId === 'copy-button') {
           // Don't add event listeners for these buttons here - they'll be handled by their bind methods
           console.log(`Skipping event listener for ${originalId} - will be handled by bind method`);
         } else {
