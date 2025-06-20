@@ -550,54 +550,57 @@ export default class GalleryView {
   updateFavoritesToggle(showOnlyFavorites) {
     console.log('updateFavoritesToggle called with:', showOnlyFavorites);
     
-    // Update main button
-    if (this.favoritesToggle) {
-      const icon = this.favoritesToggle.querySelector('i');
-      console.log('Main favorites toggle found:', this.favoritesToggle);
-      if (showOnlyFavorites) {
-        this.favoritesToggle.classList.add('active');
-        if (icon) {
-          icon.className = 'fas fa-star';
-          console.log('Main button set to filled star');
-        }
-      } else {
-        this.favoritesToggle.classList.remove('active');
-        if (icon) {
-          icon.className = 'far fa-star';
-          console.log('Main button set to outlined star');
-        }
-      }
-    }
-    
-    // Update sticky button if present
-    const sticky = document.getElementById('sticky-action-bar');
-    console.log('Sticky action bar found:', sticky);
-    if (sticky) {
-      const stickyFavoritesBtn = sticky.querySelector('#sticky-favorites-toggle');
-      console.log('Sticky favorites button found:', stickyFavoritesBtn);
-      if (stickyFavoritesBtn) {
-        const stickyIcon = stickyFavoritesBtn.querySelector('i');
-        console.log('Sticky icon found:', stickyIcon);
+    // Use a longer timeout to ensure this runs after the animation completes
+    setTimeout(() => {
+      // Update main button
+      if (this.favoritesToggle) {
+        const icon = this.favoritesToggle.querySelector('i');
+        console.log('Main favorites toggle found:', this.favoritesToggle);
         if (showOnlyFavorites) {
-          stickyFavoritesBtn.classList.add('active');
-          if (stickyIcon) {
-            stickyIcon.className = 'fas fa-star';
-            console.log('Sticky button set to filled star');
+          this.favoritesToggle.classList.add('active');
+          if (icon) {
+            icon.className = 'fas fa-star';
+            console.log('Main button set to filled star');
           }
         } else {
-          stickyFavoritesBtn.classList.remove('active');
-          if (stickyIcon) {
-            stickyIcon.className = 'far fa-star';
-            console.log('Sticky button set to outlined star');
+          this.favoritesToggle.classList.remove('active');
+          if (icon) {
+            icon.className = 'far fa-star';
+            console.log('Main button set to outlined star');
           }
         }
-      } else {
-        console.log('Sticky favorites button NOT found!');
-        // Let's see what buttons are actually in the sticky bar
-        const allStickyButtons = sticky.querySelectorAll('button');
-        console.log('All sticky buttons:', Array.from(allStickyButtons).map(btn => btn.id));
       }
-    }
+      
+      // Update sticky button if present
+      const sticky = document.getElementById('sticky-action-bar');
+      console.log('Sticky action bar found:', sticky);
+      if (sticky) {
+        const stickyFavoritesBtn = sticky.querySelector('#sticky-favorites-toggle');
+        console.log('Sticky favorites button found:', stickyFavoritesBtn);
+        if (stickyFavoritesBtn) {
+          const stickyIcon = stickyFavoritesBtn.querySelector('i');
+          console.log('Sticky icon found:', stickyIcon);
+          if (showOnlyFavorites) {
+            stickyFavoritesBtn.classList.add('active');
+            if (stickyIcon) {
+              stickyIcon.className = 'fas fa-star';
+              console.log('Sticky button set to filled star');
+            }
+          } else {
+            stickyFavoritesBtn.classList.remove('active');
+            if (stickyIcon) {
+              stickyIcon.className = 'far fa-star';
+              console.log('Sticky button set to outlined star');
+            }
+          }
+        } else {
+          console.log('Sticky favorites button NOT found!');
+          // Let's see what buttons are actually in the sticky bar
+          const allStickyButtons = sticky.querySelectorAll('button');
+          console.log('All sticky buttons:', Array.from(allStickyButtons).map(btn => btn.id));
+        }
+      }
+    }, 350); // Slightly longer than the animation duration (300ms)
   }
 
   bindImageClick(handler) {
@@ -777,14 +780,14 @@ export default class GalleryView {
   }
 
   bindFavoritesToggle(handler) {
-    const favoritesBtn = this.favoritesToggle;
+    const favoritesBtn = document.getElementById('favorites-toggle');
     const stickyFavoritesBtn = document.getElementById('sticky-favorites-toggle');
     
     function animateBothFavoritesButtons() {
       // Call the handler first to check if warning should be shown
       const shouldProceed = handler();
       
-      // Only animate if the handler didn't show a warning
+      // Only add animation if the handler didn't show a warning
       if (shouldProceed !== false) {
         // Animate main button
         if (favoritesBtn) {
@@ -860,53 +863,56 @@ export default class GalleryView {
   updateShowSelectedToggle(isActive) {
     console.log('updateShowSelectedToggle called with:', isActive);
     
-    const eyeBtn = document.getElementById('show-selected-btn');
-    console.log('Main eye button found:', eyeBtn);
-    if (eyeBtn) {
-      const icon = eyeBtn.querySelector('i');
-      if (isActive) {
-        eyeBtn.classList.add('active');
-        if (icon) {
-          icon.className = 'fas fa-eye';
-          console.log('Main button set to filled eye');
-        }
-      } else {
-        eyeBtn.classList.remove('active');
-        if (icon) {
-          icon.className = 'far fa-eye';
-          console.log('Main button set to outlined eye');
-        }
-      }
-    }
-    // Also update in sticky bar if present
-    const sticky = document.getElementById('sticky-action-bar');
-    console.log('Sticky action bar found for eye button:', sticky);
-    if (sticky) {
-      const stickyEyeBtn = sticky.querySelector('#sticky-show-selected-btn');
-      console.log('Sticky eye button found:', stickyEyeBtn);
-      if (stickyEyeBtn) {
-        const stickyIcon = stickyEyeBtn.querySelector('i');
-        console.log('Sticky eye icon found:', stickyIcon);
+    // Use a longer timeout to ensure this runs after the animation completes
+    setTimeout(() => {
+      const eyeBtn = document.getElementById('show-selected-btn');
+      console.log('Main eye button found:', eyeBtn);
+      if (eyeBtn) {
+        const icon = eyeBtn.querySelector('i');
         if (isActive) {
-          stickyEyeBtn.classList.add('active');
-          if (stickyIcon) {
-            stickyIcon.className = 'fas fa-eye';
-            console.log('Sticky button set to filled eye');
+          eyeBtn.classList.add('active');
+          if (icon) {
+            icon.className = 'fas fa-eye';
+            console.log('Main button set to filled eye');
           }
         } else {
-          stickyEyeBtn.classList.remove('active');
-          if (stickyIcon) {
-            stickyIcon.className = 'far fa-eye';
-            console.log('Sticky button set to outlined eye');
+          eyeBtn.classList.remove('active');
+          if (icon) {
+            icon.className = 'far fa-eye';
+            console.log('Main button set to outlined eye');
           }
         }
-      } else {
-        console.log('Sticky eye button NOT found!');
-        // Let's see what buttons are actually in the sticky bar
-        const allStickyButtons = sticky.querySelectorAll('button');
-        console.log('All sticky buttons for eye:', Array.from(allStickyButtons).map(btn => btn.id));
       }
-    }
+      // Also update in sticky bar if present
+      const sticky = document.getElementById('sticky-action-bar');
+      console.log('Sticky action bar found for eye button:', sticky);
+      if (sticky) {
+        const stickyEyeBtn = sticky.querySelector('#sticky-show-selected-btn');
+        console.log('Sticky eye button found:', stickyEyeBtn);
+        if (stickyEyeBtn) {
+          const stickyIcon = stickyEyeBtn.querySelector('i');
+          console.log('Sticky eye icon found:', stickyIcon);
+          if (isActive) {
+            stickyEyeBtn.classList.add('active');
+            if (stickyIcon) {
+              stickyIcon.className = 'fas fa-eye';
+              console.log('Sticky button set to filled eye');
+            }
+          } else {
+            stickyEyeBtn.classList.remove('active');
+            if (stickyIcon) {
+              stickyIcon.className = 'far fa-eye';
+              console.log('Sticky button set to outlined eye');
+            }
+          }
+        } else {
+          console.log('Sticky eye button NOT found!');
+          // Let's see what buttons are actually in the sticky bar
+          const allStickyButtons = sticky.querySelectorAll('button');
+          console.log('All sticky buttons for eye:', Array.from(allStickyButtons).map(btn => btn.id));
+        }
+      }
+    }, 350); // Slightly longer than the animation duration (300ms)
   }
 
   bindShowSelectedToggle(handler) {
@@ -917,7 +923,7 @@ export default class GalleryView {
       // Call the handler first to check if warning should be shown
       const shouldProceed = handler();
       
-      // Only animate if the handler didn't show a warning
+      // Only add animation if the handler didn't show a warning
       if (shouldProceed !== false) {
         // Animate main button
         if (eyeBtn) {
