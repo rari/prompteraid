@@ -32,6 +32,28 @@ export default class GalleryController {
   }
 
   renderGallery() {
+    // Corner case: both filters are on, but result is empty
+    if (this.model.showOnlyFavorites && this.showOnlySelected) {
+      const favoritedImages = this.model.getVisibleImages();
+      const visibleImages = favoritedImages.filter(img => this.model.selectedImages.has(img.id));
+
+      if (visibleImages.length === 0) {
+        this.view.showInfoNotification("No images match both 'favorites' and 'selected' filters. Both views have been disabled.");
+        
+        // Disable both filters
+        this.model.toggleFavoritesOnly(); // it will be true, so this toggles to false
+        this.showOnlySelected = false;
+
+        // Update UI
+        this.view.updateFavoritesToggle(false);
+        this.view.updateShowSelectedToggle(false);
+
+        // Re-render with filters off
+        this.renderGallery();
+        return; // Stop current render
+      }
+    }
+
     let visibleImages = this.model.getVisibleImages();
     if (this.showOnlySelected) {
       visibleImages = visibleImages.filter(img => this.model.selectedImages.has(img.id));
