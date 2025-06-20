@@ -135,59 +135,6 @@ export default class GalleryView {
       stickyRefreshBtn.addEventListener('click', spinBothRefreshButtons);
     }
 
-    // Initialize clipboard button
-    const clipboardBtn = document.getElementById('copy-button');
-    const stickyCopyBtn = document.getElementById('sticky-copy-button');
-    
-    function animateBothCopyButtons() {
-      // Animate main button
-      if (clipboardBtn) {
-        clipboardBtn.classList.add('active');
-        const icon = clipboardBtn.querySelector('i');
-        if (icon) {
-          icon.className = 'fas fa-clipboard';
-        }
-      }
-      
-      // Animate sticky button
-      if (stickyCopyBtn) {
-        stickyCopyBtn.classList.add('active');
-        const stickyIcon = stickyCopyBtn.querySelector('i');
-        if (stickyIcon) {
-          stickyIcon.className = 'fas fa-clipboard';
-        }
-      }
-      
-      // Call the handler
-      handler();
-      
-      // Remove active class and change back to outline icon after animation
-      setTimeout(() => {
-        if (clipboardBtn) {
-          clipboardBtn.classList.remove('active');
-          const icon = clipboardBtn.querySelector('i');
-          if (icon) {
-            icon.className = 'far fa-clipboard';
-          }
-        }
-        if (stickyCopyBtn) {
-          stickyCopyBtn.classList.remove('active');
-          const stickyIcon = stickyCopyBtn.querySelector('i');
-          if (stickyIcon) {
-            stickyIcon.className = 'far fa-clipboard';
-          }
-        }
-      }, 300);
-    }
-    
-    if (clipboardBtn) {
-      clipboardBtn.addEventListener('click', animateBothCopyButtons);
-    }
-    
-    if (stickyCopyBtn) {
-      stickyCopyBtn.addEventListener('click', animateBothCopyButtons);
-    }
-
     // Handle the click event for the back-to-top button
     if (this.backToTopButton) {
       this.backToTopButton.addEventListener('click', () => {
