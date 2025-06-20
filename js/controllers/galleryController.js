@@ -1,6 +1,36 @@
 import ImageModel from '../models/imageModel.js';
 import GalleryView from '../views/galleryView.js';
 
+/**
+ * PrompterAid Gallery Controller
+ * 
+ * Controller Role:
+ * This controller implements the MVC pattern's Controller layer, serving as the
+ * intermediary between the View (UI) and Model (data/business logic). It manages
+ * user interactions, coordinates data flow, and maintains application state.
+ * 
+ * Primary Responsibilities:
+ * - Orchestrates communication between View and Model components
+ * - Handles user interaction logic and input validation
+ * - Manages application state transitions
+ * - Coordinates UI updates based on data changes
+ * - Implements business rules and workflow logic
+ * 
+ * Key Features Managed:
+ * - Image selection and deselection workflow
+ * - Favorites system with persistence
+ * - Filter management (favorites-only, selected-only views)
+ * - Prompt generation and clipboard integration
+ * - Keyboard shortcut handling
+ * - Error handling and user feedback
+ * 
+ * State Management:
+ * - Tracks selected images and their visual states
+ * - Manages filter states (showOnlySelected, showOnlyFavorites)
+ * - Coordinates prompt generation and updates
+ * - Handles mode switching (Discord vs Website)
+ */
+
 export default class GalleryController {
   constructor() {
     this.model = new ImageModel();
@@ -31,6 +61,29 @@ export default class GalleryController {
     });
   }
 
+  /**
+   * Renders the gallery with current filter states and handles edge cases
+   * 
+   * This method orchestrates the display of images based on current filter states
+   * (favorites-only, selected-only) and implements intelligent fallback behavior
+   * when filters result in empty results.
+   * 
+   * Filter Logic:
+   * 1. Favorites filter: Shows only favorited images (handled by model)
+   * 2. Selected filter: Shows only currently selected images (handled by controller)
+   * 3. Combined filters: Applies both filters sequentially
+   * 
+   * Edge Case Handling:
+   * - When both filters are active but yield no results, automatically disables
+   *   both filters and shows a user-friendly notification
+   * - Prevents users from getting stuck with an empty gallery
+   * - Maintains UI state consistency across filter changes
+   * 
+   * Performance Considerations:
+   * - Filters are applied in order (favorites first, then selected)
+   * - Only re-renders when necessary
+   * - Uses efficient data structures (Set, Map) for lookups
+   */
   renderGallery() {
     // Corner case: both filters are on, but result is empty
     if (this.model.showOnlyFavorites && this.showOnlySelected) {

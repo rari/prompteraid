@@ -1,27 +1,41 @@
-/*
- * PrompterAid JavaScript Architecture
+/**
+ * PrompterAid Gallery View Component
  * 
- * Design Patterns:
+ * Architecture Overview:
+ * This view component implements the MVC pattern's View layer, responsible for:
+ * - DOM manipulation and UI state management
+ * - Event handling and user interaction
+ * - Visual feedback and animations
+ * - Responsive design with sticky navigation
+ * 
+ * Design Patterns Implemented:
  * 1. View Class Pattern
- *    - Encapsulates DOM manipulation and event handling
+ *    - Encapsulates all DOM manipulation logic
  *    - Maintains single source of truth for UI state
- *    - Uses event delegation for efficient handling
+ *    - Provides clean interface for controller communication
  * 
- * 2. Event Flow
- *    - Main menu buttons are primary event sources
- *    - Sticky header delegates events to main menu
- *    - State changes propagate from main menu outward
+ * 2. Event Delegation Pattern
+ *    - Main menu buttons serve as primary event sources
+ *    - Sticky header delegates events to main menu for consistency
+ *    - Reduces memory footprint and improves performance
  * 
- * 3. Component Lifecycle
- *    - Initialization: Sets up event listeners and clones menus
- *    - Runtime: Handles scroll events and button interactions
- *    - Cleanup: Removes event listeners on destruction
+ * 3. Component Lifecycle Management
+ *    - Initialization: Sets up event listeners, clones menus, establishes state
+ *    - Runtime: Handles scroll events, button interactions, state updates
+ *    - Cleanup: Properly removes event listeners to prevent memory leaks
  * 
- * AI Maintenance Guidelines:
- * - Maintain event delegation pattern
- * - Keep state management centralized
- * - Preserve button ID conventions
- * - Handle all error cases
+ * Key Features:
+ * - Dual navigation system (main + sticky header)
+ * - Real-time visual feedback for user actions
+ * - Responsive design with scroll-based UI updates
+ * - Accessibility-compliant keyboard navigation
+ * 
+ * Maintenance Guidelines:
+ * - Preserve event delegation pattern for consistency
+ * - Maintain centralized state management approach
+ * - Follow established button ID conventions (main: 'button-id', sticky: 'sticky-button-id')
+ * - Implement comprehensive error handling for all user interactions
+ * - Ensure all animations are performant and accessible
  */
 
 export default class GalleryView {
@@ -216,11 +230,28 @@ export default class GalleryView {
     }
   }
 
-  /*
-   * Sticky Header Implementation
-   * - Clones main menu for consistency
-   * - Updates button IDs with 'sticky-' prefix
-   * - Maintains event delegation to main menu
+  /**
+   * Creates and configures the sticky action bar for responsive navigation
+   * 
+   * This method implements a dual navigation system that provides consistent
+   * access to all controls when the user scrolls away from the main menu.
+   * The sticky bar is a clone of the main menu with modified IDs and event
+   * delegation to maintain state consistency.
+   * 
+   * Implementation Details:
+   * - Clones the main input group to ensure visual consistency
+   * - Maps button IDs with 'sticky-' prefix for unique identification
+   * - Implements event delegation for most buttons to maintain single source of truth
+   * - Provides direct event handling for preview toggle (independent functionality)
+   * - Excludes certain buttons from delegation to prevent conflicts with bind methods
+   * - Ensures the show-selected button exists in both menus
+   * - Synchronizes prompt input between main and sticky menus
+   * 
+   * Event Delegation Strategy:
+   * - Most buttons delegate clicks to their main menu counterparts
+   * - Preview toggle has independent functionality for responsive behavior
+   * - Favorites, show-selected, and copy buttons are handled by their respective bind methods
+   * - This prevents duplicate event listeners and maintains state consistency
    */
   addStickyActionBar() {
     if (document.getElementById('sticky-action-bar')) return;

@@ -1,3 +1,30 @@
+/**
+ * PrompterAid Application Controller
+ * 
+ * Global Application Management:
+ * This controller manages application-wide features and settings that are
+ * independent of the main gallery functionality. It handles user preferences,
+ * theme management, and global UI behaviors.
+ * 
+ * Primary Responsibilities:
+ * - Theme management (dark/light mode) with system preference detection
+ * - User preference persistence using localStorage
+ * - Image protection (prevents right-click saving, drag & drop)
+ * - Information panel management
+ * - Global UI state initialization
+ * 
+ * Key Features:
+ * - Automatic theme detection and switching
+ * - Persistent user preferences across sessions
+ * - Content protection for AI-generated images
+ * - Responsive UI state management
+ * - Error handling for storage operations
+ * 
+ * Storage Strategy:
+ * - Uses prefixed localStorage keys to avoid conflicts
+ * - Implements graceful fallbacks for storage errors
+ * - Maintains backward compatibility with existing preferences
+ */
 export default class AppController {
   constructor() {
     this.init();

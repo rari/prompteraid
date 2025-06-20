@@ -1,8 +1,29 @@
 import AppController from './controllers/appController.js';
 import GalleryController from './controllers/galleryController.js';
 
-// GitHub Pages compatibility helper
-// Detect if we're on GitHub Pages and handle path issues
+/**
+ * PrompterAid Application Entry Point
+ * 
+ * Application Initialization:
+ * This module serves as the main entry point for the PrompterAid application.
+ * It handles application startup, GitHub Pages compatibility, and controller
+ * initialization in the proper sequence.
+ * 
+ * GitHub Pages Compatibility:
+ * Due to GitHub Pages serving from a subdirectory (e.g., /username/repo/),
+ * relative paths need special handling. This module provides automatic
+ * path resolution and error recovery for asset loading issues.
+ */
+
+/**
+ * Sets up GitHub Pages compatibility for proper asset loading
+ * 
+ * Problem: GitHub Pages serves sites from subdirectories (e.g., /username/repo/),
+ * which can cause relative paths to break when they start with '/'.
+ * 
+ * Solution: Intercepts failed resource loads and attempts to fix paths
+ * by prepending the repository base path.
+ */
 function setupGitHubPagesCompat() {
   // Check if we're on GitHub Pages (*.github.io domain)
   const isGitHubPages = window.location.hostname.includes('github.io');
@@ -37,11 +58,19 @@ function setupGitHubPagesCompat() {
   }
 }
 
+/**
+ * Application initialization sequence
+ * 
+ * Ensures proper setup order:
+ * 1. GitHub Pages compatibility (if needed)
+ * 2. App controller (theme, settings, global features)
+ * 3. Gallery controller (main application functionality)
+ */
 document.addEventListener('DOMContentLoaded', () => {
   // Setup GitHub Pages compatibility
   setupGitHubPagesCompat();
   
-  // Initialize controllers
-  new AppController();
-  new GalleryController();
+  // Initialize controllers in dependency order
+  new AppController();  // Global app features (theme, settings)
+  new GalleryController(); // Main application functionality
 });

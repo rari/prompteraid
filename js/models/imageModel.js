@@ -1,3 +1,34 @@
+/**
+ * PrompterAid Image Model
+ * 
+ * Model Role:
+ * This model implements the MVC pattern's Model layer, responsible for data management,
+ * business logic, and persistence. It serves as the single source of truth for all
+ * application data and provides a clean interface for data operations.
+ * 
+ * Data Structures:
+ * - images: Array of image objects with metadata (id, sref, path)
+ * - selectedImages: Map tracking selected images with color indices
+ * - favoriteImages: Set of favorited image IDs for persistence
+ * - showOnlyFavorites: Boolean flag for filter state
+ * - basePrompt: User's base prompt text
+ * - isDiscordMode: Boolean flag for output format preference
+ * 
+ * Primary Responsibilities:
+ * - Image data loading and management
+ * - Selection state tracking with visual color coding
+ * - Favorites system with localStorage persistence
+ * - Filter logic for view modes
+ * - Prompt generation with format options
+ * - Data persistence and error handling
+ * 
+ * Business Logic:
+ * - Handles GitHub Pages path resolution for deployment
+ * - Implements Fisher-Yates shuffle for image randomization
+ * - Manages color cycling for multiple selections
+ * - Coordinates prompt generation with selected styles
+ * - Provides fallback mechanisms for data loading
+ */
 export default class ImageModel {
   constructor() {
     this.images = [];
@@ -86,6 +117,33 @@ export default class ImageModel {
     }
   }
 
+  /**
+   * Loads image file paths with robust fallback strategy for different deployment environments
+   * 
+   * This method implements a multi-path resolution strategy to handle various deployment
+   * scenarios, particularly GitHub Pages which serves content from subdirectories.
+   * 
+   * Path Resolution Strategy:
+   * 1. Local development: 'api/images.json' (relative to current directory)
+   * 2. Standard deployment: './api/images.json' (explicit relative path)
+   * 3. GitHub Pages: '/username/repo/api/images.json' (repository-specific path)
+   * 
+   * Data Format Handling:
+   * - Supports both direct array format: ['image1.jpg', 'image2.jpg']
+   * - Supports object format: { images: ['image1.jpg', 'image2.jpg'] }
+   * - Handles BOM (Byte Order Mark) removal for UTF-8 files
+   * - Validates data structure before processing
+   * 
+   * Error Handling:
+   * - Graceful degradation when individual paths fail
+   * - Comprehensive logging for debugging deployment issues
+   * - Returns empty array as fallback to prevent application crashes
+   * 
+   * Performance Considerations:
+   * - Sequential path attempts to minimize unnecessary requests
+   * - Early termination on successful load
+   * - Efficient JSON parsing with error boundaries
+   */
   async getImageFiles() {
     try {
       // Create an array of possible paths to try
@@ -170,6 +228,34 @@ export default class ImageModel {
       .filter(sref => sref !== null);
   }
 
+  /**
+   * Generates the final prompt string with selected style references and format options
+   * 
+   * This method constructs the complete prompt that users can copy and paste into
+   * AI image generation tools like NijiJourney or MidJourney.
+   * 
+   * Prompt Structure:
+   * - Base prompt: User's custom text input
+   * - Style references: Selected --sref codes joined with spaces
+   * - Model specification: --niji 6 for NijiJourney 6 compatibility
+   * - Format prefix: Optional "/imagine prompt:" for Discord bots
+   * 
+   * Format Modes:
+   * - Discord Mode: Includes "/imagine prompt:" prefix for direct bot usage
+   * - Website Mode: Clean format without prefix for web interfaces
+   * 
+   * Style Reference Handling:
+   * - Extracts sref codes from selected image filenames
+   * - Joins multiple references with spaces
+   * - Omits style references section if no images are selected
+   * - Maintains proper spacing and formatting
+   * 
+   * Output Examples:
+   * - Discord: "/imagine prompt: beautiful mermaid --niji 6 --sref style1 style2"
+   * - Website: "beautiful mermaid --niji 6 --sref style1 style2"
+   * 
+   * @returns {string} The complete formatted prompt ready for use
+   */
   generateFinalPrompt() {
     const selectedSrefs = this.getSelectedSrefs();
     const srefsString = selectedSrefs.length > 0 ? `--sref ${selectedSrefs.join(' ')}` : '';
