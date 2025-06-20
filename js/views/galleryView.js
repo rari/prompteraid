@@ -116,13 +116,20 @@ export default class GalleryView {
 
     // Initialize refresh button
     const refreshBtn = document.getElementById('refresh-button');
+    const stickyRefreshBtn = document.getElementById('sticky-refresh-button');
+    function spinBothRefreshButtons() {
+      if (refreshBtn) refreshBtn.classList.add('spinning');
+      if (stickyRefreshBtn) stickyRefreshBtn.classList.add('spinning');
+      setTimeout(() => {
+        if (refreshBtn) refreshBtn.classList.remove('spinning');
+        if (stickyRefreshBtn) stickyRefreshBtn.classList.remove('spinning');
+      }, 600);
+    }
     if (refreshBtn) {
-      refreshBtn.addEventListener('click', () => {
-        refreshBtn.classList.add('spinning');
-        setTimeout(() => {
-          refreshBtn.classList.remove('spinning');
-        }, 800);
-      });
+      refreshBtn.addEventListener('click', spinBothRefreshButtons);
+    }
+    if (stickyRefreshBtn) {
+      stickyRefreshBtn.addEventListener('click', spinBothRefreshButtons);
     }
 
     // Initialize clipboard button
