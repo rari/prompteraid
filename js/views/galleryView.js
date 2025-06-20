@@ -746,38 +746,53 @@ export default class GalleryView {
   }
 
   updateShowSelectedToggle(isActive) {
+    console.log('updateShowSelectedToggle called with:', isActive);
+    
     const eyeBtn = document.getElementById('show-selected-btn');
+    console.log('Main eye button found:', eyeBtn);
     if (eyeBtn) {
       const icon = eyeBtn.querySelector('i');
       if (isActive) {
         eyeBtn.classList.add('active');
         if (icon) {
           icon.className = 'fas fa-eye';
+          console.log('Main button set to filled eye');
         }
       } else {
         eyeBtn.classList.remove('active');
         if (icon) {
           icon.className = 'far fa-eye';
+          console.log('Main button set to outlined eye');
         }
       }
     }
     // Also update in sticky bar if present
     const sticky = document.getElementById('sticky-action-bar');
+    console.log('Sticky action bar found for eye button:', sticky);
     if (sticky) {
-      const stickyEyeBtn = sticky.querySelector('#show-selected-btn');
+      const stickyEyeBtn = sticky.querySelector('#sticky-show-selected-btn');
+      console.log('Sticky eye button found:', stickyEyeBtn);
       if (stickyEyeBtn) {
         const stickyIcon = stickyEyeBtn.querySelector('i');
+        console.log('Sticky eye icon found:', stickyIcon);
         if (isActive) {
           stickyEyeBtn.classList.add('active');
           if (stickyIcon) {
             stickyIcon.className = 'fas fa-eye';
+            console.log('Sticky button set to filled eye');
           }
         } else {
           stickyEyeBtn.classList.remove('active');
           if (stickyIcon) {
             stickyIcon.className = 'far fa-eye';
+            console.log('Sticky button set to outlined eye');
           }
         }
+      } else {
+        console.log('Sticky eye button NOT found!');
+        // Let's see what buttons are actually in the sticky bar
+        const allStickyButtons = sticky.querySelectorAll('button');
+        console.log('All sticky buttons for eye:', Array.from(allStickyButtons).map(btn => btn.id));
       }
     }
   }
@@ -797,7 +812,7 @@ export default class GalleryView {
     // Also bind in sticky bar if present
     const sticky = document.getElementById('sticky-action-bar');
     if (sticky) {
-      const stickyEyeBtn = sticky.querySelector('#show-selected-btn');
+      const stickyEyeBtn = sticky.querySelector('#sticky-show-selected-btn');
       if (stickyEyeBtn) {
         stickyEyeBtn.addEventListener('click', () => {
           // Call the handler first to check if warning should be shown
