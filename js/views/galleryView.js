@@ -123,7 +123,7 @@ export default class GalleryView {
       setTimeout(() => {
         if (refreshBtn) refreshBtn.classList.remove('spinning');
         if (stickyRefreshBtn) stickyRefreshBtn.classList.remove('spinning');
-      }, 200);
+      }, 600);
     }
     if (refreshBtn) {
       refreshBtn.addEventListener('click', spinBothRefreshButtons);

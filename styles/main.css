@@ -601,7 +601,7 @@ a:hover {
 }
 
 .input-group .button-refresh.spinning i {
-  animation: spin-once 0.2s ease-in-out;
+  animation: spin-once 0.6s ease-in-out;
 }
 
 .input-group .button-star i {
