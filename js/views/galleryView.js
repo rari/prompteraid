@@ -917,15 +917,11 @@ export default class GalleryView {
     const applyFirstClickState = (button) => {
       // Just add shake animation on first click, don't change icon
       button.classList.add('shake-animation');
-      
-      // Remove shake animation after it completes
-      setTimeout(() => {
-        button.classList.remove('shake-animation');
-      }, 500);
     };
     
     const applySecondClickState = (button) => {
-      // Change to solid icon on second click (no shake animation)
+      // Remove shake animation and change to solid icon on second click
+      button.classList.remove('shake-animation');
       const icon = button.querySelector('i');
       if (icon) {
         icon.className = 'fas fa-trash-can';
@@ -934,6 +930,8 @@ export default class GalleryView {
     };
     
     const resetButtonState = (button) => {
+      // Remove shake animation and reset icon
+      button.classList.remove('shake-animation');
       const icon = button.querySelector('i');
       if (icon) {
         icon.className = 'far fa-trash-can';
@@ -949,7 +947,7 @@ export default class GalleryView {
         clearTimeout(this.clearButtonTimeout);
       }
       
-      // First click - just shake the icon
+      // First click - just shake the icon, don't execute handler
       if (this.clearButtonClickCount === 1) {
         applyFirstClickState(this.clearButton);
         
@@ -994,7 +992,7 @@ export default class GalleryView {
         
         // Execute the clear action after a brief delay to show the filled icon
         setTimeout(() => {
-          handler();
+          handler(); // Only execute handler on second click
           resetButtonState(this.clearButton);
           
           // Also reset sticky bar button
