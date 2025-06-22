@@ -61,7 +61,7 @@
 
   <link rel="stylesheet" href="styles/main.css">
   <link rel="stylesheet" href="styles/no-hover.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -164,7 +164,7 @@
             </div>
 
             <div class="info-section how-to-use-section">
-              <h4>How to Use</h4>
+              <h4>How to use PrompterAid</h4>
               <ul>
                 <li>Enter your base prompt in the text field.</li>
                 <li>Click one or more images to select their styles.</li>
@@ -182,6 +182,21 @@
               <p>Both bots and websites can accept the same <code>--sref</code> and <code>--niji 6</code> parameters!</p>
             </div>
 
+            <div class="info-section sref-guide-section">
+              <h4>How to Use Style References</h4>
+              <p>An <code>--sref</code> code is a unique numeric ID that points to a predefined visual style stored by NijiJourney controlling the look, mood, and aesthetic of an image (like color, lighting, or composition) without needing an image upload.</p>
+              <p>The code represents a specific direction within MidJourney's multidimensional style space. Think of your prompt as starting at the center of a sphere. Each style reference is a vector—an arrow—pointing outward toward a particular visual aesthetic.</p>
+              <p>The <code>--sw</code> parameter controls how far along that vector your prompt travels, adjusting the strength of the style influence.</p>
+              
+              <h5>Advanced Options:</h5>
+              <ul>
+                <li><strong>Multiple styles:</strong> Apply more than one style by listing multiple <code>--sref</code> codes to blend their visual influences.</li>
+                <li><strong>Weighted styles:</strong> Add <code>::weight</code> to each <code>--sref</code> code to control how strongly each one affects the output.</li>
+                <li><strong>Style strength (0–1000):</strong> Use <code>--sw</code> to adjust the overall intensity of the style reference's influence on the image.</li>
+              </ul>
+              <p><a href="https://docs.midjourney.com/hc/en-us/articles/32180011136653-Style-Reference" target="_blank">Learn more about this topic in the official documentation.</a></p>
+            </div>
+
             <div class="info-section tool-guide-section">
               <h4>Menu Tools</h4>
               <ul class="tool-guide-list">
@@ -189,7 +204,7 @@
                 <li><i class="fas fa-sync-alt menu-icon-style"></i><div><strong>Refresh:</strong> Shuffle the order of all images and randomize their starting view.</div></li>
                 <li><i class="far fa-star menu-icon-style"></i><div><strong>Favorites View:</strong> Show only your starred images.</div></li>
                 <li><i class="far fa-eye menu-icon-style"></i><div><strong>Selected View:</strong> Show only your currently selected images.</div></li>
-                <li><i class="fa-solid fa-magnifying-glass menu-icon-style"></i><div><strong>Search:</strong> Search for images by their number (1-635).</div></li>
+                <li><i class="fa-solid fa-magnifying-glass menu-icon-style"></i><div><strong>Search:</strong> Search for images by their number.</div></li>
                 <li><i class="far fa-lightbulb menu-icon-style"></i><div><strong>Randomize:</strong> Randomly select an unselected image.</div></li>
                 <li><i class="far fa-clipboard menu-icon-style"></i><div><strong>Copy:</strong> Copy the final generated prompt to your clipboard.</div></li>
               </ul>
@@ -240,6 +255,7 @@
                 <li>Try combining complementary styles for unique results.</li>
                 <li>Toggle dark mode for better nighttime viewing.</li>
                 <li>You can close this info menu by clicking on the colorful bar at the top of it.</li>
+                <li>Keep prompts focused on <strong>subject</strong>, not style. Let <code>--sref</code> handle the visual tone.</li>
               </ul>
             </div>
           </div>
@@ -316,23 +332,58 @@
       </div>
     </main>
     
-    <footer class="site-footer">
+    <footer class="site-footer modern-footer">
+      <div class="footer-wave">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+          <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+          <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+        </svg>
+      </div>
+      
       <div class="footer-content">
-        <div class="footer-subtitle">
-          Visual reference tool for NijiJourney 6
+        <div class="footer-main">
+          <div class="footer-brand-section">
+            <div class="footer-brand">
+              <div class="footer-logo-container">
+                <span class="footer-logo">🧜‍♀️</span>
+                <div class="logo-glow"></div>
+              </div>
+              <div class="brand-text">
+                <h3 class="footer-title">PrompterAid</h3>
+                <p class="footer-subtitle">Visual reference tool for NijiJourney 6</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="footer-links-section">
+            <div class="social-links">
+              <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram">
+                <i class="fa-brands fa-instagram"></i>
+                <span class="social-label">Instagram</span>
+              </a>
+              <a href="https://www.threads.net/@jennajuffuffles/" target="_blank" rel="noopener noreferrer" class="social-link" title="Threads">
+                <i class="fa-brands fa-threads"></i>
+                <span class="social-label">Threads</span>
+              </a>
+              <a href="https://shop.jennajuffuffles.com/" target="_blank" rel="noopener noreferrer" class="social-link" title="Shop">
+                <i class="fa-solid fa-shopping-bag"></i>
+                <span class="social-label">Shop</span>
+              </a>
+              <a href="mailto:jenna.juffuffles+promptermaid@gmail.com" class="social-link" title="Email">
+                <i class="fa-solid fa-envelope"></i>
+                <span class="social-label">Email</span>
+              </a>
+            </div>
+          </div>
         </div>
         
-        <div class="footer-links">
-          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="https://www.threads.com/@jennajuffuffles/" target="_blank" rel="noopener noreferrer" class="social-link">
-            <i class="fa-brands fa-threads"></i>
-          </a>
-        </div>
-        
-        <div class="footer-credit">
-          Created by <a href="http://jennajuffuffles.com/" target="_blank" rel="noopener noreferrer" class="creator-link">JennaJuffuffles</a> using <a href="http://cursor.com/" target="_blank" rel="noopener noreferrer" class="tool-link">Cursor</a>
+        <div class="footer-bottom">
+          <div class="footer-credit">
+            <span>Created with ❤️ by <a href="http://jennajuffuffles.com/" target="_blank" rel="noopener noreferrer" class="creator-link">JennaJuffuffles</a></span>
+            <span class="footer-divider">•</span>
+            <span>Powered by <a href="http://cursor.com/" target="_blank" rel="noopener noreferrer" class="tool-link">Cursor</a></span>
+          </div>
         </div>
       </div>
     </footer>

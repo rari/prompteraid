@@ -441,44 +441,24 @@ export default class GalleryController {
     const searchContainer = document.querySelector('.search-container');
     const searchButton = document.getElementById('search-button');
     const stickySearchButton = document.getElementById('sticky-search-button');
-    
-    if (searchContainer) {
-      const isHidden = searchContainer.classList.contains('hidden');
-      
-      // Toggle search container visibility
-      searchContainer.classList.toggle('hidden', !isHidden);
-      
-      // Update button states
-      if (isHidden) {
-        // Search is being activated
-        searchButton?.classList.add('active');
-        stickySearchButton?.classList.add('active');
-        
-        // Update icons to magnifying-glass-plus (active)
-        const searchIcon = searchButton?.querySelector('i');
-        const stickySearchIcon = stickySearchButton?.querySelector('i');
-        if (searchIcon) searchIcon.className = 'fa-solid fa-magnifying-glass-plus';
-        if (stickySearchIcon) stickySearchIcon.className = 'fa-solid fa-magnifying-glass-plus';
-        
-        // Focus the search input
-        const searchInput = document.getElementById('search-input');
-        if (searchInput) {
-          setTimeout(() => searchInput.focus(), 100);
-        }
-      } else {
-        // Search is being deactivated
-        searchButton?.classList.remove('active');
-        stickySearchButton?.classList.remove('active');
-        
-        // Update icons to magnifying-glass (inactive)
-        const searchIcon = searchButton?.querySelector('i');
-        const stickySearchIcon = stickySearchButton?.querySelector('i');
-        if (searchIcon) searchIcon.className = 'fa-solid fa-magnifying-glass';
-        if (stickySearchIcon) stickySearchIcon.className = 'fa-solid fa-magnifying-glass';
-        
-        // Clear search
-        this.performSearch(null);
-      }
+
+    const isNowHidden = searchContainer.classList.toggle('hidden');
+
+    // Sync active state on both buttons
+    searchButton.classList.toggle('active', !isNowHidden);
+    if (stickySearchButton) {
+      stickySearchButton.classList.toggle('active', !isNowHidden);
+    }
+
+    if (isNowHidden) {
+      // If we're closing the search, clear the search and re-render
+      this.searchNumber = null;
+      document.getElementById('search-input').value = '';
+      this.renderGallery();
+    } else {
+      // If we're opening the search, scroll to the top and focus the input
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('search-input').focus();
     }
   }
   
@@ -487,16 +467,16 @@ export default class GalleryController {
    * @param {number|null} searchNumber - The number to search for, or null to clear search
    */
   performSearch(searchNumber) {
-    this.searchNumber = searchNumber;
+    this.searchNumber = searchNumber.trim();
     
-    if (searchNumber === null || searchNumber === '') {
+    if (this.searchNumber === null || this.searchNumber === '') {
       // Clear search - show all images
       this.renderGallery();
       return;
     }
     
     // Convert to string for searching
-    const searchStr = searchNumber.toString();
+    const searchStr = this.searchNumber.toString();
     if (searchStr.trim() === '') {
       this.renderGallery();
       return;

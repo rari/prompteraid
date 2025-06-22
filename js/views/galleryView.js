@@ -1475,19 +1475,14 @@ export default class GalleryView {
   }
 
   bindSearchButton(handler) {
-    const searchBtn = document.getElementById('search-button');
-    const stickySearchBtn = document.getElementById('sticky-search-button');
-    
-    function handleSearchButtonClick() {
-      handler();
+    const searchButton = document.getElementById('search-button');
+    const stickySearchButton = document.getElementById('sticky-search-button');
+
+    if (searchButton) {
+      searchButton.addEventListener('click', handler);
     }
-    
-    if (searchBtn) {
-      searchBtn.addEventListener('click', handleSearchButtonClick);
-    }
-    
-    if (stickySearchBtn) {
-      stickySearchBtn.addEventListener('click', handleSearchButtonClick);
+    if (stickySearchButton) {
+      stickySearchButton.addEventListener('click', handler);
     }
   }
   
