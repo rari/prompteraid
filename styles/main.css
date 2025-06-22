@@ -259,6 +259,15 @@ body {
   100% { background-position: 0% 0%; }
 }
 
+@keyframes chevron-gradient-shift {
+  0% { background-position: 0% 50%; }
+  20% { background-position: 100% 50%; }
+  40% { background-position: 100% 100%; }
+  60% { background-position: 0% 100%; }
+  80% { background-position: 50% 0%; }
+  100% { background-position: 0% 50%; }
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -472,7 +481,7 @@ a:hover {
 #prompt-input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(var(--primary), 0.2);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 /* Sticky prompt input styling */
@@ -491,7 +500,7 @@ a:hover {
 #sticky-prompt-input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(var(--primary), 0.2);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 /* ===== BUTTONS ===== */
@@ -531,8 +540,9 @@ a:hover {
 .input-group .button-refresh i { color: var(--neon-orange); } /* State changes */
 .input-group .button-star i { color: var(--neon-yellow); }   /* Favorites/bookmarking */
 .input-group .button-eye i { color: var(--neon-green); }     /* View toggles */
-.input-group .button-randomize i { color: var(--neon-teal); } /* Randomize actions */
-.input-group .button-clipboard i { color: var(--neon-blue); } /* Clipboard operations */
+.input-group .button-randomize i { color: var(--neon-blue); } /* Randomize actions */
+.input-group .button-clipboard i { color: var(--neon-purple); } /* Clipboard operations */
+.input-group .button-search i { color: var(--neon-teal); }   /* Search operations */
 
 /* Button hover states are removed to prevent color change */
 
@@ -640,7 +650,15 @@ a:hover {
 
 .input-group .button-clipboard.active i {
   font-weight: 900; /* Switch to filled */
-  color: #0066cc !important;
+  color: var(--neon-purple) !important;
+  animation: pop 0.3s ease-in-out;
+}
+
+.input-group .button-search i {
+  transition: color var(--transition-normal);
+}
+
+.input-group .button-search.active i {
   animation: pop 0.3s ease-in-out;
 }
 
@@ -938,20 +956,22 @@ a:hover {
 #sticky-toggle-preview-button i {
   background: linear-gradient(
     135deg,
-    var(--neon-pink),
-    var(--neon-purple),
-    var(--neon-yellow),
-    var(--neon-teal),
-    var(--neon-blue),
-    var(--neon-pink)
+    var(--neon-pink) 0%,
+    var(--neon-pink) 15%,
+    var(--neon-purple) 25%,
+    var(--neon-yellow) 40%,
+    var(--neon-teal) 55%,
+    var(--neon-blue) 70%,
+    var(--neon-pink) 85%,
+    var(--neon-pink) 100%
   );
   background-size: 300% 300%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: tropical-gradient-rotate 3s ease infinite;
+  animation: chevron-gradient-shift 3s ease infinite;
   display: inline-block;
-  transform: rotate(0deg); /* Start pointing up */
+  transform: rotate(0deg); /* Start pointing up (inactive) */
   transform-origin: center;
   transition: none; /* Remove default transition */
 }
@@ -959,22 +979,23 @@ a:hover {
 #toggle-preview-button.active i,
 #sticky-toggle-preview-button.active i {
   transform: rotate(180deg); /* Point down when active/open */
-  animation: rotate-clockwise-to-down 0.3s forwards;
+  animation: chevron-gradient-shift 3s ease infinite, rotate-to-down 0.3s ease forwards;
 }
 
 #toggle-preview-button:not(.active) i,
 #sticky-toggle-preview-button:not(.active) i {
-  animation: rotate-clockwise-to-up 0.3s forwards;
+  transform: rotate(0deg); /* Point up when inactive/closed */
+  animation: chevron-gradient-shift 3s ease infinite, rotate-to-up 0.3s ease forwards;
 }
 
-@keyframes rotate-clockwise-to-down {
+@keyframes rotate-to-down {
   from { transform: rotate(0deg); }
   to { transform: rotate(180deg); }
 }
 
-@keyframes rotate-clockwise-to-up {
+@keyframes rotate-to-up {
   from { transform: rotate(180deg); }
-  to { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
 }
 
 /* ===== STICKY ACTION BAR ===== */
@@ -1105,32 +1126,90 @@ html.dark-mode .sticky-action-bar {
 /* ===== FOOTER ===== */
 .site-footer {
   margin-top: var(--space-8);
-  padding: var(--space-4) 0;
+  padding: var(--space-5) var(--space-4);
+  background: transparent;
+  border-top: 1px solid var(--border-color);
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 600px;
+  margin: 0 auto;
   text-align: center;
-  font-size: var(--font-size-sm);
-  color: var(--gray-500);
-  background: var(--card-background);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-md);
-  transition: box-shadow var(--transition-normal), var(--transition-theme);
 }
 
-.site-footer:hover {
-  box-shadow: var(--shadow-lg);
+.footer-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 400;
 }
 
-.footer-content a {
-  color: inherit;
+.footer-links {
+  display: flex;
+  gap: var(--space-5);
+  align-items: center;
+}
+
+.social-link {
+  color: var(--text-secondary);
+  transition: all var(--transition-normal);
+  font-size: 1.5rem;
+  padding: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.social-link:hover {
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.social-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: none;
+}
+
+/* Show text for Threads link since we're using a generic icon */
+.social-link:has(.fa-comment) .social-text,
+.social-link .fa-comment + .social-text {
+  display: inline;
+}
+
+.footer-credit {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.creator-link {
+  color: var(--primary);
   text-decoration: none;
-  background: var(--gradient-primary);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  transition: opacity var(--transition-fast);
+  font-weight: 600;
+  transition: color var(--transition-normal);
 }
 
-.footer-content a:hover {
-  opacity: 0.8;
+.creator-link:hover {
+  color: var(--secondary);
+  text-decoration: underline;
+}
+
+.tool-link {
+  color: var(--neon-purple);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-normal);
+}
+
+.tool-link:hover {
+  color: var(--neon-pink);
   text-decoration: underline;
 }
 
@@ -1503,11 +1582,12 @@ button:hover i {
 .menu-icon-style.fa-sync-alt { color: var(--neon-orange); }
 .menu-icon-style.fa-star { color: var(--neon-yellow); }
 .menu-icon-style.fa-eye { color: var(--neon-green); }
-.menu-icon-style.fa-lightbulb { color: var(--neon-teal); }
-.menu-icon-style.fa-clipboard { color: var(--neon-blue); }
+.menu-icon-style.fa-lightbulb { color: var(--neon-blue); }
+.menu-icon-style.fa-clipboard { color: var(--neon-purple); }
 .menu-icon-style.fa-hand-pointer { color: var(--neon-pink); }
 .menu-icon-style.fa-discord { color: #5865F2; }
 .menu-icon-style.fa-globe { color: var(--neon-teal); }
+.menu-icon-style.fa-search { color: var(--neon-teal); }
 
 .select-icon-placeholder {
   width: 1.5rem; /* Matches .menu-icon-style width */
@@ -1742,4 +1822,139 @@ button:hover i {
 /* Sticky header version of the toggle */
 #sticky-action-bar .mode-toggle-container {
   margin: 0 0.5rem 0 0;
+}
+
+/* ===== NEWS SECTION ===== */
+.news-container {
+  margin-bottom: var(--space-6);
+  background-color: var(--card-background);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: none !important;
+}
+
+.news-container details {
+  border: none;
+}
+
+.news-container summary {
+  padding: var(--space-4);
+  background: linear-gradient(135deg, var(--neon-pink) 0%, var(--neon-orange) 100%);
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Pushes button to the right */
+  transition: none !important;
+}
+
+.news-container summary:hover {
+  background: linear-gradient(135deg, var(--neon-pink) 0%, var(--neon-orange) 100%); /* Keeps background static on hover */
+}
+
+.news-container summary::marker {
+  display: none;
+}
+
+.news-content {
+  padding: var(--space-5);
+  background-color: var(--background);
+}
+
+.news-section {
+  margin-bottom: var(--space-5);
+}
+
+.news-section:last-child {
+  margin-bottom: 0;
+}
+
+.news-section h4 {
+  margin-bottom: var(--space-3);
+  color: var(--primary);
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: var(--space-2);
+}
+
+.news-section ul {
+  list-style-position: inside;
+  padding-left: var(--space-2);
+}
+
+.news-section li {
+  margin-bottom: var(--space-2);
+}
+
+/* Search button specific styles */
+.button-search {
+  border-color: var(--neon-teal);
+}
+
+.button-search i {
+  color: var(--neon-teal);
+  transition: color var(--transition-normal);
+}
+
+.button-search.active i {
+  animation: pop 0.3s ease-in-out;
+}
+
+.button-search:hover {
+  border-color: var(--neon-teal);
+  background-color: transparent;
+  color: var(--neon-teal);
+}
+
+.button-search.active {
+  border-color: var(--neon-teal);
+  background-color: transparent;
+  color: var(--neon-teal);
+}
+
+/* Search container styles */
+.search-container {
+  margin-top: var(--space-3);
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.search-container.hidden {
+  display: none;
+}
+
+#search-input {
+  width: 100%;
+  padding: var(--space-3);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+/* Remove scrollbar from search input */
+#search-input::-webkit-scrollbar {
+  display: none;
+}
+
+#search-input {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+#search-input:focus {
+  outline: none;
+  border-color: var(--neon-teal);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+#search-input::placeholder {
+  color: var(--text-secondary);
 } 

@@ -128,6 +128,9 @@
             <button id="show-selected-btn" class="action-button button-eye" title="Show selected">
               <i class="far fa-eye"></i>
             </button>
+            <button id="search-button" class="action-button button-search" title="Search by number">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
             <button id="randomize-button" class="action-button button-randomize" title="Randomize selection">
               <i class="far fa-lightbulb"></i>
             </button>
@@ -138,6 +141,9 @@
               <i class="fas fa-chevron-down"></i>
             </button>
           </div>
+        </div>
+        <div class="search-container hidden">
+          <input type="number" id="search-input" placeholder="Enter sref image number..." step="any">
         </div>
         <div class="prompt-preview hidden">
           <p id="final-prompt"></p>
@@ -183,6 +189,7 @@
                 <li><i class="fas fa-sync-alt menu-icon-style"></i><div><strong>Refresh:</strong> Shuffle the order of all images and randomize their starting view.</div></li>
                 <li><i class="far fa-star menu-icon-style"></i><div><strong>Favorites View:</strong> Show only your starred images.</div></li>
                 <li><i class="far fa-eye menu-icon-style"></i><div><strong>Selected View:</strong> Show only your currently selected images.</div></li>
+                <li><i class="fa-solid fa-magnifying-glass menu-icon-style"></i><div><strong>Search:</strong> Search for images by their number (1-635).</div></li>
                 <li><i class="far fa-lightbulb menu-icon-style"></i><div><strong>Randomize:</strong> Randomly select an unselected image.</div></li>
                 <li><i class="far fa-clipboard menu-icon-style"></i><div><strong>Copy:</strong> Copy the final generated prompt to your clipboard.</div></li>
               </ul>
@@ -238,6 +245,66 @@
           </div>
         </details>
       </div>
+
+      <div class="news-container">
+        <details open>
+          <summary>
+            <span>📰 News</span>
+            <button id="close-news" class="close-button" title="Hide this section">&times;</button>
+          </summary>
+          
+          <div class="news-content">
+            <!-- 
+              NEWS SECTION MAINTENANCE:
+              - Keep this section updated with current information
+              - Add new sections as needed for major updates
+              - Use consistent formatting with <strong> tags for emphasis
+              - Include dates for important milestones
+              - Comment out old sections rather than deleting them
+            -->
+            
+            <!-- 
+            <div class="news-section updates-section">
+              <h4>Updates</h4>
+              <ul>
+                <li><strong>Latest Release:</strong> Added prompt preview expansion feature - now long prompts wrap properly!</li>
+                <li><strong>New Feature:</strong> Summary card generator with customizable grid backgrounds</li>
+                <li><strong>Improvement:</strong> Enhanced SEO with proper meta tags and social media previews</li>
+                <li><strong>Bug Fix:</strong> Fixed copy button functionality and notification system</li>
+              </ul>
+            </div>
+
+            <div class="news-section coming-soon-section">
+              <h4>Coming Soon</h4>
+              <ul>
+                <li><strong>Style Categories:</strong> Organize styles by themes (anime, realistic, artistic, etc.)</li>
+                <li><strong>Advanced Filters:</strong> Filter by color palette, mood, or style intensity</li>
+                <li><strong>Export Options:</strong> Save your favorite style combinations as presets</li>
+                <li><strong>Community Features:</strong> Share and discover popular style combinations</li>
+              </ul>
+            </div>
+            
+            <div class="news-section shout-outs-section">
+              <h4>Shout Outs</h4>
+              <ul>
+                <li><strong>Midjourney Team:</strong> For creating the amazing NijiJourney 6 model</li>
+                <li><strong>NijiJourney Community:</strong> For inspiring style combinations and creative prompts</li>
+                <li><strong>Open Source Contributors:</strong> For the tools and libraries that make this possible</li>
+                <li><strong>Beta Testers:</strong> For valuable feedback and bug reports</li>
+              </ul>
+            </div>
+            -->
+            
+            <div class="news-section launch-section">
+              <h4>Launch</h4>
+              <ul>
+                <li><strong>Launch Date:</strong> <strong>June 22, 2025</strong></li>
+                <li><strong>Initial Release:</strong> Launched with 635 style reference images</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
       
       <div class="gallery-container">
         <div id="image-gallery" class="image-gallery">
@@ -251,9 +318,23 @@
     
     <footer class="site-footer">
       <div class="footer-content">
-        <a href="https://threads.net/@jennajuffuffles" target="_blank" rel="noopener noreferrer">
-          Created by @jennajuffuffles
-        </a>
+        <div class="footer-subtitle">
+          Visual reference tool for NijiJourney 6
+        </div>
+        
+        <div class="footer-links">
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://www.threads.com/@jennajuffuffles/" target="_blank" rel="noopener noreferrer" class="social-link">
+            <i class="fas fa-comment"></i>
+            <span class="social-text">Threads</span>
+          </a>
+        </div>
+        
+        <div class="footer-credit">
+          Created by <a href="http://jennajuffuffles.com/" target="_blank" rel="noopener noreferrer" class="creator-link">JennaJuffuffles</a> using <a href="http://cursor.com/" target="_blank" rel="noopener noreferrer" class="tool-link">Cursor</a>
+        </div>
       </div>
     </footer>
   </div>

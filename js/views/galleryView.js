@@ -272,6 +272,7 @@ export default class GalleryView {
       'refresh-button': 'sticky-refresh-button',
       'favorites-toggle': 'sticky-favorites-toggle',
       'show-selected-btn': 'sticky-show-selected-btn',
+      'search-button': 'sticky-search-button',
       'randomize-button': 'sticky-randomize-button',
       'copy-button': 'sticky-copy-button',
       'toggle-preview-button': 'sticky-toggle-preview-button',
@@ -379,6 +380,33 @@ export default class GalleryView {
         starBtn.parentNode.insertBefore(stickyEyeBtn, starBtn.nextSibling);
       } else {
         stickyInputGroup.appendChild(stickyEyeBtn);
+      }
+    }
+    
+    // Check if the search button exists in main menu but not in sticky
+    const mainSearchBtn = document.getElementById('search-button');
+    const stickySearchBtn = stickyInputGroup.querySelector('#sticky-search-button');
+    
+    if (mainSearchBtn && !stickySearchBtn) {
+      console.log('Adding missing search button to sticky menu');
+      
+      // Create the sticky search button
+      const stickySearchBtn = mainSearchBtn.cloneNode(true);
+      stickySearchBtn.id = 'sticky-search-button';
+      stickySearchBtn.className = mainSearchBtn.className;
+      
+      // Don't add event listener here - it will be handled by bindSearchButton
+      console.log('Created sticky search button - event listener will be added by bind method');
+      
+      // Insert in the same position as in main menu (between eye and lightbulb)
+      const eyeBtn = stickyInputGroup.querySelector('#sticky-show-selected-btn');
+      const lightbulbBtn = stickyInputGroup.querySelector('#sticky-randomize-button');
+      if (eyeBtn && eyeBtn.parentNode) {
+        eyeBtn.parentNode.insertBefore(stickySearchBtn, eyeBtn.nextSibling);
+      } else if (lightbulbBtn && lightbulbBtn.parentNode) {
+        lightbulbBtn.parentNode.insertBefore(stickySearchBtn, lightbulbBtn);
+      } else {
+        stickyInputGroup.appendChild(stickySearchBtn);
       }
     }
   }
@@ -1444,5 +1472,42 @@ export default class GalleryView {
     // Show notification about mode change
     const mode = isDiscordMode ? 'Discord' : 'Website';
     this.showInfoNotification(`Switched to ${mode} mode`);
+  }
+
+  bindSearchButton(handler) {
+    const searchBtn = document.getElementById('search-button');
+    const stickySearchBtn = document.getElementById('sticky-search-button');
+    
+    function handleSearchButtonClick() {
+      handler();
+    }
+    
+    if (searchBtn) {
+      searchBtn.addEventListener('click', handleSearchButtonClick);
+    }
+    
+    if (stickySearchBtn) {
+      stickySearchBtn.addEventListener('click', handleSearchButtonClick);
+    }
+  }
+  
+  bindSearchInput(handler) {
+    const searchInput = document.getElementById('search-input');
+    
+    if (searchInput) {
+      // Handle input changes
+      searchInput.addEventListener('input', (e) => {
+        const value = e.target.value.trim();
+        handler(value === '' ? null : value);
+      });
+      
+      // Handle Enter key
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const value = e.target.value.trim();
+          handler(value === '' ? null : value);
+        }
+      });
+    }
   }
 } 

@@ -40,6 +40,9 @@ export default class AppController {
     // Initialize the More Info section functionality
     this.initMoreInfoSection();
     
+    // Initialize the News section functionality
+    this.initNewsSection();
+    
     // Check localStorage immediately to control page appearance
     this.checkInitialSettings();
   }
@@ -203,6 +206,24 @@ export default class AppController {
     });
   }
 
+  initNewsSection() {
+    const newsContainer = document.querySelector('.news-container');
+    const closeButton = document.getElementById('close-news');
+    
+    if (!newsContainer || !closeButton) {
+      return;
+    }
+
+    closeButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      newsContainer.classList.add('hidden');
+      // Save preference to localStorage with prefix
+      localStorage.setItem('prompteraid_hideNews', 'true');
+    });
+  }
+
   checkInitialSettings() {
     // Check theme preference
     const savedTheme = localStorage.getItem('prompteraid_theme');
@@ -216,6 +237,15 @@ export default class AppController {
       const moreInfoContainer = document.querySelector('.more-info-container');
       if (moreInfoContainer) {
         moreInfoContainer.classList.add('hidden');
+      }
+    }
+    
+    // Check news section preference
+    const hideNews = localStorage.getItem('prompteraid_hideNews');
+    if (hideNews === 'true') {
+      const newsContainer = document.querySelector('.news-container');
+      if (newsContainer) {
+        newsContainer.classList.add('hidden');
       }
     }
   }

@@ -36,6 +36,7 @@ export default class GalleryController {
     this.model = new ImageModel();
     this.view = new GalleryView();
     this.showOnlySelected = false;
+    this.searchNumber = null; // Track current search number
     
     this.init();
   }
@@ -108,9 +109,23 @@ export default class GalleryController {
     }
 
     let visibleImages = this.model.getVisibleImages();
+    
+    // Apply search filter if active
+    if (this.searchNumber !== null && this.searchNumber !== '') {
+      const num = parseInt(this.searchNumber);
+      if (!isNaN(num) && num >= 1 && num <= 635) {
+        visibleImages = visibleImages.filter(img => {
+          const match = img.id.match(/^(\d+)_/);
+          return match && parseInt(match[1]) === num;
+        });
+      }
+    }
+    
+    // Apply selected filter if active
     if (this.showOnlySelected) {
       visibleImages = visibleImages.filter(img => this.model.selectedImages.has(img.id));
     }
+    
     this.view.renderGallery(
       visibleImages,
       this.model.selectedImages,
@@ -200,16 +215,24 @@ export default class GalleryController {
         const validFavorites = this.model.images.filter(img => this.model.favoriteImages.has(img.id));
         
         if (validFavorites.length === 0) {
-          this.view.showNoFavoritesWarning();
-          return false; // Prevent animation
+          this.view.showErrorNotification("No images are favorited. Please star at least one image.");
+          return false; // Prevent the toggle
         }
       }
       
-      const showOnlyFavorites = this.model.toggleFavoritesOnly();
-      this.model.saveToStorage(); // Save favorites state
-      this.view.updateFavoritesToggle(showOnlyFavorites);
+      this.model.toggleFavoritesOnly();
+      this.view.updateFavoritesToggle(this.model.showOnlyFavorites);
       this.renderGallery();
-      return true; // Allow animation
+    });
+    
+    // Search button
+    this.view.bindSearchButton(() => {
+      this.toggleSearch();
+    });
+    
+    // Search input
+    this.view.bindSearchInput((searchNumber) => {
+      this.performSearch(searchNumber);
     });
     
     // Refresh button
@@ -408,5 +431,88 @@ export default class GalleryController {
   updatePrompt() {
     const finalPrompt = this.model.generateFinalPrompt();
     this.view.updateFinalPrompt(finalPrompt);
+  }
+  
+  /**
+   * Toggles the search functionality on/off
+   * Shows/hides the search input and updates button state
+   */
+  toggleSearch() {
+    const searchContainer = document.querySelector('.search-container');
+    const searchButton = document.getElementById('search-button');
+    const stickySearchButton = document.getElementById('sticky-search-button');
+    
+    if (searchContainer) {
+      const isHidden = searchContainer.classList.contains('hidden');
+      
+      // Toggle search container visibility
+      searchContainer.classList.toggle('hidden', !isHidden);
+      
+      // Update button states
+      if (isHidden) {
+        // Search is being activated
+        searchButton?.classList.add('active');
+        stickySearchButton?.classList.add('active');
+        
+        // Update icons to magnifying-glass-plus (active)
+        const searchIcon = searchButton?.querySelector('i');
+        const stickySearchIcon = stickySearchButton?.querySelector('i');
+        if (searchIcon) searchIcon.className = 'fa-solid fa-magnifying-glass-plus';
+        if (stickySearchIcon) stickySearchIcon.className = 'fa-solid fa-magnifying-glass-plus';
+        
+        // Focus the search input
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+          setTimeout(() => searchInput.focus(), 100);
+        }
+      } else {
+        // Search is being deactivated
+        searchButton?.classList.remove('active');
+        stickySearchButton?.classList.remove('active');
+        
+        // Update icons to magnifying-glass (inactive)
+        const searchIcon = searchButton?.querySelector('i');
+        const stickySearchIcon = stickySearchButton?.querySelector('i');
+        if (searchIcon) searchIcon.className = 'fa-solid fa-magnifying-glass';
+        if (stickySearchIcon) stickySearchIcon.className = 'fa-solid fa-magnifying-glass';
+        
+        // Clear search
+        this.performSearch(null);
+      }
+    }
+  }
+  
+  /**
+   * Performs a search by image number
+   * @param {number|null} searchNumber - The number to search for, or null to clear search
+   */
+  performSearch(searchNumber) {
+    this.searchNumber = searchNumber;
+    
+    if (searchNumber === null || searchNumber === '') {
+      // Clear search - show all images
+      this.renderGallery();
+      return;
+    }
+    
+    // Convert to string for searching
+    const searchStr = searchNumber.toString();
+    if (searchStr.trim() === '') {
+      this.renderGallery();
+      return;
+    }
+    
+    // Find all images that contain the search number in their ID
+    const matchingImages = this.model.images.filter(img => {
+      return img.id.includes(searchStr);
+    });
+    
+    if (matchingImages.length > 0) {
+      // Show only the matching images
+      this.view.renderGallery(matchingImages, this.model.selectedImages, this.model.favoriteImages);
+      this.view.showInfoNotification(`Found ${matchingImages.length} image(s) containing "${searchStr}"`);
+    } else {
+      this.view.showErrorNotification(`No images found containing "${searchStr}"`);
+    }
   }
 } 
