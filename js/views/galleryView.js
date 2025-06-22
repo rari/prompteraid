@@ -1476,13 +1476,8 @@ export default class GalleryView {
 
   bindSearchButton(handler) {
     const searchButton = document.getElementById('search-button');
-    const stickySearchButton = document.getElementById('sticky-search-button');
-
     if (searchButton) {
       searchButton.addEventListener('click', handler);
-    }
-    if (stickySearchButton) {
-      stickySearchButton.addEventListener('click', handler);
     }
   }
   
