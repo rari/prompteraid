@@ -13,6 +13,8 @@
  * - showOnlyFavorites: Boolean flag for filter state
  * - basePrompt: User's base prompt text
  * - isDiscordMode: Boolean flag for output format preference
+ * - imageWeights: Map to store weights for each selected image
+ * - weightColorIndices: Map to store color indices for weight displays
  * 
  * Primary Responsibilities:
  * - Image data loading and management
@@ -38,7 +40,10 @@ export default class ImageModel {
     this.basePrompt = '';
     this.currentColorIndex = 0;
     this.numSelectionColors = 5; // Pink, Orange, Yellow, Teal, Blue
+    this.numWeightColors = 7; // Pink, Orange, Yellow, Green, Teal, Blue, Purple
     this.isDiscordMode = true; // Default to Discord mode
+    this.imageWeights = new Map(); // Store weights for each selected image
+    this.weightColorIndices = new Map(); // Store color indices for weight displays
     this.loadFromStorage();
     
     // Detect if we're on GitHub Pages and get the repository name
@@ -99,9 +104,17 @@ export default class ImageModel {
       const imagePaths = await this.getImageFiles();
       this.images = imagePaths.map(path => {
         // Extract the filename from the path
-        const filename = path.split('/').pop();
+        const filename = path.split('/').pop().split('\\').pop();
+        
         // Extract sref from filename (before first underscore)
-        const sref = filename.split('_')[0];
+        // For files like "1092443072_a08d2cee-275d-4f15-b6d3-d3c369939788.webp"
+        // or files in paths like "img\sref\1\1092443072_..."
+        const filenameWithoutPath = filename.split('_')[0];
+        
+        // Extract just the numeric part, removing any directory structure
+        // This handles cases where the filename might still have directory info
+        const srefMatch = filenameWithoutPath.match(/(\d+)/);
+        const sref = srefMatch ? srefMatch[0] : filenameWithoutPath;
         
         return {
           id: path, // Use the full path as the ID to ensure uniqueness
@@ -192,8 +205,12 @@ export default class ImageModel {
   toggleImageSelection(imageId) {
     if (this.selectedImages.has(imageId)) {
       this.selectedImages.delete(imageId);
+      this.imageWeights.delete(imageId); // Remove weight when unselecting
+      this.weightColorIndices.delete(imageId); // Remove color index when unselecting
     } else {
       this.selectedImages.set(imageId, this.currentColorIndex);
+      this.imageWeights.set(imageId, 1); // Default weight is 1
+      this.weightColorIndices.set(imageId, 0); // Start with color index 0 (pink)
       this.currentColorIndex = (this.currentColorIndex + 1) % this.numSelectionColors;
     }
     return this.selectedImages.has(imageId);
@@ -223,7 +240,14 @@ export default class ImageModel {
     return Array.from(this.selectedImages.keys())
       .map(id => {
         const image = this.images.find(img => img.id === id);
-        return image ? image.sref : null;
+        const weight = this.imageWeights.get(id) || 1;
+        
+        if (!image) return null;
+        
+        // Extract only the numeric sref code from the image.sref
+        // The sref should be the filename before the first underscore
+        const srefCode = image.sref;
+        return `${srefCode}::${weight}`;
       })
       .filter(sref => sref !== null);
   }
@@ -294,5 +318,59 @@ export default class ImageModel {
     this.isDiscordMode = !this.isDiscordMode;
     this.saveToStorage();
     return this.isDiscordMode;
+  }
+
+  // Increase the weight of an image (1-9, cycles back to 1)
+  increaseWeight(imageId) {
+    if (!this.selectedImages.has(imageId)) return 1;
+    
+    let weight = this.imageWeights.get(imageId) || 1;
+    weight = weight >= 9 ? 1 : weight + 1;
+    this.imageWeights.set(imageId, weight);
+    
+    // Cycle color forward
+    let colorIndex = this.weightColorIndices.get(imageId) || 0;
+    colorIndex = (colorIndex + 1) % this.numWeightColors;
+    this.weightColorIndices.set(imageId, colorIndex);
+    
+    return weight;
+  }
+  
+  // Decrease the weight of an image (1-9, cycles back to 9)
+  decreaseWeight(imageId) {
+    if (!this.selectedImages.has(imageId)) return 1;
+    
+    let weight = this.imageWeights.get(imageId) || 1;
+    weight = weight <= 1 ? 9 : weight - 1;
+    this.imageWeights.set(imageId, weight);
+    
+    // Cycle color backward
+    let colorIndex = this.weightColorIndices.get(imageId) || 0;
+    colorIndex = (colorIndex - 1 + this.numWeightColors) % this.numWeightColors;
+    this.weightColorIndices.set(imageId, colorIndex);
+    
+    return weight;
+  }
+  
+  // Get the current weight of an image
+  getWeight(imageId) {
+    return this.imageWeights.get(imageId) || 1;
+  }
+  
+  // Get the current color index for a weight display
+  getWeightColorIndex(imageId) {
+    // If no weight color index is stored, initialize it
+    if (!this.weightColorIndices.has(imageId)) {
+      // Get the selection color index for this image
+      const selectionColorIndex = this.selectedImages.get(imageId) % this.numSelectionColors;
+      this.weightColorIndices.set(imageId, selectionColorIndex);
+    }
+    
+    // Get the current weight
+    const weight = this.getWeight(imageId);
+    
+    // Calculate color index based on weight (0-6 for the 7 colors)
+    // Pink(0) → Orange(1) → Yellow(2) → Green(3) → Teal(4) → Blue(5) → Purple(6) → Pink(0)
+    return (weight - 1) % this.numWeightColors;
   }
 } 

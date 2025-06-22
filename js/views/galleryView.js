@@ -497,6 +497,10 @@ export default class GalleryView {
       );
       this.gallery.appendChild(galleryItem);
     });
+    
+    // This will be called by the controller to update weight displays
+    // with the correct values from the model
+    console.log('Gallery rendered, ready for weight display updates');
   }
 
   createGalleryItem(image, isSelected, isFavorite, colorIndex) {
@@ -543,10 +547,6 @@ export default class GalleryView {
     flipButton.innerHTML = '<i class="fas fa-sync-alt"></i>';
     flipButton.title = 'Flip quadrant';
     flipButton.dataset.id = image.id;
-    flipButton.style.position = 'absolute';
-    flipButton.style.top = '3.2rem';
-    flipButton.style.right = '0.5rem';
-    flipButton.style.zIndex = '3';
     flipButton.addEventListener('click', (e) => {
       e.stopPropagation();
       
@@ -571,6 +571,42 @@ export default class GalleryView {
       setTimeout(() => img.classList.remove('no-transition'), 50);
     });
     item.appendChild(flipButton);
+
+    // Add weight controls for selected images
+    if (isSelected) {
+      const weightControls = document.createElement('div');
+      weightControls.className = 'weight-controls';
+      weightControls.dataset.id = image.id;
+      
+      // Plus button
+      const plusButton = document.createElement('button');
+      plusButton.className = 'weight-control-button weight-plus';
+      plusButton.innerHTML = '+';
+      plusButton.title = 'Increase weight';
+      plusButton.dataset.id = image.id;
+      plusButton.dataset.action = 'increase';
+      weightControls.appendChild(plusButton);
+      
+      // Weight display
+      const weightDisplay = document.createElement('div');
+      weightDisplay.className = 'weight-display';
+      // We'll add the color class in updateAllWeightDisplays
+      weightDisplay.dataset.id = image.id;
+      // We'll set the actual weight value in updateAllWeightDisplays
+      weightDisplay.textContent = '1'; // Placeholder value
+      weightControls.appendChild(weightDisplay);
+      
+      // Minus button
+      const minusButton = document.createElement('button');
+      minusButton.className = 'weight-control-button weight-minus';
+      minusButton.innerHTML = '−'; // Using minus sign (not hyphen)
+      minusButton.title = 'Decrease weight';
+      minusButton.dataset.id = image.id;
+      minusButton.dataset.action = 'decrease';
+      weightControls.appendChild(minusButton);
+      
+      item.appendChild(weightControls);
+    }
 
     return item;
   }
@@ -688,7 +724,11 @@ export default class GalleryView {
   bindImageClick(handler) {
     this.gallery.addEventListener('click', event => {
       const galleryItem = event.target.closest('.gallery-item');
-      if (galleryItem && !event.target.closest('.favorite-button')) {
+      // Don't trigger selection if clicking on a button or weight controls
+      if (galleryItem && 
+          !event.target.closest('.favorite-button') && 
+          !event.target.closest('.quadrant-flip-button') &&
+          !event.target.closest('.weight-controls')) {
         const id = galleryItem.dataset.id;
         handler(id);
       }
@@ -1499,5 +1539,83 @@ export default class GalleryView {
         }
       });
     }
+  }
+
+  bindWeightControls(increaseHandler, decreaseHandler, weightGetter, colorIndexGetter) {
+    // Use event delegation on the gallery
+    this.gallery.addEventListener('click', (e) => {
+      // Check if we clicked directly on a weight button (not just in the container)
+      if (e.target.classList.contains('weight-control-button') || e.target.parentElement.classList.contains('weight-control-button')) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Get the button element
+        const weightButton = e.target.classList.contains('weight-control-button') ? 
+                            e.target : e.target.parentElement;
+        
+        const imageId = weightButton.dataset.id;
+        const action = weightButton.dataset.action;
+        let newWeight;
+        
+        console.log(`Weight button clicked: ${action} for image ${imageId}`);
+        
+        if (action === 'increase') {
+          newWeight = increaseHandler(imageId);
+          console.log(`Increased weight to ${newWeight}`);
+        } else if (action === 'decrease') {
+          newWeight = decreaseHandler(imageId);
+          console.log(`Decreased weight to ${newWeight}`);
+        }
+        
+        // Update weight display - use the same parent container to find the display
+        const container = weightButton.closest('.weight-controls');
+        if (container) {
+          const weightDisplay = container.querySelector('.weight-display');
+          if (weightDisplay) {
+            console.log(`Updating weight display to ${newWeight}`);
+            
+            // Get the new color index
+            const colorIndex = colorIndexGetter(imageId);
+            
+            // Update color class
+            weightDisplay.className = 'weight-display';
+            weightDisplay.classList.add(`weight-color-${colorIndex}`);
+            
+            // Add pop animation
+            weightDisplay.classList.add('pop-animation');
+            weightDisplay.textContent = newWeight;
+            
+            // Remove animation class after it completes
+            setTimeout(() => {
+              weightDisplay.classList.remove('pop-animation');
+            }, 300);
+          }
+        }
+      }
+    });
+  }
+  
+  updateAllWeightDisplays(weightGetter, colorIndexGetter) {
+    if (!weightGetter) return;
+    
+    console.log('Updating all weight displays');
+    const weightDisplays = document.querySelectorAll('.weight-display');
+    console.log(`Found ${weightDisplays.length} weight displays to update`);
+    
+    weightDisplays.forEach(display => {
+      const imageId = display.dataset.id;
+      if (imageId) {
+        const weight = weightGetter(imageId);
+        console.log(`Updating weight display for image ${imageId} to ${weight}`);
+        display.textContent = weight;
+        
+        // Update color class if color index getter is available
+        if (colorIndexGetter) {
+          const colorIndex = colorIndexGetter(imageId);
+          display.className = 'weight-display';
+          display.classList.add(`weight-color-${colorIndex}`);
+        }
+      }
+    });
   }
 } 

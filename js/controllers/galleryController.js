@@ -131,6 +131,12 @@ export default class GalleryController {
       this.model.selectedImages,
       this.model.favoriteImages
     );
+    
+    // Update weight displays after rendering the gallery
+    this.view.updateAllWeightDisplays(
+      (imageId) => this.model.getWeight(imageId),
+      (imageId) => this.model.getWeightColorIndex(imageId)
+    );
   }
 
   bindEvents() {
@@ -149,6 +155,12 @@ export default class GalleryController {
       
       this.renderGallery();
       this.updatePrompt();
+      
+      // Initialize weight displays after selection changes
+      this.view.updateAllWeightDisplays(
+        (imageId) => this.model.getWeight(imageId),
+        (imageId) => this.model.getWeightColorIndex(imageId)
+      );
     });
     
     // Favorite toggling
@@ -176,6 +188,26 @@ export default class GalleryController {
         this.renderGallery();
       }
     });
+    
+    // Weight controls
+    this.view.bindWeightControls(
+      // Increase handler
+      (imageId) => {
+        const newWeight = this.model.increaseWeight(imageId);
+        this.updatePrompt();
+        return newWeight;
+      },
+      // Decrease handler
+      (imageId) => {
+        const newWeight = this.model.decreaseWeight(imageId);
+        this.updatePrompt();
+        return newWeight;
+      },
+      // Weight getter
+      (imageId) => this.model.getWeight(imageId),
+      // Color index getter
+      (imageId) => this.model.getWeightColorIndex(imageId)
+    );
     
     // Prompt input
     this.view.bindPromptInput(promptText => {
@@ -260,8 +292,11 @@ export default class GalleryController {
       // Add the randomly selected image to selections
       this.model.toggleImageSelection(randomImage.id);
       
-      // Show notification
-      this.view.showInfoNotification(`Randomly selected: ${randomImage.sref}`);
+      // Extract just the numeric sref code for the notification
+      const srefCode = randomImage.sref;
+      
+      // Show notification with clean sref code
+      this.view.showInfoNotification(`Randomly selected: ${srefCode}`);
       
       // Re-render gallery and update prompt
       this.renderGallery();
