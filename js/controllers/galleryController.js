@@ -108,6 +108,57 @@ export default class GalleryController {
       }
     }
 
+    // Check if we're in favorites-only mode but there are no favorites
+    if (this.model.showOnlyFavorites) {
+      const validFavorites = this.model.images.filter(img => this.model.favoriteImages.has(img.id));
+      
+      if (validFavorites.length === 0) {
+        // Show all images with a warning banner instead of filtering
+        this.view.showFullWidthNoFavoritesWarning();
+        
+        // Get all images (unfiltered)
+        let visibleImages = this.model.images;
+        
+        // Apply search filter if active
+        if (this.searchNumber !== null && this.searchNumber !== '') {
+          visibleImages = visibleImages.filter(img => {
+            return img.sref.includes(this.searchNumber);
+          });
+        }
+        
+        // Apply selected filter if active
+        if (this.showOnlySelected) {
+          visibleImages = visibleImages.filter(img => this.model.selectedImages.has(img.id));
+        }
+        
+        this.view.renderGallery(
+          visibleImages,
+          this.model.selectedImages,
+          this.model.favoriteImages
+        );
+        
+        // Update weight displays after rendering the gallery
+        this.view.updateAllWeightDisplays(
+          (imageId) => this.model.getWeight(imageId),
+          (imageId) => this.model.getWeightColorIndex(imageId)
+        );
+        
+        // Update image count in the header
+        this.view.updateImageCountSubheader(
+          visibleImages.length,
+          this.model.selectedImages.size
+        );
+        
+        return; // Stop current render
+      } else {
+        // Hide the warning banner if it exists
+        this.view.hideFullWidthNoFavoritesWarning();
+      }
+    } else {
+      // Hide the warning banner if not in favorites mode
+      this.view.hideFullWidthNoFavoritesWarning();
+    }
+
     let visibleImages = this.model.getVisibleImages();
     
     // Apply search filter if active
@@ -189,11 +240,7 @@ export default class GalleryController {
         // Get the actual favorited images that exist in the current gallery
         const validFavorites = this.model.images.filter(img => this.model.favoriteImages.has(img.id));
         
-        // If no valid favorites remain, automatically toggle off favorites view
-        if (validFavorites.length === 0) {
-          this.model.toggleFavoritesOnly(); // Turn off favorites-only mode
-          this.view.updateFavoritesToggle(false);
-        }
+        // If no valid favorites remain, renderGallery will handle showing all images with a warning
         this.renderGallery();
       }
     });
@@ -217,12 +264,8 @@ export default class GalleryController {
         });
     });
     
-    // Favorites toggle
-    this.view.bindFavoritesToggle(() => {
-      this.model.toggleFavoritesOnly();
-      this.view.updateFavoritesToggle(this.model.showOnlyFavorites);
-      this.renderGallery();
-    });
+    // Favorites toggle - use our updated method
+    this.bindFavoritesToggle();
     
     // Refresh button
     this.view.bindRefreshButton(() => {
@@ -387,20 +430,15 @@ export default class GalleryController {
         case 'f':
           // Toggle favorites view - call the same handler as the button
           const favoritesHandler = () => {
-            if (!this.model.showOnlyFavorites) {
-              // Get the actual favorited images that exist in the current gallery
-              const validFavorites = this.model.images.filter(img => this.model.favoriteImages.has(img.id));
-              
-              if (validFavorites.length === 0) {
-                this.view.showNoFavoritesWarning();
-                return false; // Prevent animation
-              }
-            }
+            // Toggle the state
+            this.model.toggleFavoritesOnly();
             
-            const showOnlyFavorites = this.model.toggleFavoritesOnly();
-            this.model.saveToStorage();
-            this.view.updateFavoritesToggle(showOnlyFavorites);
+            // Update the UI
+            this.view.updateFavoritesToggle(this.model.showOnlyFavorites);
+            
+            // Render the gallery (our renderGallery method now handles the no-favorites case)
             this.renderGallery();
+            
             return true; // Allow animation
           };
           
@@ -625,5 +663,18 @@ export default class GalleryController {
       console.error('Error importing favorites:', error);
       this.view.showErrorNotification('An unexpected error occurred while importing favorites.');
     }
+  }
+
+  bindFavoritesToggle() {
+    this.view.bindFavoritesToggle(() => {
+      // Toggle the state
+      this.model.toggleFavoritesOnly();
+      
+      // Update the UI
+      this.view.updateFavoritesToggle(this.model.showOnlyFavorites);
+      
+      // Render the gallery (our renderGallery method now handles the no-favorites case)
+      this.renderGallery();
+    });
   }
 } 

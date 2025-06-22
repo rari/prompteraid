@@ -1678,4 +1678,46 @@ export default class GalleryView {
       }
     });
   }
+
+  /**
+   * Shows a full-width warning banner for no favorites
+   * This is displayed at the top of the gallery when favorites view is active but no favorites exist
+   */
+  showFullWidthNoFavoritesWarning() {
+    // Check if the warning already exists
+    let warningBanner = document.getElementById('no-favorites-banner');
+    
+    if (!warningBanner) {
+      // Create the warning banner
+      warningBanner = document.createElement('div');
+      warningBanner.id = 'no-favorites-banner';
+      warningBanner.className = 'no-favorites-banner';
+      
+      // Create the warning message
+      const warningMessage = document.createElement('p');
+      warningMessage.innerHTML = '<i class="far fa-star"></i> No favorite images selected. Star some images to add them to your favorites collection.';
+      warningBanner.appendChild(warningMessage);
+      
+      // Create the divider
+      const divider = document.createElement('hr');
+      divider.className = 'favorites-divider';
+      warningBanner.appendChild(divider);
+      
+      // Insert at the top of the gallery
+      this.gallery.insertBefore(warningBanner, this.gallery.firstChild);
+    } else {
+      // Show the existing warning
+      warningBanner.classList.remove('hidden');
+    }
+  }
+
+  /**
+   * Hides the full-width no favorites warning banner
+   */
+  hideFullWidthNoFavoritesWarning() {
+    const warningBanner = document.getElementById('no-favorites-banner');
+    if (warningBanner) {
+      warningBanner.classList.add('hidden');
+    }
+  }
 } 

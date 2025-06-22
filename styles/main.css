@@ -2668,3 +2668,46 @@ html.dark-mode .favorites-tool-button:hover {
     justify-content: center;
   }
 }
+
+/* No Favorites Banner */
+.no-favorites-banner {
+  width: 100%;
+  background-color: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.no-favorites-banner p {
+  margin: 0;
+  color: var(--neon-yellow);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.no-favorites-banner p i {
+  font-size: 1.2rem;
+}
+
+.favorites-divider {
+  width: 100%;
+  border: none;
+  border-top: 1px solid rgba(255, 215, 0, 0.3);
+  margin: 1rem 0 0.5rem 0;
+}
+
+.no-favorites-banner.hidden {
+  display: none;
+}
+
+html.dark-mode .no-favorites-banner {
+  background-color: rgba(255, 215, 0, 0.05);
+  border-color: rgba(255, 215, 0, 0.2);
+}
