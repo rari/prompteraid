@@ -2570,3 +2570,101 @@ html.dark-mode .weight-color-6 {
   border-color: rgba(167, 66, 245, 0.5);
   background-color: rgba(20, 20, 20, 0.7);
 }
+
+/* Favorites Tools Bar */
+.favorites-tools {
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+
+html.dark-mode .favorites-tools {
+  background-color: rgba(30, 30, 30, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.favorites-tools.hidden {
+  display: none;
+}
+
+.favorites-tools-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.favorites-tools-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--neon-yellow);
+  display: flex;
+  align-items: center;
+}
+
+.favorites-tools-title::before {
+  content: "★";
+  margin-right: 0.5rem;
+}
+
+.favorites-tools-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.favorites-tool-button {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.favorites-tool-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+html.dark-mode .favorites-tool-button {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+html.dark-mode .favorites-tool-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+#export-favorites i {
+  color: var(--neon-teal);
+}
+
+#import-favorites i {
+  color: var(--neon-purple);
+}
+
+@media (max-width: 768px) {
+  .favorites-tools-content {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .favorites-tools-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .favorites-tool-button {
+    flex: 1;
+    justify-content: center;
+  }
+}

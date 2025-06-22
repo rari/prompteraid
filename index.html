@@ -324,6 +324,21 @@
       </div>
       
       <div class="gallery-container">
+        <!-- Add favorites import/export bar -->
+        <div id="favorites-tools" class="favorites-tools hidden">
+          <div class="favorites-tools-content">
+            <span class="favorites-tools-title">Favorites</span>
+            <div class="favorites-tools-buttons">
+              <button id="export-favorites" class="favorites-tool-button" title="Export favorites to file">
+                <i class="fas fa-file-export"></i> Export
+              </button>
+              <button id="import-favorites" class="favorites-tool-button" title="Import favorites from file">
+                <i class="fas fa-file-import"></i> Import
+              </button>
+              <input type="file" id="import-favorites-input" accept=".json" style="display: none;">
+            </div>
+          </div>
+        </div>
         <div id="image-gallery" class="image-gallery">
           <!-- Images will be dynamically loaded here -->
           <div id="no-favorites" class="hidden">

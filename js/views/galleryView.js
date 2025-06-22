@@ -55,6 +55,12 @@ export default class GalleryView {
     this.clearButtonClickCount = 0;
     this.clearButtonTimeout = null;
     
+    // Favorites tools bar
+    this.favoritesTools = document.getElementById('favorites-tools');
+    this.exportFavoritesButton = document.getElementById('export-favorites');
+    this.importFavoritesButton = document.getElementById('import-favorites');
+    this.importFavoritesInput = document.getElementById('import-favorites-input');
+    
     // Store quadrants for each image
     this.imageQuadrants = new Map();
 
@@ -669,55 +675,89 @@ export default class GalleryView {
   }
 
   updateFavoritesToggle(showOnlyFavorites) {
-    console.log('updateFavoritesToggle called with:', showOnlyFavorites);
-    
-    // Update main button
+    // Update main favorites button
     if (this.favoritesToggle) {
-      const icon = this.favoritesToggle.querySelector('i');
-      console.log('Main favorites toggle found:', this.favoritesToggle);
       if (showOnlyFavorites) {
         this.favoritesToggle.classList.add('active');
-        if (icon) {
-          icon.className = 'fas fa-star';
-          console.log('Main button set to filled star');
-        }
+        this.favoritesToggle.querySelector('i').className = 'fas fa-star';
+        this.favoritesToggle.setAttribute('title', 'Show all images');
       } else {
         this.favoritesToggle.classList.remove('active');
-        if (icon) {
-          icon.className = 'far fa-star';
-          console.log('Main button set to outlined star');
-        }
+        this.favoritesToggle.querySelector('i').className = 'far fa-star';
+        this.favoritesToggle.setAttribute('title', 'Show only favorites');
       }
     }
     
-    // Update sticky button if present
-    const sticky = document.getElementById('sticky-action-bar');
-    console.log('Sticky action bar found:', sticky);
-    if (sticky) {
-      const stickyFavoritesBtn = sticky.querySelector('#sticky-favorites-toggle');
-      console.log('Sticky favorites button found:', stickyFavoritesBtn);
-      if (stickyFavoritesBtn) {
-        const stickyIcon = stickyFavoritesBtn.querySelector('i');
-        console.log('Sticky icon found:', stickyIcon);
-        if (showOnlyFavorites) {
-          stickyFavoritesBtn.classList.add('active');
-          if (stickyIcon) {
-            stickyIcon.className = 'fas fa-star';
-            console.log('Sticky button set to filled star');
-          }
-        } else {
-          stickyFavoritesBtn.classList.remove('active');
-          if (stickyIcon) {
-            stickyIcon.className = 'far fa-star';
-            console.log('Sticky button set to outlined star');
-          }
-        }
+    // Update sticky favorites button if it exists
+    const stickyFavoritesToggle = document.getElementById('sticky-favorites-toggle');
+    if (stickyFavoritesToggle) {
+      if (showOnlyFavorites) {
+        stickyFavoritesToggle.classList.add('active');
+        stickyFavoritesToggle.querySelector('i').className = 'fas fa-star';
+        stickyFavoritesToggle.setAttribute('title', 'Show all images');
       } else {
-        console.log('Sticky favorites button NOT found!');
-        // Let's see what buttons are actually in the sticky bar
-        const allStickyButtons = sticky.querySelectorAll('button');
-        console.log('All sticky buttons:', Array.from(allStickyButtons).map(btn => btn.id));
+        stickyFavoritesToggle.classList.remove('active');
+        stickyFavoritesToggle.querySelector('i').className = 'far fa-star';
+        stickyFavoritesToggle.setAttribute('title', 'Show only favorites');
       }
+    }
+    
+    // Update favorites tools bar visibility
+    this.updateFavoritesToolsVisibility(showOnlyFavorites);
+    
+    // Show or hide the "no favorites" message
+    if (this.noFavoritesMessage) {
+      // We'll handle the visibility in the renderGallery method
+      // based on whether there are any favorites to show
+    }
+  }
+
+  /**
+   * Updates the favorites tools bar visibility based on favorites view state
+   * @param {boolean} showOnlyFavorites - Whether the favorites view is active
+   */
+  updateFavoritesToolsVisibility(showOnlyFavorites) {
+    if (this.favoritesTools) {
+      if (showOnlyFavorites) {
+        this.favoritesTools.classList.remove('hidden');
+      } else {
+        this.favoritesTools.classList.add('hidden');
+      }
+    }
+  }
+
+  /**
+   * Bind event handlers for export favorites button
+   * @param {Function} handler - Function to call when export button is clicked
+   */
+  bindExportFavoritesButton(handler) {
+    if (this.exportFavoritesButton) {
+      this.exportFavoritesButton.addEventListener('click', () => {
+        handler();
+      });
+    }
+  }
+
+  /**
+   * Bind event handlers for import favorites button
+   * @param {Function} handler - Function to call when a file is selected for import
+   */
+  bindImportFavoritesButton(handler) {
+    if (this.importFavoritesButton && this.importFavoritesInput) {
+      // When import button is clicked, trigger the hidden file input
+      this.importFavoritesButton.addEventListener('click', () => {
+        this.importFavoritesInput.click();
+      });
+
+      // When a file is selected, call the handler with the file
+      this.importFavoritesInput.addEventListener('change', (event) => {
+        if (event.target.files.length > 0) {
+          const file = event.target.files[0];
+          handler(file);
+          // Reset the input so the same file can be selected again
+          event.target.value = '';
+        }
+      });
     }
   }
 

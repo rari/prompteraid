@@ -198,92 +198,38 @@ export default class GalleryController {
       }
     });
     
-    // Weight controls
-    this.view.bindWeightControls(
-      // Increase handler
-      (imageId) => {
-        const newWeight = this.model.increaseWeight(imageId);
-        this.updatePrompt();
-        return newWeight;
-      },
-      // Decrease handler
-      (imageId) => {
-        const newWeight = this.model.decreaseWeight(imageId);
-        this.updatePrompt();
-        return newWeight;
-      },
-      // Weight getter
-      (imageId) => this.model.getWeight(imageId),
-      // Color index getter
-      (imageId) => this.model.getWeightColorIndex(imageId)
-    );
-    
     // Prompt input
-    this.view.bindPromptInput(promptText => {
-      this.model.setBasePrompt(promptText);
-      this.updatePrompt();
-    });
-    
-    // Discord/Website mode toggle
-    this.view.bindModeToggle(() => {
-      const isDiscordMode = this.model.toggleDiscordMode();
-      this.view.updateModeToggle(isDiscordMode);
+    this.view.bindPromptInput(prompt => {
+      this.model.setBasePrompt(prompt);
       this.updatePrompt();
     });
     
     // Copy button
     this.view.bindCopyButton(() => {
-      console.log('Copy button clicked - calling generateFinalPrompt');
-      const finalPrompt = this.model.generateFinalPrompt();
-      console.log('Generated prompt:', finalPrompt);
-      navigator.clipboard.writeText(finalPrompt)
+      const promptText = this.model.generateFinalPrompt();
+      navigator.clipboard.writeText(promptText)
         .then(() => {
-          // Show notification that text was copied
-          this.view.showInfoNotification('Prompt copied to clipboard.');
+          this.view.showCopyFeedback();
         })
         .catch(err => {
-          console.error('Failed to copy text: ', err);
-          // Show error notification
-          this.view.showInfoNotification('Failed to copy to clipboard.');
+          console.error('Could not copy text: ', err);
+          this.view.showErrorNotification('Failed to copy to clipboard. Please try again or copy manually.');
         });
     });
     
     // Favorites toggle
     this.view.bindFavoritesToggle(() => {
-      // Check if we're trying to show favorites-only mode and there are no valid favorites
-      if (!this.model.showOnlyFavorites) {
-        // Get the actual favorited images that exist in the current gallery
-        const validFavorites = this.model.images.filter(img => this.model.favoriteImages.has(img.id));
-        
-        if (validFavorites.length === 0) {
-          this.view.showErrorNotification("No images are favorited. Please star at least one image.");
-          return false; // Prevent the toggle
-        }
-      }
-      
       this.model.toggleFavoritesOnly();
       this.view.updateFavoritesToggle(this.model.showOnlyFavorites);
       this.renderGallery();
     });
     
-    // Search button
-    this.view.bindSearchButton(() => {
-      this.toggleSearch();
-    });
-    
-    // Search input
-    this.view.bindSearchInput((searchNumber) => {
-      this.performSearch(searchNumber);
-    });
-    
     // Refresh button
     this.view.bindRefreshButton(() => {
-      // Randomize image order and quadrants
       this.model.shuffleImages();
-      this.view.refreshImageQuadrants();
       this.renderGallery();
     });
-
+    
     // Randomize button
     this.view.bindRandomizeButton(() => {
       // Get all unselected images
@@ -311,53 +257,81 @@ export default class GalleryController {
       this.renderGallery();
       this.updatePrompt();
     });
-
-    this.view.bindShowSelectedToggle(() => {
-      if (!this.showOnlySelected && this.model.selectedImages.size === 0) {
-        this.view.showNoSelectedWarning();
-        return false; // Prevent animation
-      }
-      this.showOnlySelected = !this.showOnlySelected;
-      this.view.updateShowSelectedToggle(this.showOnlySelected);
-      this.renderGallery();
-      this.model.saveToStorage(); // Save favorites state after render
-      return true; // Allow animation
-    });
     
     // Clear button
     this.view.bindClearButton(() => {
       // Clear all selections
       this.model.selectedImages.clear();
       
-      // Reset prompt to original (empty)
-      this.model.setBasePrompt('');
-      this.view.promptInput.value = '';
-      
-      // If showing only selected, switch back to all images
+      // If we're in selected-only view, automatically toggle it off
       if (this.showOnlySelected) {
         this.showOnlySelected = false;
         this.view.updateShowSelectedToggle(false);
       }
       
-      // If showing only favorites and no favorites remain, switch back to all images
-      if (this.model.showOnlyFavorites) {
-        // Get the actual favorited images that exist in the current gallery
-        const validFavorites = this.model.images.filter(img => this.model.favoriteImages.has(img.id));
-        
-        if (validFavorites.length === 0) {
-          this.model.toggleFavoritesOnly(); // Turn off favorites-only mode
-          this.view.updateFavoritesToggle(false);
-        }
-      }
-      
-      // Show notification that selections were cleared
-      this.view.showInfoNotification('All selections cleared.');
-      
-      // Re-render gallery and update prompt
       this.renderGallery();
       this.updatePrompt();
     });
-
+    
+    // Show selected toggle
+    this.view.bindShowSelectedToggle(() => {
+      // Toggle the state
+      this.showOnlySelected = !this.showOnlySelected;
+      
+      // Update the UI
+      this.view.updateShowSelectedToggle(this.showOnlySelected);
+      
+      // If toggling on and no images are selected, show a warning
+      if (this.showOnlySelected && this.model.selectedImages.size === 0) {
+        this.view.showNoSelectedWarning();
+        this.showOnlySelected = false;
+        this.view.updateShowSelectedToggle(false);
+        return;
+      }
+      
+      this.renderGallery();
+    });
+    
+    // Mode toggle (Discord/Website)
+    this.view.bindModeToggle(() => {
+      this.model.toggleDiscordMode();
+      this.view.updateModeToggle(this.model.isDiscordMode);
+      this.updatePrompt();
+    });
+    
+    // Search functionality
+    this.view.bindSearchButton(() => {
+      this.toggleSearch();
+    });
+    
+    this.view.bindSearchInput((searchNumber) => {
+      this.performSearch(searchNumber);
+    });
+    
+    // Weight controls
+    this.view.bindWeightControls(
+      (imageId) => {
+        this.model.increaseWeight(imageId);
+        this.updatePrompt();
+      },
+      (imageId) => {
+        this.model.decreaseWeight(imageId);
+        this.updatePrompt();
+      },
+      (imageId) => this.model.getWeight(imageId),
+      (imageId) => this.model.getWeightColorIndex(imageId)
+    );
+    
+    // Export favorites
+    this.view.bindExportFavoritesButton(() => {
+      this.exportFavorites();
+    });
+    
+    // Import favorites
+    this.view.bindImportFavoritesButton((file) => {
+      this.importFavorites(file);
+    });
+    
     // Keyboard shortcuts
     this.bindKeyboardShortcuts();
   }
@@ -569,6 +543,87 @@ export default class GalleryController {
       this.view.showInfoNotification(`Found ${matchingImages.length} image(s) matching "${this.searchNumber}"`);
     } else {
       this.view.showErrorNotification(`No images found matching "${this.searchNumber}"`);
+    }
+  }
+
+  /**
+   * Exports favorites to a JSON file for download
+   */
+  exportFavorites() {
+    try {
+      // Get favorites data from model
+      const exportData = this.model.exportFavorites();
+      
+      // Convert to JSON string with pretty formatting
+      const jsonString = JSON.stringify(exportData, null, 2);
+      
+      // Create a Blob with the JSON data
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      
+      // Create a temporary download link
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = `prompteraid-favorites-${new Date().toISOString().slice(0, 10)}.json`;
+      
+      // Trigger the download
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      
+      // Show success notification
+      this.view.showInfoNotification(`Exported ${exportData.favorites.length} favorites successfully.`);
+    } catch (error) {
+      console.error('Error exporting favorites:', error);
+      this.view.showErrorNotification('Failed to export favorites. Please try again.');
+    }
+  }
+
+  /**
+   * Imports favorites from a JSON file
+   * @param {File} file - The JSON file to import
+   */
+  importFavorites(file) {
+    try {
+      // Validate file type
+      if (!file.name.endsWith('.json')) {
+        this.view.showErrorNotification('Please select a valid JSON file.');
+        return;
+      }
+      
+      // Read the file
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          // Parse the JSON data
+          const importData = JSON.parse(event.target.result);
+          
+          // Import favorites using the model
+          const result = this.model.importFavorites(importData);
+          
+          // Show appropriate notification based on result
+          if (result.success) {
+            this.view.showInfoNotification(result.message);
+            
+            // Re-render gallery to show imported favorites
+            this.renderGallery();
+          } else {
+            this.view.showErrorNotification(result.message);
+          }
+        } catch (parseError) {
+          console.error('Error parsing import file:', parseError);
+          this.view.showErrorNotification('The selected file contains invalid JSON data.');
+        }
+      };
+      
+      reader.onerror = () => {
+        this.view.showErrorNotification('Failed to read the selected file.');
+      };
+      
+      // Start reading the file
+      reader.readAsText(file);
+    } catch (error) {
+      console.error('Error importing favorites:', error);
+      this.view.showErrorNotification('An unexpected error occurred while importing favorites.');
     }
   }
 } 

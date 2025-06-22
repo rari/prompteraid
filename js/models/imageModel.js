@@ -390,4 +390,83 @@ export default class ImageModel {
     // Pink(0) → Orange(1) → Yellow(2) → Green(3) → Teal(4) → Blue(5) → Purple(6) → Pink(0)
     return (weight - 1) % this.numWeightColors;
   }
+
+  /**
+   * Exports favorites to a JSON file
+   * @returns {Object} Favorites data object
+   */
+  exportFavorites() {
+    // Create a data object with favorites and metadata
+    const exportData = {
+      version: 1,
+      timestamp: new Date().toISOString(),
+      app: 'PrompterAid',
+      favorites: Array.from(this.favoriteImages)
+    };
+    
+    return exportData;
+  }
+
+  /**
+   * Imports favorites from a JSON file with sanitization
+   * @param {Object} importData - The imported data object
+   * @returns {Object} Result with success flag and message
+   */
+  importFavorites(importData) {
+    try {
+      // Validate the imported data
+      if (!importData || typeof importData !== 'object') {
+        return { success: false, message: 'Invalid import data format.' };
+      }
+      
+      // Check for required properties
+      if (!importData.version || !importData.app || !Array.isArray(importData.favorites)) {
+        return { success: false, message: 'Import data is missing required properties.' };
+      }
+      
+      // Validate app name to ensure it's from our application
+      if (importData.app !== 'PrompterAid') {
+        return { success: false, message: 'Import data is not from PrompterAid.' };
+      }
+      
+      // Sanitize favorites array - only allow string IDs
+      const sanitizedFavorites = importData.favorites.filter(id => {
+        // Only accept string IDs that match our expected format
+        return typeof id === 'string' && /^img\/sref\/\d+\/\d+/.test(id);
+      });
+      
+      // Check if we have any valid favorites after sanitization
+      if (sanitizedFavorites.length === 0) {
+        return { success: false, message: 'No valid favorites found in import data.' };
+      }
+      
+      // Validate against existing images to ensure they exist
+      const validFavorites = sanitizedFavorites.filter(id => {
+        return this.images.some(img => img.id === id);
+      });
+      
+      // If no valid favorites after checking against existing images
+      if (validFavorites.length === 0) {
+        return { success: false, message: 'None of the imported favorites match your available images.' };
+      }
+      
+      // Add the valid favorites to the current favorites
+      validFavorites.forEach(id => {
+        this.favoriteImages.add(id);
+      });
+      
+      // Save to storage
+      this.saveToStorage();
+      
+      return { 
+        success: true, 
+        message: `Successfully imported ${validFavorites.length} favorites.`,
+        importedCount: validFavorites.length,
+        totalCount: importData.favorites.length
+      };
+    } catch (error) {
+      console.error('Error importing favorites:', error);
+      return { success: false, message: 'An error occurred while importing favorites.' };
+    }
+  }
 } 
