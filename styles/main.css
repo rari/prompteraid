@@ -1160,26 +1160,11 @@ html.dark-mode .sticky-action-bar {
   transition: all var(--transition-normal);
   font-size: 1.5rem;
   padding: var(--space-2);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
 }
 
 .social-link:hover {
   color: var(--primary);
   transform: translateY(-2px);
-}
-
-.social-text {
-  font-size: 0.875rem;
-  font-weight: 500;
-  display: none;
-}
-
-/* Show text for Threads link since we're using a generic icon */
-.social-link:has(.fa-comment) .social-text,
-.social-link .fa-comment + .social-text {
-  display: inline;
 }
 
 .footer-credit {
