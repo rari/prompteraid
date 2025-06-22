@@ -112,12 +112,15 @@ export default class GalleryController {
     
     // Apply search filter if active
     if (this.searchNumber !== null && this.searchNumber !== '') {
-      const num = parseInt(this.searchNumber);
-      if (!isNaN(num) && num >= 1 && num <= 635) {
-        visibleImages = visibleImages.filter(img => {
-          const match = img.id.match(/^(\d+)_/);
-          return match && parseInt(match[1]) === num;
-        });
+      visibleImages = visibleImages.filter(img => {
+        return img.sref.includes(this.searchNumber);
+      });
+      
+      // If search returns no results, show a notification but keep the filter active
+      if (visibleImages.length === 0) {
+        this.view.showErrorNotification(`No images found matching "${this.searchNumber}"`);
+        // Return early to prevent further filtering
+        return;
       }
     }
     
@@ -136,6 +139,12 @@ export default class GalleryController {
     this.view.updateAllWeightDisplays(
       (imageId) => this.model.getWeight(imageId),
       (imageId) => this.model.getWeightColorIndex(imageId)
+    );
+    
+    // Update image count in the header
+    this.view.updateImageCountSubheader(
+      visibleImages.length,
+      this.model.selectedImages.size
     );
   }
 
@@ -476,6 +485,7 @@ export default class GalleryController {
     const searchContainer = document.querySelector('.search-container');
     const searchButton = document.getElementById('search-button');
     const stickySearchButton = document.getElementById('sticky-search-button');
+    const searchInput = document.getElementById('search-input');
 
     const isNowHidden = searchContainer.classList.toggle('hidden');
 
@@ -488,46 +498,77 @@ export default class GalleryController {
     if (isNowHidden) {
       // If we're closing the search, clear the search and re-render
       this.searchNumber = null;
-      document.getElementById('search-input').value = '';
+      searchInput.value = '';
       this.renderGallery();
+      
+      // Update button state
+      searchButton.classList.remove('active');
+      if (stickySearchButton) stickySearchButton.classList.remove('active');
+      
+      this.view.showInfoNotification('Search cleared');
     } else {
       // If we're opening the search, scroll to the top and focus the input
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      document.getElementById('search-input').focus();
+      searchInput.focus();
+      
+      // If there's an existing search, populate the input
+      if (this.searchNumber !== null && this.searchNumber !== '') {
+        searchInput.value = this.searchNumber;
+      }
     }
   }
   
   /**
    * Performs a search by image number
-   * @param {number|null} searchNumber - The number to search for, or null to clear search
+   * @param {string|null} searchNumber - The number to search for, or null to clear search
    */
   performSearch(searchNumber) {
-    this.searchNumber = searchNumber.trim();
-    
-    if (this.searchNumber === null || this.searchNumber === '') {
+    if (searchNumber === null || searchNumber === '') {
       // Clear search - show all images
+      this.searchNumber = null;
+      this.renderGallery();
+      
+      // Update search button state
+      const searchButton = document.getElementById('search-button');
+      const stickySearchButton = document.getElementById('sticky-search-button');
+      if (searchButton) searchButton.classList.remove('active');
+      if (stickySearchButton) stickySearchButton.classList.remove('active');
+      
+      return;
+    }
+    
+    // Store the search string
+    this.searchNumber = searchNumber.toString().trim();
+    if (this.searchNumber === '') {
+      this.searchNumber = null;
       this.renderGallery();
       return;
     }
     
-    // Convert to string for searching
-    const searchStr = this.searchNumber.toString();
-    if (searchStr.trim() === '') {
-      this.renderGallery();
-      return;
-    }
-    
-    // Find all images that contain the search number in their ID
+    // Find all images that contain the search number in their sref
     const matchingImages = this.model.images.filter(img => {
-      return img.id.includes(searchStr);
+      return img.sref.includes(this.searchNumber);
     });
     
     if (matchingImages.length > 0) {
       // Show only the matching images
       this.view.renderGallery(matchingImages, this.model.selectedImages, this.model.favoriteImages);
-      this.view.showInfoNotification(`Found ${matchingImages.length} image(s) containing "${searchStr}"`);
+      
+      // Update weight displays after rendering the gallery
+      this.view.updateAllWeightDisplays(
+        (imageId) => this.model.getWeight(imageId),
+        (imageId) => this.model.getWeightColorIndex(imageId)
+      );
+      
+      // Update search button state to indicate search is active
+      const searchButton = document.getElementById('search-button');
+      const stickySearchButton = document.getElementById('sticky-search-button');
+      if (searchButton) searchButton.classList.add('active');
+      if (stickySearchButton) stickySearchButton.classList.add('active');
+      
+      this.view.showInfoNotification(`Found ${matchingImages.length} image(s) matching "${this.searchNumber}"`);
     } else {
-      this.view.showErrorNotification(`No images found containing "${searchStr}"`);
+      this.view.showErrorNotification(`No images found matching "${this.searchNumber}"`);
     }
   }
 } 

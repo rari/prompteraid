@@ -1523,19 +1523,39 @@ export default class GalleryView {
   
   bindSearchInput(handler) {
     const searchInput = document.getElementById('search-input');
+    const searchContainer = document.querySelector('.search-container');
     
     if (searchInput) {
-      // Handle input changes
+      // Handle input changes with a small delay to avoid excessive updates
+      let debounceTimer;
       searchInput.addEventListener('input', (e) => {
-        const value = e.target.value.trim();
-        handler(value === '' ? null : value);
-      });
-      
-      // Handle Enter key
-      searchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
           const value = e.target.value.trim();
           handler(value === '' ? null : value);
+        }, 300); // 300ms delay
+      });
+      
+      // Handle Enter key for immediate search
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          clearTimeout(debounceTimer); // Clear any pending debounce
+          const value = e.target.value.trim();
+          handler(value === '' ? null : value);
+        }
+        
+        // Handle Escape key to close search
+        if (e.key === 'Escape' && !searchContainer.classList.contains('hidden')) {
+          // Clear search and hide the search container
+          searchInput.value = '';
+          handler(null);
+          searchContainer.classList.add('hidden');
+          
+          // Update button states
+          const searchButton = document.getElementById('search-button');
+          const stickySearchButton = document.getElementById('sticky-search-button');
+          if (searchButton) searchButton.classList.remove('active');
+          if (stickySearchButton) stickySearchButton.classList.remove('active');
         }
       });
     }
