@@ -49,10 +49,11 @@ export default class ImageModel {
     // Detect if we're on GitHub Pages and get the repository name
     this.basePath = '';
     if (window.location.hostname.includes('github.io')) {
-      // Extract repository name from path
-      const pathParts = window.location.pathname.split('/');
-      if (pathParts.length > 1 && pathParts[1]) {
-        this.basePath = '/' + pathParts[1];
+      // Extract repository name from path, but ensure we don't duplicate segments
+      const pathParts = window.location.pathname.split('/').filter(part => part.trim() !== '');
+      if (pathParts.length > 0) {
+        // Use only the first segment (the repository name)
+        this.basePath = '/' + pathParts[0];
         console.log(`Detected GitHub Pages repository: ${this.basePath}`);
       }
     }
@@ -116,10 +117,21 @@ export default class ImageModel {
         const srefMatch = filenameWithoutPath.match(/(\d+)/);
         const sref = srefMatch ? srefMatch[0] : filenameWithoutPath;
         
+        // For GitHub Pages, ensure we're not duplicating the basePath
+        let imagePath = path;
+        if (window.location.hostname.includes('github.io') && this.basePath && path.startsWith(this.basePath)) {
+          // Path already contains the basePath, so use it as is
+          console.log(`Path already contains basePath: ${path}`);
+        } else if (window.location.hostname.includes('github.io') && this.basePath) {
+          // Add basePath only once for GitHub Pages
+          imagePath = `${this.basePath}/${path}`;
+          console.log(`Adding basePath to path: ${imagePath}`);
+        }
+        
         return {
-          id: path, // Use the full path as the ID to ensure uniqueness
+          id: path, // Keep the original path as the ID to ensure uniqueness
           sref: sref,
-          path: path // Use relative paths
+          path: imagePath // Use the properly constructed path
         };
       });
       this.shuffleImages();
@@ -161,10 +173,15 @@ export default class ImageModel {
     try {
       // Create an array of possible paths to try
       const pathsToTry = [
-        'api/images.json',
-        './api/images.json',
-        `${this.basePath}/api/images.json`,
+        'api/images.json', // Local development
+        './api/images.json', // Standard deployment
       ];
+      
+      // Add GitHub Pages path if applicable
+      if (window.location.hostname.includes('github.io') && this.basePath) {
+        pathsToTry.push(`${this.basePath}/api/images.json`);
+        console.log(`Added GitHub Pages path: ${this.basePath}/api/images.json`);
+      }
       
       // Try each path in order
       for (const path of pathsToTry) {
