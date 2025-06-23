@@ -150,6 +150,25 @@
         </div>
       </div>
 
+      <!-- Favorites Tools -->
+      <div id="favorites-tools" class="favorites-tools hidden">
+        <div class="favorites-tools-header">
+          <i class="fas fa-star"></i>
+          <h4>Favorites</h4>
+        </div>
+        <div class="favorites-tools-buttons">
+          <button id="export-favorites-button" class="action-button" title="Export your favorites to a file">
+            <i class="fas fa-download"></i>
+            <span>Export</span>
+          </button>
+          <button id="import-favorites-button" class="action-button" title="Import favorites from a file">
+            <i class="fas fa-upload"></i>
+            <span>Import</span>
+          </button>
+          <input type="file" id="import-favorites-input" accept=".json" style="display: none;">
+        </div>
+      </div>
+
       <div class="more-info-container">
         <details open>
           <summary>
@@ -160,15 +179,16 @@
           <div class="more-info-content">
             <div class="info-section about-section">
               <h4>About</h4>
-              <p><strong>PrompterAid</strong> is a visual reference tool for users of the NijiJourney 6 AI model. It displays pregenerated style references (<code>--sref</code> codes) using a consistent series of mermaid-themed images, all created with the same seed and a simple <code>mermaid</code> prompt. This uniform approach makes it easy to compare styles directly and combine them to fine-tune your prompts with precision.</p>
+              <p><strong>PrompterAid</strong> is a visual reference tool for users of the NijiJourney and Midjourney AI models. It displays pre-generated style references (<code>--sref</code> codes) using a consistent series of mermaid-themed images, all created with the same seed and a simple <code>mermaid</code> prompt. This uniform approach makes it easy to compare styles directly and combine them to fine-tune your prompts with precision.</p>
             </div>
 
             <div class="info-section how-to-use-section">
               <h4>How to use PrompterAid</h4>
               <ul>
+                <li>Hover over the model name (e.g., "Niji 6") in the subheader to switch between NijiJourney and Midjourney models. The appropriate version tag (<code>--niji 6</code> or <code>--v 7</code>) will be automatically added to your prompt.</li>
                 <li>Enter your base prompt in the text field.</li>
                 <li>Click one or more images to select their styles.</li>
-                <li>The final prompt, including <code>--sref</code>, is auto-generated.</li>
+                <li>The final prompt, including <code>--sref</code> and the correct version tag, is auto-generated.</li>
                 <li>Click <i class="far fa-clipboard inline-icon"></i> or press 'C' to copy the prompt to your clipboard.</li>
               </ul>
             </div>
@@ -179,7 +199,7 @@
                 <li><i class="fab fa-discord menu-icon-style"></i><div><strong>Discord</strong>: Paste the prompt into the MidJourney or NijiJourney Discord bot, just like any other prompt.</div></li>
                 <li><i class="fas fa-globe menu-icon-style"></i><div><strong>Website</strong>: Use the generated prompt directly on the <a href="https://www.midjourney.com" target="_blank">Midjourney</a> or <a href="https://nijijourney.com" target="_blank">NijiJourney</a> website.</div></li>
               </ul>
-              <p>Both bots and websites can accept the same <code>--sref</code> parameters!</p>
+              <p>Both bots and websites can accept the same <code>--sref</code>, <code>--niji 6</code> and <code>--v 7</code> parameters!</p>
             </div>
 
             <div class="info-section sref-guide-section">
@@ -191,7 +211,7 @@
               <h5>Advanced Options:</h5>
               <ul>
                 <li><strong>Multiple styles:</strong> Apply more than one style by listing multiple <code>--sref</code> codes to blend their visual influences.</li>
-                <li><strong>Weighted styles:</strong> Add <code>::weight</code> to each <code>--sref</code> code to control how strongly each one affects the output. Use the weight controls (+ and - buttons) that appear on selected images to adjust weights from 1-9.</li>
+                <li><strong>Weighted styles:</strong> Add <code>::weight</code> to each <code>--sref</code> code to control how strongly each one affects the output.</li>
                 <li><strong>Style strength (0–1000):</strong> Use <code>--sw</code> to adjust the overall intensity of the style reference's influence on the image.</li>
               </ul>
               <p><a href="https://docs.midjourney.com/hc/en-us/articles/32180011136653-Style-Reference" target="_blank">Learn more about this topic in the official documentation.</a></p>
@@ -204,7 +224,7 @@
                 <li><i class="fas fa-sync-alt menu-icon-style"></i><div><strong>Refresh:</strong> Shuffle the order of all images and randomize their starting view.</div></li>
                 <li><i class="far fa-star menu-icon-style"></i><div><strong>Favorites View:</strong> Show only your starred images.</div></li>
                 <li><i class="far fa-eye menu-icon-style"></i><div><strong>Selected View:</strong> Show only your currently selected images.</div></li>
-                <li><i class="fa-solid fa-magnifying-glass menu-icon-style"></i><div><strong>Search:</strong> Search for images by their number.</div></li>
+                <li><i class="fa-solid fa-magnifying-glass menu-icon-style"></i><div><strong>Search:</strong> Search for images by their number (1-635).</div></li>
                 <li><i class="far fa-lightbulb menu-icon-style"></i><div><strong>Randomize:</strong> Randomly select an unselected image.</div></li>
                 <li><i class="far fa-clipboard menu-icon-style"></i><div><strong>Copy:</strong> Copy the final generated prompt to your clipboard.</div></li>
               </ul>
@@ -216,7 +236,6 @@
                 <li><i class="far fa-star menu-icon-style"></i><div><strong>Favorite:</strong> Add the image to your favorites collection.</div></li>
                 <li><i class="fas fa-sync-alt menu-icon-style"></i><div><strong>Rotate:</strong> Cycle through other visual examples from the same style reference code.</div></li>
                 <li><i class="fas fa-hand-pointer menu-icon-style"></i><div><strong>Select:</strong> Left-click the image to add its style code to your prompt. Selected images are shown with a colored border.</div></li>
-                <li><i class="fas fa-plus menu-icon-style" style="color: var(--neon-purple);"></i><div><strong>Weight Controls:</strong> Adjust the influence of each selected style using the +/- buttons. Higher weights (1-9) give that style more influence in the final image.</div></li>
               </ul>
             </div>
 
@@ -322,23 +341,8 @@
           </div>
         </details>
       </div>
-      
+
       <div class="gallery-container">
-        <!-- Add favorites import/export bar -->
-        <div id="favorites-tools" class="favorites-tools hidden">
-          <div class="favorites-tools-content">
-            <span class="favorites-tools-title">Favorites</span>
-            <div class="favorites-tools-buttons">
-              <button id="export-favorites" class="favorites-tool-button" title="Export favorites to file">
-                <i class="fas fa-file-export"></i> Export
-              </button>
-              <button id="import-favorites" class="favorites-tool-button" title="Import favorites from file">
-                <i class="fas fa-file-import"></i> Import
-              </button>
-              <input type="file" id="import-favorites-input" accept=".json" style="display: none;">
-            </div>
-          </div>
-        </div>
         <div id="image-gallery" class="image-gallery">
           <!-- Images will be dynamically loaded here -->
           <div id="no-favorites" class="hidden">
@@ -399,6 +403,13 @@
             <span>Created with ❤️ by <a href="http://jennajuffuffles.com/" target="_blank" rel="noopener noreferrer" class="creator-link">JennaJuffuffles</a></span>
             <span class="footer-divider">•</span>
             <span>Powered by <a href="http://cursor.com/" target="_blank" rel="noopener noreferrer" class="tool-link">Cursor</a></span>
+          </div>
+          <div class="footer-legal">
+            <p>&copy; 2025 PrompterAid</p>
+            <span class="footer-divider">•</span>
+            <a href="terms.html">Terms of Service</a>
+            <span class="footer-divider">•</span>
+            <a href="privacy.html">Privacy Policy</a>
           </div>
         </div>
       </div>

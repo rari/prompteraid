@@ -71,6 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
   setupGitHubPagesCompat();
   
   // Initialize controllers in dependency order
-  new AppController();  // Global app features (theme, settings)
-  new GalleryController(); // Main application functionality
+  const appController = new AppController();  // Global app features (theme, settings)
+  const galleryController = new GalleryController(appController); // Main application functionality
+  
+  // Make controllers accessible globally for URL parameter handling and debugging
+  window.appController = appController;
+  window.galleryController = galleryController;
 });

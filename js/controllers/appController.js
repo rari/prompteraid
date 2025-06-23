@@ -12,6 +12,7 @@
  * - Image protection (prevents right-click saving, drag & drop)
  * - Information panel management
  * - Global UI state initialization
+ * - AI model selection (Niji 6, Midjourney v7)
  * 
  * Key Features:
  * - Automatic theme detection and switching
@@ -19,6 +20,7 @@
  * - Content protection for AI-generated images
  * - Responsive UI state management
  * - Error handling for storage operations
+ * - Model switching between different AI versions
  * 
  * Storage Strategy:
  * - Uses prefixed localStorage keys to avoid conflicts
@@ -27,10 +29,14 @@
  */
 export default class AppController {
   constructor() {
+    this.currentModel = 'niji-6'; // Default model
     this.init();
   }
 
   init() {
+    // Determine the model first, in a specific order of priority
+    this.initializeModel();
+
     // Initialize dark mode first to set the theme immediately
     this.initDarkMode();
     
@@ -45,6 +51,225 @@ export default class AppController {
     
     // Check localStorage immediately to control page appearance
     this.checkInitialSettings();
+    
+    // Handle other URL parameters
+    this.handleUrlParameters();
+    
+    // Initialize model change listener
+    this.initModelChangeListener();
+  }
+  
+  initializeModel() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const modelFromUrl = urlParams.get('model');
+
+    if (modelFromUrl && (modelFromUrl === 'niji-6' || modelFromUrl === 'midjourney-7')) {
+      this.currentModel = modelFromUrl;
+      // Also update localStorage to stay in sync
+      localStorage.setItem('prompteraid_model', modelFromUrl);
+      return;
+    }
+
+    const modelFromStorage = localStorage.getItem('prompteraid_model');
+    if (modelFromStorage && (modelFromStorage === 'niji-6' || modelFromStorage === 'midjourney-7')) {
+      this.currentModel = modelFromStorage;
+      return;
+    }
+  }
+
+  // Initialize model change listener
+  initModelChangeListener() {
+    document.addEventListener('modelChange', (e) => {
+      const selectedModel = e.detail.model;
+      this.changeModel(selectedModel);
+    });
+  }
+  
+  // Change the current AI model
+  changeModel(modelId) {
+    if (modelId !== this.currentModel) {
+      console.log(`Changing model from ${this.currentModel} to ${modelId}`);
+      this.currentModel = modelId;
+      
+      // Save to localStorage
+      try {
+        localStorage.setItem('prompteraid_model', modelId);
+      } catch (e) {
+        console.error('Failed to save model preference to localStorage:', e);
+      }
+
+      // Reload the page with the new model parameter
+      const url = new URL(window.location);
+      url.searchParams.set('model', modelId);
+      window.location.href = url.href;
+    }
+  }
+  
+  handleUrlParameters() {
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const sref = urlParams.get('sref');
+    const quadrant = urlParams.get('q') || urlParams.get('quadrant'); // Support both short and long parameter names
+    
+    // Model handling is now in initializeModel(), so we only handle sref here.
+    if (sref) {
+      // If we have a style reference in the URL, find it and focus on it
+      console.log(`Looking for style reference: ${sref}`);
+      
+      // Wait for the gallery to load and the controller to be initialized
+      const checkAndCreateLinkedView = () => {
+        // Check if gallery controller is available
+        if (!window.galleryController || !window.galleryController.view || !window.galleryController.model) {
+          console.log("Gallery controller not yet available, waiting...");
+          setTimeout(checkAndCreateLinkedView, 500);
+          return;
+        }
+        
+        // Find the image with the matching style reference
+        const galleryItem = document.querySelector(`.gallery-item[data-sref="${sref}"]`);
+        
+        if (galleryItem) {
+          // Create a linked view with divider
+          this.createLinkedView(galleryItem, sref, quadrant);
+        } else {
+          console.warn(`Style reference ${sref} not found in gallery`);
+        }
+      };
+      
+      // Start checking
+      setTimeout(checkAndCreateLinkedView, 1000);
+    }
+  }
+  
+  createLinkedView(galleryItem, sref, quadrant) {
+    // Get the gallery controller
+    const galleryController = window.galleryController;
+    
+    if (!galleryController) {
+      console.error("Gallery controller not available for linked view");
+      return;
+    }
+    
+    // Get the image ID from the gallery item
+    const imageId = galleryItem.dataset.id;
+    
+    if (!imageId) {
+      console.error("Image ID not found in gallery item");
+      return;
+    }
+    
+    // Find the image in the model
+    const linkedImage = galleryController.model.images.find(img => img.id === imageId);
+    
+    if (!linkedImage) {
+      console.error(`Image with ID ${imageId} not found in the model`);
+      return;
+    }
+    
+    // Clear the gallery
+    galleryController.view.clearGallery();
+    
+    // Create the linked item
+    const linkedItem = galleryController.view.createGalleryItem(
+      linkedImage,
+      false, // Not selected by default
+      galleryController.model.favoriteImages.has(imageId),
+      -1 // No color index
+    );
+    
+    // Add highlight class to make it stand out
+    linkedItem.classList.add('highlight-item');
+    
+    // Append to gallery
+    galleryController.view.gallery.appendChild(linkedItem);
+    
+    // Set the quadrant if specified
+    if (quadrant !== null) {
+      const quadrantNum = parseInt(quadrant, 10);
+      if (!isNaN(quadrantNum) && quadrantNum >= 0 && quadrantNum <= 3) {
+        const img = linkedItem.querySelector('img');
+        
+        if (img) {
+          // Remove existing quadrant classes
+          img.className = img.className
+            .split(' ')
+            .filter(cls => !cls.startsWith('quadrant-'))
+            .join(' ');
+          
+          // Add the new quadrant class
+          img.classList.add(`quadrant-${quadrantNum}`);
+          
+          // Store the quadrant in the gallery controller's view
+          if (galleryController.view.imageQuadrants) {
+            galleryController.view.imageQuadrants.set(imageId, quadrantNum);
+          }
+        }
+      }
+    }
+    
+    // Show the divider
+    galleryController.view.showFilterDivider('linked', 1);
+    
+    // Get all images except the linked one
+    const allImages = galleryController.model.images;
+    const otherImages = allImages.filter(img => img.id !== linkedImage.id);
+    
+    // Append the other images
+    otherImages.forEach(image => {
+      const isSelected = galleryController.model.selectedImages.has(image.id);
+      const isFavorite = galleryController.model.favoriteImages.has(image.id);
+      
+      const galleryItem = galleryController.view.createGalleryItem(
+        image,
+        isSelected,
+        isFavorite,
+        isSelected ? galleryController.model.selectedImages.get(image.id) : -1
+      );
+      
+      galleryController.view.gallery.appendChild(galleryItem);
+    });
+    
+    // Update weight displays
+    galleryController.view.updateAllWeightDisplays(
+      (imageId) => galleryController.model.getWeight(imageId),
+      (imageId) => galleryController.model.getWeightColorIndex(imageId)
+    );
+    
+    // Update image count in the header
+    galleryController.view.updateImageCountSubheader(
+      allImages.length,
+      galleryController.model.selectedImages.size
+    );
+    
+    // Open the search if it exists
+    const searchButton = document.querySelector('.button-search');
+    const searchInput = document.getElementById('search-input');
+    
+    if (searchButton && searchInput) {
+      // Activate search
+      searchButton.classList.add('active');
+      document.querySelector('.search-container')?.classList.remove('hidden');
+      
+      // Set the search input value to the style reference
+      searchInput.value = sref;
+      
+      // Set the search number in the gallery controller
+      galleryController.searchNumber = sref;
+    }
+    
+    // Scroll to top to show the linked image
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Remove highlight after a few seconds
+    setTimeout(() => {
+      const highlightedItem = document.querySelector('.gallery-item.highlight-item');
+      if (highlightedItem) {
+        highlightedItem.classList.remove('highlight-item');
+      }
+    }, 3000);
+    
+    // Log to confirm the linked view is created
+    console.log('Created linked view with divider and gallery');
   }
 
   initDarkMode() {
@@ -175,7 +400,8 @@ export default class AppController {
       /* Re-enable pointer events for buttons and interactive elements within gallery items */
       .gallery-item button,
       .gallery-item .favorite-button,
-      .gallery-item .quadrant-flip-button {
+      .gallery-item .quadrant-flip-button,
+      .gallery-item .link-button {
         pointer-events: auto;
       }
     `;

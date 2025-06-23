@@ -55,10 +55,13 @@ export default class GalleryView {
     this.clearButtonClickCount = 0;
     this.clearButtonTimeout = null;
     
+    // Model selector initialization flags
+    // this.documentClickHandlerAdded = false; // No longer needed for hover menu
+    
     // Favorites tools bar
     this.favoritesTools = document.getElementById('favorites-tools');
-    this.exportFavoritesButton = document.getElementById('export-favorites');
-    this.importFavoritesButton = document.getElementById('import-favorites');
+    this.exportFavoritesButton = document.getElementById('export-favorites-button');
+    this.importFavoritesButton = document.getElementById('import-favorites-button');
     this.importFavoritesInput = document.getElementById('import-favorites-input');
     
     // Store quadrants for each image
@@ -90,6 +93,11 @@ export default class GalleryView {
     
     // Sync sticky menu with main menu to ensure all buttons work
     this.syncStickyMenu();
+
+    // Store event handlers for direct access
+    this._eventHandlers = {
+      favoriteClick: []
+    };
   }
 
   initializeButtons() {
@@ -469,47 +477,29 @@ export default class GalleryView {
     }
   }
 
-  renderGallery(images, selectedImages, favoriteImages) {
-    // Remove sorting that moves selected images to the top
-
-    // Clear existing gallery items except the no-favorites message
-    Array.from(this.gallery.children).forEach(child => {
-      if (child.id !== 'no-favorites') {
-        this.gallery.removeChild(child);
-      }
-    });
-
-    // Show or hide the no favorites message
+  renderGallery(images, selectedImages, favoriteImages, currentModel) {
+    this.gallery.innerHTML = '';
+    
     if (images.length === 0) {
-      this.noFavoritesMessage.classList.remove('hidden');
-    } else {
-      this.noFavoritesMessage.classList.add('hidden');
+      if (this.showOnlyFavorites) {
+        this.showFullWidthNoFavoritesWarning();
+      }
+      return;
     }
-
-    // Update the image count subheader
-    this.updateImageCountSubheader(
-      images.length,
-      selectedImages.size
-    );
-
-    // Create and append gallery items
+    
     images.forEach(image => {
       const isSelected = selectedImages.has(image.id);
-      const galleryItem = this.createGalleryItem(
-        image, 
-        isSelected, 
-        favoriteImages.has(image.id),
-        isSelected ? selectedImages.get(image.id) : -1
-      );
-      this.gallery.appendChild(galleryItem);
+      const isFavorite = favoriteImages.has(image.id);
+      const colorIndex = isSelected ? selectedImages.get(image.id) : -1;
+      const item = this.createGalleryItem(image, isSelected, isFavorite, colorIndex, currentModel);
+      this.gallery.appendChild(item);
     });
-    
-    // This will be called by the controller to update weight displays
-    // with the correct values from the model
-    console.log('Gallery rendered, ready for weight display updates');
+
+    this.hideFullWidthNoFavoritesWarning();
+    this.hideFullWidthNoSelectedWarning();
   }
 
-  createGalleryItem(image, isSelected, isFavorite, colorIndex) {
+  createGalleryItem(image, isSelected, isFavorite, colorIndex, currentModel) {
     const item = document.createElement('div');
     item.className = 'gallery-item';
     
@@ -522,6 +512,7 @@ export default class GalleryView {
       item.classList.add('selected', `selected-color-${colorIndex}`);
     }
     item.dataset.id = image.id;
+    item.dataset.sref = image.sref;
     item.dataset.sref = image.sref;
 
     let quadrant;
@@ -539,12 +530,86 @@ export default class GalleryView {
     img.loading = 'lazy'; // Enable lazy loading
     item.appendChild(img);
 
+    // Add link button at the top left
+    const linkButton = document.createElement('button');
+    linkButton.className = 'link-button';
+    linkButton.innerHTML = '<i class="fas fa-link"></i>';
+    linkButton.dataset.id = image.id;
+    linkButton.dataset.sref = image.sref;
+    linkButton.title = `Copy link to style ${image.sref}`;
+    
+    linkButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      
+      // Get the current quadrant for this image
+      const currentQuadrant = this.imageQuadrants.get(image.id) ?? 0;
+      
+      // Create a shareable URL with the style reference and quadrant
+      const url = new URL(window.location.href);
+      // Use the correct style reference (sref) from the image object
+      url.searchParams.set('sref', image.sref);
+      url.searchParams.set('q', currentQuadrant); // Using shorter parameter name
+      if (currentModel) {
+        url.searchParams.set('model', currentModel);
+      }
+      
+      // Copy to clipboard
+      navigator.clipboard.writeText(url.toString())
+        .then(() => {
+          // Show feedback animation
+          const icon = linkButton.querySelector('i');
+          icon.className = 'fas fa-check';
+          linkButton.classList.add('copied');
+          
+          // Show notification
+          this.showInfoNotification(`Link to style ${image.sref} copied to clipboard`);
+          
+          // Reset after animation
+          setTimeout(() => {
+            icon.className = 'fas fa-link';
+            linkButton.classList.remove('copied');
+          }, 2000);
+        })
+        .catch(err => {
+          console.error('Could not copy URL: ', err);
+          this.showErrorNotification('Failed to copy link. Please try again.');
+        });
+    });
+    
+    item.appendChild(linkButton);
+
+    // Add favorite button
     const favButton = document.createElement('button');
     favButton.className = 'favorite-button';
     favButton.innerHTML = isFavorite 
       ? '<i class="fas fa-star"></i>' 
       : '<i class="far fa-star"></i>';
     favButton.dataset.id = image.id;
+    favButton.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
+    
+    // Use the same direct addEventListener approach as the quadrant flip button
+    favButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      console.log('Favorite button clicked for image:', image.id);
+      
+      // The actual toggling will be handled in the controller
+      // We just need to ensure the event is properly triggered
+      const id = favButton.dataset.id;
+      
+      // Find the handler function from bindFavoriteClick
+      const favoriteHandlers = this._eventHandlers && this._eventHandlers.favoriteClick;
+      if (favoriteHandlers && favoriteHandlers.length > 0) {
+        // Call the handler and get the new favorite state
+        const newIsFavorite = favoriteHandlers[0](id);
+        
+        // Update the button appearance immediately
+        favButton.innerHTML = newIsFavorite 
+          ? '<i class="fas fa-star"></i>' 
+          : '<i class="far fa-star"></i>';
+        favButton.title = newIsFavorite ? 'Remove from favorites' : 'Add to favorites';
+      }
+    });
+    
     item.appendChild(favButton);
 
     // Add quadrant flip button directly below the star
@@ -583,6 +648,9 @@ export default class GalleryView {
       const weightControls = document.createElement('div');
       weightControls.className = 'weight-controls';
       weightControls.dataset.id = image.id;
+      weightControls.style.opacity = '1';
+      weightControls.style.visibility = 'visible';
+      weightControls.style.display = 'flex';
       
       // Plus button
       const plusButton = document.createElement('button');
@@ -600,6 +668,9 @@ export default class GalleryView {
       weightDisplay.dataset.id = image.id;
       // We'll set the actual weight value in updateAllWeightDisplays
       weightDisplay.textContent = '1'; // Placeholder value
+      weightDisplay.style.opacity = '1';
+      weightDisplay.style.visibility = 'visible';
+      weightDisplay.style.display = 'flex';
       weightControls.appendChild(weightDisplay);
       
       // Minus button
@@ -768,7 +839,9 @@ export default class GalleryView {
       if (galleryItem && 
           !event.target.closest('.favorite-button') && 
           !event.target.closest('.quadrant-flip-button') &&
-          !event.target.closest('.weight-controls')) {
+          !event.target.closest('.weight-controls') &&
+          !event.target.closest('.weight-control-button') &&
+          !event.target.closest('.weight-display')) {
         const id = galleryItem.dataset.id;
         handler(id);
       }
@@ -776,9 +849,14 @@ export default class GalleryView {
   }
 
   bindFavoriteClick(handler) {
+    // Store the handler for direct access from buttons
+    this._eventHandlers.favoriteClick = [handler];
+    
+    // Listen for regular click events (delegation approach)
     this.gallery.addEventListener('click', event => {
       const favoriteButton = event.target.closest('.favorite-button');
       if (favoriteButton) {
+        console.log('Favorite button clicked via delegation:', favoriteButton);
         event.stopPropagation();
         const id = favoriteButton.dataset.id;
         handler(id);
@@ -1216,20 +1294,57 @@ export default class GalleryView {
     }, 3000);
   }
 
-  updateImageCountSubheader(totalCount, selectedCount) {
+  updateImageCountSubheader(totalCount, selectedCount, currentModel) {
     if (!this.imageCountSubheader) return;
+
+    const modelDisplayName = currentModel === 'niji-6' ? 'Niji 6' : 'Midjourney v7';
+
+    // Define all available models
+    const allModels = [
+      { id: 'niji-6', name: 'Niji 6' },
+      { id: 'midjourney-7', name: 'Midjourney v7' }
+    ];
+
+    // Filter out the current model to only show the other option(s)
+    const otherModels = allModels.filter(model => model.id !== currentModel);
     
-    if (selectedCount > 0) {
-      this.imageCountSubheader.innerHTML = `
-        <i class="fas fa-image" style="color: var(--tropical-turquoise); opacity: 0.8; font-size: 0.9em;"></i>
-        <span class="selected-count">${selectedCount}</span> of 
-        <span class="count">${totalCount}</span> pregenerated sref references selected
-      `;
-    } else {
-      this.imageCountSubheader.innerHTML = `
-        <i class="fas fa-image" style="color: var(--tropical-turquoise); opacity: 0.8; font-size: 0.9em;"></i>
-        <span class="count">${totalCount}</span> pregenerated sref references
-      `;
+    const innerHTML = `
+      <span class="image-count-number">${totalCount}</span>
+      <span class="subheader-text">pregenerated sref references for </span>
+      <div class="model-selector">
+        <span class="current-model">${modelDisplayName}</span>
+        <div class="model-dropdown">
+          ${otherModels.map(model => `<div class="model-option" data-model="${model.id}">${model.name}</div>`).join('')}
+        </div>
+      </div>
+    `;
+    
+    this.imageCountSubheader.innerHTML = innerHTML;
+    
+    // Always set up events after re-rendering the HTML
+    this.setupModelSelectorEvents();
+  }
+
+  setupModelSelectorEvents() {
+    const modelSelector = this.imageCountSubheader.querySelector('.model-selector');
+    if (modelSelector) {
+      const modelOptions = modelSelector.querySelectorAll('.model-option');
+      modelOptions.forEach(option => {
+        option.addEventListener('click', (e) => {
+          e.stopPropagation(); // Prevent click from bubbling
+          const selectedModel = option.dataset.model;
+          
+          if (selectedModel !== this.currentModel) {
+            this.currentModel = selectedModel;
+            
+            // Dispatch custom event for model change
+            const event = new CustomEvent('modelChange', { 
+              detail: { model: selectedModel } 
+            });
+            document.dispatchEvent(event);
+          }
+        });
+      });
     }
   }
 
@@ -1627,9 +1742,22 @@ export default class GalleryView {
           console.log(`Decreased weight to ${newWeight}`);
         }
         
+        // Find the gallery item that contains this button
+        const galleryItem = weightButton.closest('.gallery-item');
+        
+        // Make sure the gallery item stays selected
+        if (galleryItem && !galleryItem.classList.contains('selected')) {
+          galleryItem.classList.add('selected');
+        }
+        
         // Update weight display - use the same parent container to find the display
         const container = weightButton.closest('.weight-controls');
         if (container) {
+          // Make sure the container is visible
+          container.style.opacity = '1';
+          container.style.visibility = 'visible';
+          container.style.display = 'flex';
+          
           const weightDisplay = container.querySelector('.weight-display');
           if (weightDisplay) {
             console.log(`Updating weight display to ${newWeight}`);
@@ -1641,6 +1769,11 @@ export default class GalleryView {
             weightDisplay.className = 'weight-display';
             weightDisplay.classList.add(`weight-color-${colorIndex}`);
             
+            // Make sure the weight display is visible
+            weightDisplay.style.opacity = '1';
+            weightDisplay.style.visibility = 'visible';
+            weightDisplay.style.display = 'flex';
+            
             // Add pop animation
             weightDisplay.classList.add('pop-animation');
             weightDisplay.textContent = newWeight;
@@ -1648,6 +1781,16 @@ export default class GalleryView {
             // Remove animation class after it completes
             setTimeout(() => {
               weightDisplay.classList.remove('pop-animation');
+              
+              // Keep the weight display visible after animation
+              weightDisplay.style.opacity = '1';
+              weightDisplay.style.visibility = 'visible';
+              weightDisplay.style.display = 'flex';
+              
+              // Make sure the gallery item is still selected
+              if (galleryItem && !galleryItem.classList.contains('selected')) {
+                galleryItem.classList.add('selected');
+              }
             }, 300);
           }
         }
@@ -1669,11 +1812,24 @@ export default class GalleryView {
         console.log(`Updating weight display for image ${imageId} to ${weight}`);
         display.textContent = weight;
         
+        // Make sure the display is visible
+        display.style.opacity = '1';
+        display.style.visibility = 'visible';
+        display.style.display = 'flex';
+        
         // Update color class if color index getter is available
         if (colorIndexGetter) {
           const colorIndex = colorIndexGetter(imageId);
           display.className = 'weight-display';
           display.classList.add(`weight-color-${colorIndex}`);
+        }
+        
+        // Also make sure the parent container is visible
+        const container = display.closest('.weight-controls');
+        if (container) {
+          container.style.opacity = '1';
+          container.style.visibility = 'visible';
+          container.style.display = 'flex';
         }
       }
     });
@@ -1681,7 +1837,7 @@ export default class GalleryView {
 
   /**
    * Shows a full-width warning banner for no favorites
-   * This is displayed at the top of the gallery when favorites view is active but no favorites exist
+   * This is displayed within the favorites view when no favorites exist
    */
   showFullWidthNoFavoritesWarning() {
     // Check if the warning already exists
@@ -1695,16 +1851,13 @@ export default class GalleryView {
       
       // Create the warning message
       const warningMessage = document.createElement('p');
-      warningMessage.innerHTML = '<i class="far fa-star"></i> No favorite images selected. Star some images to add them to your favorites collection.';
+      warningMessage.innerHTML = 'No favorites. Mark images to appear in this view.';
       warningBanner.appendChild(warningMessage);
       
-      // Create the divider
-      const divider = document.createElement('hr');
-      divider.className = 'favorites-divider';
-      warningBanner.appendChild(divider);
-      
-      // Insert at the top of the gallery
-      this.gallery.insertBefore(warningBanner, this.gallery.firstChild);
+      // Insert before the gallery (not inside it)
+      const galleryContainer = document.querySelector('.gallery-container');
+      const galleryElement = document.getElementById('image-gallery');
+      galleryContainer.insertBefore(warningBanner, galleryElement);
     } else {
       // Show the existing warning
       warningBanner.classList.remove('hidden');
@@ -1718,6 +1871,113 @@ export default class GalleryView {
     const warningBanner = document.getElementById('no-favorites-banner');
     if (warningBanner) {
       warningBanner.classList.add('hidden');
+    }
+  }
+
+  /**
+   * Shows a full-width warning banner for no selected images
+   * This is displayed within the selected view when no images are selected
+   */
+  showFullWidthNoSelectedWarning() {
+    // Check if the warning already exists
+    let warningBanner = document.getElementById('no-selected-banner');
+    
+    if (!warningBanner) {
+      // Create the warning banner
+      warningBanner = document.createElement('div');
+      warningBanner.id = 'no-selected-banner';
+      warningBanner.className = 'no-selected-banner';
+      
+      // Create the warning message
+      const warningMessage = document.createElement('p');
+      warningMessage.innerHTML = 'Click on any image to select it and add its style to your prompt.';
+      warningBanner.appendChild(warningMessage);
+      
+      // Insert before the gallery (not inside it)
+      const galleryContainer = document.querySelector('.gallery-container');
+      const galleryElement = document.getElementById('image-gallery');
+      galleryContainer.insertBefore(warningBanner, galleryElement);
+    } else {
+      // Show the existing warning
+      warningBanner.classList.remove('hidden');
+    }
+  }
+  
+  /**
+   * Hides the full-width no selected warning banner
+   */
+  hideFullWidthNoSelectedWarning() {
+    const warningBanner = document.getElementById('no-selected-banner');
+    if (warningBanner) {
+      warningBanner.classList.add('hidden');
+    }
+  }
+
+  /**
+   * Creates a divider between filtered and unfiltered images
+   * @param {string} type - The type of divider ('favorites', 'selected', 'linked', or 'search')
+   * @param {number} count - The number of filtered images
+   * @returns {HTMLElement} The created divider element
+   */
+  createFilterDivider(type, count) {
+    // Remove existing divider if any
+    const existingDivider = document.getElementById(`${type}-filter-divider`);
+    if (existingDivider) {
+      existingDivider.remove();
+    }
+    
+    // Create new divider
+    const divider = document.createElement('div');
+    divider.id = `${type}-filter-divider`;
+    divider.className = 'filter-divider';
+    
+    // Create divider label
+    const label = document.createElement('span');
+    label.className = 'filter-divider-label';
+    
+    // Set appropriate text based on type
+    if (type === 'favorites') {
+      label.innerHTML = `<i class="far fa-star"></i> ${count} favorite${count !== 1 ? 's' : ''} above`;
+    } else if (type === 'selected') {
+      label.innerHTML = `<i class="far fa-eye"></i> ${count} selected image${count !== 1 ? 's' : ''} above`;
+    } else if (type === 'linked') {
+      label.innerHTML = `<i class="fas fa-link"></i> Linked style above`;
+    } else if (type === 'search') {
+      label.innerHTML = `<i class="fas fa-search"></i> ${count} search result${count !== 1 ? 's' : ''} above`;
+    }
+    
+    divider.appendChild(label);
+    
+    return divider;
+  }
+  
+  /**
+   * Shows a divider between filtered and unfiltered images
+   * @param {string} type - The type of divider ('favorites' or 'selected')
+   * @param {number} count - The number of filtered images
+   */
+  showFilterDivider(type, count) {
+    const divider = this.createFilterDivider(type, count);
+    this.gallery.appendChild(divider);
+  }
+  
+  /**
+   * Hides the filter divider
+   * @param {string} type - The type of divider ('favorites' or 'selected')
+   */
+  hideFilterDivider(type) {
+    const divider = document.getElementById(`${type}-filter-divider`);
+    if (divider) {
+      divider.remove();
+    }
+  }
+
+  /**
+   * Clears all content from the gallery
+   */
+  clearGallery() {
+    while (this.gallery.firstChild) {
+      this.gallery.removeChild(this.gallery.firstChild);
     }
   }
 } 

@@ -44,7 +44,6 @@ export default class ImageModel {
     this.isDiscordMode = true; // Default to Discord mode
     this.imageWeights = new Map(); // Store weights for each selected image
     this.weightColorIndices = new Map(); // Store color indices for weight displays
-    this.loadFromStorage();
     
     // Detect if we're on GitHub Pages and get the repository name
     this.basePath = '';
@@ -61,13 +60,13 @@ export default class ImageModel {
 
   loadFromStorage() {
     try {
-      // Only load favorites and Discord mode from storage
-      const favs = JSON.parse(localStorage.getItem('prompteraid_favoriteImages'));
+      const favsKey = `prompteraid_favoriteImages_${this.currentModel}`;
+      const favs = JSON.parse(localStorage.getItem(favsKey));
       if (Array.isArray(favs)) {
         this.favoriteImages = new Set(favs);
       }
       
-      // Load Discord/Website mode preference
+      // Load Discord/Website mode preference (which is global)
       const isDiscordMode = localStorage.getItem('prompteraid_isDiscordMode');
       if (isDiscordMode !== null) {
         this.isDiscordMode = isDiscordMode === 'true';
@@ -87,8 +86,11 @@ export default class ImageModel {
 
   saveToStorage() {
     try {
-      // Only save favorites and Discord mode to storage
-      localStorage.setItem('prompteraid_favoriteImages', JSON.stringify(Array.from(this.favoriteImages)));
+      // Save model-specific favorites
+      const favsKey = `prompteraid_favoriteImages_${this.currentModel}`;
+      localStorage.setItem(favsKey, JSON.stringify(Array.from(this.favoriteImages)));
+      
+      // Save global preferences
       localStorage.setItem('prompteraid_isDiscordMode', this.isDiscordMode);
     } catch (e) {
       // Show a friendly error notification
@@ -194,7 +196,31 @@ export default class ImageModel {
             const cleanText = text.replace(/^\uFEFF/, '');
             const data = JSON.parse(cleanText);
             
-            // Handle both direct array and object with "images" property
+            // Check for the new model sets format
+            if (data && typeof data === 'object' && data.sets) {
+              // Get the current model (default to the one specified in the JSON or niji-6)
+              const currentModel = this.currentModel || data.default || 'niji-6';
+              
+              // Map UI model IDs to JSON keys
+              const modelKeyMap = {
+                'niji-6': 'niji6',
+                'midjourney-6': 'mj6',
+                'midjourney-7': 'mj7'
+              };
+              
+              const jsonKey = modelKeyMap[currentModel] || currentModel;
+              
+              // Get the images for the current model
+              const modelSet = data.sets[jsonKey];
+              if (modelSet && Array.isArray(modelSet.images)) {
+                console.log(`Successfully loaded ${modelSet.images.length} images for model ${currentModel} (JSON key: ${jsonKey})`);
+                return modelSet.images;
+              } else {
+                console.warn(`No images found for model ${currentModel} (JSON key: ${jsonKey})`);
+              }
+            }
+            
+            // Fall back to old format handling
             let imageArray = data;
             if (data && typeof data === 'object' && data.images && Array.isArray(data.images)) {
               imageArray = data.images;
@@ -293,18 +319,30 @@ export default class ImageModel {
    * 
    * Output Examples:
    * - Discord: "/imagine prompt: beautiful mermaid --niji 6 --sref style1 style2"
-   * - Website: "beautiful mermaid --niji 6 --sref style1 style2"
+   * - Website: "beautiful mermaid --v 7 --sref style1 style2"
    * 
    * @returns {string} The complete formatted prompt ready for use
    */
   generateFinalPrompt() {
-    const selectedSrefs = this.getSelectedSrefs();
-    const srefsString = selectedSrefs.length > 0 ? `--sref ${selectedSrefs.join(' ')}` : '';
+    const srefs = this.getSelectedSrefs();
+    if (srefs.length === 0 && !this.basePrompt) {
+      return '';
+    }
     
-    // Include "/imagine prompt:" prefix only in Discord mode
-    const prefix = this.isDiscordMode ? "/imagine prompt: " : "";
+    // Get the model tag based on the current model
+    let modelTag = '';
+    if (this.currentModel === 'niji-6') {
+      modelTag = '--niji 6';
+    } else if (this.currentModel === 'midjourney-7') {
+      modelTag = '--v 7';
+    }
+
+    const srefsString = srefs.length > 0 ? `--sref ${srefs.join(' ')}` : '';
+    const prefix = this.isDiscordMode ? '/imagine prompt: ' : '';
     
-    return `${prefix}${this.basePrompt} --niji 6 ${srefsString}`.trim();
+    // Combine all parts, ensuring there are spaces where needed
+    const parts = [this.basePrompt, modelTag, srefsString].filter(part => part.trim() !== '');
+    return `${prefix}${parts.join(' ')}`.trim();
   }
 
   getVisibleImages() {
@@ -339,7 +377,12 @@ export default class ImageModel {
 
   // Increase the weight of an image (1-9, cycles back to 1)
   increaseWeight(imageId) {
-    if (!this.selectedImages.has(imageId)) return 1;
+    // Make sure the image is still selected
+    if (!this.selectedImages.has(imageId)) {
+      // If somehow the image is not selected, select it
+      this.selectedImages.set(imageId, this.currentColorIndex);
+      this.currentColorIndex = (this.currentColorIndex + 1) % this.numSelectionColors;
+    }
     
     let weight = this.imageWeights.get(imageId) || 1;
     weight = weight >= 9 ? 1 : weight + 1;
@@ -355,7 +398,12 @@ export default class ImageModel {
   
   // Decrease the weight of an image (1-9, cycles back to 9)
   decreaseWeight(imageId) {
-    if (!this.selectedImages.has(imageId)) return 1;
+    // Make sure the image is still selected
+    if (!this.selectedImages.has(imageId)) {
+      // If somehow the image is not selected, select it
+      this.selectedImages.set(imageId, this.currentColorIndex);
+      this.currentColorIndex = (this.currentColorIndex + 1) % this.numSelectionColors;
+    }
     
     let weight = this.imageWeights.get(imageId) || 1;
     weight = weight <= 1 ? 9 : weight - 1;
@@ -396,15 +444,30 @@ export default class ImageModel {
    * @returns {Object} Favorites data object
    */
   exportFavorites() {
-    // Create a data object with favorites and metadata
-    const exportData = {
-      version: 1,
-      timestamp: new Date().toISOString(),
-      app: 'PrompterAid',
-      favorites: Array.from(this.favoriteImages)
-    };
-    
-    return exportData;
+    try {
+      const exportObject = {
+        model: this.currentModel,
+        favorites: Array.from(this.favoriteImages)
+      };
+      
+      const dataStr = JSON.stringify(exportObject, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      const modelName = this.currentModel.replace('-', '');
+      a.download = `prompteraid_favorites_${modelName}.json`;
+      a.click();
+      
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('Error exporting favorites:', e);
+      const event = new CustomEvent('storage-error', { 
+        detail: { message: 'An unexpected error occurred while exporting favorites.' } 
+      });
+      document.dispatchEvent(event);
+    }
   }
 
   /**
@@ -414,59 +477,49 @@ export default class ImageModel {
    */
   importFavorites(importData) {
     try {
-      // Validate the imported data
-      if (!importData || typeof importData !== 'object') {
-        return { success: false, message: 'Invalid import data format.' };
+      const imported = JSON.parse(importData);
+      
+      if (typeof imported !== 'object' || !imported.model || !Array.isArray(imported.favorites)) {
+        throw new Error('Invalid favorites file format.');
       }
       
-      // Check for required properties
-      if (!importData.version || !importData.app || !Array.isArray(importData.favorites)) {
-        return { success: false, message: 'Import data is missing required properties.' };
+      if (imported.model !== this.currentModel) {
+        const expectedModel = this.currentModel === 'niji-6' ? 'Niji 6' : 'Midjourney v7';
+        const importedModelName = imported.model === 'niji-6' ? 'Niji 6' : imported.model === 'midjourney-7' ? 'Midjourney v7' : imported.model;
+        
+        const event = new CustomEvent('storage-error', { 
+          detail: { 
+            message: `Import failed: These favorites are for ${importedModelName}, but you are currently using ${expectedModel}.`
+          } 
+        });
+        document.dispatchEvent(event);
+        return false;
       }
       
-      // Validate app name to ensure it's from our application
-      if (importData.app !== 'PrompterAid') {
-        return { success: false, message: 'Import data is not from PrompterAid.' };
-      }
-      
-      // Sanitize favorites array - only allow string IDs
-      const sanitizedFavorites = importData.favorites.filter(id => {
-        // Only accept string IDs that match our expected format
-        return typeof id === 'string' && /^img\/sref\/\d+\/\d+/.test(id);
+      // Sterilize the import: only accept valid image IDs that exist for the current model
+      const allImageIds = new Set(this.images.map(img => img.id));
+      const sanitizedFavorites = imported.favorites.filter(favId => {
+        const isString = typeof favId === 'string';
+        if (!isString) {
+            console.warn(`Sanitization: removed non-string favorite ID from import:`, favId);
+        }
+        const exists = allImageIds.has(favId);
+        if (isString && !exists) {
+            console.warn(`Sanitization: removed favorite ID not found in current model's image set:`, favId);
+        }
+        return isString && exists;
       });
-      
-      // Check if we have any valid favorites after sanitization
-      if (sanitizedFavorites.length === 0) {
-        return { success: false, message: 'No valid favorites found in import data.' };
+
+      if (sanitizedFavorites.length === 0 && imported.favorites.length > 0) {
+          throw new Error('None of the favorites in the file match the images for the current model.');
       }
       
-      // Validate against existing images to ensure they exist
-      const validFavorites = sanitizedFavorites.filter(id => {
-        return this.images.some(img => img.id === id);
-      });
-      
-      // If no valid favorites after checking against existing images
-      if (validFavorites.length === 0) {
-        return { success: false, message: 'None of the imported favorites match your available images.' };
-      }
-      
-      // Add the valid favorites to the current favorites
-      validFavorites.forEach(id => {
-        this.favoriteImages.add(id);
-      });
-      
-      // Save to storage
+      this.favoriteImages = new Set(sanitizedFavorites);
       this.saveToStorage();
-      
-      return { 
-        success: true, 
-        message: `Successfully imported ${validFavorites.length} favorites.`,
-        importedCount: validFavorites.length,
-        totalCount: importData.favorites.length
-      };
-    } catch (error) {
-      console.error('Error importing favorites:', error);
-      return { success: false, message: 'An error occurred while importing favorites.' };
+      return true;
+    } catch (e) {
+      console.error('Error importing favorites:', e);
+      throw new Error('Could not parse the imported file. Please make sure it is a valid favorites file.');
     }
   }
 } 

@@ -32,9 +32,11 @@ import GalleryView from '../views/galleryView.js';
  */
 
 export default class GalleryController {
-  constructor() {
+  constructor(appController) {
     this.model = new ImageModel();
+    this.model.currentModel = appController.currentModel;
     this.view = new GalleryView();
+    this.view.currentModel = appController.currentModel;
     this.showOnlySelected = false;
     this.searchNumber = null; // Track current search number
     
@@ -42,6 +44,10 @@ export default class GalleryController {
   }
 
   async init() {
+    try {
+    // Load model-specific favorites
+    this.model.loadFromStorage();
+    
     // Load images
     await this.model.loadImages();
     
@@ -50,6 +56,9 @@ export default class GalleryController {
     
     // Bind event handlers
     this.bindEvents();
+      
+      // Add direct document-level handler for favorite button clicks
+      this.addDirectFavoriteHandler();
     
     // Update prompt initially
     this.updatePrompt();
@@ -60,6 +69,10 @@ export default class GalleryController {
         this.view.showErrorNotification(event.detail.message);
       }
     });
+    } catch (error) {
+      console.error('Failed to initialize gallery:', error);
+      this.view.showErrorNotification('Failed to load images. Please try refreshing the page.');
+    }
   }
 
   /**
@@ -86,36 +99,29 @@ export default class GalleryController {
    * - Uses efficient data structures (Set, Map) for lookups
    */
   renderGallery() {
-    // Corner case: both filters are on, but result is empty
+    // Ensure only one filter is active at a time
     if (this.model.showOnlyFavorites && this.showOnlySelected) {
-      const favoritedImages = this.model.getVisibleImages();
-      const visibleImages = favoritedImages.filter(img => this.model.selectedImages.has(img.id));
-
-      if (visibleImages.length === 0) {
-        this.view.showErrorNotification("No images match both 'favorites' and 'selected' filters. Both views have been disabled.");
-        
-        // Disable both filters
-        this.model.toggleFavoritesOnly(); // it will be true, so this toggles to false
-        this.showOnlySelected = false;
-
-        // Update UI
-        this.view.updateFavoritesToggle(false);
-        this.view.updateShowSelectedToggle(false);
-
-        // Re-render with filters off
-        this.renderGallery();
-        return; // Stop current render
-      }
+      // If both filters are somehow active, prioritize the most recently activated one
+      // This should not happen with our updated toggle handlers, but just in case
+      console.warn("Both filters are active. This should not happen. Prioritizing favorites view.");
+      this.showOnlySelected = false;
+      this.view.updateShowSelectedToggle(false);
     }
 
-    // Check if we're in favorites-only mode but there are no favorites
+    // Check if we need to show the no-favorites warning banner
+    const validFavorites = this.model.images.filter(img => this.model.favoriteImages.has(img.id));
+    
+    // Show the warning banner only if we're in favorites view and there are no favorites
+    if (validFavorites.length === 0 && this.model.showOnlyFavorites) {
+      this.view.showFullWidthNoFavoritesWarning();
+    } else {
+      this.view.hideFullWidthNoFavoritesWarning();
+    }
+    
+    // Handle favorites view
     if (this.model.showOnlyFavorites) {
-      const validFavorites = this.model.images.filter(img => this.model.favoriteImages.has(img.id));
-      
+      // If there are no favorites, show all images with the warning banner
       if (validFavorites.length === 0) {
-        // Show all images with a warning banner instead of filtering
-        this.view.showFullWidthNoFavoritesWarning();
-        
         // Get all images (unfiltered)
         let visibleImages = this.model.images;
         
@@ -134,7 +140,8 @@ export default class GalleryController {
         this.view.renderGallery(
           visibleImages,
           this.model.selectedImages,
-          this.model.favoriteImages
+          this.model.favoriteImages,
+          this.model.currentModel
         );
         
         // Update weight displays after rendering the gallery
@@ -146,24 +153,76 @@ export default class GalleryController {
         // Update image count in the header
         this.view.updateImageCountSubheader(
           visibleImages.length,
-          this.model.selectedImages.size
+          this.model.selectedImages.size,
+          this.model.currentModel
         );
         
         return; // Stop current render
       } else {
-        // Hide the warning banner if it exists
-        this.view.hideFullWidthNoFavoritesWarning();
+        // If there are favorites, show them first, then a divider, then all non-favorites
+        
+        // Get all visible images based on current filters
+        let allVisibleImages = this.model.images;
+        
+        // Apply search filter if active
+        if (this.searchNumber !== null && this.searchNumber !== '') {
+          allVisibleImages = allVisibleImages.filter(img => {
+            return img.sref.includes(this.searchNumber);
+          });
+        }
+        
+        // Split into favorites and non-favorites
+        const favoriteImages = allVisibleImages.filter(img => this.model.favoriteImages.has(img.id));
+        const nonFavoriteImages = allVisibleImages.filter(img => !this.model.favoriteImages.has(img.id));
+        
+        // Render the favorite images first
+        this.view.renderGallery(
+          favoriteImages,
+          this.model.selectedImages,
+          this.model.favoriteImages,
+          this.model.currentModel
+        );
+        
+        // Show the divider
+        this.view.showFilterDivider('favorites', favoriteImages.length);
+        
+        // Append the non-favorite images
+        nonFavoriteImages.forEach(image => {
+          const isSelected = this.model.selectedImages.has(image.id);
+          const galleryItem = this.view.createGalleryItem(
+            image,
+            isSelected,
+            false, // Not a favorite by definition
+            isSelected ? this.model.selectedImages.get(image.id) : -1
+          );
+          this.view.gallery.appendChild(galleryItem);
+        });
+        
+        // Update weight displays after rendering the gallery
+        this.view.updateAllWeightDisplays(
+          (imageId) => this.model.getWeight(imageId),
+          (imageId) => this.model.getWeightColorIndex(imageId)
+        );
+        
+        // Update image count in the header
+        this.view.updateImageCountSubheader(
+          allVisibleImages.length,
+          this.model.selectedImages.size,
+          this.model.currentModel
+        );
+        
+        return; // Stop current render
       }
     } else {
-      // Hide the warning banner if not in favorites mode
-      this.view.hideFullWidthNoFavoritesWarning();
+      // Hide the favorites filter divider if not in favorites view
+      this.view.hideFilterDivider('favorites');
     }
 
     let visibleImages = this.model.getVisibleImages();
     
     // Apply search filter if active
     if (this.searchNumber !== null && this.searchNumber !== '') {
-      visibleImages = visibleImages.filter(img => {
+        visibleImages = visibleImages.filter(img => {
         return img.sref.includes(this.searchNumber);
       });
       
@@ -173,17 +232,126 @@ export default class GalleryController {
         // Return early to prevent further filtering
         return;
       }
+      
+      // If we have search results and not in another special view (favorites or selected),
+      // show the search results with a divider
+      if (!this.model.showOnlyFavorites && !this.showOnlySelected) {
+        // Create a copy of all visible images before filtering
+        const allVisibleImages = this.model.getVisibleImages();
+        
+        // Get images that match the search
+        const searchMatchImages = visibleImages;
+        
+        // Get images that don't match the search
+        const nonMatchImages = allVisibleImages.filter(img => 
+          !searchMatchImages.some(matchImg => matchImg.id === img.id)
+        );
+        
+        if (searchMatchImages.length > 0 && nonMatchImages.length > 0) {
+          // Render the search match images first
+          this.view.renderGallery(
+            searchMatchImages,
+            this.model.selectedImages,
+            this.model.favoriteImages,
+            this.model.currentModel
+          );
+          
+          // Show the divider
+          this.view.showFilterDivider('search', searchMatchImages.length);
+          
+          // Append the non-matching images
+          nonMatchImages.forEach(image => {
+            const isSelected = this.model.selectedImages.has(image.id);
+            const galleryItem = this.view.createGalleryItem(
+              image,
+              isSelected,
+              this.model.favoriteImages.has(image.id),
+              isSelected ? this.model.selectedImages.get(image.id) : -1
+            );
+            this.view.gallery.appendChild(galleryItem);
+          });
+          
+          // Update weight displays after rendering the gallery
+          this.view.updateAllWeightDisplays(
+            (imageId) => this.model.getWeight(imageId),
+            (imageId) => this.model.getWeightColorIndex(imageId)
+          );
+          
+          // Update image count in the header
+          this.view.updateImageCountSubheader(
+            allVisibleImages.length,
+            this.model.selectedImages.size,
+            this.model.currentModel
+          );
+          
+          return; // Stop current render
+        }
+      }
+    } else {
+      // Hide the search filter divider if search is not active
+      this.view.hideFilterDivider('search');
     }
     
-    // Apply selected filter if active
+    // Check if we need to show the no-selected warning banner
+    const hasSelectedImages = this.model.selectedImages.size > 0;
+    
+    // Show the warning banner only if we're in selected view and there are no selected images
+    if (!hasSelectedImages && this.showOnlySelected) {
+      this.view.showFullWidthNoSelectedWarning();
+    } else {
+      this.view.hideFullWidthNoSelectedWarning();
+    }
+    
+    // Handle selected view with divider
     if (this.showOnlySelected) {
-      visibleImages = visibleImages.filter(img => this.model.selectedImages.has(img.id));
+      // Get selected images
+      const selectedImages = visibleImages.filter(img => this.model.selectedImages.has(img.id));
+      
+      // Get unselected images
+      const unselectedImages = visibleImages.filter(img => !this.model.selectedImages.has(img.id));
+      
+      // If there are selected images, show them first, then a divider, then all unselected images
+      if (selectedImages.length > 0) {
+        // Render the selected images first
+        this.view.renderGallery(selectedImages, this.model.selectedImages, this.model.favoriteImages, this.model.currentModel);
+        
+        // Show the divider
+        this.view.showFilterDivider('selected', selectedImages.length);
+        
+        // Append the unselected images
+        unselectedImages.forEach(image => {
+          const isSelected = false; // These are unselected by definition
+          const galleryItem = this.view.createGalleryItem(
+            image,
+            isSelected,
+            this.model.favoriteImages.has(image.id),
+            -1 // No color index for unselected images
+          );
+          this.view.gallery.appendChild(galleryItem);
+        });
+        
+        // Update weight displays after rendering the gallery
+        this.view.updateAllWeightDisplays(
+          (imageId) => this.model.getWeight(imageId),
+          (imageId) => this.model.getWeightColorIndex(imageId)
+        );
+        
+        // Return early since we've manually rendered everything
+        return;
+      } else {
+        // If no images are selected, just show all images with the warning banner
+        visibleImages = this.model.getVisibleImages();
+      }
+    } else {
+      // Hide the selected filter divider if not in selected view
+      this.view.hideFilterDivider('selected');
     }
     
     this.view.renderGallery(
       visibleImages,
       this.model.selectedImages,
-      this.model.favoriteImages
+      this.model.favoriteImages,
+      this.model.currentModel
     );
     
     // Update weight displays after rendering the gallery
@@ -195,7 +363,8 @@ export default class GalleryController {
     // Update image count in the header
     this.view.updateImageCountSubheader(
       visibleImages.length,
-      this.model.selectedImages.size
+      this.model.selectedImages.size,
+      this.model.currentModel
     );
   }
 
@@ -227,22 +396,20 @@ export default class GalleryController {
     this.view.bindFavoriteClick(imageId => {
       const isFavorite = this.model.toggleImageFavorite(imageId);
       
-      // Update the favorite button UI without re-rendering the whole gallery
-      const favoriteButton = document.querySelector(`.favorite-button[data-id="${imageId}"]`);
-      if (favoriteButton) {
-        favoriteButton.innerHTML = isFavorite 
+      // Update all favorite buttons with the same ID
+      document.querySelectorAll(`.favorite-button[data-id="${imageId}"]`).forEach(button => {
+        button.innerHTML = isFavorite 
           ? '<i class="fas fa-star"></i>' 
           : '<i class="far fa-star"></i>';
-      }
+        button.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
+      });
       
-      // If we're in favorites-only mode and unfavorited an image, check if any favorites remain
-      if (this.model.showOnlyFavorites && !isFavorite) {
-        // Get the actual favorited images that exist in the current gallery
-        const validFavorites = this.model.images.filter(img => this.model.favoriteImages.has(img.id));
-        
-        // If no valid favorites remain, renderGallery will handle showing all images with a warning
+      // If we're in favorites-only mode and unfavorited an image, re-render the gallery
+      if (this.model.showOnlyFavorites) {
         this.renderGallery();
       }
+      
+      return isFavorite; // Return the new favorite state
     });
     
     // Prompt input
@@ -272,7 +439,7 @@ export default class GalleryController {
       this.model.shuffleImages();
       this.renderGallery();
     });
-    
+
     // Randomize button
     this.view.bindRandomizeButton(() => {
       // Get all unselected images
@@ -318,18 +485,23 @@ export default class GalleryController {
     
     // Show selected toggle
     this.view.bindShowSelectedToggle(() => {
+      // If favorites view is active, turn it off
+      if (this.model.showOnlyFavorites && !this.showOnlySelected) {
+        this.model.showOnlyFavorites = false;
+          this.view.updateFavoritesToggle(false);
+      }
+      
       // Toggle the state
       this.showOnlySelected = !this.showOnlySelected;
       
       // Update the UI
       this.view.updateShowSelectedToggle(this.showOnlySelected);
       
-      // If toggling on and no images are selected, show a warning
+      // If toggling on and no images are selected, don't revert but show the warning banner
       if (this.showOnlySelected && this.model.selectedImages.size === 0) {
-        this.view.showNoSelectedWarning();
-        this.showOnlySelected = false;
-        this.view.updateShowSelectedToggle(false);
-        return;
+        this.view.showFullWidthNoSelectedWarning();
+      } else {
+        this.view.hideFullWidthNoSelectedWarning();
       }
       
       this.renderGallery();
@@ -354,12 +526,14 @@ export default class GalleryController {
     // Weight controls
     this.view.bindWeightControls(
       (imageId) => {
-        this.model.increaseWeight(imageId);
+        const weight = this.model.increaseWeight(imageId);
         this.updatePrompt();
+        return weight;
       },
       (imageId) => {
-        this.model.decreaseWeight(imageId);
+        const weight = this.model.decreaseWeight(imageId);
         this.updatePrompt();
+        return weight;
       },
       (imageId) => this.model.getWeight(imageId),
       (imageId) => this.model.getWeightColorIndex(imageId)
@@ -374,7 +548,7 @@ export default class GalleryController {
     this.view.bindImportFavoritesButton((file) => {
       this.importFavorites(file);
     });
-    
+
     // Keyboard shortcuts
     this.bindKeyboardShortcuts();
   }
@@ -430,6 +604,12 @@ export default class GalleryController {
         case 'f':
           // Toggle favorites view - call the same handler as the button
           const favoritesHandler = () => {
+            // If selected view is active, turn it off
+            if (this.showOnlySelected && !this.model.showOnlyFavorites) {
+              this.showOnlySelected = false;
+              this.view.updateShowSelectedToggle(false);
+            }
+            
             // Toggle the state
             this.model.toggleFavoritesOnly();
             
@@ -459,12 +639,22 @@ export default class GalleryController {
         case 'v':
           // Toggle selected view - call the same handler as the button
           const selectedHandler = () => {
-            if (!this.showOnlySelected && this.model.selectedImages.size === 0) {
-              this.view.showNoSelectedWarning();
-              return false; // Prevent animation
+            // If favorites view is active, turn it off
+            if (this.model.showOnlyFavorites && !this.showOnlySelected) {
+              this.model.showOnlyFavorites = false;
+              this.view.updateFavoritesToggle(false);
             }
+            
             this.showOnlySelected = !this.showOnlySelected;
             this.view.updateShowSelectedToggle(this.showOnlySelected);
+            
+            // Show or hide the warning banner as needed
+            if (this.showOnlySelected && this.model.selectedImages.size === 0) {
+              this.view.showFullWidthNoSelectedWarning();
+            } else {
+              this.view.hideFullWidthNoSelectedWarning();
+            }
+            
             this.renderGallery();
             this.model.saveToStorage();
             return true; // Allow animation
@@ -518,7 +708,7 @@ export default class GalleryController {
       if (stickySearchButton) stickySearchButton.classList.remove('active');
       
       this.view.showInfoNotification('Search cleared');
-    } else {
+      } else {
       // If we're opening the search, scroll to the top and focus the input
       window.scrollTo({ top: 0, behavior: 'smooth' });
       searchInput.focus();
@@ -535,9 +725,13 @@ export default class GalleryController {
    * @param {string|null} searchNumber - The number to search for, or null to clear search
    */
   performSearch(searchNumber) {
-    if (searchNumber === null || searchNumber === '') {
-      // Clear search - show all images
+    // Set the search number
+    this.searchNumber = searchNumber;
+    
+    // If the search is empty, clear it
+    if (!searchNumber || searchNumber.trim() === '') {
       this.searchNumber = null;
+      this.view.hideFilterDivider('search');
       this.renderGallery();
       
       // Update search button state
@@ -549,39 +743,80 @@ export default class GalleryController {
       return;
     }
     
-    // Store the search string
-    this.searchNumber = searchNumber.toString().trim();
-    if (this.searchNumber === '') {
-      this.searchNumber = null;
+    // Get all images
+    const allImages = this.model.images;
+    
+    // Filter images based on search
+    const matchingImages = allImages.filter(img => {
+      return img.sref.includes(searchNumber);
+    });
+    
+    // If no matches, show notification but keep the search active
+    if (matchingImages.length === 0) {
+      this.view.showErrorNotification(`No images found matching "${searchNumber}"`);
+      this.view.hideFilterDivider('search');
       this.renderGallery();
       return;
     }
     
-    // Find all images that contain the search number in their sref
-    const matchingImages = this.model.images.filter(img => {
-      return img.sref.includes(this.searchNumber);
+    // Clear the gallery
+    this.view.clearGallery();
+    
+    // Render the matching images first
+    matchingImages.forEach(image => {
+      const isSelected = this.model.selectedImages.has(image.id);
+      const isFavorite = this.model.favoriteImages.has(image.id);
+      const galleryItem = this.view.createGalleryItem(
+        image,
+        isSelected,
+        isFavorite,
+        isSelected ? this.model.selectedImages.get(image.id) : -1
+      );
+      this.view.gallery.appendChild(galleryItem);
     });
     
-    if (matchingImages.length > 0) {
-      // Show only the matching images
-      this.view.renderGallery(matchingImages, this.model.selectedImages, this.model.favoriteImages);
-      
-      // Update weight displays after rendering the gallery
-      this.view.updateAllWeightDisplays(
-        (imageId) => this.model.getWeight(imageId),
-        (imageId) => this.model.getWeightColorIndex(imageId)
+    // Show the divider
+    this.view.showFilterDivider('search', matchingImages.length);
+    
+    // Get non-matching images
+    const nonMatchingImages = allImages.filter(img => 
+      !matchingImages.some(match => match.id === img.id)
+    );
+    
+    // Append the non-matching images
+    nonMatchingImages.forEach(image => {
+      const isSelected = this.model.selectedImages.has(image.id);
+      const isFavorite = this.model.favoriteImages.has(image.id);
+      const galleryItem = this.view.createGalleryItem(
+        image,
+        isSelected,
+        isFavorite,
+        isSelected ? this.model.selectedImages.get(image.id) : -1
       );
-      
-      // Update search button state to indicate search is active
-      const searchButton = document.getElementById('search-button');
-      const stickySearchButton = document.getElementById('sticky-search-button');
-      if (searchButton) searchButton.classList.add('active');
-      if (stickySearchButton) stickySearchButton.classList.add('active');
-      
-      this.view.showInfoNotification(`Found ${matchingImages.length} image(s) matching "${this.searchNumber}"`);
-    } else {
-      this.view.showErrorNotification(`No images found matching "${this.searchNumber}"`);
-    }
+      this.view.gallery.appendChild(galleryItem);
+    });
+    
+    // Update weight displays
+    this.view.updateAllWeightDisplays(
+      (imageId) => this.model.getWeight(imageId),
+      (imageId) => this.model.getWeightColorIndex(imageId)
+    );
+    
+    // Update image count in the header
+    this.view.updateImageCountSubheader(
+      allImages.length,
+      this.model.selectedImages.size,
+      this.model.currentModel
+    );
+    
+    // Update search button state to indicate search is active
+    const searchButton = document.getElementById('search-button');
+    const stickySearchButton = document.getElementById('sticky-search-button');
+    if (searchButton) searchButton.classList.add('active');
+    if (stickySearchButton) stickySearchButton.classList.add('active');
+    
+    // Show notification about search results
+    this.view.showInfoNotification(`Found ${matchingImages.length} image(s) matching "${searchNumber}"`);
   }
 
   /**
@@ -589,30 +824,10 @@ export default class GalleryController {
    */
   exportFavorites() {
     try {
-      // Get favorites data from model
-      const exportData = this.model.exportFavorites();
-      
-      // Convert to JSON string with pretty formatting
-      const jsonString = JSON.stringify(exportData, null, 2);
-      
-      // Create a Blob with the JSON data
-      const blob = new Blob([jsonString], { type: 'application/json' });
-      
-      // Create a temporary download link
-      const downloadLink = document.createElement('a');
-      downloadLink.href = URL.createObjectURL(blob);
-      downloadLink.download = `prompteraid-favorites-${new Date().toISOString().slice(0, 10)}.json`;
-      
-      // Trigger the download
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-      
-      // Show success notification
-      this.view.showInfoNotification(`Exported ${exportData.favorites.length} favorites successfully.`);
+      this.model.exportFavorites();
     } catch (error) {
-      console.error('Error exporting favorites:', error);
-      this.view.showErrorNotification('Failed to export favorites. Please try again.');
+      console.error('Export failed:', error);
+      this.view.showErrorNotification('Failed to export favorites.');
     }
   }
 
@@ -621,52 +836,42 @@ export default class GalleryController {
    * @param {File} file - The JSON file to import
    */
   importFavorites(file) {
-    try {
-      // Validate file type
-      if (!file.name.endsWith('.json')) {
-        this.view.showErrorNotification('Please select a valid JSON file.');
-        return;
-      }
-      
-      // Read the file
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          // Parse the JSON data
-          const importData = JSON.parse(event.target.result);
-          
-          // Import favorites using the model
-          const result = this.model.importFavorites(importData);
-          
-          // Show appropriate notification based on result
-          if (result.success) {
-            this.view.showInfoNotification(result.message);
-            
-            // Re-render gallery to show imported favorites
-            this.renderGallery();
-          } else {
-            this.view.showErrorNotification(result.message);
-          }
-        } catch (parseError) {
-          console.error('Error parsing import file:', parseError);
-          this.view.showErrorNotification('The selected file contains invalid JSON data.');
-        }
-      };
-      
-      reader.onerror = () => {
-        this.view.showErrorNotification('Failed to read the selected file.');
-      };
-      
-      // Start reading the file
-      reader.readAsText(file);
-    } catch (error) {
-      console.error('Error importing favorites:', error);
-      this.view.showErrorNotification('An unexpected error occurred while importing favorites.');
+    if (!file) {
+      this.view.showErrorNotification('No file selected for import.');
+      return;
     }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const fileContent = event.target.result;
+        const success = this.model.importFavorites(fileContent);
+        
+        if (success) {
+          this.view.showInfoNotification('Favorites imported successfully!');
+          this.renderGallery(); // Re-render to show newly imported favorites
+        }
+        // Error case is handled by the event listener in init()
+      } catch (e) {
+        this.view.showErrorNotification(e.message || 'An unexpected error occurred while importing favorites.');
+      }
+    };
+    
+    reader.onerror = () => {
+      this.view.showErrorNotification('Failed to read the selected file.');
+    };
+    
+    reader.readAsText(file);
   }
 
   bindFavoritesToggle() {
     this.view.bindFavoritesToggle(() => {
+      // If selected view is active, turn it off
+      if (this.showOnlySelected && !this.model.showOnlyFavorites) {
+        this.showOnlySelected = false;
+        this.view.updateShowSelectedToggle(false);
+      }
+      
       // Toggle the state
       this.model.toggleFavoritesOnly();
       
@@ -675,6 +880,39 @@ export default class GalleryController {
       
       // Render the gallery (our renderGallery method now handles the no-favorites case)
       this.renderGallery();
+    });
+  }
+
+  // Add a direct document-level handler for favorite button clicks
+  addDirectFavoriteHandler() {
+    document.addEventListener('click', (event) => {
+      // Check if the click was directly on a favorite button or its icon
+      const favoriteButton = event.target.closest('.favorite-button');
+      if (favoriteButton) {
+        // Get the image ID from the button's data attribute
+        const imageId = favoriteButton.dataset.id;
+        
+        if (imageId) {
+          console.log('Direct document handler: favorite button clicked for image', imageId);
+          event.stopPropagation();
+          
+          // Toggle the favorite state
+          const isFavorite = this.model.toggleImageFavorite(imageId);
+          
+          // Update all buttons with this ID
+          document.querySelectorAll(`.favorite-button[data-id="${imageId}"]`).forEach(button => {
+            button.innerHTML = isFavorite 
+              ? '<i class="fas fa-star"></i>' 
+              : '<i class="far fa-star"></i>';
+            button.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
+          });
+            
+          // If we're in favorites-only mode, re-render the gallery
+          if (this.model.showOnlyFavorites) {
+            this.renderGallery();
+          }
+        }
+      }
     });
   }
 } 
