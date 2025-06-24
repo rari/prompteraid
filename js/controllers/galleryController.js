@@ -491,11 +491,21 @@ export default class GalleryController {
           this.view.updateFavoritesToggle(false);
       }
       
+      // If search is active, turn it off
+      if (this.searchNumber !== null && this.searchNumber !== '') {
+        this.clearSearchState();
+      }
+      
       // Toggle the state
       this.showOnlySelected = !this.showOnlySelected;
       
       // Update the UI
       this.view.updateShowSelectedToggle(this.showOnlySelected);
+      
+      // Scroll to top when activating selected view
+      if (this.showOnlySelected) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
       
       // If toggling on and no images are selected, don't revert but show the warning banner
       if (this.showOnlySelected && this.model.selectedImages.size === 0) {
@@ -610,11 +620,21 @@ export default class GalleryController {
               this.view.updateShowSelectedToggle(false);
             }
             
+            // If search is active, turn it off
+            if (this.searchNumber !== null && this.searchNumber !== '') {
+              this.clearSearchState();
+            }
+            
             // Toggle the state
             this.model.toggleFavoritesOnly();
             
             // Update the UI
             this.view.updateFavoritesToggle(this.model.showOnlyFavorites);
+            
+            // Scroll to top when activating favorites view
+            if (this.model.showOnlyFavorites) {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
             
             // Render the gallery (our renderGallery method now handles the no-favorites case)
             this.renderGallery();
@@ -645,10 +665,20 @@ export default class GalleryController {
               this.view.updateFavoritesToggle(false);
             }
             
+            // If search is active, turn it off
+            if (this.searchNumber !== null && this.searchNumber !== '') {
+              this.clearSearchState();
+            }
+            
             this.showOnlySelected = !this.showOnlySelected;
             this.view.updateShowSelectedToggle(this.showOnlySelected);
             
-            // Show or hide the warning banner as needed
+            // Scroll to top when activating selected view
+            if (this.showOnlySelected) {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            // If toggling on and no images are selected, don't revert but show the warning banner
             if (this.showOnlySelected && this.model.selectedImages.size === 0) {
               this.view.showFullWidthNoSelectedWarning();
             } else {
@@ -680,6 +710,23 @@ export default class GalleryController {
   }
   
   /**
+   * Clears the search state and updates UI accordingly
+   */
+  clearSearchState() {
+    this.searchNumber = null;
+    const searchContainer = document.querySelector('.search-container');
+    const searchButton = document.getElementById('search-button');
+    const stickySearchButton = document.getElementById('sticky-search-button');
+    const searchInput = document.getElementById('search-input');
+    
+    if (searchContainer) searchContainer.classList.add('hidden');
+    if (searchButton) searchButton.classList.remove('active');
+    if (stickySearchButton) stickySearchButton.classList.remove('active');
+    if (searchInput) searchInput.value = '';
+    this.view.hideFilterDivider('search');
+  }
+
+  /**
    * Toggles the search functionality on/off
    * Shows/hides the search input and updates button state
    */
@@ -699,16 +746,20 @@ export default class GalleryController {
 
     if (isNowHidden) {
       // If we're closing the search, clear the search and re-render
-      this.searchNumber = null;
-      searchInput.value = '';
-      this.renderGallery();
-      
-      // Update button state
-      searchButton.classList.remove('active');
-      if (stickySearchButton) stickySearchButton.classList.remove('active');
+      this.clearSearchState();
       
       this.view.showInfoNotification('Search cleared');
-      } else {
+    } else {
+      // If we're opening the search, turn off other exclusive views
+      if (this.model.showOnlyFavorites) {
+        this.model.showOnlyFavorites = false;
+        this.view.updateFavoritesToggle(false);
+      }
+      if (this.showOnlySelected) {
+        this.showOnlySelected = false;
+        this.view.updateShowSelectedToggle(false);
+      }
+      
       // If we're opening the search, scroll to the top and focus the input
       window.scrollTo({ top: 0, behavior: 'smooth' });
       searchInput.focus();
@@ -730,8 +781,7 @@ export default class GalleryController {
     
     // If the search is empty, clear it
     if (!searchNumber || searchNumber.trim() === '') {
-      this.searchNumber = null;
-      this.view.hideFilterDivider('search');
+      this.clearSearchState();
       this.renderGallery();
       
       // Update search button state
@@ -741,6 +791,16 @@ export default class GalleryController {
       if (stickySearchButton) stickySearchButton.classList.remove('active');
       
       return;
+    }
+    
+    // Turn off other exclusive views when performing a search
+    if (this.model.showOnlyFavorites) {
+      this.model.showOnlyFavorites = false;
+      this.view.updateFavoritesToggle(false);
+    }
+    if (this.showOnlySelected) {
+      this.showOnlySelected = false;
+      this.view.updateShowSelectedToggle(false);
     }
     
     // Get all images
@@ -872,11 +932,21 @@ export default class GalleryController {
         this.view.updateShowSelectedToggle(false);
       }
       
+      // If search is active, turn it off
+      if (this.searchNumber !== null && this.searchNumber !== '') {
+        this.clearSearchState();
+      }
+      
       // Toggle the state
       this.model.toggleFavoritesOnly();
       
       // Update the UI
       this.view.updateFavoritesToggle(this.model.showOnlyFavorites);
+      
+      // Scroll to top when activating favorites view
+      if (this.model.showOnlyFavorites) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
       
       // Render the gallery (our renderGallery method now handles the no-favorites case)
       this.renderGallery();
