@@ -30,3 +30,4 @@ node_modules/**
 .env.production.local
 package-lock.json
 server.js
+summary-card-generator-images.html

@@ -2280,36 +2280,65 @@ html.dark-mode .footer-credit a:hover {
 /* Responsive design */
 @media (max-width: 768px) {
   .footer-main {
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-5);
+  }
+  .footer-brand {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .brand-text {
+    margin-bottom: var(--space-3);
     text-align: center;
   }
-  
-  .footer-brand {
+  .footer-links-section {
+    width: 100%;
+    display: flex;
     justify-content: center;
+    margin-bottom: var(--space-3);
   }
-  
   .social-links {
+    display: flex;
     justify-content: center;
+    gap: var(--space-2);
+    width: 100%;
+    margin-bottom: var(--space-3);
     flex-wrap: wrap;
   }
-  
-  .social-link {
-    min-width: 70px;
-    padding: var(--space-2);
+  .footer-bottom {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    text-align: center;
   }
-  
-  .footer-title {
-    font-size: var(--font-size-2xl);
+  .footer-credit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 1rem;
+    line-height: 1.7;
   }
-  
-  .footer-logo {
-    font-size: 2.5rem;
+  .footer-legal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-top: 0.5rem;
   }
-  
-  .logo-glow {
-    width: 65px;
-    height: 65px;
+  .footer-legal p,
+  .footer-legal a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 0.1em 0;
+  }
+  .footer-divider {
+    display: none;
   }
 }
 
@@ -3065,11 +3094,23 @@ html:not(.dark-mode) .weight-color-6 {
 }
 
 .model-selector .current-model {
-  display: inline-block;
-  position: relative;
-  border-bottom: 2px dotted var(--neon-pink);
-  padding-bottom: 2px; /* This controls the small visible gap */
-  transition: border-color 0.2s ease;
+  background: linear-gradient(90deg, rgba(0,229,255,0.22) 0%, rgba(0,229,255,0.44) 40%, rgba(0,255,136,0.44) 60%, rgba(0,229,255,0.22) 100%);
+  background-size: 300% 100%;
+  animation: model-pill-gradient 4s linear infinite alternate;
+  color: var(--primary);
+  padding: 0.18em 0.85em;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+  margin-right: 0.5em;
+  z-index: 1;
+  box-shadow: 0 0 8px 0 rgba(0,229,255,0.12);
+  border-bottom: none;
+  text-decoration: none;
+}
+@keyframes model-pill-gradient {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 
 .model-selector:hover .current-model {
