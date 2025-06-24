@@ -108,14 +108,17 @@ export default class AppController {
   handleUrlParameters() {
     // Get URL parameters
     const urlParams = new URLSearchParams(window.location.search);
+    const modelFromUrl = urlParams.get('model');
+    if (modelFromUrl && (modelFromUrl === 'niji-6' || modelFromUrl === 'midjourney-7')) {
+      this.currentModel = modelFromUrl;
+      localStorage.setItem('prompteraid_model', modelFromUrl);
+    }
     const sref = urlParams.get('sref');
     const quadrant = urlParams.get('q') || urlParams.get('quadrant'); // Support both short and long parameter names
-    
     // Model handling is now in initializeModel(), so we only handle sref here.
     if (sref) {
       // If we have a style reference in the URL, find it and focus on it
       console.log(`Looking for style reference: ${sref}`);
-      
       // Wait for the gallery to load and the controller to be initialized
       const checkAndCreateLinkedView = () => {
         // Check if gallery controller is available
@@ -124,10 +127,8 @@ export default class AppController {
           setTimeout(checkAndCreateLinkedView, 500);
           return;
         }
-        
         // Find the image with the matching style reference
         const galleryItem = document.querySelector(`.gallery-item[data-sref="${sref}"]`);
-        
         if (galleryItem) {
           // Create a linked view with divider
           this.createLinkedView(galleryItem, sref, quadrant);
@@ -135,7 +136,6 @@ export default class AppController {
           console.warn(`Style reference ${sref} not found in gallery`);
         }
       };
-      
       // Start checking
       setTimeout(checkAndCreateLinkedView, 1000);
     }
@@ -174,7 +174,8 @@ export default class AppController {
       linkedImage,
       false, // Not selected by default
       galleryController.model.favoriteImages.has(imageId),
-      -1 // No color index
+      -1, // No color index
+      this.currentModel // Pass the current model
     );
     
     // Add highlight class to make it stand out
@@ -223,7 +224,8 @@ export default class AppController {
         image,
         isSelected,
         isFavorite,
-        isSelected ? galleryController.model.selectedImages.get(image.id) : -1
+        isSelected ? galleryController.model.selectedImages.get(image.id) : -1,
+        this.currentModel // Pass the current model
       );
       
       galleryController.view.gallery.appendChild(galleryItem);
@@ -235,10 +237,11 @@ export default class AppController {
       (imageId) => galleryController.model.getWeightColorIndex(imageId)
     );
     
-    // Update image count in the header
+    // Update image count in the header with the correct model
     galleryController.view.updateImageCountSubheader(
       allImages.length,
-      galleryController.model.selectedImages.size
+      galleryController.model.selectedImages.size,
+      this.currentModel // Pass the current model
     );
     
     // Open the search if it exists
