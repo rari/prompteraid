@@ -549,6 +549,7 @@ export default class GalleryView {
     linkButton.dataset.sref = image.sref;
     linkButton.title = `Copy link to style ${image.sref}`;
     linkButton.setAttribute('aria-label', `Copy direct link to style reference ${image.sref}`);
+    linkButton.tabIndex = isSelected ? 0 : -1;
     
     linkButton.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -600,6 +601,7 @@ export default class GalleryView {
     favButton.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
     favButton.setAttribute('aria-label', isFavorite ? `Remove style reference ${image.sref} from favorites` : `Add style reference ${image.sref} to favorites`);
     favButton.setAttribute('aria-pressed', isFavorite ? 'true' : 'false');
+    favButton.tabIndex = isSelected ? 0 : -1;
     
     // Use the same direct addEventListener approach as the quadrant flip button
     favButton.addEventListener('click', (e) => {
@@ -632,6 +634,7 @@ export default class GalleryView {
     flipButton.innerHTML = '<i class="fas fa-sync-alt"></i>';
     flipButton.title = 'Flip quadrant';
     flipButton.dataset.id = image.id;
+    flipButton.tabIndex = isSelected ? 0 : -1;
     flipButton.addEventListener('click', (e) => {
       e.stopPropagation();
       
@@ -674,6 +677,7 @@ export default class GalleryView {
       plusButton.dataset.id = image.id;
       plusButton.dataset.action = 'increase';
       plusButton.setAttribute('aria-label', `Increase weight for style reference ${image.sref}`);
+      plusButton.tabIndex = 0;
       weightControls.appendChild(plusButton);
       
       // Weight display
