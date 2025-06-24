@@ -2044,4 +2044,63 @@ export default class GalleryView {
     this.notificationContainer.style.display = 'none';
     document.body.appendChild(this.notificationContainer);
   }
+
+  renderNewStylesSection(newImages, currentModel) {
+    const section = document.getElementById('new-styles-section');
+    if (!section) return;
+
+    // If no new images, hide the section
+    if (!newImages || newImages.length === 0) {
+      section.style.display = 'none';
+      section.innerHTML = '';
+      return;
+    }
+
+    // Check localStorage for expanded/collapsed state
+    const newImageIds = newImages.map(img => img.id).join(',');
+    const storageKey = 'prompteraid_newStyles_expanded';
+    const lastIdsKey = 'prompteraid_newStyles_lastIds';
+    let expanded = false;
+    const lastIds = localStorage.getItem(lastIdsKey);
+    if (lastIds !== newImageIds) {
+      // New images detected, reset to collapsed
+      expanded = false;
+      localStorage.setItem(storageKey, 'false');
+      localStorage.setItem(lastIdsKey, newImageIds);
+    } else {
+      expanded = localStorage.getItem(storageKey) === 'true';
+    }
+
+    // Limit to 5 images unless expanded
+    const maxToShow = 5;
+    const showAll = expanded || newImages.length <= maxToShow;
+    const imagesToShow = showAll ? newImages : newImages.slice(0, maxToShow);
+
+    // Section header
+    let html = `<div class="new-styles-header"><i class="fa-solid fa-sparkles" style="color: var(--neon-pink);"></i> <span>New Styles</span></div>`;
+    html += '<div class="new-styles-gallery">';
+    imagesToShow.forEach(image => {
+      html += `<div class="new-style-item">
+        <img src="${image.path}" alt="New style reference ${image.sref}" loading="lazy">
+        <div class="new-style-sref">${image.sref}</div>
+      </div>`;
+    });
+    html += '</div>';
+    if (!showAll) {
+      html += `<button class="new-styles-more-btn" aria-label="Show more new styles">More</button>`;
+    } else if (newImages.length > maxToShow) {
+      html += `<button class="new-styles-more-btn" aria-label="Show fewer new styles">Less</button>`;
+    }
+    section.innerHTML = html;
+    section.style.display = '';
+
+    // Add event listener for More/Less button
+    const moreBtn = section.querySelector('.new-styles-more-btn');
+    if (moreBtn) {
+      moreBtn.addEventListener('click', () => {
+        localStorage.setItem(storageKey, (!showAll).toString());
+        this.renderNewStylesSection(newImages, currentModel);
+      });
+    }
+  }
 } 

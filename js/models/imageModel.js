@@ -105,36 +105,31 @@ export default class ImageModel {
   async loadImages() {
     try {
       const imagePaths = await this.getImageFiles();
-      this.images = imagePaths.map(path => {
-        // Extract the filename from the path
-        const filename = path.split('/').pop().split('\\').pop();
-        
-        // Extract sref from filename (before first underscore)
-        // For files like "1092443072_a08d2cee-275d-4f15-b6d3-d3c369939788.webp"
-        // or files in paths like "img\sref\1\1092443072_..."
-        const filenameWithoutPath = filename.split('_')[0];
-        
-        // Extract just the numeric part, removing any directory structure
-        // This handles cases where the filename might still have directory info
-        const srefMatch = filenameWithoutPath.match(/(\d+)/);
-        const sref = srefMatch ? srefMatch[0] : filenameWithoutPath;
-        
-        // For GitHub Pages, ensure we're not duplicating the basePath
-        let imagePath = path;
-        if (window.location.hostname.includes('github.io') && this.basePath && path.startsWith(this.basePath)) {
-          // Path already contains the basePath, so use it as is
-          console.log(`Path already contains basePath: ${path}`);
-        } else if (window.location.hostname.includes('github.io') && this.basePath) {
-          // Add basePath only once for GitHub Pages
-          imagePath = `${this.basePath}/${path}`;
-          console.log(`Adding basePath to path: ${imagePath}`);
+      this.images = imagePaths.map(pathOrObj => {
+        // If the entry is an object (new format), preserve all fields
+        if (typeof pathOrObj === 'object' && pathOrObj !== null) {
+          // Extract sref as before
+          const filename = pathOrObj.path.split('/').pop().split('\\').pop();
+          const filenameWithoutPath = filename.split('_')[0];
+          const srefMatch = filenameWithoutPath.match(/(\d+)/);
+          const sref = srefMatch ? srefMatch[0] : filenameWithoutPath;
+          return {
+            ...pathOrObj,
+            id: pathOrObj.path, // Use path as unique ID
+            sref: sref,
+          };
+        } else {
+          // Old format: just a string path
+          const filename = pathOrObj.split('/').pop().split('\\').pop();
+          const filenameWithoutPath = filename.split('_')[0];
+          const srefMatch = filenameWithoutPath.match(/(\d+)/);
+          const sref = srefMatch ? srefMatch[0] : filenameWithoutPath;
+          return {
+            id: pathOrObj,
+            sref: sref,
+            path: pathOrObj
+          };
         }
-        
-        return {
-          id: path, // Keep the original path as the ID to ensure uniqueness
-          sref: sref,
-          path: imagePath // Use the properly constructed path
-        };
       });
       this.shuffleImages();
       return this.images;
@@ -521,5 +516,9 @@ export default class ImageModel {
       console.error('Error importing favorites:', e);
       throw new Error('Could not parse the imported file. Please make sure it is a valid favorites file.');
     }
+  }
+
+  getNewImages() {
+    return this.images.filter(img => img.new === true);
   }
 } 
