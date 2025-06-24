@@ -1299,10 +1299,10 @@ export default class GalleryView {
 
     // Add icons for models
     const modelIcons = {
-      'niji-6': '<i class="fa-solid fa-rainbow" style="color: #ff5eea; margin-right: 0.3em;"></i>',
-      'midjourney-7': '<i class="fa-solid fa-sailboat" style="color: #00bfff; margin-right: 0.3em;"></i>'
+      'niji-6': '<i class="fa-solid fa-rainbow" style="color: #00e5ff; margin-right: 0.3em;"></i>',
+      'midjourney-7': '<i class="fa-solid fa-sailboat" style="color: #00e5ff; margin-right: 0.3em;"></i>'
     };
-    const modelDisplayName = currentModel === 'niji-6' ? `${modelIcons['niji-6']}Niji 6` : `${modelIcons['midjourney-7']}Midjourney v7`;
+    const modelDisplayName = currentModel === 'niji-6' ? `${modelIcons['niji-6']}<span style="color: white;">Niji 6</span>` : `${modelIcons['midjourney-7']}<span style="color: white;">Midjourney v7</span>`;
 
     // Define all available models
     const allModels = [
@@ -1319,7 +1319,7 @@ export default class GalleryView {
       <div class="model-selector">
         <span class="current-model">${modelDisplayName}</span>
         <div class="model-dropdown">
-          ${otherModels.map(model => `<div class="model-option" data-model="${model.id}">${model.icon}${model.name}</div>`).join('')}
+          ${otherModels.map(model => `<div class="model-option" data-model="${model.id}">${model.icon}<span style="color: white;">${model.name}</span></div>`).join('')}
         </div>
       </div>
     `;
