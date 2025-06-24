@@ -722,7 +722,7 @@ export default class GalleryController {
           this.toggleSearch();
           break;
           
-        case 'l':
+        case 'a':
           // Randomize selection - call the same handler as the button
           this.randomizeSelection();
           break;
