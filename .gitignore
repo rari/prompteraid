@@ -1,25 +1,3 @@
-# Ignore everything
-*
-
-# Except these folders and files
-!api/
-!api/**
-!img/
-!img/**
-!js/
-!js/**/*
-!styles/
-!styles/**/*
-!index.html
-!debug.html
-!package.json
-!README.md
-!.gitignore
-!.nojekyll
-!404.html
-!summary-card-generator.html
-!summary-card-generator-images.html
-
 # But still ignore these even if they're in allowed folders
 node_modules/
 node_modules/**
