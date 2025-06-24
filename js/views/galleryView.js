@@ -1339,26 +1339,28 @@ export default class GalleryView {
       'niji-6': '<i class="fa-solid fa-rainbow" style="color: #00e5ff; margin-right: 0.3em;"></i>',
       'midjourney-7': '<i class="fa-solid fa-sailboat" style="color: #00e5ff; margin-right: 0.3em;"></i>'
     };
-    const modelDisplayName = currentModel === 'niji-6' ? `${modelIcons['niji-6']}<span style="color: white;">Niji 6</span>` : `${modelIcons['midjourney-7']}<span style="color: white;">Midjourney v7</span>`;
+    const modelDisplayName = currentModel === 'niji-6' ? `${modelIcons['niji-6']}<span style=\"color: white;\">Niji&nbsp;6</span>` : `${modelIcons['midjourney-7']}<span style=\"color: white;\">Midjourney&nbsp;v7</span>`;
 
     // Define all available models
     const allModels = [
-      { id: 'niji-6', name: 'Niji 6', icon: modelIcons['niji-6'] },
-      { id: 'midjourney-7', name: 'Midjourney v7', icon: modelIcons['midjourney-7'] }
+      { id: 'niji-6', name: 'Niji&nbsp;6', icon: modelIcons['niji-6'] },
+      { id: 'midjourney-7', name: 'Midjourney&nbsp;v7', icon: modelIcons['midjourney-7'] }
     ];
 
     // Filter out the current model to only show the other option(s)
     const otherModels = allModels.filter(model => model.id !== currentModel);
     
+    // Combine the text and model selector into a single span for no-break
     const innerHTML = `
-      <span class="image-count-number">${totalCount}</span>
-      <span class="subheader-text">pregenerated sref references for </span>
-      <div class="model-selector">
-        <span class="current-model">${modelDisplayName}</span>
-        <div class="model-dropdown">
-          ${otherModels.map(model => `<div class="model-option" data-model="${model.id}">${model.icon}<span style="color: white;">${model.name}</span></div>`).join('')}
-        </div>
-      </div>
+      <span class=\"image-count-number\">${totalCount}</span>
+      <span class=\"subheader-inline\">pregenerated sref references for
+        <span class=\"model-selector-inline model-selector\">
+          <span class=\"current-model\">${modelDisplayName}</span>
+          <span class=\"model-dropdown\">
+            ${otherModels.map(model => `<span class=\"model-option\" data-model=\"${model.id}\">${model.icon}<span style=\"color: white;\">${model.name}</span></span>`).join('')}
+          </span>
+        </span>
+      </span>
     `;
     
     this.imageCountSubheader.innerHTML = innerHTML;

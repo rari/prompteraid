@@ -412,6 +412,8 @@ a:hover {
   text-align: center;
   margin-top: 1.2rem;
   letter-spacing: 0.02em;
+  flex-wrap: nowrap; /* Prevent wrapping on mobile */
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
 .image-count-subheader .subheader-text {
@@ -3537,4 +3539,72 @@ html.dark-mode .action-button:hover {
   background: rgba(0, 0, 0, 0.18) !important;
   color: var(--text-primary) !important;
   border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.subheader-inline {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  gap: 0.3em;
+}
+.model-selector-inline {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  margin-left: 0.3em;
+}
+
+@media (max-width: 768px) {
+  .image-count-subheader {
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+  }
+  .subheader-inline, .model-selector-inline {
+    white-space: nowrap !important;
+  }
+}
+
+.footer-credit > *, .footer-legal > * {
+  margin: 0;
+  padding: 0;
+}
+.footer-credit a, .footer-legal a {
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+}
+.footer-bullet {
+  display: inline-block;
+  margin: 0 0.75em;
+  font-size: 1.1em;
+  vertical-align: middle;
+  opacity: 0.6;
+  user-select: none;
+}
+
+/* Remove list-style if any ul/li is used in the footer */
+.footer-credit li, .footer-legal li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+
+.legal-page h2 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.home-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.legal-page ul {
+  padding-left: 2em;
+  margin-left: 0;
+  list-style-position: inside;
+}
+.legal-page li {
+  margin-bottom: 0.5em;
 }
