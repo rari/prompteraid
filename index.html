@@ -81,6 +81,7 @@
   </script>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
   <div class="container">
     <header>
       <h1 class="cute-title-container">
@@ -94,56 +95,59 @@
       </div>
     </header>
     
-    <main>
+    <main id="main-content">
       <div class="prompt-container">
         <div class="input-group">
           <!-- Discord/Website Toggle moved to the left -->
           <div class="mode-toggle-container">
-            <button id="mode-toggle" class="mode-toggle" title="Toggle between Discord and Website modes">
+            <button id="mode-toggle" class="mode-toggle" title="Toggle between Discord and Website modes" aria-label="Toggle between Discord and Website modes" aria-pressed="true">
               <i class="fab fa-discord discord-icon active"></i>
               <i class="fas fa-globe website-icon"></i>
             </button>
           </div>
           
-          <input type="text" id="prompt-input" placeholder="Enter your base prompt...">
+          <input type="text" id="prompt-input" placeholder="Enter your base prompt..." aria-label="Base prompt input" aria-describedby="prompt-help">
+          <div id="prompt-help" class="sr-only">Enter your base prompt text here. Selected style references will be automatically added to your prompt.</div>
           
           <!-- Theme toggle moved inside input group on the right -->
           <div class="theme-toggle-container">
-            <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+            <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
               <i class="fas fa-moon"></i>
             </button>
           </div>
           
           <!-- Action buttons moved to second row -->
           <div class="action-buttons-row">
-            <button id="clear-button" class="action-button button-trash" title="Clear selected images">
+            <button id="clear-button" class="action-button button-trash" title="Clear selected images" aria-label="Clear selected images">
               <i class="far fa-trash-can"></i>
             </button>
-            <button id="refresh-button" class="action-button button-refresh" title="Shuffle image display">
+            <button id="refresh-button" class="action-button button-refresh" title="Shuffle image display" aria-label="Shuffle image display">
               <i class="fas fa-sync-alt"></i>
             </button>
-            <button id="favorites-toggle" class="action-button button-star" title="Toggle favorites">
+            <button id="favorites-toggle" class="action-button button-star" title="Toggle favorites" aria-label="Toggle favorites view">
               <i class="far fa-star"></i>
             </button>
-            <button id="show-selected-btn" class="action-button button-eye" title="Show selected">
+            <button id="show-selected-btn" class="action-button button-eye" title="Show selected" aria-label="Show selected images">
               <i class="far fa-eye"></i>
             </button>
-            <button id="search-button" class="action-button button-search" title="Search by number">
+            <button id="search-button" class="action-button button-search" title="Search by number" aria-label="Search by image number">
               <i class="fa-solid fa-magnifying-glass"></i>
             </button>
-            <button id="randomize-button" class="action-button button-randomize" title="Randomize selection">
+            <button id="randomize-button" class="action-button button-randomize" title="Randomize selection" aria-label="Randomly select an image">
               <i class="far fa-lightbulb"></i>
             </button>
-            <button id="copy-button" class="action-button button-clipboard" title="Copy to clipboard">
+            <button id="copy-button" class="action-button button-clipboard" title="Copy to clipboard" aria-label="Copy prompt to clipboard">
               <i class="far fa-clipboard"></i>
             </button>
-            <button id="toggle-preview-button" class="action-button button-toggle" title="Toggle prompt preview">
+            <button id="toggle-preview-button" class="action-button button-toggle" title="Toggle prompt preview" aria-label="Toggle prompt preview">
               <i class="fas fa-chevron-down"></i>
             </button>
           </div>
         </div>
         <div class="search-container hidden">
-          <input type="text" id="search-input" placeholder="Enter sref numbers (e.g., 1 2 7)..." step="any">
+          <label for="search-input" class="sr-only">Search style references</label>
+          <input type="text" id="search-input" placeholder="Enter sref numbers (e.g., 1 2 7)..." step="any" aria-label="Search style references by number" aria-describedby="search-help">
+          <div id="search-help" class="sr-only">Enter one or more style reference numbers separated by spaces to find matching images</div>
         </div>
         <div class="prompt-preview hidden">
           <p id="final-prompt"></p>
@@ -157,15 +161,15 @@
           <h4>Favorites</h4>
         </div>
         <div class="favorites-tools-buttons">
-          <button id="export-favorites-button" class="action-button" title="Export your favorites to a file">
+          <button id="export-favorites-button" class="action-button" title="Export your favorites to a file" aria-label="Export favorites to file">
             <i class="fas fa-download"></i>
             <span>Export</span>
           </button>
-          <button id="import-favorites-button" class="action-button" title="Import favorites from a file">
+          <button id="import-favorites-button" class="action-button" title="Import favorites from a file" aria-label="Import favorites from file">
             <i class="fas fa-upload"></i>
             <span>Import</span>
           </button>
-          <input type="file" id="import-favorites-input" accept=".json" style="display: none;">
+          <input type="file" id="import-favorites-input" accept=".json" style="display: none;" aria-label="Select favorites file to import">
         </div>
       </div>
 
@@ -173,7 +177,7 @@
         <details open>
           <summary>
             <span>✨ Information</span>
-            <button id="close-more-info" class="close-button" title="Hide this section">&times;</button>
+            <button id="close-more-info" class="close-button" title="Hide this section" aria-label="Hide information section">&times;</button>
           </summary>
           
           <div class="more-info-content">
@@ -296,7 +300,7 @@
         <details open>
           <summary>
             <span>📰 News</span>
-            <button id="close-news" class="close-button" title="Hide this section">&times;</button>
+            <button id="close-news" class="close-button" title="Hide this section" aria-label="Hide news section">&times;</button>
           </summary>
           
           <div class="news-content">
@@ -420,9 +424,14 @@
     </footer>
   </div>
 
-  <button id="back-to-top-btn" title="Back to top">
+  <button id="back-to-top-btn" title="Back to top" aria-label="Back to top of page">
     <i class="fas fa-arrow-up"></i>
   </button>
+
+  <!-- Live regions for screen reader announcements -->
+  <div id="status-announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <div id="search-results" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <div id="prompt-updates" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
   <script src="js/app.js" type="module"></script>
 </body>
