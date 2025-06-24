@@ -1645,10 +1645,12 @@ button:hover i {
 .menu-icon-style.fa-eye { color: var(--neon-green); }
 .menu-icon-style.fa-lightbulb { color: var(--neon-blue); }
 .menu-icon-style.fa-clipboard { color: var(--neon-purple); }
-.menu-icon-style.fa-hand-pointer { color: var(--neon-pink); }
+.menu-icon-style.fa-hand-pointer { color: var(--neon-green); }
 .menu-icon-style.fa-discord { color: #5865F2; }
 .menu-icon-style.fa-globe { color: var(--neon-teal); }
 .menu-icon-style.fa-magnifying-glass { color: var(--neon-teal); }
+.menu-icon-style.fa-link { color: var(--neon-pink); }
+.menu-icon-style.fa-balance-scale { color: var(--neon-teal); }
 
 .select-icon-placeholder {
   width: 1.5rem; /* Matches .menu-icon-style width */
