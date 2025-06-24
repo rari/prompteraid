@@ -98,6 +98,13 @@ export default class GalleryView {
     this._eventHandlers = {
       favoriteClick: []
     };
+
+    // Initialize notification container
+    this.initializeNotificationContainer();
+
+    if (!this.gallery) {
+      console.error('Gallery element not found');
+    }
   }
 
   initializeButtons() {
@@ -502,6 +509,10 @@ export default class GalleryView {
   createGalleryItem(image, isSelected, isFavorite, colorIndex, currentModel) {
     const item = document.createElement('div');
     item.className = 'gallery-item';
+    item.tabIndex = 0; // Make gallery items focusable
+    item.setAttribute('role', 'button');
+    item.setAttribute('aria-label', `Style reference ${image.sref} - ${isSelected ? 'Selected' : 'Not selected'}`);
+    item.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
     
     // Add hover color class based on the image's position in the gallery
     // This ensures hover colors match the selection color logic
@@ -525,7 +536,7 @@ export default class GalleryView {
     
     const img = document.createElement('img');
     img.src = image.path;
-    img.alt = `Style reference ${image.sref}`;
+    img.alt = `Style reference ${image.sref} - Mermaid-themed example showing visual style characteristics`;
     img.className = `quadrant quadrant-${quadrant}`;
     img.loading = 'lazy'; // Enable lazy loading
     item.appendChild(img);
@@ -537,6 +548,7 @@ export default class GalleryView {
     linkButton.dataset.id = image.id;
     linkButton.dataset.sref = image.sref;
     linkButton.title = `Copy link to style ${image.sref}`;
+    linkButton.setAttribute('aria-label', `Copy direct link to style reference ${image.sref}`);
     
     linkButton.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -586,6 +598,8 @@ export default class GalleryView {
       : '<i class="far fa-star"></i>';
     favButton.dataset.id = image.id;
     favButton.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
+    favButton.setAttribute('aria-label', isFavorite ? `Remove style reference ${image.sref} from favorites` : `Add style reference ${image.sref} to favorites`);
+    favButton.setAttribute('aria-pressed', isFavorite ? 'true' : 'false');
     
     // Use the same direct addEventListener approach as the quadrant flip button
     favButton.addEventListener('click', (e) => {
@@ -659,11 +673,14 @@ export default class GalleryView {
       plusButton.title = 'Increase weight';
       plusButton.dataset.id = image.id;
       plusButton.dataset.action = 'increase';
+      plusButton.setAttribute('aria-label', `Increase weight for style reference ${image.sref}`);
       weightControls.appendChild(plusButton);
       
       // Weight display
       const weightDisplay = document.createElement('div');
       weightDisplay.className = 'weight-display';
+      weightDisplay.setAttribute('role', 'status');
+      weightDisplay.setAttribute('aria-label', `Current weight for style reference ${image.sref}`);
       // We'll add the color class in updateAllWeightDisplays
       weightDisplay.dataset.id = image.id;
       // We'll set the actual weight value in updateAllWeightDisplays
@@ -680,6 +697,7 @@ export default class GalleryView {
       minusButton.title = 'Decrease weight';
       minusButton.dataset.id = image.id;
       minusButton.dataset.action = 'decrease';
+      minusButton.setAttribute('aria-label', `Decrease weight for style reference ${image.sref}`);
       weightControls.appendChild(minusButton);
       
       item.appendChild(weightControls);
@@ -842,6 +860,16 @@ export default class GalleryView {
           !event.target.closest('.weight-controls') &&
           !event.target.closest('.weight-control-button') &&
           !event.target.closest('.weight-display')) {
+        const id = galleryItem.dataset.id;
+        handler(id);
+      }
+    });
+    
+    // Add keyboard navigation support
+    this.gallery.addEventListener('keydown', event => {
+      const galleryItem = event.target.closest('.gallery-item');
+      if (galleryItem && (event.key === 'Enter' || event.key === ' ')) {
+        event.preventDefault();
         const id = galleryItem.dataset.id;
         handler(id);
       }
@@ -1240,58 +1268,63 @@ export default class GalleryView {
     }, 2000);
   }
 
-  showInfoNotification(message) {
-    // Create or show an info notification at the top of the gallery
-    let notification = document.getElementById('info-notification');
-    if (!notification) {
-      notification = document.createElement('div');
-      notification.id = 'info-notification';
-      notification.className = 'info-notification';
-      notification.style.position = 'fixed';
-      notification.style.top = '24px';
-      notification.style.left = '50%';
-      notification.style.transform = 'translateX(-50%)';
-      notification.style.background = '#e6f7ff';
-      notification.style.color = '#0066cc';
-      notification.style.padding = '12px 24px';
-      notification.style.border = '1px solid #91d5ff';
-      notification.style.borderRadius = '8px';
-      notification.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
-      notification.style.zIndex = '2000';
-      document.body.appendChild(notification);
+  /**
+   * Announce status changes to screen readers
+   * @param {string} message - The message to announce
+   * @param {string} region - The live region to use ('status', 'search', or 'prompt')
+   */
+  announceToScreenReader(message, region = 'status') {
+    const regionId = `${region}-announcements`;
+    const liveRegion = document.getElementById(regionId);
+    
+    if (liveRegion) {
+      // Clear the region first
+      liveRegion.textContent = '';
+      
+      // Add the new message after a brief delay to ensure it's announced
+      setTimeout(() => {
+        liveRegion.textContent = message;
+      }, 100);
     }
-    notification.textContent = message;
-    notification.style.display = 'block';
-    setTimeout(() => {
-      notification.style.display = 'none';
-    }, 2000);
   }
 
-  showErrorNotification(message) {
-    // Create or show an error notification at the top of the gallery (with friendly styling)
-    let notification = document.getElementById('error-notification');
-    if (!notification) {
-      notification = document.createElement('div');
-      notification.id = 'error-notification';
-      notification.className = 'error-notification';
-      notification.style.position = 'fixed';
-      notification.style.top = '24px';
-      notification.style.left = '50%';
-      notification.style.transform = 'translateX(-50%)';
-      notification.style.background = '#fff2f0';
-      notification.style.color = '#cf1322';
-      notification.style.padding = '12px 24px';
-      notification.style.border = '1px solid #ffccc7';
-      notification.style.borderRadius = '8px';
-      notification.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
-      notification.style.zIndex = '2000';
-      document.body.appendChild(notification);
+  /**
+   * Show info notification with screen reader announcement
+   * @param {string} message - The notification message
+   */
+  showInfoNotification(message) {
+    // Existing notification logic
+    if (this.notificationContainer) {
+      this.notificationContainer.textContent = message;
+      this.notificationContainer.className = 'notification info-notification';
+      this.notificationContainer.style.display = 'block';
+      
+      // Announce to screen reader
+      this.announceToScreenReader(message, 'status');
+      
+      setTimeout(() => {
+        this.notificationContainer.style.display = 'none';
+      }, 3000);
     }
-    notification.textContent = message;
-    notification.style.display = 'block';
-    setTimeout(() => {
-      notification.style.display = 'none';
-    }, 3000);
+  }
+
+  /**
+   * Show error notification with screen reader announcement
+   * @param {string} message - The error message
+   */
+  showErrorNotification(message) {
+    if (this.notificationContainer) {
+      this.notificationContainer.textContent = message;
+      this.notificationContainer.className = 'notification error-notification';
+      this.notificationContainer.style.display = 'block';
+      
+      // Announce to screen reader
+      this.announceToScreenReader(message, 'status');
+      
+      setTimeout(() => {
+        this.notificationContainer.style.display = 'none';
+      }, 5000);
+    }
   }
 
   updateImageCountSubheader(totalCount, selectedCount, currentModel) {
@@ -1984,5 +2017,25 @@ export default class GalleryView {
     while (this.gallery.firstChild) {
       this.gallery.removeChild(this.gallery.firstChild);
     }
+  }
+
+  // Initialize notification container
+  initializeNotificationContainer() {
+    this.notificationContainer = document.createElement('div');
+    this.notificationContainer.id = 'notification-container';
+    this.notificationContainer.className = 'notification-container';
+    this.notificationContainer.style.position = 'fixed';
+    this.notificationContainer.style.top = '24px';
+    this.notificationContainer.style.left = '50%';
+    this.notificationContainer.style.transform = 'translateX(-50%)';
+    this.notificationContainer.style.background = '#fffbe6';
+    this.notificationContainer.style.color = '#b26a00';
+    this.notificationContainer.style.padding = '12px 24px';
+    this.notificationContainer.style.border = '1px solid #ffe58f';
+    this.notificationContainer.style.borderRadius = '8px';
+    this.notificationContainer.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+    this.notificationContainer.style.zIndex = '2000';
+    this.notificationContainer.style.display = 'none';
+    document.body.appendChild(this.notificationContainer);
   }
 } 
