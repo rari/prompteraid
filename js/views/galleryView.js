@@ -1297,12 +1297,17 @@ export default class GalleryView {
   updateImageCountSubheader(totalCount, selectedCount, currentModel) {
     if (!this.imageCountSubheader) return;
 
-    const modelDisplayName = currentModel === 'niji-6' ? 'Niji 6' : 'Midjourney v7';
+    // Add icons for models
+    const modelIcons = {
+      'niji-6': '<i class="fa-solid fa-rainbow" style="color: #ff5eea; margin-right: 0.3em;"></i>',
+      'midjourney-7': '<i class="fa-solid fa-sailboat" style="color: #00bfff; margin-right: 0.3em;"></i>'
+    };
+    const modelDisplayName = currentModel === 'niji-6' ? `${modelIcons['niji-6']}Niji 6` : `${modelIcons['midjourney-7']}Midjourney v7`;
 
     // Define all available models
     const allModels = [
-      { id: 'niji-6', name: 'Niji 6' },
-      { id: 'midjourney-7', name: 'Midjourney v7' }
+      { id: 'niji-6', name: 'Niji 6', icon: modelIcons['niji-6'] },
+      { id: 'midjourney-7', name: 'Midjourney v7', icon: modelIcons['midjourney-7'] }
     ];
 
     // Filter out the current model to only show the other option(s)
@@ -1314,7 +1319,7 @@ export default class GalleryView {
       <div class="model-selector">
         <span class="current-model">${modelDisplayName}</span>
         <div class="model-dropdown">
-          ${otherModels.map(model => `<div class="model-option" data-model="${model.id}">${model.name}</div>`).join('')}
+          ${otherModels.map(model => `<div class="model-option" data-model="${model.id}">${model.icon}${model.name}</div>`).join('')}
         </div>
       </div>
     `;
