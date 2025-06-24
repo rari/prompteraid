@@ -51,6 +51,9 @@ export default class GalleryController {
     // Load images
     await this.model.loadImages();
     
+    // Render new styles section
+    this.view.renderNewStylesSection(this.model.getNewImages(), this.model.currentModel);
+    
     // Render initial gallery
     this.renderGallery();
     
