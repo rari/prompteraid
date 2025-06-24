@@ -76,6 +76,26 @@ export default class GalleryController {
   }
 
   /**
+   * Helper method to filter images based on multiple search terms
+   * @param {Array} images - Array of images to filter
+   * @param {string} searchInput - Search input string (can contain multiple terms separated by spaces)
+   * @returns {Array} Filtered array of images that match any of the search terms
+   */
+  filterImagesBySearch(images, searchInput) {
+    if (!searchInput || searchInput.trim() === '') {
+      return images;
+    }
+    
+    // Split search input by spaces and trim whitespace
+    const searchTerms = searchInput.split(' ').map(term => term.trim()).filter(term => term.length > 0);
+    
+    // Filter images based on search - match ANY of the search terms
+    return images.filter(img => {
+      return searchTerms.some(term => img.sref.includes(term));
+    });
+  }
+
+  /**
    * Renders the gallery with current filter states and handles edge cases
    * 
    * This method orchestrates the display of images based on current filter states
@@ -127,9 +147,7 @@ export default class GalleryController {
         
         // Apply search filter if active
         if (this.searchNumber !== null && this.searchNumber !== '') {
-          visibleImages = visibleImages.filter(img => {
-            return img.sref.includes(this.searchNumber);
-          });
+          visibleImages = this.filterImagesBySearch(visibleImages, this.searchNumber);
         }
         
         // Apply selected filter if active
@@ -166,9 +184,7 @@ export default class GalleryController {
         
         // Apply search filter if active
         if (this.searchNumber !== null && this.searchNumber !== '') {
-          allVisibleImages = allVisibleImages.filter(img => {
-            return img.sref.includes(this.searchNumber);
-          });
+          allVisibleImages = this.filterImagesBySearch(allVisibleImages, this.searchNumber);
         }
         
         // Split into favorites and non-favorites
@@ -222,13 +238,13 @@ export default class GalleryController {
     
     // Apply search filter if active
     if (this.searchNumber !== null && this.searchNumber !== '') {
-        visibleImages = visibleImages.filter(img => {
-        return img.sref.includes(this.searchNumber);
-      });
+        visibleImages = this.filterImagesBySearch(visibleImages, this.searchNumber);
       
       // If search returns no results, show a notification but keep the filter active
       if (visibleImages.length === 0) {
-        this.view.showErrorNotification(`No images found matching "${this.searchNumber}"`);
+        const searchTerms = this.searchNumber.split(' ').map(term => term.trim()).filter(term => term.length > 0);
+        const searchDisplay = searchTerms.length > 1 ? `"${searchTerms.join('", "')}"` : `"${this.searchNumber}"`;
+        this.view.showErrorNotification(`No images found matching ${searchDisplay}`);
         // Return early to prevent further filtering
         return;
       }
@@ -529,8 +545,8 @@ export default class GalleryController {
       this.toggleSearch();
     });
     
-    this.view.bindSearchInput((searchNumber) => {
-      this.performSearch(searchNumber);
+    this.view.bindSearchInput((searchInput) => {
+      this.performSearch(searchInput);
     });
     
     // Weight controls
@@ -772,15 +788,16 @@ export default class GalleryController {
   }
   
   /**
-   * Performs a search by image number
-   * @param {string|null} searchNumber - The number to search for, or null to clear search
+   * Performs a search by image number(s)
+   * @param {string|null} searchInput - The search terms to search for, or null to clear search
+   * Supports multiple IDs separated by spaces (e.g., "1 2 7" will find images matching any of these)
    */
-  performSearch(searchNumber) {
-    // Set the search number
-    this.searchNumber = searchNumber;
+  performSearch(searchInput) {
+    // Set the search input
+    this.searchNumber = searchInput;
     
     // If the search is empty, clear it
-    if (!searchNumber || searchNumber.trim() === '') {
+    if (!searchInput || searchInput.trim() === '') {
       this.clearSearchState();
       this.renderGallery();
       
@@ -806,14 +823,18 @@ export default class GalleryController {
     // Get all images
     const allImages = this.model.images;
     
-    // Filter images based on search
+    // Split search input by spaces and trim whitespace
+    const searchTerms = searchInput.split(' ').map(term => term.trim()).filter(term => term.length > 0);
+    
+    // Filter images based on search - match ANY of the search terms
     const matchingImages = allImages.filter(img => {
-      return img.sref.includes(searchNumber);
+      return searchTerms.some(term => img.sref.includes(term));
     });
     
     // If no matches, show notification but keep the search active
     if (matchingImages.length === 0) {
-      this.view.showErrorNotification(`No images found matching "${searchNumber}"`);
+      const searchDisplay = searchTerms.length > 1 ? `"${searchTerms.join('", "')}"` : `"${searchInput}"`;
+      this.view.showErrorNotification(`No images found matching ${searchDisplay}`);
       this.view.hideFilterDivider('search');
       this.renderGallery();
       return;
@@ -876,7 +897,8 @@ export default class GalleryController {
     if (stickySearchButton) stickySearchButton.classList.add('active');
     
     // Show notification about search results
-    this.view.showInfoNotification(`Found ${matchingImages.length} image(s) matching "${searchNumber}"`);
+    const searchDisplay = searchTerms.length > 1 ? `"${searchTerms.join('", "')}"` : `"${searchInput}"`;
+    this.view.showInfoNotification(`Found ${matchingImages.length} image(s) matching ${searchDisplay}`);
   }
 
   /**
