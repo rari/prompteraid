@@ -716,6 +716,16 @@ export default class GalleryController {
             }
           }
           break;
+          
+        case 's':
+          // Toggle search - call the same handler as the button
+          this.toggleSearch();
+          break;
+          
+        case 'l':
+          // Randomize selection - call the same handler as the button
+          this.randomizeSelection();
+          break;
       }
     });
   }
@@ -1006,5 +1016,36 @@ export default class GalleryController {
         }
       }
     });
+  }
+
+  /**
+   * Randomly selects an unselected image
+   * This method is called by the keyboard shortcut 'L'
+   */
+  randomizeSelection() {
+    // Get all unselected images
+    const unselectedImages = this.model.images.filter(img => !this.model.selectedImages.has(img.id));
+    
+    if (unselectedImages.length === 0) {
+      this.view.showInfoNotification('All images are already selected.');
+      return;
+    }
+    
+    // Randomly select one unselected image
+    const randomIndex = Math.floor(Math.random() * unselectedImages.length);
+    const randomImage = unselectedImages[randomIndex];
+    
+    // Add the randomly selected image to selections
+    this.model.toggleImageSelection(randomImage.id);
+    
+    // Extract just the numeric sref code for the notification
+    const srefCode = randomImage.sref;
+    
+    // Show notification with clean sref code
+    this.view.showInfoNotification(`Randomly selected: ${srefCode}`);
+    
+    // Re-render gallery and update prompt
+    this.renderGallery();
+    this.updatePrompt();
   }
 } 
