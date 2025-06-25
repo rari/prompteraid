@@ -1536,11 +1536,13 @@ button:hover i {
 /* ===== MORE INFORMATION SECTION ===== */
 .more-info-container {
   margin-bottom: var(--space-6);
-  background-color: var(--card-background);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-md);
+  border-radius: 1.2rem;
+  background: rgba(30, 30, 60, 0.55);
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12), 0 1.5px 8px 0 rgba(0,255,255,0.08);
+  backdrop-filter: blur(12px) saturate(1.2);
+  border: 1.5px solid var(--neon-orange);
+  transition: box-shadow 0.2s, border 0.2s;
   overflow: hidden;
-  transition: none !important;
 }
 
 .more-info-container details {
@@ -1548,19 +1550,24 @@ button:hover i {
 }
 
 .more-info-container summary {
-  padding: var(--space-4);
-  background: var(--gradient-primary);
-  color: white;
-  cursor: pointer;
-  font-weight: 600;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Pushes button to the right */
-  transition: none !important;
+  justify-content: space-between;
+  min-height: 3.2rem;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.01em;
+  transition: background 0.2s;
+  background: inherit;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
 }
 
 .more-info-container summary:hover {
-  background: var(--gradient-primary); /* Keeps background static on hover */
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .more-info-container summary::marker {
@@ -3611,90 +3618,129 @@ html.dark-mode .action-button:hover {
 
 .new-styles-section {
   margin: 1.5rem 0 2rem 0;
-  padding: 1.2rem 1.2rem 1.5rem 1.2rem;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.new-styles-container {
   border-radius: 1.2rem;
   background: rgba(30, 30, 60, 0.55);
   box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12), 0 1.5px 8px 0 rgba(0,255,255,0.08);
   backdrop-filter: blur(12px) saturate(1.2);
   border: 1.5px solid var(--neon-pink);
   transition: box-shadow 0.2s, border 0.2s;
-  max-width: 100%;
-  overflow-x: auto;
+  overflow: hidden;
 }
-.new-styles-header {
+.new-styles-container summary {
   display: flex;
   align-items: center;
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--neon-pink);
-  margin-bottom: 0.7em;
-  gap: 0.5em;
+  justify-content: space-between;
+  min-height: 3.2rem;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
   letter-spacing: 0.01em;
+  transition: background 0.2s;
+  background: inherit;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+}
+.new-styles-container summary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+.new-styles-container summary::-webkit-details-marker {
+  display: none;
+}
+.new-styles-content {
+  padding: 0 1.5rem 1.5rem 1.5rem;
 }
 .new-styles-gallery {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.1em 1.2em;
+  gap: 0.6em 0.8em;
   justify-content: flex-start;
-  align-items: flex-end;
-  margin-bottom: 0.7em;
+  align-items: flex-start;
+  margin: 1rem 0 0.7em 0;
 }
-.new-style-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(255,255,255,0.08);
-  border-radius: 0.7em;
-  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
-  padding: 0.5em 0.7em 0.7em 0.7em;
-  transition: box-shadow 0.2s, background 0.2s;
-  border: 1.5px solid transparent;
+.new-styles-item {
+  flex: 0 0 calc(20% - 0.64em);
+  max-width: calc(20% - 0.64em);
+  margin: 0;
 }
-.new-style-item img {
-  width: 72px;
-  height: 72px;
-  object-fit: cover;
-  border-radius: 0.5em;
-  margin-bottom: 0.4em;
-  box-shadow: 0 1.5px 6px 0 rgba(0,0,0,0.13);
-  border: 1.5px solid var(--neon-pink);
-  background: #181828;
-}
-.new-style-sref {
-  font-size: 0.98em;
-  color: var(--neon-pink);
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  margin-top: 0.1em;
+.new-styles-item img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
 }
 .new-styles-more-btn {
-  display: inline-block;
-  margin: 0.7em auto 0 auto;
-  padding: 0.45em 1.2em;
-  border-radius: 2em;
-  background: linear-gradient(90deg, var(--neon-pink), var(--neon-teal));
+  display: block;
+  width: 100%;
+  margin: 0.7em 0 0 0;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0;
+  background: linear-gradient(135deg, rgba(255, 105, 180, 0.15), rgba(0, 229, 255, 0.15));
   color: #fff;
-  font-weight: 700;
-  font-size: 1em;
+  font-weight: 600;
+  font-size: 1rem;
   border: none;
-  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
-  transition: background 0.18s, box-shadow 0.18s, color 0.18s;
+  transition: background 0.18s, color 0.18s;
+  text-align: center;
 }
 .new-styles-more-btn:hover, .new-styles-more-btn:focus {
-  background: linear-gradient(90deg, var(--neon-teal), var(--neon-pink));
+  background: linear-gradient(135deg, rgba(255, 105, 180, 0.25), rgba(0, 229, 255, 0.25));
   color: #fff700;
   outline: none;
 }
+@media (max-width: 1200px) {
+  .new-styles-item {
+    flex: 0 0 calc(25% - 0.6em);
+    max-width: calc(25% - 0.6em);
+  }
+}
+@media (max-width: 900px) {
+  .new-styles-item {
+    flex: 0 0 calc(33.333% - 0.53em);
+    max-width: calc(33.333% - 0.53em);
+  }
+}
 @media (max-width: 600px) {
   .new-styles-gallery {
-    gap: 0.7em 0.5em;
+    gap: 0.4em 0.5em;
   }
-  .new-style-item img {
-    width: 56px;
-    height: 56px;
+  .new-styles-item {
+    flex: 0 0 calc(50% - 0.25em);
+    max-width: calc(50% - 0.25em);
   }
-  .new-styles-section {
-    padding: 0.7rem 0.3rem 1rem 0.3rem;
+  .new-styles-container summary {
+    padding: 0.7rem 1rem;
   }
+  .new-styles-content {
+    padding: 0 1rem 1rem 1rem;
+  }
+}
+
+.new-styles-container .close-button,
+.more-info-container .close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.8rem;
+  width: 2.8rem;
+  font-size: 1.7em !important;
+  line-height: 1;
+  vertical-align: middle;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0 0.5rem;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+.new-styles-container .close-button:hover,
+.more-info-container .close-button:hover {
+  opacity: 1;
 }
