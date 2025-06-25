@@ -1540,7 +1540,7 @@ button:hover i {
   background: rgba(30, 30, 60, 0.55);
   box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12), 0 1.5px 8px 0 rgba(0,255,255,0.08);
   backdrop-filter: blur(12px) saturate(1.2);
-  border: 1.5px solid var(--neon-orange);
+  border: 1.5px solid var(--neon-pink);
   transition: box-shadow 0.2s, border 0.2s;
   overflow: hidden;
 }
@@ -3743,4 +3743,47 @@ html.dark-mode .action-button:hover {
 .new-styles-container .close-button:hover,
 .more-info-container .close-button:hover {
   opacity: 1;
+}
+
+.styles-month-glow {
+  box-shadow: 0 0 12px 2px var(--neon-yellow), 0 2px 8px rgba(0,0,0,0.12) !important;
+}
+.styles-month-label {
+  text-align: center;
+  font-weight: bold;
+  color: var(--neon-yellow);
+  margin-bottom: 0.3em;
+}
+
+/* Styles of the Month container - orange border */
+#styles-of-the-month-section .new-styles-container {
+  border: 1.5px solid var(--neon-orange);
+}
+
+/* Tutorial container - yellow border */
+.more-info-container {
+  margin-bottom: var(--space-6);
+  border-radius: 1.2rem;
+  background: rgba(30, 30, 60, 0.55);
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12), 0 1.5px 8px 0 rgba(0,255,255,0.08);
+  backdrop-filter: blur(12px) saturate(1.2);
+  border: 1.5px solid var(--neon-yellow);
+  transition: box-shadow 0.2s, border 0.2s;
+  overflow: hidden;
+}
+
+/* Month label styles */
+.month-label {
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 0.3em;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.month-label.current {
+  color: var(--neon-yellow);
+  text-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
 }

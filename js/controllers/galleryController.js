@@ -50,6 +50,42 @@ export default class GalleryController {
     
     // Load images
     await this.model.loadImages();
+
+    // Build imagesById map (id = sref from filename)
+    const imagesById = {};
+    this.model.images.forEach(img => {
+      // Use sref as the id for matching
+      imagesById[img.sref] = img;
+    });
+
+    // Load Styles of the Month JSON
+    let stylesOfTheMonth = [];
+    try {
+      const resp = await fetch('api/styles-of-the-month.json');
+      if (resp.ok) {
+        const allStyles = await resp.json();
+        // Filter styles by current model
+        stylesOfTheMonth = allStyles.filter(style => style.model === this.model.currentModel);
+      }
+    } catch (e) {
+      console.warn('Could not load styles-of-the-month.json', e);
+    }
+
+    // Get current month in mm-yyyy
+    const now = new Date();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const yyyy = now.getFullYear();
+    const currentMonth = `${mm}-${yyyy}`;
+
+    // Render Styles of the Month section
+    // this.view.renderStylesOfTheMonthSection(
+    //   stylesOfTheMonth,
+    //   imagesById,
+    //   this.model.selectedImages,
+    //   this.model.favoriteImages,
+    //   this.model.currentModel,
+    //   currentMonth
+    // );
     
     // Render new styles section
     this.view.renderNewStylesSection(this.model.getNewImages(), this.model.selectedImages, this.model.favoriteImages, this.model.currentModel);
