@@ -1535,14 +1535,22 @@ button:hover i {
 
 /* ===== MORE INFORMATION SECTION ===== */
 .more-info-container {
-  margin-bottom: 0;
-  border-radius: 1.2rem;
-  background: rgba(30, 30, 60, 0.55);
-  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12), 0 1.5px 8px 0 rgba(0,255,255,0.08);
+  background: linear-gradient(135deg, rgba(255,255,255,0.82) 0%, rgba(240,240,255,0.18) 100%) !important;
+  color: var(--text-primary, #111);
+  box-shadow: var(--shadow-md);
   backdrop-filter: blur(12px) saturate(1.2);
-  border: 1.5px solid var(--neon-pink);
-  transition: box-shadow 0.2s, border 0.2s;
+  border-radius: 1.2rem;
+  border: 1.5px solid var(--neon-yellow);
+  transition: box-shadow 0.2s, border 0.2s, background 0.2s, color 0.2s;
   overflow: hidden;
+  margin-bottom: var(--space-6);
+}
+
+html.dark-mode .more-info-container {
+  background: linear-gradient(135deg, rgba(20,20,30,0.92) 0%, rgba(60,60,80,0.55) 100%) !important;
+  color: var(--text-primary, #fff);
+  border: 1.5px solid var(--neon-yellow);
+  box-shadow: var(--shadow-md);
 }
 
 .more-info-container:has(#favorites-tools.hidden) {
@@ -1568,12 +1576,16 @@ button:hover i {
   cursor: pointer;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--neon-yellow) !important;
   letter-spacing: 0.01em;
   transition: background 0.2s;
   background: inherit;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #bbb;
   box-sizing: border-box;
+}
+
+html.dark-mode .more-info-container summary {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .more-info-container summary:hover {
@@ -1585,8 +1597,7 @@ button:hover i {
 }
 
 .more-info-content {
-  padding: var(--space-5);
-  background-color: var(--background);
+  padding: 0 1.5rem 1.5rem 1.5rem;
 }
 
 .info-section {
@@ -3486,15 +3497,51 @@ a:focus-visible {
 }
 
 .info-notification {
-  background: #e6f7ff;
-  color: #0066cc;
-  border: 1px solid #91d5ff;
+  background: linear-gradient(135deg, rgba(255,255,255,0.82) 0%, rgba(0,229,255,0.18) 60%, rgba(0,123,255,0.10) 100%);
+  color: var(--text-primary, #111);
+  border: 1.5px solid var(--neon-teal, #00e5ff);
+  box-shadow: 0 2px 12px 0 rgba(0, 229, 255, 0.10), 0 1.5px 8px 0 rgba(0,255,255,0.08);
+  backdrop-filter: blur(8px) saturate(1.2);
+  font-weight: 600;
+  transition: background 0.18s, border 0.18s, box-shadow 0.18s;
+}
+
+html.dark-mode .info-notification {
+  background: linear-gradient(135deg, rgba(20,20,30,0.92) 0%, rgba(0,229,255,0.22) 60%, rgba(0,123,255,0.18) 100%);
+  color: var(--text-primary, #fff);
+  border: 1.5px solid var(--neon-teal, #00e5ff);
+}
+
+.warning-notification {
+  background: linear-gradient(135deg, rgba(255,255,255,0.82) 0%, rgba(255,255,200,0.18) 60%, rgba(255,200,0,0.10) 100%);
+  color: var(--text-primary, #111);
+  border: 1.5px solid var(--neon-yellow, #ffd700);
+  box-shadow: 0 2px 12px 0 rgba(255,255,0,0.10), 0 1.5px 8px 0 rgba(0,255,255,0.08);
+  backdrop-filter: blur(8px) saturate(1.2);
+  font-weight: 600;
+  transition: background 0.18s, border 0.18s, box-shadow 0.18s;
+}
+
+html.dark-mode .warning-notification {
+  background: linear-gradient(135deg, rgba(20,20,30,0.92) 0%, rgba(255,255,200,0.22) 60%, rgba(255,200,0,0.18) 100%);
+  color: var(--text-primary, #fff);
+  border: 1.5px solid var(--neon-yellow, #ffd700);
 }
 
 .error-notification {
-  background: #fff2f0;
-  color: #cf1322;
-  border: 1px solid #ffccc7;
+  background: linear-gradient(135deg, rgba(255,255,255,0.82) 0%, rgba(255,20,147,0.18) 60%, rgba(153,50,204,0.10) 100%);
+  color: var(--text-primary, #111);
+  border: 1.5px solid var(--neon-pink, #ff1493);
+  box-shadow: 0 2px 12px 0 rgba(255,20,147,0.10), 0 1.5px 8px 0 rgba(153,50,204,0.08);
+  backdrop-filter: blur(8px) saturate(1.2);
+  font-weight: 600;
+  transition: background 0.18s, border 0.18s, box-shadow 0.18s;
+}
+
+html.dark-mode .error-notification {
+  background: linear-gradient(135deg, rgba(20,20,30,0.92) 0%, rgba(255,20,147,0.22) 60%, rgba(153,50,204,0.18) 100%);
+  color: var(--text-primary, #fff);
+  border: 1.5px solid var(--neon-pink, #ff1493);
 }
 
 /* Ensure sufficient color contrast for accessibility */
@@ -3641,13 +3688,42 @@ html.dark-mode .action-button:hover {
 }
 .new-styles-container {
   border-radius: 1.2rem;
-  background: rgba(30, 30, 60, 0.55);
+  background: linear-gradient(135deg, rgba(255,255,255,0.82) 0%, rgba(240,240,255,0.18) 100%);
+  color: var(--text-primary, #111);
   box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12), 0 1.5px 8px 0 rgba(0,255,255,0.08);
   backdrop-filter: blur(12px) saturate(1.2);
+  border-radius: 1.2rem;
   border: 1.5px solid var(--neon-pink);
-  transition: box-shadow 0.2s, border 0.2s;
+  transition: box-shadow 0.2s, border 0.2s, background 0.2s, color 0.2s;
   overflow: hidden;
 }
+
+html.dark-mode .new-styles-container {
+  background: linear-gradient(135deg, rgba(20,20,30,0.92) 0%, rgba(60,60,80,0.55) 100%);
+  color: var(--text-primary, #fff);
+  border: 1.5px solid var(--neon-pink);
+}
+
+/* Section-specific border overrides */
+#styles-of-the-month-section .new-styles-container {
+  border: 1.5px solid var(--neon-orange);
+}
+html.dark-mode #styles-of-the-month-section .new-styles-container {
+  border: 1.5px solid var(--neon-orange);
+}
+.more-info-container:has(.fa-graduation-cap) {
+  border-color: var(--neon-orange) !important;
+}
+html.dark-mode .more-info-container:has(.fa-graduation-cap) {
+  border-color: var(--neon-orange) !important;
+}
+.more-info-container {
+  border: 1.5px solid var(--neon-yellow);
+}
+html.dark-mode .more-info-container {
+  border: 1.5px solid var(--neon-yellow);
+}
+
 .new-styles-container summary {
   display: flex;
   align-items: center;
@@ -3692,26 +3768,48 @@ html.dark-mode .action-button:hover {
   aspect-ratio: 1;
 }
 .new-styles-more-btn {
-  display: block;
-  width: 100%;
-  margin: 0.7em 0 0 0;
-  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(255, 105, 180, 0.18) 100%);
+  color: var(--text-primary, #111) !important;
+  border: 3px solid var(--neon-pink, #ff1493);
+  font-weight: 700;
+  font-size: 1.25rem;
   border-radius: 0;
-  background: linear-gradient(135deg, rgba(255, 105, 180, 0.15), rgba(0, 229, 255, 0.15));
-  color: #fff;
-  font-weight: 600;
-  font-size: 1rem;
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 2.5px solid #bbb;
   cursor: pointer;
-  transition: background 0.18s, color 0.18s;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s, border 0.18s;
   text-align: center;
+  box-shadow: 0 6px 24px 0 rgba(255, 20, 147, 0.18), 0 4px 16px 0 rgba(0,0,0,0.10);
+  width: 100%;
+  display: block;
+  padding: 1.1rem 0;
+  letter-spacing: 0.01em;
+  box-shadow: var(--shadow-md) !important;
 }
+
 .new-styles-more-btn:hover, .new-styles-more-btn:focus {
-  background: linear-gradient(135deg, rgba(255, 105, 180, 0.25), rgba(0, 229, 255, 0.25));
-  color: #fff700;
+  background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(255, 105, 180, 0.25) 100%);
+  color: var(--neon-pink) !important;
   outline: none;
+  border-color: var(--neon-pink, #ff1493);
+  box-shadow: 0 8px 32px 0 rgba(255, 20, 147, 0.22), 0 6px 24px 0 rgba(0,0,0,0.12);
+  box-shadow: var(--shadow-lg) !important;
 }
+
+html.dark-mode .new-styles-more-btn {
+  background: linear-gradient(135deg, rgba(20,20,30,0.92) 0%, rgba(255, 105, 180, 0.15) 100%);
+  color: var(--text-primary, #fff) !important;
+  border-top: 2.5px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 16px 0 rgba(0,0,0,0.32);
+  box-shadow: var(--shadow-md) !important;
+}
+
+html.dark-mode .new-styles-more-btn:hover, html.dark-mode .new-styles-more-btn:focus {
+  background: linear-gradient(135deg, rgba(20,20,30,1) 0%, rgba(255, 105, 180, 0.25) 100%);
+  color: var(--neon-pink) !important;
+  box-shadow: 0 8px 32px 0 rgba(255, 20, 147, 0.22), 0 6px 24px 0 rgba(0,0,0,0.18);
+  box-shadow: var(--shadow-lg) !important;
+}
+
 @media (max-width: 1200px) {
   .new-styles-item {
     flex: 0 0 calc(25% - 0.6em);
@@ -3829,3 +3927,189 @@ html.dark-mode .action-button:hover {
 .tutorial-icon-teal { color: var(--neon-teal); }
 .tutorial-icon-blue { color: var(--neon-blue); }
 .tutorial-icon-purple { color: var(--neon-purple); }
+
+.filter-divider-link:focus-visible, .filter-divider-link:hover {
+  border: 1px solid var(--neon-pink);
+  outline: none;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,0,128,0.10) 100%);
+  box-shadow: 0 2px 12px 0 rgba(255,0,128,0.10), 0 1.5px 8px 0 rgba(0,255,255,0.08);
+  backdrop-filter: blur(4px) saturate(1.2);
+  transition: background 0.18s, border 0.18s, box-shadow 0.18s;
+}
+
+.new-styles-container, .more-info-container {
+  /* ...existing styles... */
+  box-shadow: var(--shadow-md);
+}
+
+.new-styles-container,
+.more-info-container,
+.new-styles-container *,
+.more-info-container * {
+  color: var(--text-primary, #111) !important;
+}
+
+html.dark-mode .new-styles-container,
+html.dark-mode .more-info-container,
+html.dark-mode .new-styles-container *,
+html.dark-mode .more-info-container * {
+  color: var(--text-primary, #fff) !important;
+}
+
+.new-styles-more-btn {
+  background: linear-gradient(135deg, rgba(255,255,255,0.82) 0%, rgba(255, 105, 180, 0.15) 100%);
+  color: var(--text-primary, #111) !important;
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.new-styles-more-btn:hover, .new-styles-more-btn:focus {
+  background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(255, 105, 180, 0.25) 100%);
+  color: var(--neon-pink) !important;
+  outline: none;
+}
+
+html.dark-mode .new-styles-more-btn {
+  background: linear-gradient(135deg, rgba(20,20,30,0.92) 0%, rgba(255, 105, 180, 0.15) 100%);
+  color: var(--text-primary, #fff) !important;
+  border-top: 2.5px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 16px 0 rgba(0,0,0,0.32);
+  box-shadow: var(--shadow-md) !important;
+}
+
+html.dark-mode .new-styles-more-btn:hover, html.dark-mode .new-styles-more-btn:focus {
+  background: linear-gradient(135deg, rgba(20,20,30,1) 0%, rgba(255, 105, 180, 0.25) 100%);
+  color: var(--neon-pink) !important;
+  box-shadow: 0 8px 32px 0 rgba(255, 20, 147, 0.22), 0 6px 24px 0 rgba(0,0,0,0.18);
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.new-styles-container summary {
+  /* ...existing styles... */
+  border-bottom: 1px solid #bbb;
+}
+
+html.dark-mode .new-styles-container summary {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.new-styles-container summary span,
+.new-styles-container summary span i {
+  color: var(--neon-pink) !important;
+}
+
+.more-info-container summary span,
+.more-info-container summary span i {
+  color: var(--neon-orange) !important;
+}
+
+/* Collapse icon color match for New Styles */
+.new-styles-container .close-button i {
+  color: var(--neon-pink) !important;
+}
+
+/* Collapse icon color match for Tutorial */
+.more-info-container .close-button i {
+  color: var(--neon-orange) !important;
+}
+
+html.dark-mode .new-styles-container summary,
+html.dark-mode .new-styles-container summary span,
+html.dark-mode .new-styles-container summary span i,
+html.dark-mode .more-info-container summary,
+html.dark-mode .more-info-container summary span,
+html.dark-mode .more-info-container summary span i,
+html.dark-mode .new-styles-container .close-button i,
+html.dark-mode .more-info-container .close-button i {
+  color: unset !important;
+}
+
+.new-styles-container summary span,
+.new-styles-container summary span i,
+.new-styles-container .close-button i {
+  color: var(--neon-pink) !important;
+}
+
+.more-info-container summary span,
+.more-info-container summary span i,
+.more-info-container .close-button i {
+  color: var(--neon-orange) !important;
+}
+
+/* Remove any html.dark-mode overrides for these elements */
+html.dark-mode .new-styles-container summary span,
+html.dark-mode .new-styles-container summary span i,
+html.dark-mode .new-styles-container .close-button i,
+html.dark-mode .more-info-container summary span,
+html.dark-mode .more-info-container summary span i,
+html.dark-mode .more-info-container .close-button i {
+  color: inherit;
+  color: var(--neon-pink) !important;
+}
+
+html.dark-mode .more-info-container summary span,
+html.dark-mode .more-info-container summary span i,
+html.dark-mode .more-info-container .close-button i {
+  color: var(--neon-orange) !important;
+}
+
+.current-model span, .model-option span {
+  color: var(--neon-blue) !important;
+}
+
+html.dark-mode .current-model span, html.dark-mode .model-option span {
+  color: #fff !important;
+}
+
+.current-model i, .model-option i {
+  color: var(--neon-blue) !important;
+}
+
+html.dark-mode .current-model i, html.dark-mode .model-option i {
+  color: #fff !important;
+}
+
+/* Override broad color rules for gallery buttons in New Styles and Tutorial sections */
+.new-styles-container .favorite-button i,
+.new-styles-container .quadrant-flip-button i,
+.new-styles-container .link-button i,
+.more-info-container .favorite-button i,
+.more-info-container .quadrant-flip-button i,
+.more-info-container .link-button i {
+  color: var(--neon-yellow) !important;
+}
+
+.new-styles-container .quadrant-flip-button i,
+.more-info-container .quadrant-flip-button i {
+  color: var(--neon-orange) !important;
+}
+
+.new-styles-container .link-button i,
+.more-info-container .link-button i {
+  color: var(--neon-pink) !important;
+}
+
+html.dark-mode .new-styles-container .favorite-button i,
+html.dark-mode .new-styles-container .quadrant-flip-button i,
+html.dark-mode .new-styles-container .link-button i,
+html.dark-mode .more-info-container .favorite-button i,
+html.dark-mode .more-info-container .quadrant-flip-button i,
+html.dark-mode .more-info-container .link-button i {
+  color: var(--neon-yellow) !important;
+}
+
+html.dark-mode .new-styles-container .quadrant-flip-button i,
+html.dark-mode .more-info-container .quadrant-flip-button i {
+  color: var(--neon-orange) !important;
+}
+
+html.dark-mode .new-styles-container .link-button i,
+html.dark-mode .more-info-container .link-button i {
+  color: var(--neon-pink) !important;
+}
