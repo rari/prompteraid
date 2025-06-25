@@ -3248,25 +3248,25 @@ html.dark-mode .model-option.active {
   max-width: 800px;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: var(--background-color-light);
+  background-color: var(--card-background);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  color: var(--text-color);
+  color: var(--text-primary);
 }
 
 .legal-page h2 {
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: var(--header-text-color);
+  color: var(--text-primary);
 }
 
 .legal-page h3 {
   font-size: 1.5rem;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
-  color: var(--header-text-color);
-  border-bottom: 2px solid var(--primary-accent-color);
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--primary);
   padding-bottom: 0.5rem;
 }
 
@@ -3276,7 +3276,7 @@ html.dark-mode .model-option.active {
 }
 
 .legal-page a {
-  color: var(--primary-accent-color);
+  color: var(--primary);
   text-decoration: none;
 }
 
@@ -3290,7 +3290,7 @@ html.dark-mode .model-option.active {
   padding: 2rem 1rem;
   margin-top: 4rem;
   border-top: 1px solid var(--border-color);
-  color: var(--text-color-light);
+  color: var(--text-secondary);
 }
 
 .site-footer nav {
@@ -3298,14 +3298,14 @@ html.dark-mode .model-option.active {
 }
 
 .site-footer a {
-  color: var(--text-color-light);
+  color: var(--text-secondary);
   text-decoration: none;
   margin: 0 10px;
   transition: color 0.2s ease;
 }
 
 .site-footer a:hover {
-  color: var(--primary-accent-color);
+  color: var(--primary);
   text-decoration: underline;
 }
 
@@ -3388,18 +3388,18 @@ html.dark-mode .favorites-tools .action-button:hover i {
 }
 
 /* Enhanced focus styles for better keyboard navigation */
-button:focus,
-input:focus,
-select:focus,
-textarea:focus,
-a:focus {
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
   outline: 2px solid var(--neon-teal);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
 /* Focus styles for action buttons */
-.action-button:focus {
+.action-button:focus-visible {
   outline: 2px solid var(--neon-teal);
   outline-offset: 2px;
   transform: scale(1.05);
@@ -3407,23 +3407,23 @@ a:focus {
 }
 
 /* Focus styles for gallery items */
-.gallery-item:focus {
+.gallery-item:focus-visible {
   outline: 2px solid var(--neon-teal);
   outline-offset: 4px;
   border-radius: 8px;
 }
 
 /* Focus styles for weight controls */
-.weight-control-button:focus {
+.weight-control-button:focus-visible {
   outline: 2px solid var(--neon-teal);
   outline-offset: 2px;
   transform: scale(1.1);
 }
 
 /* Focus styles for link and favorite buttons */
-.link-button:focus,
-.favorite-button:focus,
-.quadrant-flip-button:focus {
+.link-button:focus-visible,
+.favorite-button:focus-visible,
+.quadrant-flip-button:focus-visible {
   outline: 2px solid var(--neon-teal);
   outline-offset: 2px;
   transform: scale(1.1);
@@ -3809,3 +3809,18 @@ html.dark-mode .action-button:hover {
 .more-info-container:has(.fa-graduation-cap) {
   border-color: var(--neon-orange) !important;
 }
+
+/* Tutorial icon styles */
+.tutorial-icon {
+  font-size: 1.2rem;
+  width: 1.5rem;
+  text-align: center;
+}
+
+.tutorial-icon-pink { color: var(--neon-pink); }
+.tutorial-icon-orange { color: var(--neon-orange); }
+.tutorial-icon-yellow { color: var(--neon-yellow); }
+.tutorial-icon-green { color: var(--neon-green); }
+.tutorial-icon-teal { color: var(--neon-teal); }
+.tutorial-icon-blue { color: var(--neon-blue); }
+.tutorial-icon-purple { color: var(--neon-purple); }

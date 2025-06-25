@@ -320,9 +320,6 @@ export default class ImageModel {
    */
   generateFinalPrompt() {
     const srefs = this.getSelectedSrefs();
-    if (srefs.length === 0 && !this.basePrompt) {
-      return '';
-    }
     
     // Get the model tag based on the current model
     let modelTag = '';
@@ -337,6 +334,12 @@ export default class ImageModel {
     
     // Combine all parts, ensuring there are spaces where needed
     const parts = [this.basePrompt, modelTag, srefsString].filter(part => part.trim() !== '');
+    
+    // If no user input and no styles selected, still show the model parameter and prefix
+    if (parts.length === 0) {
+      return `${prefix}${modelTag}`.trim();
+    }
+    
     return `${prefix}${parts.join(' ')}`.trim();
   }
 

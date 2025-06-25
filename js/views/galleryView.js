@@ -105,6 +105,35 @@ export default class GalleryView {
     if (!this.gallery) {
       console.error('Gallery element not found');
     }
+
+    // Add click-to-copy for prompt preview
+    this.bindPromptPreviewCopy(this.getPromptText.bind(this));
+  }
+
+  getPromptText() {
+    return this.finalPrompt ? this.finalPrompt.textContent : '';
+  }
+
+  bindPromptPreviewCopy(getPromptText) {
+    const promptPreview = document.querySelector('.prompt-preview');
+    if (promptPreview) {
+      promptPreview.style.cursor = 'pointer';
+      promptPreview.title = 'Click to copy prompt';
+      promptPreview.addEventListener('click', () => {
+        const promptText = getPromptText();
+        if (promptText && promptText.trim() !== '') {
+          navigator.clipboard.writeText(promptText)
+            .then(() => {
+              this.showCopyFeedback();
+              this.showInfoNotification('Prompt copied to clipboard.');
+            })
+            .catch(err => {
+              console.error('Could not copy text: ', err);
+              this.showErrorNotification('Failed to copy to clipboard. Please try again or copy manually.');
+            });
+        }
+      });
+    }
   }
 
   initializeButtons() {
