@@ -214,6 +214,14 @@ export default class GalleryController {
           this.model.currentModel
         );
         
+        // Re-render the New Styles section to reflect current selection states
+        this.view.renderNewStylesSection(
+          this.model.getNewImages(), 
+          this.model.selectedImages, 
+          this.model.favoriteImages, 
+          this.model.currentModel
+        );
+        
         return; // Stop current render
       } else {
         // If there are favorites, show them first, then a divider, then all non-favorites
@@ -263,6 +271,14 @@ export default class GalleryController {
         this.view.updateImageCountSubheader(
           allVisibleImages.length,
           this.model.selectedImages.size,
+          this.model.currentModel
+        );
+        
+        // Re-render the New Styles section to reflect current selection states
+        this.view.renderNewStylesSection(
+          this.model.getNewImages(), 
+          this.model.selectedImages, 
+          this.model.favoriteImages, 
           this.model.currentModel
         );
         
@@ -339,6 +355,14 @@ export default class GalleryController {
             this.model.currentModel
           );
           
+          // Re-render the New Styles section to reflect current selection states
+          this.view.renderNewStylesSection(
+            this.model.getNewImages(), 
+            this.model.selectedImages, 
+            this.model.favoriteImages, 
+            this.model.currentModel
+          );
+          
           return; // Stop current render
         }
       }
@@ -391,6 +415,14 @@ export default class GalleryController {
           (imageId) => this.model.getWeightColorIndex(imageId)
         );
         
+        // Re-render the New Styles section to reflect current selection states
+        this.view.renderNewStylesSection(
+          this.model.getNewImages(), 
+          this.model.selectedImages, 
+          this.model.favoriteImages, 
+          this.model.currentModel
+        );
+        
         // Return early since we've manually rendered everything
         return;
       } else {
@@ -421,6 +453,14 @@ export default class GalleryController {
       this.model.selectedImages.size,
       this.model.currentModel
     );
+
+    // Re-render the New Styles section to reflect current selection states
+    this.view.renderNewStylesSection(
+      this.model.getNewImages(), 
+      this.model.selectedImages, 
+      this.model.favoriteImages, 
+      this.model.currentModel
+    );
   }
 
   bindEvents() {
@@ -441,6 +481,56 @@ export default class GalleryController {
       this.updatePrompt();
       
       // Initialize weight displays after selection changes
+      this.view.updateAllWeightDisplays(
+        (imageId) => this.model.getWeight(imageId),
+        (imageId) => this.model.getWeightColorIndex(imageId)
+      );
+    });
+    
+    // Handle image selection from New Styles gallery
+    document.addEventListener('imageSelection', (event) => {
+      const { imageId, source } = event.detail;
+      
+      // Use the same selection logic as the main gallery
+      this.model.toggleImageSelection(imageId);
+      
+      // If we're in selected-only mode and unselected an image, check if any selections remain
+      if (this.showOnlySelected) {
+        // If no selections remain, automatically toggle off selected view
+        if (this.model.selectedImages.size === 0) {
+          this.showOnlySelected = false;
+          this.view.updateShowSelectedToggle(false);
+        }
+      }
+      
+      this.renderGallery();
+      this.updatePrompt();
+      
+      // Initialize weight displays after selection changes
+      this.view.updateAllWeightDisplays(
+        (imageId) => this.model.getWeight(imageId),
+        (imageId) => this.model.getWeightColorIndex(imageId)
+      );
+    });
+    
+    // Handle weight control clicks from New Styles gallery
+    document.addEventListener('weightControl', (event) => {
+      const { imageId, action, source } = event.detail;
+      
+      let newWeight;
+      
+      if (action === 'increase') {
+        newWeight = this.model.increaseWeight(imageId);
+        console.log(`Increased weight to ${newWeight}`);
+      } else if (action === 'decrease') {
+        newWeight = this.model.decreaseWeight(imageId);
+        console.log(`Decreased weight to ${newWeight}`);
+      }
+      
+      // Update the prompt with the new weight
+      this.updatePrompt();
+      
+      // Update all weight displays to reflect the change
       this.view.updateAllWeightDisplays(
         (imageId) => this.model.getWeight(imageId),
         (imageId) => this.model.getWeightColorIndex(imageId)

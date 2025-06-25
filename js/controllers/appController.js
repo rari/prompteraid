@@ -115,8 +115,9 @@ export default class AppController {
     }
     const sref = urlParams.get('sref');
     const quadrant = urlParams.get('q') || urlParams.get('quadrant'); // Support both short and long parameter names
+    const searchQ = urlParams.get('q');
     // Model handling is now in initializeModel(), so we only handle sref here.
-    if (sref) {
+    if (sref && !searchQ) {
       // If we have a style reference in the URL, find it and focus on it
       console.log(`Looking for style reference: ${sref}`);
       // Wait for the gallery to load and the controller to be initialized
@@ -138,6 +139,29 @@ export default class AppController {
       };
       // Start checking
       setTimeout(checkAndCreateLinkedView, 1000);
+    }
+    // If q is present (search), trigger search UI and logic
+    if (searchQ) {
+      const trySearch = () => {
+        if (!window.galleryController || !window.galleryController.view) {
+          setTimeout(trySearch, 300);
+          return;
+        }
+        // Open search UI if not already open
+        const searchContainer = document.querySelector('.search-container');
+        if (searchContainer && searchContainer.classList.contains('hidden')) {
+          searchContainer.classList.remove('hidden');
+        }
+        // Set search input value
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+          searchInput.value = searchQ;
+        }
+        // Set searchNumber and trigger search
+        window.galleryController.searchNumber = searchQ;
+        window.galleryController.performSearch(searchQ);
+      };
+      setTimeout(trySearch, 800);
     }
   }
   

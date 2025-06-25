@@ -1434,6 +1434,23 @@ export default class GalleryView {
     }
   }
 
+  /**
+   * Show warning notification with screen reader announcement
+   * @param {string} message - The warning message
+   */
+  showWarningNotification(message) {
+    if (this.notificationContainer) {
+      this.notificationContainer.textContent = message;
+      this.notificationContainer.className = 'notification warning-notification';
+      this.notificationContainer.style.display = 'block';
+      // Announce to screen reader
+      this.announceToScreenReader(message, 'status');
+      setTimeout(() => {
+        this.notificationContainer.style.display = 'none';
+      }, 4000);
+    }
+  }
+
   updateImageCountSubheader(totalCount, selectedCount, currentModel) {
     if (!this.imageCountSubheader) return;
 
@@ -1442,7 +1459,7 @@ export default class GalleryView {
       'niji-6': '<i class="fa-solid fa-rainbow" style="color: #00e5ff; margin-right: 0.3em;"></i>',
       'midjourney-7': '<i class="fa-solid fa-sailboat" style="color: #00e5ff; margin-right: 0.3em;"></i>'
     };
-    const modelDisplayName = currentModel === 'niji-6' ? `${modelIcons['niji-6']}<span style=\"color: white;\">Niji&nbsp;6</span>` : `${modelIcons['midjourney-7']}<span style=\"color: white;\">Midjourney&nbsp;v7</span>`;
+    const modelDisplayName = currentModel === 'niji-6' ? `${modelIcons['niji-6']}<span>Niji&nbsp;6</span>` : `${modelIcons['midjourney-7']}<span>Midjourney&nbsp;v7</span>`;
 
     // Define all available models
     const allModels = [
@@ -1460,7 +1477,7 @@ export default class GalleryView {
         <span class=\"model-selector-inline model-selector\">
           <span class=\"current-model\">${modelDisplayName}</span>
           <span class=\"model-dropdown\">
-            ${otherModels.map(model => `<span class=\"model-option\" data-model=\"${model.id}\">${model.icon}<span style=\"color: white;\">${model.name}</span></span>`).join('')}
+            ${otherModels.map(model => `<span class=\"model-option\" data-model=\"${model.id}\">${model.icon}<span>${model.name}</span></span>`).join('')}
           </span>
         </span>
       </span>
@@ -2084,16 +2101,61 @@ export default class GalleryView {
     
     // Set appropriate text based on type
     if (type === 'favorites') {
-      label.innerHTML = `<i class="far fa-star"></i> ${count} favorite${count !== 1 ? 's' : ''} above`;
+      label.innerHTML = `<i class=\"far fa-star\"></i> ${count} favorite${count !== 1 ? 's' : ''} above`;
+      divider.appendChild(label);
     } else if (type === 'selected') {
-      label.innerHTML = `<i class="far fa-eye"></i> ${count} selected image${count !== 1 ? 's' : ''} above`;
+      label.innerHTML = `<i class=\"far fa-eye\"></i> ${count} selected image${count !== 1 ? 's' : ''} above`;
+      divider.appendChild(label);
     } else if (type === 'linked') {
-      label.innerHTML = `<i class="fas fa-link"></i> Linked style above`;
+      label.innerHTML = `<i class=\"fas fa-link\"></i> Linked style above`;
+      divider.appendChild(label);
     } else if (type === 'search') {
-      label.innerHTML = `<i class="fas fa-search"></i> ${count} search result${count !== 1 ? 's' : ''} above`;
+      label.innerHTML = `<i class=\"fas fa-search\"></i> ${count} search result${count !== 1 ? 's' : ''} above`;
+      // Create the create link lozenge as a sibling
+      const linkLozenge = document.createElement('span');
+      linkLozenge.className = 'filter-divider-label filter-divider-link';
+      linkLozenge.style.marginLeft = '1em';
+      linkLozenge.style.cursor = 'pointer';
+      linkLozenge.innerHTML = `<i class=\"fas fa-link\" style=\"color: var(--neon-pink);\"></i> Create a link`;
+      linkLozenge.tabIndex = 0;
+      linkLozenge.setAttribute('role', 'button');
+      linkLozenge.setAttribute('aria-label', 'Create a shareable link for this search');
+      linkLozenge.addEventListener('click', () => {
+        // Get current model and search query
+        const model = window.galleryController?.model?.currentModel || 'niji-6';
+        const search = window.galleryController?.searchNumber || '';
+        // Get all visible images matching the search
+        let srefs = [];
+        if (window.galleryController && search) {
+          const allImages = window.galleryController.model.images;
+          const searchTerms = search.split(' ').map(term => term.trim()).filter(term => term.length > 0);
+          const matchingImages = allImages.filter(img => searchTerms.some(term => img.sref.includes(term)));
+          srefs = matchingImages.map(img => img.sref);
+        }
+        // Build the link
+        const params = new URLSearchParams();
+        params.set('model', model);
+        if (srefs.length > 0) params.set('sref', srefs.join(' '));
+        if (search) params.set('q', search);
+        const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+        // Copy to clipboard
+        navigator.clipboard.writeText(url).then(() => {
+          this.showCopyFeedback && this.showCopyFeedback();
+          this.showInfoNotification && this.showInfoNotification('Shareable search link copied!');
+        }).catch(() => {
+          this.showErrorNotification && this.showErrorNotification('Failed to copy link.');
+        });
+      });
+      // Accessibility: trigger click on Enter or Space
+      linkLozenge.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          linkLozenge.click();
+        }
+      });
+      divider.appendChild(label);
+      divider.appendChild(linkLozenge);
     }
-    
-    divider.appendChild(label);
     
     return divider;
   }
@@ -2137,14 +2199,9 @@ export default class GalleryView {
     this.notificationContainer.style.top = '24px';
     this.notificationContainer.style.left = '50%';
     this.notificationContainer.style.transform = 'translateX(-50%)';
-    this.notificationContainer.style.background = '#fffbe6';
-    this.notificationContainer.style.color = '#b26a00';
-    this.notificationContainer.style.padding = '12px 24px';
-    this.notificationContainer.style.border = '1px solid #ffe58f';
-    this.notificationContainer.style.borderRadius = '8px';
-    this.notificationContainer.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
     this.notificationContainer.style.zIndex = '2000';
     this.notificationContainer.style.display = 'none';
+    // Removed inline background, color, border, borderRadius, boxShadow, and padding to allow CSS classes to style notifications
     document.body.appendChild(this.notificationContainer);
   }
 
@@ -2215,6 +2272,23 @@ export default class GalleryView {
     section.innerHTML = html;
     section.style.display = '';
 
+    // Add event delegation for image selection to the new styles gallery
+    const newStylesGallery = section.querySelector('.new-styles-gallery');
+    if (newStylesGallery) {
+      // Remove any existing event listeners to avoid duplicates
+      newStylesGallery.removeEventListener('click', this.handleNewStylesImageClick);
+      newStylesGallery.removeEventListener('keydown', this.handleNewStylesImageKeydown);
+      
+      // Add click event listener for image selection
+      newStylesGallery.addEventListener('click', this.handleNewStylesImageClick);
+      
+      // Add keyboard navigation support
+      newStylesGallery.addEventListener('keydown', this.handleNewStylesImageKeydown);
+      
+      // Add weight control event delegation
+      newStylesGallery.addEventListener('click', this.handleNewStylesWeightClick);
+    }
+
     // Add event listener for More/Less button
     const moreBtn = section.querySelector('.new-styles-more-btn');
     if (moreBtn) {
@@ -2247,6 +2321,65 @@ export default class GalleryView {
       });
     } else {
       console.log('New styles summary not found');
+    }
+  }
+
+  // Event handler for New Styles image clicks
+  handleNewStylesImageClick = (event) => {
+    const galleryItem = event.target.closest('.gallery-item');
+    // Don't trigger selection if clicking on a button or weight controls
+    if (galleryItem && 
+        !event.target.closest('.favorite-button') && 
+        !event.target.closest('.quadrant-flip-button') &&
+        !event.target.closest('.weight-controls') &&
+        !event.target.closest('.weight-control-button') &&
+        !event.target.closest('.weight-display')) {
+      const id = galleryItem.dataset.id;
+      
+      // Dispatch a custom event that the controller can listen for
+      const selectionEvent = new CustomEvent('imageSelection', { 
+        detail: { imageId: id, source: 'new-styles' } 
+      });
+      document.dispatchEvent(selectionEvent);
+    }
+  }
+
+  // Event handler for New Styles image keyboard navigation
+  handleNewStylesImageKeydown = (event) => {
+    const galleryItem = event.target.closest('.gallery-item');
+    if (galleryItem && (event.key === 'Enter' || event.key === ' ')) {
+      event.preventDefault();
+      const id = galleryItem.dataset.id;
+      
+      // Dispatch a custom event that the controller can listen for
+      const selectionEvent = new CustomEvent('imageSelection', { 
+        detail: { imageId: id, source: 'new-styles' } 
+      });
+      document.dispatchEvent(selectionEvent);
+    }
+  }
+
+  // Event handler for New Styles weight control clicks
+  handleNewStylesWeightClick = (event) => {
+    // Check if we clicked directly on a weight button (not just in the container)
+    if (event.target.classList.contains('weight-control-button') || event.target.parentElement.classList.contains('weight-control-button')) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      // Get the button element
+      const weightButton = event.target.classList.contains('weight-control-button') ? 
+                          event.target : event.target.parentElement;
+      
+      const imageId = weightButton.dataset.id;
+      const action = weightButton.dataset.action;
+      
+      console.log(`New Styles weight button clicked: ${action} for image ${imageId}`);
+      
+      // Dispatch a custom event that the controller can listen for
+      const weightEvent = new CustomEvent('weightControl', { 
+        detail: { imageId: imageId, action: action, source: 'new-styles' } 
+      });
+      document.dispatchEvent(weightEvent);
     }
   }
 
