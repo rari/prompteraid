@@ -156,7 +156,7 @@
 
       <!-- New Styles Section -->
       <div id="new-styles-section" class="new-styles-section" style="display: none;">
-        <details open>
+        <details>
           <summary>
             <span><i class="fa-solid fa-bolt" style="color: var(--neon-pink); margin-right: 0.3em;"></i>New Styles</span>
             <button id="minimize-new-styles" class="close-button" title="Minimize this section" aria-label="Minimize new styles section"><i class="fas fa-compress-alt"></i></button>
@@ -165,41 +165,11 @@
         </details>
       </div>
 
-      <!-- Styles of the Month Section -->
-      <div id="styles-of-the-month-section" class="new-styles-section" style="display: none;">
-        <details open>
-          <summary>
-            <span><i class="fa-solid fa-crown" style="color: var(--neon-orange); margin-right: 0.3em;"></i>Styles of the Month</span>
-            <button id="minimize-styles-of-the-month" class="close-button" title="Minimize this section" aria-label="Minimize styles of the month section"><i class="fas fa-compress-alt"></i></button>
-          </summary>
-          <div class="new-styles-content"></div>
-        </details>
-      </div>
-
-      <!-- Favorites Tools -->
-      <div id="favorites-tools" class="favorites-tools hidden">
-        <div class="favorites-tools-header">
-          <i class="fas fa-star"></i>
-          <h4>Favorites</h4>
-        </div>
-        <div class="favorites-tools-buttons">
-          <button id="export-favorites-button" class="action-button" title="Export your favorites to a file" aria-label="Export favorites to file">
-            <i class="fas fa-download"></i>
-            <span>Export</span>
-          </button>
-          <button id="import-favorites-button" class="action-button" title="Import favorites from a file" aria-label="Import favorites from file">
-            <i class="fas fa-upload"></i>
-            <span>Import</span>
-          </button>
-          <input type="file" id="import-favorites-input" accept=".json" style="display: none;" aria-label="Select favorites file to import">
-        </div>
-      </div>
-
       <!-- Tutorial Section -->
       <div class="more-info-container">
         <details>
           <summary>
-            <span><i class="fa-solid fa-graduation-cap" style="color: var(--neon-yellow); margin-right: 0.3em;"></i>Tutorial</span>
+            <span><i class="fa-solid fa-graduation-cap" style="color: var(--neon-orange); margin-right: 0.3em;"></i>Tutorial</span>
             <button id="minimize-tutorial" class="close-button" title="Minimize this section" aria-label="Minimize tutorial section"><i class="fas fa-compress-alt"></i></button>
           </summary>
           <div class="more-info-content">
@@ -318,67 +288,37 @@
         </details>
       </div>
 
-      <!--
-      NEWS HEADER PRESERVED FOR FUTURE USE. DO NOT DELETE.
-      <div class="news-container">
+      <!-- Styles of the Month Section -->
+      <div id="styles-of-the-month-section" class="new-styles-section" style="display: none;">
         <details open>
           <summary>
-            <span>📰 News</span>
-            <button id="close-news" class="close-button" title="Hide this section" aria-label="Hide news section">&times;</button>
+            <span><i class="fa-solid fa-crown" style="color: var(--neon-orange); margin-right: 0.3em;"></i>Styles of the Month</span>
+            <button id="minimize-styles-of-the-month" class="close-button" title="Minimize this section" aria-label="Minimize styles of the month section"><i class="fas fa-compress-alt"></i></button>
           </summary>
-          <div class="news-content">
-            <!-- 
-              NEWS SECTION MAINTENANCE:
-              - Keep this section updated with current information
-              - Add new sections as needed for major updates
-              - Use consistent formatting with <strong> tags for emphasis
-              - Include dates for important milestones
-              - Comment out old sections rather than deleting them
-            -->
-            
-            <!-- 
-            <div class="news-section updates-section">
-              <h4>Updates</h4>
-              <ul>
-                <li><strong>Latest Release:</strong> Added prompt preview expansion feature - now long prompts wrap properly!</li>
-                <li><strong>New Feature:</strong> Summary card generator with customizable grid backgrounds</li>
-                <li><strong>Improvement:</strong> Enhanced SEO with proper meta tags and social media previews</li>
-                <li><strong>Bug Fix:</strong> Fixed copy button functionality and notification system</li>
-              </ul>
-            </div>
-
-            <div class="news-section coming-soon-section">
-              <h4>Coming Soon</h4>
-              <ul>
-                <li><strong>Style Categories:</strong> Organize styles by themes (anime, realistic, artistic, etc.)</li>
-                <li><strong>Advanced Filters:</strong> Filter by color palette, mood, or style intensity</li>
-                <li><strong>Export Options:</strong> Save your favorite style combinations as presets</li>
-                <li><strong>Community Features:</strong> Share and discover popular style combinations</li>
-              </ul>
-            </div>
-            
-            <div class="news-section shout-outs-section">
-              <h4>Shout Outs</h4>
-              <ul>
-                <li><strong>Midjourney Team:</strong> For creating the amazing NijiJourney 6 model</li>
-                <li><strong>NijiJourney Community:</strong> For inspiring style combinations and creative prompts</li>
-                <li><strong>Open Source Contributors:</strong> For the tools and libraries that make this possible</li>
-                <li><strong>Beta Testers:</strong> For valuable feedback and bug reports</li>
-              </ul>
-            </div>
-           
-            
-            <div class="news-section launch-section">
-              <h4>Launch</h4>
-              <ul>
-                <li><strong>Launch Date:</strong> <strong>June 22, 2025</strong></li>
-                <li><strong>Initial Release:</strong> Launched with 635 style reference images</li>
-              </ul>
-            </div>
-          </div>
+          <div class="new-styles-content"></div>
         </details>
       </div>
-       -->
+
+      <!-- Favorites Tools -->
+      <div class="more-info-container">
+        <div id="favorites-tools" class="favorites-tools hidden">
+          <div class="favorites-tools-header">
+            <i class="fas fa-star"></i>
+            <h4>Favorites</h4>
+          </div>
+          <div class="favorites-tools-buttons">
+            <button id="export-favorites-button" class="action-button" title="Export your favorites to a file" aria-label="Export favorites to file">
+              <i class="fas fa-download"></i>
+              <span>Export</span>
+            </button>
+            <button id="import-favorites-button" class="action-button" title="Import favorites from a file" aria-label="Import favorites from file">
+              <i class="fas fa-upload"></i>
+              <span>Import</span>
+            </button>
+            <input type="file" id="import-favorites-input" accept=".json" style="display: none;" aria-label="Select favorites file to import">
+          </div>
+        </div>
+      </div>
 
       <div class="gallery-container">
         <div id="image-gallery" class="image-gallery">
