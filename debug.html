@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Page</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #181a20; color: #fff; margin: 0; padding: 2rem; }
+    h1 { color: #ff7700; }
+    h2 { color: #ffd700; margin-top: 2rem; }
+    pre, code { background: #23242a; color: #fff; padding: 0.5em; border-radius: 6px; }
+    .section { margin-bottom: 2.5rem; }
+    .btn { background: #23242a; color: #ffd700; border: 1px solid #ffd700; border-radius: 6px; padding: 0.5em 1em; margin-right: 1em; cursor: pointer; font-weight: 600; }
+    .btn:hover { background: #ffd700; color: #23242a; }
+    table { border-collapse: collapse; margin-top: 0.5em; }
+    th, td { border: 1px solid #444; padding: 0.4em 0.8em; }
+    th { background: #23242a; color: #ffd700; }
+    .error-log { color: #ff1493; }
+  </style>
+</head>
+<body>
+  <h1>Debug Page</h1>
+
+  <div class="section" id="app-env-info">
+    <h2>App & Environment Info</h2>
+    <ul id="env-list"></ul>
+  </div>
+
+  <div class="section" id="images-by-model">
+    <h2>Images by Model</h2>
+    <table id="images-table">
+      <thead><tr><th>Model</th><th>Total Images</th><th>New Images</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="section" id="localstorage-dump">
+    <h2>LocalStorage Dump</h2>
+    <pre id="localstorage-json"></pre>
+  </div>
+
+  <div class="section" id="error-log-section">
+    <h2>Error Log</h2>
+    <pre id="error-log" class="error-log">(No errors captured yet)</pre>
+  </div>
+
+  <div class="section" id="manual-actions">
+    <h2>Manual Actions</h2>
+    <button class="btn" onclick="clearLocalStorage()">Clear LocalStorage</button>
+    <button class="btn" onclick="location.reload()">Reload Page</button>
+  </div>
+
+  <script>
+    // App & Environment Info
+    const envList = document.getElementById('env-list');
+    const envInfo = [
+      ['User Agent', navigator.userAgent],
+      ['Platform', navigator.platform],
+      ['Language', navigator.language],
+      ['Screen Size', `${window.screen.width} x ${window.screen.height}`],
+      ['Window Size', `${window.innerWidth} x ${window.innerHeight}`],
+      ['Location', window.location.href],
+      ['Date/Time', new Date().toString()],
+    ];
+    envInfo.forEach(([k, v]) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${k}:</strong> <code>${v}</code>`;
+      envList.appendChild(li);
+    });
+
+    // Images by Model (load from api/images.json)
+    fetch('api/images.json')
+      .then(r => r.json())
+      .then(data => {
+        const tbody = document.querySelector('#images-table tbody');
+        if (data.sets) {
+          Object.entries(data.sets).forEach(([model, info]) => {
+            const total = info.images.length;
+            const newCount = info.images.filter(img => img.new).length;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${model}</td><td>${total}</td><td>${newCount}</td>`;
+            tbody.appendChild(tr);
+          });
+        }
+      });
+
+    // LocalStorage Dump
+    function dumpLocalStorage() {
+      const obj = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        obj[k] = localStorage.getItem(k);
+      }
+      document.getElementById('localstorage-json').textContent = JSON.stringify(obj, null, 2);
+    }
+    dumpLocalStorage();
+
+    // Error Log (capture window errors)
+    let errorLog = [];
+    window.onerror = function(msg, url, line, col, error) {
+      errorLog.push(`[${new Date().toLocaleTimeString()}] ${msg} (${url}:${line}:${col})`);
+      document.getElementById('error-log').textContent = errorLog.join('\n');
+    };
+
+    // Manual Actions
+    function clearLocalStorage() {
+      if (confirm('Are you sure you want to clear all localStorage?')) {
+        localStorage.clear();
+        dumpLocalStorage();
+      }
+    }
+    window.clearLocalStorage = clearLocalStorage;
+  </script>
+</body>
+</html> 

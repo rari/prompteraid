@@ -45,69 +45,69 @@ export default class GalleryController {
 
   async init() {
     try {
-    // Load model-specific favorites
-    this.model.loadFromStorage();
-    
-    // Load images
-    await this.model.loadImages();
-
-    // Build imagesById map (id = sref from filename)
-    const imagesById = {};
-    this.model.images.forEach(img => {
-      // Use sref as the id for matching
-      imagesById[img.sref] = img;
-    });
-
-    // Load Styles of the Month JSON
-    let stylesOfTheMonth = [];
-    try {
-      const resp = await fetch('api/styles-of-the-month.json');
-      if (resp.ok) {
-        const allStyles = await resp.json();
-        // Filter styles by current model
-        stylesOfTheMonth = allStyles.filter(style => style.model === this.model.currentModel);
-      }
-    } catch (e) {
-      console.warn('Could not load styles-of-the-month.json', e);
-    }
-
-    // Get current month in mm-yyyy
-    const now = new Date();
-    const mm = String(now.getMonth() + 1).padStart(2, '0');
-    const yyyy = now.getFullYear();
-    const currentMonth = `${mm}-${yyyy}`;
-
-    // Render Styles of the Month section
-    // this.view.renderStylesOfTheMonthSection(
-    //   stylesOfTheMonth,
-    //   imagesById,
-    //   this.model.selectedImages,
-    //   this.model.favoriteImages,
-    //   this.model.currentModel,
-    //   currentMonth
-    // );
-    
-    // Render new styles section
-    this.view.renderNewStylesSection(this.model.getNewImages(), this.model.selectedImages, this.model.favoriteImages, this.model.currentModel);
-    
-    // Render initial gallery
-    this.renderGallery();
-    
-    // Bind event handlers
-    this.bindEvents();
+      // Load model-specific favorites
+      this.model.loadFromStorage();
       
+      // Load images
+      await this.model.loadImages();
+
+      // Build imagesById map (id = sref from filename)
+      const imagesById = {};
+      this.model.images.forEach(img => {
+        // Use sref as the id for matching
+        imagesById[img.sref] = img;
+      });
+
+      // Load Styles of the Month JSON
+      let stylesOfTheMonth = [];
+      try {
+        const resp = await fetch('api/styles-of-the-month.json');
+        if (resp.ok) {
+          const allStyles = await resp.json();
+          // Filter styles by current model
+          stylesOfTheMonth = allStyles.filter(style => style.model === this.model.currentModel);
+        }
+      } catch (e) {
+        console.warn('Could not load styles-of-the-month.json', e);
+      }
+
+      // Get current month in mm-yyyy
+      const now = new Date();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const yyyy = now.getFullYear();
+      const currentMonth = `${mm}-${yyyy}`;
+
+      // Render Styles of the Month section
+      // this.view.renderStylesOfTheMonthSection(
+      //   stylesOfTheMonth,
+      //   imagesById,
+      //   this.model.selectedImages,
+      //   this.model.favoriteImages,
+      //   this.model.currentModel,
+      //   currentMonth
+      // );
+      
+      // Render new styles section
+      this.view.renderNewStylesSection(this.model.getNewImages(), this.model.selectedImages, this.model.favoriteImages, this.model.currentModel);
+      
+      // Render initial gallery
+      this.renderGallery();
+      
+      // Bind event handlers
+      this.bindEvents();
+        
       // Add direct document-level handler for favorite button clicks
       this.addDirectFavoriteHandler();
     
-    // Update prompt initially
-    this.updatePrompt();
+      // Update prompt initially
+      this.updatePrompt();
     
-    // Listen for storage errors
-    document.addEventListener('storage-error', (event) => {
-      if (event.detail && event.detail.message) {
-        this.view.showErrorNotification(event.detail.message);
-      }
-    });
+      // Listen for storage errors
+      document.addEventListener('storage-error', (event) => {
+        if (event.detail && event.detail.message) {
+          this.view.showErrorNotification(event.detail.message);
+        }
+      });
     } catch (error) {
       console.error('Failed to initialize gallery:', error);
       this.view.showErrorNotification('Failed to load images. Please try refreshing the page.');
@@ -479,6 +479,7 @@ export default class GalleryController {
       navigator.clipboard.writeText(promptText)
         .then(() => {
           this.view.showCopyFeedback();
+          this.view.showInfoNotification('Prompt copied to clipboard.');
         })
         .catch(err => {
           console.error('Could not copy text: ', err);

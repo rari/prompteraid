@@ -81,7 +81,7 @@
   </script>
 </head>
 <body>
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <a href="#gallery-top" class="skip-link">Skip to main content</a>
   <div class="container">
     <header>
       <h1 class="cute-title-container">
@@ -149,7 +149,7 @@
           <input type="text" id="search-input" placeholder="Enter sref numbers (e.g., 1 2 7)..." step="any" aria-label="Search style references by number" aria-describedby="search-help">
           <div id="search-help" class="sr-only">Enter one or more style reference numbers separated by spaces to find matching images</div>
         </div>
-        <div class="prompt-preview hidden">
+        <div class="prompt-preview">
           <p id="final-prompt"></p>
         </div>
       </div>
@@ -192,8 +192,8 @@
             <div class="info-section platform-section">
               <h4>Platform</h4>
               <ul class="tool-guide-list">
-                <li><i class="fab fa-discord menu-icon-style"></i><div><strong>Discord</strong>: Paste the prompt into the MidJourney or NijiJourney Discord bot, just like any other prompt.</div></li>
-                <li><i class="fas fa-globe menu-icon-style"></i><div><strong>Website</strong>: Use the generated prompt directly on the <a href="https://www.midjourney.com" target="_blank">Midjourney</a> or <a href="https://nijijourney.com" target="_blank">NijiJourney</a> website.</div></li>
+                <li><i class="fab fa-discord"></i><div><strong>Discord</strong>: Paste the prompt into the MidJourney or NijiJourney Discord bot, just like any other prompt.</div></li>
+                <li><i class="fas fa-globe"></i><div><strong>Website</strong>: Use the generated prompt directly on the <a href="https://www.midjourney.com" target="_blank">Midjourney</a> or <a href="https://nijijourney.com" target="_blank">NijiJourney</a> website.</div></li>
               </ul>
               <p>Both bots and websites can accept the same <code>--sref</code>, <code>--niji 6</code> and <code>--v 7</code> parameters!</p>
             </div>
@@ -216,24 +216,24 @@
             <div class="info-section tool-guide-section">
               <h4>Menu Tools</h4>
               <ul class="tool-guide-list">
-                <li><i class="far fa-trash-can menu-icon-style"></i><div><strong>Deselect:</strong> Clear all selected images.</div></li>
-                <li><i class="fas fa-sync-alt menu-icon-style"></i><div><strong>Refresh:</strong> Shuffle the order of all images and randomize their starting view.</div></li>
-                <li><i class="far fa-star menu-icon-style"></i><div><strong>Favorites View:</strong> Show only your starred images.</div></li>
-                <li><i class="far fa-eye menu-icon-style"></i><div><strong>Selected View:</strong> Show only your currently selected images.</div></li>
-                <li><i class="fa-solid fa-magnifying-glass menu-icon-style"></i><div><strong>Search:</strong> Search for images by their number(s). Use spaces to search for multiple numbers (e.g., "1 2 7").</div></li>
-                <li><i class="far fa-lightbulb menu-icon-style"></i><div><strong>Randomize:</strong> Randomly select an unselected image.</div></li>
-                <li><i class="far fa-clipboard menu-icon-style"></i><div><strong>Copy:</strong> Copy the final generated prompt to your clipboard.</div></li>
+                <li><i class="far fa-trash-can tutorial-icon tutorial-icon-pink"></i><div><strong>Deselect:</strong> Clear all selected images.</div></li>
+                <li><i class="fas fa-sync-alt tutorial-icon tutorial-icon-orange"></i><div><strong>Refresh:</strong> Shuffle the order of all images and randomize their starting view.</div></li>
+                <li><i class="far fa-star tutorial-icon tutorial-icon-yellow"></i><div><strong>Favorites View:</strong> Show only your starred images.</div></li>
+                <li><i class="far fa-eye tutorial-icon tutorial-icon-green"></i><div><strong>Selected View:</strong> Show only your currently selected images.</div></li>
+                <li><i class="fa-solid fa-magnifying-glass tutorial-icon tutorial-icon-teal"></i><div><strong>Search:</strong> Search for images by their number(s). Use spaces to search for multiple numbers (e.g., "1 2 7").</div></li>
+                <li><i class="far fa-lightbulb tutorial-icon tutorial-icon-blue"></i><div><strong>Randomize:</strong> Randomly select an unselected image.</div></li>
+                <li><i class="far fa-clipboard tutorial-icon tutorial-icon-purple"></i><div><strong>Copy:</strong> Copy the final generated prompt to your clipboard.</div></li>
               </ul>
             </div>
 
             <div class="info-section image-tools-section">
               <h4>Image Tools</h4>
               <ul class="tool-guide-list">
-                <li><i class="far fa-star menu-icon-style"></i><div><strong>Favorite:</strong> Add the image to your favorites collection.</div></li>
-                <li><i class="fas fa-sync-alt menu-icon-style"></i><div><strong>Rotate:</strong> Cycle through other visual examples from the same style reference code.</div></li>
-                <li><i class="fas fa-hand-pointer menu-icon-style"></i><div><strong>Select:</strong> Left-click the image to add its style code to your prompt. Selected images are shown with a colored border.</div></li>
-                <li><i class="fas fa-link menu-icon-style" style="color: var(--neon-pink);"></i><div><strong>Link:</strong> Share a direct link to any style reference!</div></li>
-                <li><i class="fas fa-balance-scale menu-icon-style" style="color: var(--neon-teal);"></i><div><strong>Weight:</strong> Adjust the relative importance of each code.</div></li>
+                <li><i class="far fa-star tutorial-icon tutorial-icon-yellow"></i><div><strong>Favorite:</strong> Add the image to your favorites collection.</div></li>
+                <li><i class="fas fa-sync-alt tutorial-icon tutorial-icon-orange"></i><div><strong>Rotate:</strong> Cycle through other visual examples from the same style reference code.</div></li>
+                <li><i class="fas fa-hand-pointer tutorial-icon tutorial-icon-green"></i><div><strong>Select:</strong> Left-click the image to add its style code to your prompt. Selected images are shown with a colored border.</div></li>
+                <li><i class="fas fa-link tutorial-icon tutorial-icon-pink"></i><div><strong>Link:</strong> Share a direct link to any style reference!</div></li>
+                <li><i class="fas fa-balance-scale tutorial-icon tutorial-icon-teal"></i><div><strong>Weight:</strong> Adjust the relative importance of each code.</div></li>
               </ul>
             </div>
 
@@ -320,7 +320,7 @@
         </div>
       </div>
 
-      <div class="gallery-container">
+      <div class="gallery-container" id="gallery-top">
         <div id="image-gallery" class="image-gallery">
           <!-- Images will be dynamically loaded here -->
           <div id="no-favorites" class="hidden">
