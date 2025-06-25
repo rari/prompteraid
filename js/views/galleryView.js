@@ -108,6 +108,80 @@ export default class GalleryView {
 
     // Add click-to-copy for prompt preview
     this.bindPromptPreviewCopy(this.getPromptText.bind(this));
+    
+    // Initialize tutorial section icon click handler
+    this.initTutorialIconClick();
+  }
+
+  initTutorialIconClick() {
+    // Use a more robust approach that waits for DOM to be ready
+    const initTutorialIcon = () => {
+      const tutorialSection = document.querySelector('.more-info-container');
+      if (tutorialSection) {
+        console.log('Found tutorial section');
+        
+        const collapseButton = tutorialSection.querySelector('#minimize-tutorial');
+        if (collapseButton) {
+          console.log('Found tutorial collapse button, adding click handler');
+          // Remove any existing click handlers to avoid duplicates
+          collapseButton.removeEventListener('click', this.handleTutorialCollapse);
+          collapseButton.addEventListener('click', this.handleTutorialCollapse);
+        } else {
+          console.log('Tutorial collapse button not found');
+        }
+
+        // Add click handler for the summary (icon/span) to minimize the section
+        const summary = tutorialSection.querySelector('summary');
+        if (summary) {
+          console.log('Found tutorial summary, adding click handler');
+          // Remove any existing click handlers to avoid duplicates
+          summary.removeEventListener('click', this.handleTutorialSummaryClick);
+          summary.addEventListener('click', this.handleTutorialSummaryClick);
+        } else {
+          console.log('Tutorial summary not found');
+        }
+      } else {
+        console.log('Tutorial section not found');
+      }
+    };
+
+    // Try immediately
+    initTutorialIcon();
+    
+    // Also try after a short delay in case DOM isn't ready yet
+    setTimeout(initTutorialIcon, 100);
+  }
+
+  // Separate handler methods for better organization
+  handleTutorialCollapse = (e) => {
+    console.log('Tutorial collapse button clicked');
+    e.preventDefault();
+    e.stopPropagation(); // Prevent the summary click from also firing
+    const tutorialSection = document.querySelector('.more-info-container');
+    const details = tutorialSection.querySelector('details');
+    if (details) {
+      details.open = !details.open;
+      console.log('Tutorial section toggled, open:', details.open);
+    }
+  }
+
+  handleTutorialSummaryClick = (e) => {
+    // Check if the click was on the icon or span
+    const clickedElement = e.target;
+    const isIconClick = clickedElement.tagName === 'I' || 
+                       clickedElement.tagName === 'SPAN' ||
+                       clickedElement.closest('span');
+    
+    if (isIconClick) {
+      console.log('Tutorial icon/span clicked, target:', clickedElement);
+      e.stopPropagation(); // Prevent the summary click from also firing
+      const tutorialSection = document.querySelector('.more-info-container');
+      const details = tutorialSection.querySelector('details');
+      if (details) {
+        details.open = !details.open;
+        console.log('Tutorial section toggled via icon/span, open:', details.open);
+      }
+    }
   }
 
   getPromptText() {
@@ -2149,6 +2223,31 @@ export default class GalleryView {
         this.renderNewStylesSection(newImages, selectedImages, favoriteImages, currentModel);
       });
     }
+
+    // Add click handler for the icon to minimize the section
+    const summary = section.querySelector('summary');
+    if (summary) {
+      console.log('Found new styles summary, adding click handler');
+      summary.addEventListener('click', (e) => {
+        // Check if the click was on the icon or span
+        const clickedElement = e.target;
+        const isIconClick = clickedElement.tagName === 'I' || 
+                           clickedElement.tagName === 'SPAN' ||
+                           clickedElement.closest('span');
+        
+        if (isIconClick) {
+          console.log('New styles icon/span clicked, target:', clickedElement);
+          e.stopPropagation(); // Prevent the summary click from also firing
+          const details = section.querySelector('details');
+          if (details) {
+            details.open = !details.open;
+            localStorage.setItem(storageKey, details.open ? 'true' : 'false');
+          }
+        }
+      });
+    } else {
+      console.log('New styles summary not found');
+    }
   }
 
   /**
@@ -2229,6 +2328,30 @@ export default class GalleryView {
         details.open = !details.open;
         localStorage.setItem(storageKey, details.open ? 'true' : 'false');
       };
+    }
+
+    // Add click handler for the icon to minimize the section
+    const summary = section.querySelector('summary');
+    if (summary) {
+      console.log('Found styles of month summary, adding click handler');
+      summary.addEventListener('click', (e) => {
+        // Check if the click was on the icon or span
+        const clickedElement = e.target;
+        const isIconClick = clickedElement.tagName === 'I' || 
+                           clickedElement.tagName === 'SPAN' ||
+                           clickedElement.closest('span');
+        
+        if (isIconClick) {
+          console.log('Styles of month icon/span clicked, target:', clickedElement);
+          e.stopPropagation(); // Prevent the summary click from also firing
+          if (details) {
+            details.open = !details.open;
+            localStorage.setItem(storageKey, details.open ? 'true' : 'false');
+          }
+        }
+      });
+    } else {
+      console.log('Styles of month summary not found');
     }
   }
 } 

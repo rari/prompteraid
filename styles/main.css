@@ -3738,6 +3738,11 @@ html.dark-mode .action-button:hover {
   .new-styles-content {
     padding: 0 1rem 1rem 1rem;
   }
+  
+  /* Limit to 4 images on mobile */
+  .new-styles-item:nth-child(n+5) {
+    display: none;
+  }
 }
 
 .new-styles-container .close-button,
