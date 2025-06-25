@@ -1535,7 +1535,7 @@ button:hover i {
 
 /* ===== MORE INFORMATION SECTION ===== */
 .more-info-container {
-  margin-bottom: var(--space-6);
+  margin-bottom: 0;
   border-radius: 1.2rem;
   background: rgba(30, 30, 60, 0.55);
   box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12), 0 1.5px 8px 0 rgba(0,255,255,0.08);
@@ -1543,6 +1543,16 @@ button:hover i {
   border: 1.5px solid var(--neon-pink);
   transition: box-shadow 0.2s, border 0.2s;
   overflow: hidden;
+}
+
+.more-info-container:has(#favorites-tools.hidden) {
+  border-color: transparent !important;
+}
+
+.more-info-container:has(#favorites-tools) {
+  background: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
 
 .more-info-container details {
@@ -2728,9 +2738,10 @@ html.dark-mode .weight-color-6 {
   background-color: transparent;
   border: none;
   border-radius: var(--border-radius-lg);
-  margin-bottom: var(--space-6);
+  margin-bottom: 0;
   box-shadow: none;
   overflow: hidden;
+  padding-bottom: 0;
 }
 
 .favorites-tools.hidden {
@@ -2738,36 +2749,43 @@ html.dark-mode .weight-color-6 {
 }
 
 .favorites-tools-header {
-  padding: var(--space-4);
-  background: linear-gradient(135deg, var(--neon-yellow) 0%, var(--neon-orange) 100%);
-  color: white;
-  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+  gap: 0.7em;
+  background: rgba(30, 30, 60, 0.55);
+  border: none;
+  border-radius: 0;
+  padding: 1.2rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.01em;
+  box-sizing: border-box;
+  transition: background 0.2s, border 0.2s;
+  margin-bottom: 0;
 }
-
-.favorites-tools-header i {
-  font-size: 1.2rem;
-  color: white;
+.favorites-tools-header i.fa-star {
+  color: var(--neon-yellow);
+  font-size: 1.3em;
+  margin-right: 0.3em;
 }
-
 .favorites-tools-header h4 {
   margin: 0;
-  font-size: var(--font-size-lg);
-  color: white;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  display: inline;
 }
 
 .favorites-tools-buttons {
   display: flex;
   gap: var(--space-3);
   padding: var(--space-4);
-  background-color: var(--background);
-  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
-  border: 1px solid var(--border-color);
-  border-top: none;
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 .favorites-tools .action-button {
@@ -3786,4 +3804,8 @@ html.dark-mode .action-button:hover {
 .month-label.current {
   color: var(--neon-yellow);
   text-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
+}
+
+.more-info-container:has(.fa-graduation-cap) {
+  border-color: var(--neon-orange) !important;
 }
