@@ -156,7 +156,24 @@
 
       <!-- New Styles Section -->
       <div id="new-styles-section" class="new-styles-section" style="display: none;">
-        <span><i class="fa-solid fa-calendar-days" style="color: var(--neon-pink); margin-right: 0.3em;"></i>New Styles</span>
+        <details open>
+          <summary>
+            <span><i class="fa-solid fa-bolt" style="color: var(--neon-pink); margin-right: 0.3em;"></i>New Styles</span>
+            <button id="minimize-new-styles" class="close-button" title="Minimize this section" aria-label="Minimize new styles section"><i class="fas fa-compress-alt"></i></button>
+          </summary>
+          <div class="new-styles-content"></div>
+        </details>
+      </div>
+
+      <!-- Styles of the Month Section -->
+      <div id="styles-of-the-month-section" class="new-styles-section" style="display: none;">
+        <details open>
+          <summary>
+            <span><i class="fa-solid fa-crown" style="color: var(--neon-orange); margin-right: 0.3em;"></i>Styles of the Month</span>
+            <button id="minimize-styles-of-the-month" class="close-button" title="Minimize this section" aria-label="Minimize styles of the month section"><i class="fas fa-compress-alt"></i></button>
+          </summary>
+          <div class="new-styles-content"></div>
+        </details>
       </div>
 
       <!-- Favorites Tools -->
@@ -178,13 +195,13 @@
         </div>
       </div>
 
+      <!-- Tutorial Section -->
       <div class="more-info-container">
-        <details open>
+        <details>
           <summary>
-            <span><i class="fa-solid fa-gem" style="color: var(--neon-orange); margin-right: 0.3em;"></i>Features</span>
-            <button id="close-more-info" class="close-button" title="Hide this section" aria-label="Hide features section"><i class="fas fa-times"></i></button>
+            <span><i class="fa-solid fa-graduation-cap" style="color: var(--neon-yellow); margin-right: 0.3em;"></i>Tutorial</span>
+            <button id="minimize-tutorial" class="close-button" title="Minimize this section" aria-label="Minimize tutorial section"><i class="fas fa-compress-alt"></i></button>
           </summary>
-          
           <div class="more-info-content">
             <div class="info-section about-section">
               <h4>About</h4>

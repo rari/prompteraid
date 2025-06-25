@@ -140,7 +140,12 @@ def process_images_concurrently():
             futures = []
             for png in pngs:
                 webp_name = png.with_suffix('.webp').name
-                webp_path = dst_folder_path / webp_name
+                # Extract first digit from filename for subfolder organization
+                # Filename format: 255973990_something.webp -> extract '2'
+                first_digit = webp_name[0] if webp_name and webp_name[0].isdigit() else '0'
+                subfolder = dst_folder_path / first_digit
+                subfolder.mkdir(parents=True, exist_ok=True)
+                webp_path = subfolder / webp_name
                 futures.append(executor.submit(convert_png_to_webp, png, webp_path))
                 webp_paths[model_id].append(webp_path)
             for fut in as_completed(futures):

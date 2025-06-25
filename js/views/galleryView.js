@@ -2080,7 +2080,7 @@ export default class GalleryView {
     let html = `<div class="new-styles-container">
       <details open>
         <summary>
-          <span><i class=\"fa-solid fa-calendar-days\" style=\"color: var(--neon-pink); margin-right: 0.3em;\"></i>New Styles</span>
+          <span><i class=\"fa-solid fa-bolt\" style=\"color: var(--neon-pink); margin-right: 0.3em;\"></i>New Styles</span>
           <button id="minimize-new-styles" class="close-button" title="Minimize this section" aria-label="Minimize new styles section"><i class="fas fa-compress-alt"></i></button>
         </summary>
         <div class="new-styles-content">`;
@@ -2119,6 +2119,87 @@ export default class GalleryView {
         localStorage.setItem(storageKey, (!showAll).toString());
         this.renderNewStylesSection(newImages, selectedImages, favoriteImages, currentModel);
       });
+    }
+  }
+
+  /**
+   * Renders the Styles of the Month section
+   * @param {Array} stylesOfTheMonth - Array of {id, model, month}
+   * @param {Object} imagesById - Map of id to image data (from images.json)
+   * @param {Set} selectedImages
+   * @param {Set} favoriteImages
+   * @param {string} currentModel
+   * @param {string} currentMonth - mm-yyyy string for current month
+   */
+  renderStylesOfTheMonthSection(stylesOfTheMonth, imagesById, selectedImages, favoriteImages, currentModel, currentMonth) {
+    const section = document.getElementById('styles-of-the-month-section');
+    if (!section) return;
+
+    if (!stylesOfTheMonth || stylesOfTheMonth.length === 0) {
+      section.style.display = 'none';
+      section.innerHTML = '';
+      return;
+    }
+
+    // Collapsible state logic
+    const storageKey = 'prompteraid_stylesOfTheMonth_expanded';
+    let expanded = localStorage.getItem(storageKey);
+    if (expanded === null) expanded = 'true';
+    expanded = expanded === 'true';
+
+    // Sort by month descending (most recent left)
+    const sorted = [...stylesOfTheMonth].sort((a, b) => {
+      const [am, ay] = a.month.split('-').map(Number);
+      const [bm, by] = b.month.split('-').map(Number);
+      return by !== ay ? by - ay : bm - am;
+    });
+
+    // Section header
+    let html = `<div class="new-styles-container">
+      <details${expanded ? ' open' : ''}>
+        <summary>
+          <span><i class=\"fa-solid fa-crown\" style=\"color: var(--neon-orange); margin-right: 0.3em;\"></i>Styles of the Month</span>
+          <button id="minimize-styles-of-the-month" class="close-button" title="Minimize this section" aria-label="Minimize styles of the month section"><i class="fas fa-compress-alt"></i></button>
+        </summary>
+        <div class="new-styles-content">
+          <div class="new-styles-gallery">`;
+
+    sorted.forEach(entry => {
+      const image = imagesById[entry.id];
+      if (!image) return;
+      const isSelected = selectedImages.has(entry.id);
+      const isFavorite = favoriteImages.has(entry.id);
+      const colorIndex = isSelected ? selectedImages.get(entry.id) : -1;
+      const galleryItem = this.createGalleryItem(image, isSelected, isFavorite, colorIndex, currentModel);
+      galleryItem.classList.add('new-styles-item');
+      // Add yellow glow if current month
+      if (entry.month === currentMonth) {
+        galleryItem.style.boxShadow = '0 0 12px 2px var(--neon-yellow), 0 2px 8px rgba(0,0,0,0.12)';
+      }
+      // Add month label at the bottom
+      const monthLabel = document.createElement('div');
+      monthLabel.textContent = entry.month;
+      monthLabel.className = entry.month === currentMonth ? 'month-label current' : 'month-label';
+      galleryItem.appendChild(monthLabel);
+      // Convert to HTML string
+      const tempDiv = document.createElement('div');
+      tempDiv.appendChild(galleryItem);
+      html += tempDiv.innerHTML;
+    });
+
+    html += '</div></div></details></div>';
+    section.innerHTML = html;
+    section.style.display = '';
+
+    // Collapse/expand logic
+    const details = section.querySelector('details');
+    const btn = section.querySelector('#minimize-styles-of-the-month');
+    if (btn && details) {
+      btn.onclick = (e) => {
+        e.preventDefault();
+        details.open = !details.open;
+        localStorage.setItem(storageKey, details.open ? 'true' : 'false');
+      };
     }
   }
 } 
