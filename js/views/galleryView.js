@@ -1306,7 +1306,7 @@ export default class GalleryView {
       // Announce to screen reader
       this.announceToScreenReader(message, 'status');
       
-      setTimeout(() => {
+    setTimeout(() => {
         this.notificationContainer.style.display = 'none';
       }, 3000);
     }
@@ -1325,7 +1325,7 @@ export default class GalleryView {
       // Announce to screen reader
       this.announceToScreenReader(message, 'status');
       
-      setTimeout(() => {
+    setTimeout(() => {
         this.notificationContainer.style.display = 'none';
       }, 5000);
     }
@@ -2045,7 +2045,7 @@ export default class GalleryView {
     document.body.appendChild(this.notificationContainer);
   }
 
-  renderNewStylesSection(newImages, currentModel) {
+  renderNewStylesSection(newImages, selectedImages, favoriteImages, currentModel) {
     const section = document.getElementById('new-styles-section');
     if (!section) return;
 
@@ -2077,20 +2077,38 @@ export default class GalleryView {
     const imagesToShow = showAll ? newImages : newImages.slice(0, maxToShow);
 
     // Section header
-    let html = `<div class="new-styles-header"><i class="fa-solid fa-sparkles" style="color: var(--neon-pink);"></i> <span>New Styles</span></div>`;
+    let html = `<div class="new-styles-container">
+      <details open>
+        <summary>
+          <span><i class=\"fa-solid fa-calendar-days\" style=\"color: var(--neon-pink); margin-right: 0.3em;\"></i>New Styles</span>
+          <button id="minimize-new-styles" class="close-button" title="Minimize this section" aria-label="Minimize new styles section"><i class="fas fa-compress-alt"></i></button>
+        </summary>
+        <div class="new-styles-content">`;
     html += '<div class="new-styles-gallery">';
+    
+    // Use createGalleryItem for each image to get full functionality
     imagesToShow.forEach(image => {
-      html += `<div class="new-style-item">
-        <img src="${image.path}" alt="New style reference ${image.sref}" loading="lazy">
-        <div class="new-style-sref">${image.sref}</div>
-      </div>`;
+      const isSelected = selectedImages.has(image.id);
+      const isFavorite = favoriteImages.has(image.id);
+      const colorIndex = isSelected ? selectedImages.get(image.id) : -1;
+      const galleryItem = this.createGalleryItem(image, isSelected, isFavorite, colorIndex, currentModel);
+      
+      // Add the new-styles-item class for reduced margins
+      galleryItem.classList.add('new-styles-item');
+      
+      // Convert to HTML string for insertion
+      const tempDiv = document.createElement('div');
+      tempDiv.appendChild(galleryItem);
+      html += tempDiv.innerHTML;
     });
+    
     html += '</div>';
     if (!showAll) {
       html += `<button class="new-styles-more-btn" aria-label="Show more new styles">More</button>`;
     } else if (newImages.length > maxToShow) {
       html += `<button class="new-styles-more-btn" aria-label="Show fewer new styles">Less</button>`;
     }
+    html += '</div></details></div>';
     section.innerHTML = html;
     section.style.display = '';
 
@@ -2099,7 +2117,7 @@ export default class GalleryView {
     if (moreBtn) {
       moreBtn.addEventListener('click', () => {
         localStorage.setItem(storageKey, (!showAll).toString());
-        this.renderNewStylesSection(newImages, currentModel);
+        this.renderNewStylesSection(newImages, selectedImages, favoriteImages, currentModel);
       });
     }
   }

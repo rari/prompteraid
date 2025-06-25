@@ -1,6 +1,8 @@
 # But still ignore these even if they're in allowed folders
 node_modules/
 node_modules/**
+source-images/
+source-images/**
 .env
 .env.local
 .env.development.local
@@ -9,3 +11,4 @@ node_modules/**
 package-lock.json
 server.js
 summary-card-generator-images.html
+process.py
