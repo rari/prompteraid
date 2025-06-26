@@ -2763,26 +2763,29 @@ html.dark-mode .weight-color-6 {
   display: flex;
   align-items: center;
   gap: 0.7em;
-  background: rgba(30, 30, 60, 0.55);
+  background: linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(255, 255, 0, 0.18) 100%);
   border: none;
   border-radius: 0;
   padding: 1.2rem 1.5rem;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--neon-yellow) !important;
   letter-spacing: 0.01em;
   box-sizing: border-box;
   transition: background 0.2s, border 0.2s;
   margin-bottom: 0;
+  backdrop-filter: blur(12px) saturate(1.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12), 0 1.5px 8px 0 rgba(255,255,0,0.08);
 }
 .favorites-tools-header i.fa-star {
-  color: var(--neon-yellow);
+  color: var(--neon-yellow) !important;
   font-size: 1.3em;
   margin-right: 0.3em;
 }
 .favorites-tools-header h4 {
   margin: 0;
-  color: #fff;
+  color: var(--neon-yellow) !important;
   font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -2838,7 +2841,7 @@ html.dark-mode .weight-color-6 {
 }
 
 #export-favorites i {
-  color: var(--neon-teal);
+  color: var(--neon-yellow);
 }
 
 /* No Favorites Banner */
@@ -3347,7 +3350,7 @@ html.dark-mode .favorites-tools .action-button:hover i {
 }
 
 #export-favorites i {
-  color: var(--neon-teal);
+  color: var(--neon-yellow);
 }
 
 html.dark-mode .favorites-tools .action-button:hover i {
@@ -3769,7 +3772,7 @@ html.dark-mode .more-info-container {
 }
 .new-styles-more-btn {
   background: linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(255, 105, 180, 0.18) 100%);
-  color: var(--text-primary, #111) !important;
+  color: var(--text-primary, #111);
   border: 3px solid var(--neon-pink, #ff1493);
   font-weight: 700;
   font-size: 1.25rem;
@@ -3797,7 +3800,7 @@ html.dark-mode .more-info-container {
 
 html.dark-mode .new-styles-more-btn {
   background: linear-gradient(135deg, rgba(20,20,30,0.92) 0%, rgba(255, 105, 180, 0.15) 100%);
-  color: var(--text-primary, #fff) !important;
+  color: var(--text-primary, #fff);
   border-top: 2.5px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 4px 16px 0 rgba(0,0,0,0.32);
   box-shadow: var(--shadow-md) !important;
@@ -3946,19 +3949,19 @@ html.dark-mode .new-styles-more-btn:hover, html.dark-mode .new-styles-more-btn:f
 .more-info-container,
 .new-styles-container *,
 .more-info-container * {
-  color: var(--text-primary, #111) !important;
+  color: var(--text-primary, #111);
 }
 
 html.dark-mode .new-styles-container,
 html.dark-mode .more-info-container,
 html.dark-mode .new-styles-container *,
 html.dark-mode .more-info-container * {
-  color: var(--text-primary, #fff) !important;
+  color: var(--text-primary, #fff);
 }
 
 .new-styles-more-btn {
   background: linear-gradient(135deg, rgba(255,255,255,0.82) 0%, rgba(255, 105, 180, 0.15) 100%);
-  color: var(--text-primary, #111) !important;
+  color: var(--text-primary, #111);
   border: none;
   font-weight: 600;
   font-size: 1rem;
@@ -3977,7 +3980,7 @@ html.dark-mode .more-info-container * {
 
 html.dark-mode .new-styles-more-btn {
   background: linear-gradient(135deg, rgba(20,20,30,0.92) 0%, rgba(255, 105, 180, 0.15) 100%);
-  color: var(--text-primary, #fff) !important;
+  color: var(--text-primary, #fff);
   border-top: 2.5px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 4px 16px 0 rgba(0,0,0,0.32);
   box-shadow: var(--shadow-md) !important;
@@ -4112,4 +4115,78 @@ html.dark-mode .more-info-container .quadrant-flip-button i {
 html.dark-mode .new-styles-container .link-button i,
 html.dark-mode .more-info-container .link-button i {
   color: var(--neon-pink) !important;
+}
+
+html.dark-mode .favorites-tools .action-button:hover i {
+  color: white;
+}
+
+/* Dark mode override for favorites-tools-header to keep neon yellow colors */
+html.dark-mode .favorites-tools-header {
+  background: linear-gradient(135deg, rgba(20,20,30,0.92) 0%, rgba(255, 255, 0, 0.15) 100%);
+  color: var(--neon-yellow) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.32), 0 1.5px 8px 0 rgba(255,255,0,0.08);
+}
+
+html.dark-mode .favorites-tools-header i.fa-star {
+  color: var(--neon-yellow) !important;
+}
+
+html.dark-mode .favorites-tools-header h4 {
+  color: var(--neon-yellow) !important;
+}
+
+.new-styles-container,
+.more-info-container,
+.new-styles-container *,
+.more-info-container * {
+  color: var(--text-primary, #111);
+}
+
+/* Preserve neon colors for specific elements in New Styles and Tutorial sections */
+.new-styles-container .favorite-button i,
+.new-styles-container .quadrant-flip-button i,
+.new-styles-container .link-button i,
+.new-styles-container .weight-control-button i,
+.new-styles-container summary span i,
+.new-styles-container .close-button i,
+.more-info-container .favorite-button i,
+.more-info-container .quadrant-flip-button i,
+.more-info-container .link-button i,
+.more-info-container .weight-control-button i,
+.more-info-container summary span i,
+.more-info-container .close-button i,
+.new-styles-container .tutorial-icon,
+.more-info-container .tutorial-icon {
+  color: inherit !important;
+}
+
+html.dark-mode .new-styles-container,
+html.dark-mode .more-info-container,
+html.dark-mode .new-styles-container *,
+html.dark-mode .more-info-container * {
+  color: var(--text-primary, #fff);
+}
+
+/* Preserve neon colors for specific elements in dark mode */
+html.dark-mode .new-styles-container .favorite-button i,
+html.dark-mode .new-styles-container .quadrant-flip-button i,
+html.dark-mode .new-styles-container .link-button i,
+html.dark-mode .new-styles-container .weight-control-button i,
+html.dark-mode .new-styles-container summary span i,
+html.dark-mode .new-styles-container .close-button i,
+html.dark-mode .more-info-container .favorite-button i,
+html.dark-mode .more-info-container .quadrant-flip-button i,
+html.dark-mode .more-info-container .link-button i,
+html.dark-mode .more-info-container .weight-control-button i,
+html.dark-mode .more-info-container summary span i,
+html.dark-mode .more-info-container .close-button i,
+html.dark-mode .new-styles-container .tutorial-icon,
+html.dark-mode .more-info-container .tutorial-icon {
+  color: inherit !important;
+}
+
+html.dark-mode .favorites-tools-header h4 {
+  color: var(--neon-yellow) !important;
 }
