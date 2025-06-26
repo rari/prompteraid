@@ -24,14 +24,114 @@
   .shake { animation: shake 0.5s ease-in-out; }
   .bounce { animation: bounce 1s ease-in-out; }
 
-  /* Keyframes (deduplicated) */
-  @keyframes shake { 0%,100%{transform:translateX(0);} 10%,30%,50%,70%,90%{transform:translateX(-1px);} 20%,40%,60%,80%{transform:translateX(1px);} }
-  @keyframes spin { 0%{transform:rotate(0);} 100%{transform:rotate(360deg);} }
-  @keyframes spin-once { 0%{transform:rotate(0);} 100%{transform:rotate(180deg);} }
-  @keyframes pop { 0%{transform:scale(1);} 50%{transform:scale(1.2);} 100%{transform:scale(1);} }
-  @keyframes blink { 0%,50%{opacity:1;} 25%,75%{opacity:0.3;} }
-  @keyframes bounce {0%,20%,53%,80%,100%{transform:translate3d(0,0,0);}40%,43%{transform:translate3d(0,-8px,0);}70%{transform:translate3d(0,-4px,0);}90%{transform:translate3d(0,-2px,0);} }
-  @keyframes glow-copied-icon {0%{box-shadow:0 0 0 rgba(255,255,255,0);}50%{box-shadow:0 0 8px rgba(255,255,255,0.9);}100%{box-shadow:0 0 0 rgba(255,255,255,0);} }
-  @keyframes gradient-shift {0%{background-position:0 50%;}50%{background-position:100% 50%;}100%{background-position:0 50%;}}
-  @keyframes tropical-gradient-rotate {0%{filter:hue-rotate(0deg);}100%{filter:hue-rotate(360deg);} }
+  /* Non-motion fallbacks for interactive buttons */
+  @media (prefers-reduced-motion: reduce) {
+    .spin, .shake, .bounce { animation: none; }
+    .favorite-button:hover { transform: none; }
+    .quadrant-flip-button:hover { transform: none; }
+    .link-button:hover { transform: none; }
+    .weight-control-button:hover { transform: none; }
+    .gallery-item:hover { transform: none; }
+    .action-button:hover { transform: none; }
+  }
+
+  /* Keyframes (deduplicated) - only animate if motion is preferred */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes shake { 
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    
+    @keyframes spin { 
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes spin-once { 
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes pop { 
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes blink { 
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    
+    @keyframes bounce { 
+      0%, 20%, 53%, 80%, 100% { transform: translate3d(0, 0, 0); }
+      40%, 43% { transform: translate3d(0, -30px, 0); }
+      70% { transform: translate3d(0, -15px, 0); }
+      90% { transform: translate3d(0, -4px, 0); }
+    }
+    
+    @keyframes glow-copied-icon {
+      0% { box-shadow: 0 0 0px 0 #a78bfa; background: inherit; color: #7c3aed; transform: scale(1); }
+      50% { box-shadow: 0 0 20px 10px #a78bfa; background: #7c3aed; color: white; transform: scale(1.1); }
+      100% { box-shadow: 0 0 0px 0 #a78bfa; background: inherit; color: #7c3aed; transform: scale(1); }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(255, 20, 147, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(255, 20, 147, 0.8), 0 0 30px rgba(255, 20, 147, 0.6); }
+    }
+    
+    @keyframes highlight-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+      50% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+    }
+    
+    @keyframes model-pill-gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes pop-animation {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes float-in-water {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+    
+    @keyframes rotate-to-down {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(90deg); }
+    }
+    
+    @keyframes rotate-to-up {
+      0% { transform: rotate(90deg); }
+      100% { transform: rotate(0deg); }
+    }
+    
+    @keyframes modelChangeFlash {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    @keyframes fade-in {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes tropical-color-rotate {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+  }
 } 
