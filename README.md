@@ -13,7 +13,6 @@ Browse thousands of curated style references organized by categories. From anime
 
 ### 🔍 **Smart Search & Discovery**
 - Search through styles by keywords, artists, or techniques
-- Discover new styles with our "Styles of the Month" showcase
 - Learn from our tutorial section with expert prompt techniques
 - Switch between NijiJourney 6 and Midjourney 7 models seamlessly
 
@@ -62,7 +61,6 @@ Browse thousands of curated style references organized by categories. From anime
 - Favorites system to save preferred style references
 - Search functionality to find specific styles
 - Shareable links for prompt configurations
-- Styles of the Month showcase
 - Tutorial section for learning prompt techniques
 
 ## License
