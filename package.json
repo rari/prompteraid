@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "build:css": "postcss styles/_tokens.css styles/_base.css styles/_components.css styles/_utilities.css styles/working.css -o dist/main.min.css",
+    "build:css:watch": "postcss styles/_tokens.css styles/_base.css styles/_components.css styles/_utilities.css styles/working.css -o dist/main.min.css --watch",
+    "lint:css": "stylelint 'styles/**/*.css'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -22,7 +25,13 @@
   },
   "devDependencies": {
     "postcss": "^8.5.6",
-    "postcss-selector-parser": "^7.1.0"
+    "postcss-selector-parser": "^7.1.0",
+    "postcss-cli": "^10.1.0",
+    "autoprefixer": "^10.4.16",
+    "cssnano": "^6.0.1",
+    "@fullhuman/postcss-purgecss": "^5.0.0",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard": "^34.0.0"
   },
   "repository": {
     "type": "git",

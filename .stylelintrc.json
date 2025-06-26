@@ -1,0 +1,31 @@
+{
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "declaration-no-important": true,
+    "selector-max-specificity": "0,4,0",
+    "selector-max-compound-selectors": 4,
+    "max-nesting-depth": 3,
+    "color-function-notation": "modern",
+    "alpha-value-notation": "percentage",
+    "color-hex-length": "short",
+    "font-family-name-quotes": "always-where-required",
+    "function-url-quotes": "always",
+    "string-quotes": "double",
+    "unit-case": "lower",
+    "value-keyword-case": "lower",
+    "property-case": "lower",
+    "selector-pseudo-class-case": "lower",
+    "selector-pseudo-element-case": "lower",
+    "selector-type-case": "lower",
+    "media-feature-name-case": "lower",
+    "at-rule-name-case": "lower",
+    "custom-property-pattern": "^[a-z][a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$",
+    "keyframes-name-pattern": "^[a-z][a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$",
+    "selector-class-pattern": "^[a-z][a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$",
+    "selector-id-pattern": "^[a-z][a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$"
+  },
+  "ignoreFiles": [
+    "dist/**/*",
+    "node_modules/**/*"
+  ]
+} 
