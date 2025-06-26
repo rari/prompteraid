@@ -1,0 +1,169 @@
+/* Component layer – structural UI blocks (migrated from working.css)
+   ------------------------------------------------------------------ */
+@layer components {
+
+  /* ===== LAYOUT ===== */
+  .container {
+    width: 100%;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+  }
+
+  /* ===== PROMPT CONTAINER ===== */
+  .prompt-container {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: var(--space-5);
+    margin-bottom: var(--space-6);
+    transition: box-shadow var(--transition-normal), var(--transition-theme);
+  }
+  .prompt-container:hover {
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* ===== GALLERY ===== */
+  .image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .gallery-item {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    background: var(--card-background);
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-normal);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .gallery-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+  .gallery-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    opacity: 0;
+    transition: opacity var(--transition-fast), background var(--transition-fast);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .gallery-item:hover::before {
+    background: rgba(255,255,255,0.22);
+    opacity: 1;
+  }
+  .gallery-item.selected:hover::before {
+    opacity: 1; /* keep neon overlay when selected */
+  }
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-fast);
+    pointer-events: none;
+  }
+  .gallery-item:hover img {
+    transform: scale(1.05);
+  }
+
+  /* ===== FAVORITE BUTTON ===== */
+  .favorite-button,
+  .star-button {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: var(--border-radius-full);
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    color: var(--neon-yellow);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+  }
+  .gallery-item:hover .favorite-button,
+  .gallery-item:hover .star-button { opacity: 1; }
+  .favorite-button:hover,
+  .star-button:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    transform: scale(1.1);
+  }
+
+  /* ===== QUADRANT FLIP BUTTON ===== */
+  .quadrant-flip-button {
+    position: absolute;
+    top: 3.2rem;
+    right: var(--space-2);
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: var(--border-radius-full);
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    color: var(--neon-orange);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+  }
+  .gallery-item:hover .quadrant-flip-button { opacity: 1; }
+  .quadrant-flip-button:hover { transform: scale(1.1); }
+
+  /* ===== LINK BUTTON ===== */
+  .link-button {
+    position: absolute;
+    top: 6.4rem;
+    right: var(--space-2);
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: var(--border-radius-full);
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    color: var(--neon-pink);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+  }
+  .gallery-item:hover .link-button { opacity: 1; }
+  .link-button:hover { transform: scale(1.1); }
+
+} 
