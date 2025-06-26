@@ -22,11 +22,6 @@ Browse thousands of curated style references organized by categories. From anime
 - Save your favorite styles for quick access
 - Share your prompt configurations with shareable links
 
-### 🎯 **Perfect for Content Creators**
-- **Blog Post Card Generator**: Create eye-catching social media cards
-- **Summary Card Generator**: Design beautiful image cards with overlays
-- Export high-quality visuals for your content
-
 ### 💾 **Your Personal Style Library**
 - Save and organize your favorite style references
 - Import/export your collections
@@ -44,7 +39,6 @@ Browse thousands of curated style references organized by categories. From anime
 
 - Use the search function to find specific styles quickly
 - Save your favorite styles to build a personal collection
-- Try the card generators for social media content
 - Explore the tutorial section to learn advanced techniques
 
 ---
@@ -62,7 +56,6 @@ Browse thousands of curated style references organized by categories. From anime
 - Favorites system to save preferred style references
 - Search functionality to find specific styles
 - Shareable links for prompt configurations
-- Card generator tools for creating visual content
 - Styles of the Month showcase
 - Tutorial section for learning prompt techniques
 
