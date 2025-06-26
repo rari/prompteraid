@@ -577,8 +577,38 @@ export default class GalleryController {
         });
     });
     
-    // Favorites toggle - use our updated method
-    this.bindFavoritesToggle();
+    // Favorites toggle - use the view's method with our handler
+    this.view.bindFavoritesToggle(() => {
+      // If selected view is active, turn it off
+      if (this.showOnlySelected && !this.model.showOnlyFavorites) {
+        this.showOnlySelected = false;
+        this.view.updateShowSelectedToggle(false);
+      }
+      
+      // If search is active, turn it off
+      if (this.searchNumber !== null && this.searchNumber !== '') {
+        this.clearSearchState();
+      }
+      
+      // Toggle the state
+      this.model.toggleFavoritesOnly();
+      
+      // Update the UI
+      this.view.updateFavoritesToggle(this.model.showOnlyFavorites);
+      
+      // Scroll to top when activating favorites view
+      if (this.model.showOnlyFavorites) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      
+      // Render the gallery (our renderGallery method now handles the no-favorites case)
+      this.renderGallery();
+      
+      // Close collapsible sections after rendering to prevent them from being reopened
+      this.view.closeAllCollapsibleSections();
+      
+      return true; // Allow animation
+    });
     
     // Refresh button
     this.view.bindRefreshButton(() => {
@@ -661,6 +691,9 @@ export default class GalleryController {
       }
       
       this.renderGallery();
+      
+      // Close collapsible sections after rendering to prevent them from being reopened
+      this.view.closeAllCollapsibleSections();
     });
     
     // Mode toggle (Discord/Website)
@@ -785,6 +818,9 @@ export default class GalleryController {
             // Render the gallery (our renderGallery method now handles the no-favorites case)
             this.renderGallery();
             
+            // Close collapsible sections after rendering to prevent them from being reopened
+            this.view.closeAllCollapsibleSections();
+            
             return true; // Allow animation
           };
           
@@ -833,6 +869,10 @@ export default class GalleryController {
             
             this.renderGallery();
             this.model.saveToStorage();
+            
+            // Close collapsible sections after rendering to prevent them from being reopened
+            this.view.closeAllCollapsibleSections();
+            
             return true; // Allow animation
           };
           
@@ -894,19 +934,24 @@ export default class GalleryController {
 
     const isNowHidden = searchContainer.classList.toggle('hidden');
 
+    // If search is being activated (not hidden), close collapsible sections
+    if (!isNowHidden) {
+      this.view.closeAllCollapsibleSections();
+    }
+
     // Sync active state on both buttons
     searchButton.classList.toggle('active', !isNowHidden);
     if (stickySearchButton) {
       stickySearchButton.classList.toggle('active', !isNowHidden);
     }
 
-    if (isNowHidden) {
-      // If we're closing the search, clear the search and re-render
-      this.clearSearchState();
-      
-      this.view.showInfoNotification('Search cleared');
-    } else {
-      // If we're opening the search, turn off other exclusive views
+    // If search is now visible, focus the input
+    if (!isNowHidden && searchInput) {
+      searchInput.focus();
+    }
+
+    // Turn off other exclusive views when activating search
+    if (!isNowHidden) {
       if (this.model.showOnlyFavorites) {
         this.model.showOnlyFavorites = false;
         this.view.updateFavoritesToggle(false);
@@ -914,15 +959,6 @@ export default class GalleryController {
       if (this.showOnlySelected) {
         this.showOnlySelected = false;
         this.view.updateShowSelectedToggle(false);
-      }
-      
-      // If we're opening the search, scroll to the top and focus the input
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      searchInput.focus();
-      
-      // If there's an existing search, populate the input
-      if (this.searchNumber !== null && this.searchNumber !== '') {
-        searchInput.value = this.searchNumber;
       }
     }
   }
@@ -1084,35 +1120,6 @@ export default class GalleryController {
     };
     
     reader.readAsText(file);
-  }
-
-  bindFavoritesToggle() {
-    this.view.bindFavoritesToggle(() => {
-      // If selected view is active, turn it off
-      if (this.showOnlySelected && !this.model.showOnlyFavorites) {
-        this.showOnlySelected = false;
-        this.view.updateShowSelectedToggle(false);
-      }
-      
-      // If search is active, turn it off
-      if (this.searchNumber !== null && this.searchNumber !== '') {
-        this.clearSearchState();
-      }
-      
-      // Toggle the state
-      this.model.toggleFavoritesOnly();
-      
-      // Update the UI
-      this.view.updateFavoritesToggle(this.model.showOnlyFavorites);
-      
-      // Scroll to top when activating favorites view
-      if (this.model.showOnlyFavorites) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      
-      // Render the gallery (our renderGallery method now handles the no-favorites case)
-      this.renderGallery();
-    });
   }
 
   // Add a direct document-level handler for favorite button clicks

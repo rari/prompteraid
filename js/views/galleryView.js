@@ -1008,8 +1008,11 @@ export default class GalleryView {
     // Add Enter key handler to blur the input field
     this.promptInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
+        e.preventDefault(); // Prevent default form submission behavior
         // Blur (deselect) the input field
         this.promptInput.blur();
+        // Also focus on document body to ensure no element has focus
+        document.body.focus();
       }
     });
     
@@ -1025,8 +1028,11 @@ export default class GalleryView {
         // Add Enter key handler to the sticky prompt input as well
         stickyPromptInput.addEventListener('keydown', (e) => {
           if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent default form submission behavior
             // Blur (deselect) the input field
             stickyPromptInput.blur();
+            // Also focus on document body to ensure no element has focus
+            document.body.focus();
           }
         });
       }
@@ -2486,5 +2492,55 @@ export default class GalleryView {
     } else {
       console.log('Styles of month summary not found');
     }
+  }
+
+  // Add methods to close sections
+  closeNewStylesSection() {
+    const section = document.getElementById('new-styles-section');
+    if (section) {
+      const details = section.querySelector('details');
+      if (details && details.open) {
+        details.open = false;
+        localStorage.setItem('prompteraid_newStyles_expanded', 'false');
+      }
+    }
+  }
+
+  closeTutorialSection() {
+    // Find the tutorial section specifically by looking for the one with the graduation cap icon
+    const allMoreInfoContainers = document.querySelectorAll('.more-info-container');
+    let tutorialSection = null;
+    
+    for (const container of allMoreInfoContainers) {
+      if (container.querySelector('.fa-graduation-cap')) {
+        tutorialSection = container;
+        break;
+      }
+    }
+    
+    if (tutorialSection) {
+      const details = tutorialSection.querySelector('details');
+      if (details && details.open) {
+        details.open = false;
+      }
+    }
+  }
+
+  closeStylesOfTheMonthSection() {
+    const section = document.getElementById('styles-of-the-month-section');
+    if (section) {
+      const details = section.querySelector('details');
+      if (details && details.open) {
+        details.open = false;
+        localStorage.setItem('prompteraid_stylesOfTheMonth_expanded', 'false');
+      }
+    }
+  }
+
+  // Method to close all collapsible sections
+  closeAllCollapsibleSections() {
+    this.closeNewStylesSection();
+    this.closeTutorialSection();
+    this.closeStylesOfTheMonthSection();
   }
 } 
