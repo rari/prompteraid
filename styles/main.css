@@ -4190,3 +4190,30 @@ html.dark-mode .more-info-container .tutorial-icon {
 html.dark-mode .favorites-tools-header h4 {
   color: var(--neon-yellow) !important;
 }
+
+/* Footer social links: no underline on any state */
+.footer-links-section .social-link,
+.footer-links-section .social-link:active,
+.footer-links-section .social-link:focus,
+.footer-links-section .social-link:hover {
+  text-decoration: none !important;
+}
+
+/* Also for .footer-legal and .footer-credit links if needed */
+.footer-credit a,
+.footer-credit a:active,
+.footer-credit a:focus,
+.footer-credit a:hover,
+.footer-legal a,
+.footer-legal a:active,
+.footer-legal a:focus,
+.footer-legal a:hover {
+  text-decoration: none !important;
+}
+
+.footer-links .social-link,
+.footer-links .social-link:active,
+.footer-links .social-link:focus,
+.footer-links .social-link:hover {
+  text-decoration: none !important;
+}
