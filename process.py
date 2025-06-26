@@ -181,7 +181,7 @@ def convert_png_to_webp(png_path, webp_path):
         with Image.open(png_path) as img:
             if img.mode in ('RGBA', 'LA', 'P'):
                 img = img.convert('RGB')
-            img.save(webp_path, 'WEBP', quality=10, optimize=True)
+            img.save(webp_path, 'WEBP', quality=5, optimize=True)
         return f"Converted: {png_path.name} -> {webp_path.name}"
     except Exception as e:
         return f"ERROR converting {png_path.name}: {e}"
@@ -303,13 +303,42 @@ def print_report(rename_report, convert_report, changes, total_time, total_files
     avg = (total_time / total_files) if total_files else 0
     print(f"Average time per file: {avg:.3f} seconds")
 
+def mark_old_images_not_new(json_path, hours=1):
+    if not json_path.exists():
+        print(f"No {json_path} found, skipping mark_old_images_not_new.")
+        return
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    now = datetime.now(timezone.utc)
+    cutoff = now - timedelta(hours=hours)
+    changed = False
+    for model_id in data.get("sets", {}):
+        for img in data["sets"][model_id].get("images", []):
+            dateadded = img.get("dateadded")
+            if dateadded:
+                dt = datetime.fromisoformat(dateadded.replace("Z", "+00:00"))
+                if dt < cutoff and img.get("new", False):
+                    img["new"] = False
+                    changed = True
+    if changed:
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        print(f"Updated 'new' flags for images older than {hours} hour(s).")
+    else:
+        print(f"No images needed 'new' flag update.")
+
 if __name__ == "__main__":
     print("Starting image processing script...")
     print(f"Source: {SOURCE_IMG_ROOT}")
     print(f"Output: {IMG_ROOT}")
     print(f"Models: {list(MODEL_FOLDERS.keys())}")
     print("-" * 50)
-    
+
+    # Option to mark all images as not new if older than 1 hour
+    choice = input("Mark all images as not new if older than 1 hour? (y/n): ").strip().lower()
+    if choice == 'y':
+        mark_old_images_not_new(JSON_PATH, hours=1)
+
     start_time = time.time()
     rename_report = rename_and_check_duplicates()
     webp_paths, convert_report, convert_time = process_images_concurrently()
