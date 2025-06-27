@@ -11,6 +11,25 @@ html, body {
   box-shadow: none !important;
 }
 
+/* Main gallery icon color overrides - ensure these take precedence */
+.input-group .button-trash i { color: var(--neon-pink) !important; }    /* Destructive actions */
+.input-group .button-refresh i { color: var(--neon-orange) !important; } /* State changes */
+.input-group .button-star i { color: var(--neon-yellow) !important; }   /* Favorites/bookmarking */
+.input-group .button-eye i { color: var(--neon-green) !important; }     /* View toggles */
+.input-group .button-randomize i { color: var(--neon-blue) !important; } /* Randomize actions */
+.input-group .button-clipboard i { color: var(--neon-purple) !important; } /* Clipboard operations */
+.input-group .button-search i { color: var(--neon-teal) !important; }   /* Search operations */
+
+/* Main gallery item button icon color overrides - ensure these take precedence */
+.favorite-button i { color: var(--neon-yellow) !important; }
+.quadrant-flip-button i { color: var(--neon-orange) !important; }
+.link-button i { color: var(--neon-pink) !important; }
+
+/* Dark mode overrides for New Styles button icons - ensure neon colors in dark mode */
+html.dark-mode .new-styles-container .favorite-button i { color: var(--neon-yellow) !important; }
+html.dark-mode .new-styles-container .quadrant-flip-button i { color: var(--neon-orange) !important; }
+html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !important; }
+
 /* Button state overrides for filled icons and active states */
 .input-group .button-trash.filled i {
   font-weight: 900; /* Switch to filled */
@@ -136,15 +155,9 @@ html, body {
 }
 
 /* Preserve neon colors for specific elements in New Styles and Tutorial sections */
-.new-styles-container .favorite-button i,
-.new-styles-container .quadrant-flip-button i,
-.new-styles-container .link-button i,
 .new-styles-container .weight-control-button i,
 .new-styles-container summary span i,
 .new-styles-container .close-button i,
-.more-info-container .favorite-button i,
-.more-info-container .quadrant-flip-button i,
-.more-info-container .link-button i,
 .more-info-container .weight-control-button i,
 .more-info-container summary span i,
 .more-info-container .close-button i,

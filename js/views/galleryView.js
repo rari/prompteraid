@@ -2270,7 +2270,7 @@ export default class GalleryView {
     
     // Replace MORE/LESS button with count display
     html += `<div class="new-styles-count" style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
-      <strong>${newImages.length}</strong> new references recently added!
+      <strong>${newImages.length}</strong> new style references recently added!
     </div>`;
     
     html += '</div></details></div>';
