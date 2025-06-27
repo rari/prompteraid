@@ -52,6 +52,8 @@ export default class GalleryView {
     this.togglePreviewButton = document.getElementById('toggle-preview-button');
     this.promptPreview = document.querySelector('.prompt-preview');
     this.modeToggle = document.getElementById('mode-toggle');
+    this.clearButtonClickCount = 0;
+    this.clearButtonTimeout = null;
     
     // Model selector initialization flags
     // this.documentClickHandlerAdded = false; // No longer needed for hover menu
@@ -209,6 +211,50 @@ export default class GalleryView {
   }
 
   initializeButtons() {
+    // Initialize trash button
+    const trashBtn = document.getElementById('clear-button');
+    if (trashBtn) {
+      let clickCount = 0;
+      let clickTimer = null;
+      
+      trashBtn.addEventListener('click', () => {
+        // Check if there are any selected images
+        const selectedImages = document.querySelectorAll('.gallery-item.selected');
+        const hasSelectedImages = selectedImages.length > 0;
+        
+        clickCount++;
+        
+        if (clickCount === 1) {
+          // Only shake if there are selected images
+          if (hasSelectedImages) {
+            trashBtn.classList.add('shake');
+          }
+          
+          clickTimer = setTimeout(() => {
+            clickCount = 0;
+            trashBtn.classList.remove('shake');
+          }, 500);
+        } else if (clickCount === 2) {
+          clearTimeout(clickTimer);
+          clickCount = 0;
+          
+          // Fill icon on second click (no shake animation)
+          const icon = trashBtn.querySelector('i');
+          if (icon) {
+            icon.className = 'fas fa-trash-can';
+          }
+          trashBtn.classList.add('filled');
+          
+          setTimeout(() => {
+            trashBtn.classList.remove('filled');
+            if (icon) {
+              icon.className = 'far fa-trash-can';
+            }
+          }, 2000);
+        }
+      });
+    }
+
     // Initialize refresh button
     const refreshBtn = document.getElementById('refresh-button');
     const stickyRefreshBtn = document.getElementById('sticky-refresh-button');
@@ -1476,7 +1522,7 @@ export default class GalleryView {
     if (!this.clearButton) return;
     
     const applyClearState = (button) => {
-      // Add shake animation and change to solid icon
+      // Add shake animation and change to filled icon
       button.classList.add('shake-animation');
       const icon = button.querySelector('i');
       if (icon) {
@@ -1506,9 +1552,10 @@ export default class GalleryView {
         return; // Exit early, don't proceed with click behavior
       }
       
-      // Apply clear state to both main and sticky buttons
+      // Apply visual feedback immediately
       applyClearState(this.clearButton);
       
+      // Also update sticky bar button if present
       const sticky = document.getElementById('sticky-action-bar');
       if (sticky) {
         const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
@@ -1517,26 +1564,20 @@ export default class GalleryView {
         }
       }
       
-      // Execute the clear action after a brief delay to show the animation
+      // Execute the clear action after a brief delay to show the visual feedback
       setTimeout(() => {
-        console.log('Executing clear handler...');
-        handler(); // Execute handler on single click
+        handler(); // Execute handler immediately on first click
         
-        // Show info notification
-        this.showInfoNotification('All selections cleared.');
+        // Reset button state after execution
+        resetButtonState(this.clearButton);
         
-        // Reset button state after a short delay
-        setTimeout(() => {
-          resetButtonState(this.clearButton);
-          
-          // Also reset sticky bar button
-          if (sticky) {
-            const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
-            if (stickyClearBtn) {
-              resetButtonState(stickyClearBtn);
-            }
+        // Also reset sticky bar button
+        if (sticky) {
+          const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
+          if (stickyClearBtn) {
+            resetButtonState(stickyClearBtn);
           }
-        }, 500);
+        }
       }, 300);
     });
     
@@ -1805,7 +1846,8 @@ export default class GalleryView {
     // Use event delegation on the gallery
     this.gallery.addEventListener('click', (e) => {
       // Check if we clicked directly on a weight button (not just in the container)
-      if (e.target.classList.contains('weight-control-button') || e.target.parentElement.classList.contains('weight-control-button')) {
+      if (e.target.classList.contains('weight-control-button') || 
+          (e.target.parentElement && e.target.parentElement.classList.contains('weight-control-button'))) {
         e.preventDefault();
         e.stopPropagation();
         
@@ -2273,7 +2315,8 @@ export default class GalleryView {
   // Event handler for New Styles weight control clicks
   handleNewStylesWeightClick = (event) => {
     // Check if we clicked directly on a weight button (not just in the container)
-    if (event.target.classList.contains('weight-control-button') || event.target.parentElement.classList.contains('weight-control-button')) {
+    if (event.target.classList.contains('weight-control-button') || 
+        (event.target.parentElement && event.target.parentElement.classList.contains('weight-control-button'))) {
       event.preventDefault();
       event.stopPropagation();
       

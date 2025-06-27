@@ -646,13 +646,8 @@ export default class GalleryController {
     
     // Clear button
     this.view.bindClearButton(() => {
-      console.log('Clear button handler called');
-      console.log('Before clearing - selected images:', this.model.selectedImages.size);
-      
-      // Clear all selections using the model method
-      this.model.clearSelectedImages();
-      
-      console.log('After clearing - selected images:', this.model.selectedImages.size);
+      // Clear all selections
+      this.model.selectedImages.clear();
       
       // If we're in selected-only view, automatically toggle it off
       if (this.showOnlySelected) {
@@ -660,13 +655,8 @@ export default class GalleryController {
         this.view.updateShowSelectedToggle(false);
       }
       
-      // Add a small delay to ensure model state is updated before rendering
-      setTimeout(() => {
-        console.log('Calling renderGallery...');
-        this.renderGallery();
-        this.updatePrompt();
-        console.log('Clear button handler completed');
-      }, 50);
+      this.renderGallery();
+      this.updatePrompt();
     });
     
     // Show selected toggle
@@ -794,7 +784,7 @@ export default class GalleryController {
             return;
           }
           console.log('Clearing selections');
-          this.model.clearSelectedImages();
+          this.model.selectedImages.clear();
           this.view.showInfoNotification('All selections cleared.');
           this.renderGallery();
           this.updatePrompt();
