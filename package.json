@@ -5,10 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
-    "build:css": "postcss styles/_tokens.css styles/_base.css styles/_components.css styles/_utilities.css styles/working.css -o dist/main.min.css",
-    "build:css:watch": "postcss styles/_tokens.css styles/_base.css styles/_components.css styles/_utilities.css styles/working.css -o dist/main.min.css --watch",
-    "lint:css": "stylelint 'styles/**/*.css'",
+    "dev": "postcss src/index.css -o dist/bundle.css -w",
+    "build": "NODE_ENV=production postcss src/index.css -o dist/bundle.min.css && stylelint \"src/**/*.css\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -24,18 +22,23 @@
     "express": "^4.18.2"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "cross-env": "^7.0.3",
+    "cssnano": "^7.0.7",
     "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "postcss-import": "^16.1.1",
+    "postcss-nested": "^7.0.2",
     "postcss-selector-parser": "^7.1.0",
-    "postcss-cli": "^10.1.0",
-    "autoprefixer": "^10.4.16",
-    "cssnano": "^6.0.1",
-    "@fullhuman/postcss-purgecss": "^5.0.0",
-    "stylelint": "^15.11.0",
-    "stylelint-config-standard": "^34.0.0"
+    "stylelint": "^16.21.0",
+    "stylelint-config-standard": "^38.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rari/promptaid.git"
+    "url": "git+https://github.com/rari/promptaid.git"
   },
-  "homepage": "https://github.com/rari/promptaid#readme"
+  "homepage": "https://github.com/rari/promptaid#readme",
+  "bugs": {
+    "url": "https://github.com/rari/promptaid/issues"
+  }
 }
