@@ -2227,15 +2227,15 @@ export default class GalleryView {
     if (expanded === null) expanded = 'true';
     expanded = expanded === 'true';
 
-    // Limit to 5 images, randomly selected each time
+    // Always show only 5 randomly selected images
     const maxToShow = 5;
-    const showAll = expanded || newImages.length <= maxToShow;
     
     let imagesToShow;
-    if (showAll) {
+    if (newImages.length <= maxToShow) {
+      // If we have 5 or fewer new images, show all of them
       imagesToShow = newImages;
     } else {
-      // Randomly select up to 5 images from all new images
+      // Randomly select 5 images from all new images
       const shuffled = [...newImages].sort(() => Math.random() - 0.5);
       imagesToShow = shuffled.slice(0, maxToShow);
     }
