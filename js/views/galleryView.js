@@ -52,8 +52,6 @@ export default class GalleryView {
     this.togglePreviewButton = document.getElementById('toggle-preview-button');
     this.promptPreview = document.querySelector('.prompt-preview');
     this.modeToggle = document.getElementById('mode-toggle');
-    this.clearButtonClickCount = 0;
-    this.clearButtonTimeout = null;
     
     // Model selector initialization flags
     // this.documentClickHandlerAdded = false; // No longer needed for hover menu
@@ -211,50 +209,6 @@ export default class GalleryView {
   }
 
   initializeButtons() {
-    // Initialize trash button
-    const trashBtn = document.getElementById('clear-button');
-    if (trashBtn) {
-      let clickCount = 0;
-      let clickTimer = null;
-      
-      trashBtn.addEventListener('click', () => {
-        // Check if there are any selected images
-        const selectedImages = document.querySelectorAll('.gallery-item.selected');
-        const hasSelectedImages = selectedImages.length > 0;
-        
-        clickCount++;
-        
-        if (clickCount === 1) {
-          // Only shake if there are selected images
-          if (hasSelectedImages) {
-            trashBtn.classList.add('shake');
-          }
-          
-          clickTimer = setTimeout(() => {
-            clickCount = 0;
-            trashBtn.classList.remove('shake');
-          }, 500);
-        } else if (clickCount === 2) {
-          clearTimeout(clickTimer);
-          clickCount = 0;
-          
-          // Fill icon on second click (no shake animation)
-          const icon = trashBtn.querySelector('i');
-          if (icon) {
-            icon.className = 'fas fa-trash-can';
-          }
-          trashBtn.classList.add('filled');
-          
-          setTimeout(() => {
-            trashBtn.classList.remove('filled');
-            if (icon) {
-              icon.className = 'far fa-trash-can';
-            }
-          }, 2000);
-        }
-      });
-    }
-
     // Initialize refresh button
     const refreshBtn = document.getElementById('refresh-button');
     const stickyRefreshBtn = document.getElementById('sticky-refresh-button');
@@ -1521,14 +1475,9 @@ export default class GalleryView {
   bindClearButton(handler) {
     if (!this.clearButton) return;
     
-    const applyFirstClickState = (button) => {
-      // Just add shake animation on first click, don't change icon
+    const applyClearState = (button) => {
+      // Add shake animation and change to solid icon
       button.classList.add('shake-animation');
-    };
-    
-    const applySecondClickState = (button) => {
-      // Remove shake animation and change to solid icon on second click
-      button.classList.remove('shake-animation');
       const icon = button.querySelector('i');
       if (icon) {
         icon.className = 'fas fa-trash-can';
@@ -1557,59 +1506,26 @@ export default class GalleryView {
         return; // Exit early, don't proceed with click behavior
       }
       
-      this.clearButtonClickCount++;
+      // Apply clear state to both main and sticky buttons
+      applyClearState(this.clearButton);
       
-      // Clear any existing timeout
-      if (this.clearButtonTimeout) {
-        clearTimeout(this.clearButtonTimeout);
+      const sticky = document.getElementById('sticky-action-bar');
+      if (sticky) {
+        const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
+        if (stickyClearBtn) {
+          applyClearState(stickyClearBtn);
+        }
       }
       
-      // First click - just shake the icon, don't execute handler
-      if (this.clearButtonClickCount === 1) {
-        applyFirstClickState(this.clearButton);
+      // Execute the clear action after a brief delay to show the animation
+      setTimeout(() => {
+        handler(); // Execute handler on single click
         
-        // Also update sticky bar button if present
-        const sticky = document.getElementById('sticky-action-bar');
-        if (sticky) {
-          const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
-          if (stickyClearBtn) {
-            applyFirstClickState(stickyClearBtn);
-          }
-        }
+        // Show info notification
+        this.showInfoNotification('All selections cleared.');
         
-        // Reset after 2 seconds if not clicked again
-        this.clearButtonTimeout = setTimeout(() => {
-          resetButtonState(this.clearButton);
-          
-          // Also reset sticky bar button
-          const sticky = document.getElementById('sticky-action-bar');
-          if (sticky) {
-            const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
-            if (stickyClearBtn) {
-              resetButtonState(stickyClearBtn);
-            }
-          }
-          
-          this.clearButtonClickCount = 0;
-        }, 2000);
-      } 
-      // Second click - fill icon (no shake) and execute the clear action
-      else if (this.clearButtonClickCount === 2) {
-        // Fill the icon first (no shake animation)
-        applySecondClickState(this.clearButton);
-        
-        // Also update sticky bar button
-        const sticky = document.getElementById('sticky-action-bar');
-        if (sticky) {
-          const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
-          if (stickyClearBtn) {
-            applySecondClickState(stickyClearBtn);
-          }
-        }
-        
-        // Execute the clear action after a brief delay to show the filled icon
+        // Reset button state after a short delay
         setTimeout(() => {
-          handler(); // Only execute handler on second click
           resetButtonState(this.clearButton);
           
           // Also reset sticky bar button
@@ -1619,10 +1535,8 @@ export default class GalleryView {
               resetButtonState(stickyClearBtn);
             }
           }
-          
-          this.clearButtonClickCount = 0;
-        }, 300);
-      }
+        }, 500);
+      }, 300);
     });
     
     // Also bind in sticky bar if present
