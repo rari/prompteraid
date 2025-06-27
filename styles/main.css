@@ -3249,9 +3249,14 @@ a:hover {
     max-width: calc(25% - 0.6em);
   }
   
-  /* Limit to 4 images on screens less than 1200px */
+  /* Limit to 4 images on screens less than 1200px by default */
   .new-styles-item:nth-child(n+5) {
     display: none;
+  }
+  
+  /* But show all images when the More button is clicked */
+  .new-styles-container.show-all-images .new-styles-item:nth-child(n+5) {
+    display: block;
   }
 }
 @media (max-width: 900px) {
