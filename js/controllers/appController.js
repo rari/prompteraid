@@ -115,33 +115,64 @@ export default class AppController {
     }
     const sref = urlParams.get('sref');
     const quadrant = urlParams.get('q') || urlParams.get('quadrant'); // Support both short and long parameter names
-    const searchQ = urlParams.get('q');
-    // Model handling is now in initializeModel(), so we only handle sref here.
-    if (sref && !searchQ) {
-      // If we have a style reference in the URL, find it and focus on it
-      console.log(`Looking for style reference: ${sref}`);
-      // Wait for the gallery to load and the controller to be initialized
-      const checkAndCreateLinkedView = () => {
-        // Check if gallery controller is available
-        if (!window.galleryController || !window.galleryController.view || !window.galleryController.model) {
-          console.log("Gallery controller not yet available, waiting...");
-          setTimeout(checkAndCreateLinkedView, 500);
-          return;
-        }
-        // Find the image with the matching style reference
-        const galleryItem = document.querySelector(`.gallery-item[data-sref="${sref}"]`);
-        if (galleryItem) {
-          // Create a linked view with divider
-          this.createLinkedView(galleryItem, sref, quadrant);
-        } else {
-          console.warn(`Style reference ${sref} not found in gallery`);
-        }
-      };
-      // Start checking
-      setTimeout(checkAndCreateLinkedView, 1000);
+    
+    // Handle sref (style reference) - this takes priority over search
+    if (sref) {
+      // Check if this is a single image link (no spaces in sref) or multiple images
+      const srefParts = sref.split(' ').filter(part => part.trim().length > 0);
+      
+      if (srefParts.length === 1) {
+        // Single image link - can have optional quadrant
+        console.log(`Looking for single style reference: ${sref} with quadrant: ${quadrant || 'none'}`);
+        // Wait for the gallery to load and the controller to be initialized
+        const checkAndCreateLinkedView = () => {
+          // Check if gallery controller is available
+          if (!window.galleryController || !window.galleryController.view || !window.galleryController.model) {
+            console.log("Gallery controller not yet available, waiting...");
+            setTimeout(checkAndCreateLinkedView, 500);
+            return;
+          }
+          // Find the image with the matching style reference
+          const galleryItem = document.querySelector(`.gallery-item[data-sref="${sref}"]`);
+          if (galleryItem) {
+            // Create a linked view with divider
+            this.createLinkedView(galleryItem, sref, quadrant);
+          } else {
+            console.warn(`Style reference ${sref} not found in gallery`);
+          }
+        };
+        // Start checking
+        setTimeout(checkAndCreateLinkedView, 1000);
+      } else {
+        // Multiple images link - treat as search query
+        console.log(`Multiple style references detected, treating as search: ${srefParts.join(', ')}`);
+        const trySearch = () => {
+          if (!window.galleryController || !window.galleryController.view) {
+            setTimeout(trySearch, 300);
+            return;
+          }
+          // Open search UI if not already open
+          const searchContainer = document.querySelector('.search-container');
+          if (searchContainer && searchContainer.classList.contains('hidden')) {
+            searchContainer.classList.remove('hidden');
+          }
+          // Set search input value to the space-separated style references
+          const searchInput = document.getElementById('search-input');
+          if (searchInput) {
+            searchInput.value = sref;
+          }
+          // Set searchNumber and trigger search
+          window.galleryController.searchNumber = sref;
+          window.galleryController.performSearch(sref);
+        };
+        setTimeout(trySearch, 800);
+      }
+      return; // Exit early, don't process as search
     }
-    // If q is present (search), trigger search UI and logic
-    if (searchQ) {
+    
+    // Handle search (only if no sref is present)
+    const searchQ = urlParams.get('q');
+    if (searchQ && !sref) {
       const trySearch = () => {
         if (!window.galleryController || !window.galleryController.view) {
           setTimeout(trySearch, 300);
