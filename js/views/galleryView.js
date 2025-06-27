@@ -2181,7 +2181,10 @@ export default class GalleryView {
     // Collapsible state logic
     const storageKey = 'prompteraid_newStyles_expanded';
     let expanded = localStorage.getItem(storageKey);
-    if (expanded === null) expanded = 'true';
+    if (expanded === null) {
+      expanded = 'true';
+      localStorage.setItem(storageKey, 'true');
+    }
     expanded = expanded === 'true';
 
     // Always show only 5 randomly selected images
@@ -2199,7 +2202,7 @@ export default class GalleryView {
 
     // Section header
     let html = `<div class="new-styles-container">
-      <details open>
+      <details${expanded ? ' open' : ''}>
         <summary>
           <span><i class=\"fa-solid fa-bolt\" style=\"color: var(--neon-pink); margin-right: 0.3em;\"></i>New Styles</span>
           <button id="minimize-new-styles" class="close-button" title="Minimize this section" aria-label="Minimize new styles section"><i class="fas fa-compress-alt"></i></button>
@@ -2274,6 +2277,14 @@ export default class GalleryView {
       });
     } else {
       console.log('New styles summary not found');
+    }
+
+    // Add toggle event to always track open/collapsed state
+    const detailsElem = section.querySelector('details');
+    if (detailsElem) {
+      detailsElem.addEventListener('toggle', () => {
+        localStorage.setItem(storageKey, detailsElem.open ? 'true' : 'false');
+      });
     }
   }
 
@@ -2439,6 +2450,14 @@ export default class GalleryView {
       });
     } else {
       console.log('Styles of month summary not found');
+    }
+
+    // Add toggle event to always track open/collapsed state
+    const detailsElem = section.querySelector('details');
+    if (detailsElem) {
+      detailsElem.addEventListener('toggle', () => {
+        localStorage.setItem(storageKey, detailsElem.open ? 'true' : 'false');
+      });
     }
   }
 
