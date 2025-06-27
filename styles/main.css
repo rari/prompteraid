@@ -3379,13 +3379,6 @@ a:hover {
   box-shadow: var(--shadow-md);
 }
 
-.new-styles-container,
-.more-info-container,
-.new-styles-container *,
-.more-info-container * {
-  color: var(--text-primary, #111);
-}
-
 /* New Styles More Button - REMOVED */
 /*
 .new-styles-more-btn {
@@ -3477,35 +3470,6 @@ a:hover {
 .more-info-container .link-button i {
   color: var(--neon-pink) !important;
 }
-
-/* Dark mode override for favorites-tools-header to keep neon yellow colors */
-
-.new-styles-container,
-.more-info-container,
-.new-styles-container *,
-.more-info-container * {
-  color: var(--text-primary, #111);
-}
-
-/* Preserve neon colors for specific elements in New Styles and Tutorial sections */
-.new-styles-container .favorite-button i,
-.new-styles-container .quadrant-flip-button i,
-.new-styles-container .link-button i,
-.new-styles-container .weight-control-button i,
-.new-styles-container summary span i,
-.new-styles-container .close-button i,
-.more-info-container .favorite-button i,
-.more-info-container .quadrant-flip-button i,
-.more-info-container .link-button i,
-.more-info-container .weight-control-button i,
-.more-info-container summary span i,
-.more-info-container .close-button i,
-.new-styles-container .tutorial-icon,
-.more-info-container .tutorial-icon {
-  color: inherit !important;
-}
-
-/* Preserve neon colors for specific elements in dark mode */
 
 /* Footer social links: no underline on any state */
 .footer-links-section .social-link,

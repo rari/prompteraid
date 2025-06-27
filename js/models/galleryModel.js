@@ -81,15 +81,8 @@ export default class GalleryModel {
 
   // Clear all selected images
   clearSelectedImages() {
-    console.log('Model: Clearing selected images');
-    console.log('Model: Before clearing - selectedImages size:', this.selectedImages.size);
-    console.log('Model: Before clearing - weights size:', this.weights.size);
-    
     this.selectedImages.clear();
     this.weights.clear();
-    
-    console.log('Model: After clearing - selectedImages size:', this.selectedImages.size);
-    console.log('Model: After clearing - weights size:', this.weights.size);
   }
 
   // Get weight for an image

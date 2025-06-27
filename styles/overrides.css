@@ -220,4 +220,19 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   text-decoration: none !important;
 }
 
+/* Tutorial section icon color overrides */
+.more-info-container .tutorial-icon-pink { color: var(--neon-pink) !important; }
+.more-info-container .tutorial-icon-orange { color: var(--neon-orange) !important; }
+.more-info-container .tutorial-icon-yellow { color: var(--neon-yellow) !important; }
+.more-info-container .tutorial-icon-green { color: var(--neon-green) !important; }
+.more-info-container .tutorial-icon-teal { color: var(--neon-teal) !important; }
+.more-info-container .tutorial-icon-blue { color: var(--neon-blue) !important; }
+.more-info-container .tutorial-icon-purple { color: var(--neon-purple) !important; }
+
+/* Tutorial section link color override */
+.more-info-container a { color: var(--neon-teal) !important; text-decoration: underline !important; }
+
+/* Tutorial section code color override */
+.more-info-container code { color: var(--neon-pink) !important; background: none !important; }
+
 /* (Paste all rules with !important or labeled as override here) */ 
