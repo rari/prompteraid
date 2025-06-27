@@ -593,18 +593,27 @@ html.dark-mode .favorites-tools .action-button:hover i {
 
 /* Notifications */
 html.dark-mode .info-notification {
-  background-color: var(--card-background);
-  border-color: var(--border-color);
+  background: linear-gradient(135deg, rgba(0,0,0,0.82) 0%, rgba(0,229,255,0.18) 60%, rgba(0,123,255,0.10) 100%);
+  color: var(--text-primary, #fff);
+  border: 1.5px solid var(--neon-teal, #00e5ff);
+  box-shadow: 0 2px 12px 0 rgba(0, 229, 255, 0.10), 0 1.5px 8px 0 rgba(0,255,255,0.08);
+  backdrop-filter: blur(8px) saturate(1.2);
 }
 
 html.dark-mode .warning-notification {
-  background-color: var(--card-background);
-  border-color: var(--border-color);
+  background: linear-gradient(135deg, rgba(0,0,0,0.82) 0%, rgba(255,255,200,0.18) 60%, rgba(255,200,0,0.10) 100%);
+  color: var(--text-primary, #fff);
+  border: 1.5px solid var(--neon-yellow, #ffd700);
+  box-shadow: 0 2px 12px 0 rgba(255,255,0,0.10), 0 1.5px 8px 0 rgba(0,255,255,0.08);
+  backdrop-filter: blur(8px) saturate(1.2);
 }
 
 html.dark-mode .error-notification {
-  background-color: var(--card-background);
-  border-color: var(--border-color);
+  background: linear-gradient(135deg, rgba(0,0,0,0.82) 0%, rgba(255,20,147,0.18) 60%, rgba(153,50,204,0.10) 100%);
+  color: var(--text-primary, #fff);
+  border: 1.5px solid var(--neon-pink, #ff1493);
+  box-shadow: 0 2px 12px 0 rgba(255,20,147,0.10), 0 1.5px 8px 0 rgba(153,50,204,0.08);
+  backdrop-filter: blur(8px) saturate(1.2);
 }
 
 /* Menu Icons */

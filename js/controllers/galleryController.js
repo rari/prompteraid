@@ -649,6 +649,9 @@ export default class GalleryController {
       // Clear all selections
       this.model.selectedImages.clear();
       
+      // Show notification
+      this.view.showInfoNotification('All selections cleared.');
+      
       // If we're in selected-only view, automatically toggle it off
       if (this.showOnlySelected) {
         this.showOnlySelected = false;
