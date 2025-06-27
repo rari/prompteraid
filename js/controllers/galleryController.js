@@ -646,8 +646,8 @@ export default class GalleryController {
     
     // Clear button
     this.view.bindClearButton(() => {
-      // Clear all selections
-      this.model.selectedImages.clear();
+      // Clear all selections using the model method
+      this.model.clearSelectedImages();
       
       // If we're in selected-only view, automatically toggle it off
       if (this.showOnlySelected) {
@@ -784,7 +784,7 @@ export default class GalleryController {
             return;
           }
           console.log('Clearing selections');
-          this.model.selectedImages.clear();
+          this.model.clearSelectedImages();
           this.view.showInfoNotification('All selections cleared.');
           this.renderGallery();
           this.updatePrompt();
