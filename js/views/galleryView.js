@@ -2215,27 +2215,17 @@ export default class GalleryView {
     const section = document.getElementById('new-styles-section');
     if (!section) return;
 
-    // If no new images, hide the section
     if (!newImages || newImages.length === 0) {
       section.style.display = 'none';
       section.innerHTML = '';
       return;
     }
 
-    // Check localStorage for expanded/collapsed state
-    const newImageIds = newImages.map(img => img.id).join(',');
+    // Collapsible state logic
     const storageKey = 'prompteraid_newStyles_expanded';
-    const lastIdsKey = 'prompteraid_newStyles_lastIds';
-    let expanded = false;
-    const lastIds = localStorage.getItem(lastIdsKey);
-    if (lastIds !== newImageIds) {
-      // New images detected, reset to collapsed
-      expanded = false;
-      localStorage.setItem(storageKey, 'false');
-      localStorage.setItem(lastIdsKey, newImageIds);
-    } else {
-      expanded = localStorage.getItem(storageKey) === 'true';
-    }
+    let expanded = localStorage.getItem(storageKey);
+    if (expanded === null) expanded = 'true';
+    expanded = expanded === 'true';
 
     // Limit to 5 images unless expanded
     const maxToShow = 5;
@@ -2243,7 +2233,7 @@ export default class GalleryView {
     const imagesToShow = showAll ? newImages : newImages.slice(0, maxToShow);
 
     // Section header
-    let html = `<div class="new-styles-container${showAll ? ' show-all-images' : ''}">
+    let html = `<div class="new-styles-container">
       <details open>
         <summary>
           <span><i class=\"fa-solid fa-bolt\" style=\"color: var(--neon-pink); margin-right: 0.3em;\"></i>New Styles</span>
@@ -2269,11 +2259,12 @@ export default class GalleryView {
     });
     
     html += '</div>';
-    if (!showAll) {
-      html += `<button class="new-styles-more-btn" aria-label="Show more new styles">More</button>`;
-    } else if (newImages.length > maxToShow) {
-      html += `<button class="new-styles-more-btn" aria-label="Show fewer new styles">Less</button>`;
-    }
+    
+    // Replace MORE/LESS button with count display
+    html += `<div class="new-styles-count" style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+      <strong>${newImages.length}</strong> new references recently added!
+    </div>`;
+    
     html += '</div></details></div>';
     section.innerHTML = html;
     section.style.display = '';
@@ -2293,15 +2284,6 @@ export default class GalleryView {
       
       // Add weight control event delegation
       newStylesGallery.addEventListener('click', this.handleNewStylesWeightClick);
-    }
-
-    // Add event listener for More/Less button
-    const moreBtn = section.querySelector('.new-styles-more-btn');
-    if (moreBtn) {
-      moreBtn.addEventListener('click', () => {
-        localStorage.setItem(storageKey, (!showAll).toString());
-        this.renderNewStylesSection(newImages, selectedImages, favoriteImages, currentModel);
-      });
     }
 
     // Add click handler for the icon to minimize the section
@@ -2422,7 +2404,7 @@ export default class GalleryView {
     });
 
     // Section header
-    let html = `<div class="new-styles-container${expanded ? ' show-all-images' : ''}">
+    let html = `<div class="new-styles-container">
       <details${expanded ? ' open' : ''}>
         <summary>
           <span><i class=\"fa-solid fa-crown\" style=\"color: var(--neon-orange); margin-right: 0.3em;\"></i>Styles of the Month</span>
