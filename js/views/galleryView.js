@@ -2065,10 +2065,102 @@ export default class GalleryView {
     // Set appropriate text based on type
     if (type === 'favorites') {
       label.innerHTML = `<i class=\"far fa-star\"></i> ${count} favorite${count !== 1 ? 's' : ''} above`;
+      // Create the create link lozenge as a sibling
+      const linkLozenge = document.createElement('span');
+      linkLozenge.className = 'filter-divider-label filter-divider-link';
+      linkLozenge.style.marginLeft = '1em';
+      linkLozenge.style.cursor = 'pointer';
+      linkLozenge.innerHTML = `<i class=\"fas fa-link\" style=\"color: var(--neon-pink);\"></i> Create a link`;
+      linkLozenge.tabIndex = 0;
+      linkLozenge.setAttribute('role', 'button');
+      linkLozenge.setAttribute('aria-label', 'Create a shareable link for these favorite images');
+      linkLozenge.addEventListener('click', () => {
+        // Get current model and favorite images
+        const model = window.galleryController?.model?.currentModel || 'niji-6';
+        const favoriteImages = window.galleryController?.model?.favoriteImages || new Set();
+        
+        // Get the style references of favorite images
+        let srefs = [];
+        if (window.galleryController && favoriteImages.size > 0) {
+          const allImages = window.galleryController.model.images;
+          srefs = Array.from(favoriteImages).map(imageId => {
+            const image = allImages.find(img => img.id === imageId);
+            return image ? image.sref : null;
+          }).filter(sref => sref !== null);
+        }
+        
+        // Build the link - only include model and sref, no q parameter
+        const params = new URLSearchParams();
+        if (model) params.set('model', model);
+        if (srefs.length > 0) params.set('sref', srefs.join(' '));
+        const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(url).then(() => {
+          this.showCopyFeedback && this.showCopyFeedback();
+          this.showInfoNotification && this.showInfoNotification('Shareable favorite images link copied!');
+        }).catch(() => {
+          this.showErrorNotification && this.showErrorNotification('Failed to copy link.');
+        });
+      });
+      // Accessibility: trigger click on Enter or Space
+      linkLozenge.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          linkLozenge.click();
+        }
+      });
       divider.appendChild(label);
+      divider.appendChild(linkLozenge);
     } else if (type === 'selected') {
       label.innerHTML = `<i class=\"far fa-eye\"></i> ${count} selected image${count !== 1 ? 's' : ''} above`;
+      // Create the create link lozenge as a sibling
+      const linkLozenge = document.createElement('span');
+      linkLozenge.className = 'filter-divider-label filter-divider-link';
+      linkLozenge.style.marginLeft = '1em';
+      linkLozenge.style.cursor = 'pointer';
+      linkLozenge.innerHTML = `<i class=\"fas fa-link\" style=\"color: var(--neon-pink);\"></i> Create a link`;
+      linkLozenge.tabIndex = 0;
+      linkLozenge.setAttribute('role', 'button');
+      linkLozenge.setAttribute('aria-label', 'Create a shareable link for these selected images');
+      linkLozenge.addEventListener('click', () => {
+        // Get current model and selected images
+        const model = window.galleryController?.model?.currentModel || 'niji-6';
+        const selectedImages = window.galleryController?.model?.selectedImages || new Map();
+        
+        // Get the style references of selected images
+        let srefs = [];
+        if (window.galleryController && selectedImages.size > 0) {
+          const allImages = window.galleryController.model.images;
+          srefs = Array.from(selectedImages.keys()).map(imageId => {
+            const image = allImages.find(img => img.id === imageId);
+            return image ? image.sref : null;
+          }).filter(sref => sref !== null);
+        }
+        
+        // Build the link - only include model and sref, no q parameter
+        const params = new URLSearchParams();
+        if (model) params.set('model', model);
+        if (srefs.length > 0) params.set('sref', srefs.join(' '));
+        const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(url).then(() => {
+          this.showCopyFeedback && this.showCopyFeedback();
+          this.showInfoNotification && this.showInfoNotification('Shareable selected images link copied!');
+        }).catch(() => {
+          this.showErrorNotification && this.showErrorNotification('Failed to copy link.');
+        });
+      });
+      // Accessibility: trigger click on Enter or Space
+      linkLozenge.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          linkLozenge.click();
+        }
+      });
       divider.appendChild(label);
+      divider.appendChild(linkLozenge);
     } else if (type === 'linked') {
       label.innerHTML = `<i class=\"fas fa-link\"></i> Linked style above`;
       divider.appendChild(label);
@@ -2099,7 +2191,6 @@ export default class GalleryView {
         const params = new URLSearchParams();
         params.set('model', model);
         if (srefs.length > 0) params.set('sref', srefs.join(' '));
-        if (search) params.set('q', search);
         const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
         // Copy to clipboard
         navigator.clipboard.writeText(url).then(() => {

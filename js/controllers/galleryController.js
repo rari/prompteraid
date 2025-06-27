@@ -969,11 +969,14 @@ export default class GalleryController {
    * Supports multiple IDs separated by spaces (e.g., "1 2 7" will find images matching any of these)
    */
   performSearch(searchInput) {
-    // Set the search input
-    this.searchNumber = searchInput;
+    // Filter search input to only allow numbers and spaces
+    const filteredInput = searchInput.replace(/[^0-9\s]/g, '');
+    
+    // Set the search input (use filtered version)
+    this.searchNumber = filteredInput;
     
     // If the search is empty, clear it
-    if (!searchInput || searchInput.trim() === '') {
+    if (!filteredInput || filteredInput.trim() === '') {
       this.clearSearchState();
       this.renderGallery();
       
@@ -1000,7 +1003,7 @@ export default class GalleryController {
     const allImages = this.model.images;
     
     // Split search input by spaces and trim whitespace
-    const searchTerms = searchInput.split(' ').map(term => term.trim()).filter(term => term.length > 0);
+    const searchTerms = filteredInput.split(' ').map(term => term.trim()).filter(term => term.length > 0);
     
     // Filter images based on search - match ANY of the search terms
     const matchingImages = allImages.filter(img => {
@@ -1009,7 +1012,7 @@ export default class GalleryController {
     
     // If no matches, show notification but keep the search active
     if (matchingImages.length === 0) {
-      const searchDisplay = searchTerms.length > 1 ? `"${searchTerms.join('", "')}"` : `"${searchInput}"`;
+      const searchDisplay = searchTerms.length > 1 ? `"${searchTerms.join('", "')}"` : `"${filteredInput}"`;
       this.view.showErrorNotification(`No images found matching ${searchDisplay}`);
       this.view.hideFilterDivider('search');
       this.renderGallery();
@@ -1073,7 +1076,7 @@ export default class GalleryController {
     if (stickySearchButton) stickySearchButton.classList.add('active');
     
     // Show notification about search results
-    const searchDisplay = searchTerms.length > 1 ? `"${searchTerms.join('", "')}"` : `"${searchInput}"`;
+    const searchDisplay = searchTerms.length > 1 ? `"${searchTerms.join('", "')}"` : `"${filteredInput}"`;
     this.view.showInfoNotification(`Found ${matchingImages.length} image(s) matching ${searchDisplay}`);
   }
 
