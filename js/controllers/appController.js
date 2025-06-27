@@ -309,16 +309,17 @@ export default class AppController {
       themeModalContainer.remove();
     }
     
-    // Check for saved theme preference or default to dark mode
+    // Check for saved theme preference
     // Add a prefix to localStorage keys to avoid conflicts with other GitHub Pages sites
     const savedTheme = localStorage.getItem('prompteraid_theme');
     
-    // Set initial theme - default to dark mode if no preference is saved
+    // Set initial theme based on saved preference or system preference
     if (savedTheme) {
+      // User has manually set a preference
       this.setTheme(savedTheme);
     } else {
-      // Default to dark mode
-      this.setTheme('dark');
+      // Use system preference as default
+      this.setSystemTheme();
     }
     
     // Add event listener to theme toggle button
@@ -331,22 +332,48 @@ export default class AppController {
     
     // Listen for system theme changes
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      // Only auto-switch if user hasn't set a preference
+      // Only auto-switch if user hasn't set a manual preference
       if (!localStorage.getItem('prompteraid_theme')) {
-        this.setTheme(e.matches ? 'dark' : 'light');
+        this.setSystemTheme();
       }
     });
   }
 
+  setSystemTheme() {
+    // Check system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = prefersDark ? 'dark' : 'light';
+    
+    // Remove any manual theme classes
+    document.documentElement.classList.remove('dark-mode', 'light-mode');
+    
+    // Update theme toggle icons to reflect system preference
+    this.updateThemeToggleIcons(theme);
+  }
+
   setTheme(theme) {
     const isDark = theme === 'dark';
+    const isLight = theme === 'light';
     
-    // Update HTML element class for theme
+    // Remove all theme classes first
+    document.documentElement.classList.remove('dark-mode', 'light-mode');
+    
+    // Add appropriate theme class
     if (isDark) {
       document.documentElement.classList.add('dark-mode');
-    } else {
-      document.documentElement.classList.remove('dark-mode');
+    } else if (isLight) {
+      document.documentElement.classList.add('light-mode');
     }
+    
+    // Update theme toggle icons
+    this.updateThemeToggleIcons(theme);
+    
+    // Save preference to localStorage with prefix
+    localStorage.setItem('prompteraid_theme', theme);
+  }
+
+  updateThemeToggleIcons(theme) {
+    const isDark = theme === 'dark';
     
     // Update theme toggle icons (both main and sticky)
     const themeToggles = [
@@ -369,15 +396,32 @@ export default class AppController {
         toggle.classList.remove('theme-toggle-dark');
       }
     });
-    
-    // Save preference to localStorage with prefix
-    localStorage.setItem('prompteraid_theme', theme);
   }
 
   toggleTheme() {
-    const isDarkMode = document.documentElement.classList.contains('dark-mode');
-    const newTheme = isDarkMode ? 'light' : 'dark';
-    this.setTheme(newTheme);
+    const hasDarkMode = document.documentElement.classList.contains('dark-mode');
+    const hasLightMode = document.documentElement.classList.contains('light-mode');
+    
+    let newTheme;
+    
+    if (hasDarkMode) {
+      // Currently in dark mode, switch to light mode
+      newTheme = 'light';
+    } else if (hasLightMode) {
+      // Currently in light mode, switch to system preference
+      newTheme = 'system';
+    } else {
+      // Currently using system preference, switch to dark mode
+      newTheme = 'dark';
+    }
+    
+    if (newTheme === 'system') {
+      // Remove manual preference and use system
+      localStorage.removeItem('prompteraid_theme');
+      this.setSystemTheme();
+    } else {
+      this.setTheme(newTheme);
+    }
   }
 
   disableImageSaving() {
@@ -482,6 +526,9 @@ export default class AppController {
     const savedTheme = localStorage.getItem('prompteraid_theme');
     if (savedTheme) {
       this.setTheme(savedTheme);
+    } else {
+      // Use system preference if no manual preference is saved
+      this.setSystemTheme();
     }
     
     // Check info section preference

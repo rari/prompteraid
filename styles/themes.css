@@ -1,0 +1,663 @@
+/* CSS Theme Overrides for PrompterAid */
+
+/* ===== SYSTEM PREFERENCE (prefers-color-scheme) ===== */
+/* These styles apply by default based on user's system preference */
+
+/* Light mode (default for prefers-color-scheme: light) */
+@media (prefers-color-scheme: light) {
+  html:not(.dark-mode):not(.light-mode) .weight-display {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    color: #a742f5 !important; /* Neon Purple */
+    text-shadow: 0 0 5px rgba(167, 66, 245, 0.5) !important;
+  }
+
+  /* Light mode weight color classes */
+  html:not(.dark-mode):not(.light-mode) .weight-color-0,
+  html:not(.dark-mode):not(.light-mode) .weight-color-1,
+  html:not(.dark-mode):not(.light-mode) .weight-color-2,
+  html:not(.dark-mode):not(.light-mode) .weight-color-3,
+  html:not(.dark-mode):not(.light-mode) .weight-color-4,
+  html:not(.dark-mode):not(.light-mode) .weight-color-5,
+  html:not(.dark-mode):not(.light-mode) .weight-color-6 {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+    color: #a742f5 !important; /* Neon Purple */
+    text-shadow: 0 0 5px rgba(167, 66, 245, 0.5) !important;
+  }
+}
+
+/* Dark mode (default for prefers-color-scheme: dark) */
+@media (prefers-color-scheme: dark) {
+  html:not(.dark-mode):not(.light-mode) {
+    /* Neutral palette - Dark mode */
+    --background: hsl(210, 30%, 8%);
+    --card-background: hsl(210, 30%, 12%);
+    --text-primary: hsl(210, 20%, 92%);
+    --text-secondary: hsl(210, 20%, 80%);
+    --border-color: hsl(210, 20%, 20%);
+    
+    --gray-50: hsl(210, 30%, 8%);
+    --gray-100: hsl(210, 30%, 12%);
+    --gray-200: hsl(210, 30%, 15%);
+    --gray-300: hsl(210, 30%, 20%);
+    --gray-400: hsl(210, 30%, 30%);
+    --gray-500: hsl(210, 30%, 40%);
+    --gray-600: hsl(210, 20%, 60%);
+    --gray-700: hsl(210, 20%, 70%);
+    --gray-800: hsl(210, 20%, 80%);
+    --gray-900: hsl(210, 20%, 92%);
+    
+    /* Shadows for dark mode */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+    
+    /* Gradients for dark mode */
+    --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    --gradient-tropical: linear-gradient(135deg, var(--neon-pink), var(--neon-purple), var(--neon-blue), var(--neon-teal));
+    
+    /* Legacy compatibility */
+    --secondary: var(--accent);
+    --secondary-light: var(--accent-light);
+    --secondary-dark: var(--accent-dark);
+  }
+
+  /* Dark mode component styles for system preference */
+  html:not(.dark-mode):not(.light-mode) .sticky-action-bar {
+    background-color: rgba(30, 41, 59, 0.95);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .more-info-container {
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .more-info-container summary {
+    color: var(--text-primary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .modern-footer {
+    background-color: var(--card-background);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .footer-wave .shape-fill {
+    fill: var(--card-background);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .footer-wave .shape-fill:nth-child(2) {
+    fill: var(--background);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .footer-wave .shape-fill:nth-child(3) {
+    fill: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .social-link {
+    color: var(--text-secondary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .social-link:hover {
+    color: var(--primary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .footer-credit {
+    color: var(--text-secondary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .footer-credit a {
+    color: var(--primary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .footer-credit a:hover {
+    color: var(--accent);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .weight-control-button {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .weight-plus,
+  html:not(.dark-mode):not(.light-mode) .weight-minus {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .weight-plus:hover,
+  html:not(.dark-mode):not(.light-mode) .weight-minus:hover {
+    background-color: var(--gray-300);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .weight-display {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .weight-color-0,
+  html:not(.dark-mode):not(.light-mode) .weight-color-1,
+  html:not(.dark-mode):not(.light-mode) .weight-color-2,
+  html:not(.dark-mode):not(.light-mode) .weight-color-3,
+  html:not(.dark-mode):not(.light-mode) .weight-color-4,
+  html:not(.dark-mode):not(.light-mode) .weight-color-5,
+  html:not(.dark-mode):not(.light-mode) .weight-color-6 {
+    background-color: var(--card-background);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .favorite-button,
+  html:not(.dark-mode):not(.light-mode) .quadrant-flip-button {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .favorite-button i,
+  html:not(.dark-mode):not(.light-mode) .quadrant-flip-button i {
+    color: var(--text-secondary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .favorite-button:hover,
+  html:not(.dark-mode):not(.light-mode) .quadrant-flip-button:hover {
+    background-color: var(--gray-300);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .link-button {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .link-button:hover {
+    background-color: var(--gray-300);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .model-dropdown {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .model-option {
+    color: var(--text-primary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .model-option:hover {
+    background-color: var(--gray-300);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .model-option.active {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  html:not(.dark-mode):not(.light-mode) .favorites-tools-buttons {
+    background-color: var(--card-background);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .favorites-tools .action-button {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .favorites-tools .action-button:hover {
+    background-color: var(--gray-300);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .favorites-tools .action-button i {
+    color: var(--text-secondary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .favorites-tools .action-button:hover i {
+    color: var(--text-primary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .info-notification {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .warning-notification {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .error-notification {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .menu-icon-style {
+    color: var(--text-secondary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .menu-icon-style:hover {
+    color: var(--text-primary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .action-button:hover {
+    background-color: var(--gray-300);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .current-model span, 
+  html:not(.dark-mode):not(.light-mode) .model-option span {
+    color: var(--text-primary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .current-model i, 
+  html:not(.dark-mode):not(.light-mode) .model-option i {
+    color: var(--text-primary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .favorites-tools-header {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .favorites-tools-header i.fa-star {
+    color: var(--neon-yellow);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .favorites-tools-header h4 {
+    color: var(--text-primary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .new-styles-container,
+  html:not(.dark-mode):not(.light-mode) .more-info-container {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .new-styles-container,
+  html:not(.dark-mode):not(.light-mode) .more-info-container,
+  html:not(.dark-mode):not(.light-mode) .new-styles-container *,
+  html:not(.dark-mode):not(.light-mode) .more-info-container * {
+    color: var(--text-primary);
+  }
+}
+
+/* ===== MANUAL OVERRIDE STYLES ===== */
+/* These styles apply when user manually sets a theme preference */
+
+/* ===== LIGHT MODE STYLES (Manual Override) ===== */
+html.light-mode .weight-display {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  color: #a742f5 !important; /* Neon Purple */
+  text-shadow: 0 0 5px rgba(167, 66, 245, 0.5) !important;
+}
+
+/* Light mode weight color classes */
+html.light-mode .weight-color-0,
+html.light-mode .weight-color-1,
+html.light-mode .weight-color-2,
+html.light-mode .weight-color-3,
+html.light-mode .weight-color-4,
+html.light-mode .weight-color-5,
+html.light-mode .weight-color-6 {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+  color: #a742f5 !important; /* Neon Purple */
+  text-shadow: 0 0 5px rgba(167, 66, 245, 0.5) !important;
+}
+
+/* ===== DARK MODE STYLES (Manual Override) ===== */
+
+/* Apply dark mode variables to the HTML element */
+html.dark-mode {
+  /* Neutral palette - Dark mode */
+  --background: hsl(210, 30%, 8%);
+  --card-background: hsl(210, 30%, 12%);
+  --text-primary: hsl(210, 20%, 92%);
+  --text-secondary: hsl(210, 20%, 80%);
+  --border-color: hsl(210, 20%, 20%);
+  
+  --gray-50: hsl(210, 30%, 8%);
+  --gray-100: hsl(210, 30%, 12%);
+  --gray-200: hsl(210, 30%, 15%);
+  --gray-300: hsl(210, 30%, 20%);
+  --gray-400: hsl(210, 30%, 30%);
+  --gray-500: hsl(210, 30%, 40%);
+  --gray-600: hsl(210, 20%, 60%);
+  --gray-700: hsl(210, 20%, 70%);
+  --gray-800: hsl(210, 20%, 80%);
+  --gray-900: hsl(210, 20%, 92%);
+  
+  /* Shadows for dark mode */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+  
+  /* Gradients for dark mode */
+  --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  --gradient-tropical: linear-gradient(135deg, var(--neon-pink), var(--neon-purple), var(--neon-blue), var(--neon-teal));
+  
+  /* Legacy compatibility */
+  --secondary: var(--accent);
+  --secondary-light: var(--accent-light);
+  --secondary-dark: var(--accent-dark);
+}
+
+/* ===== DARK MODE COMPONENT STYLES ===== */
+
+/* Sticky Action Bar */
+html.dark-mode .sticky-action-bar {
+  background-color: rgba(30, 41, 59, 0.95);
+}
+
+/* More Info Container */
+html.dark-mode .more-info-container {
+  border-color: var(--border-color);
+}
+
+html.dark-mode .more-info-container summary {
+  color: var(--text-primary);
+}
+
+/* Footer Styles */
+html.dark-mode .modern-footer {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .footer-wave .shape-fill {
+  fill: var(--card-background);
+}
+
+html.dark-mode .footer-wave .shape-fill:nth-child(2) {
+  fill: var(--background);
+}
+
+html.dark-mode .footer-wave .shape-fill:nth-child(3) {
+  fill: var(--border-color);
+}
+
+html.dark-mode .social-link {
+  color: var(--text-secondary);
+}
+
+html.dark-mode .social-link:hover {
+  color: var(--primary);
+}
+
+html.dark-mode .footer-credit {
+  color: var(--text-secondary);
+}
+
+html.dark-mode .footer-credit a {
+  color: var(--primary);
+}
+
+html.dark-mode .footer-credit a:hover {
+  color: var(--accent);
+}
+
+/* Weight Controls */
+html.dark-mode .weight-control-button {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .weight-plus,
+html.dark-mode .weight-minus {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .weight-plus:hover,
+html.dark-mode .weight-minus:hover {
+  background-color: var(--gray-300);
+}
+
+html.dark-mode .weight-display {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .weight-color-0,
+html.dark-mode .weight-color-1,
+html.dark-mode .weight-color-2,
+html.dark-mode .weight-color-3,
+html.dark-mode .weight-color-4,
+html.dark-mode .weight-color-5,
+html.dark-mode .weight-color-6 {
+  background-color: var(--card-background);
+}
+
+/* Gallery Item Buttons */
+html.dark-mode .favorite-button,
+html.dark-mode .quadrant-flip-button {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .favorite-button i,
+html.dark-mode .quadrant-flip-button i {
+  color: var(--text-secondary);
+}
+
+html.dark-mode .favorite-button:hover,
+html.dark-mode .quadrant-flip-button:hover {
+  background-color: var(--gray-300);
+}
+
+html.dark-mode .quadrant-flip-button {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .weight-control-button {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .weight-plus,
+html.dark-mode .weight-minus {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .weight-plus:hover,
+html.dark-mode .weight-minus:hover {
+  background-color: var(--gray-300);
+}
+
+html.dark-mode .weight-plus:active,
+html.dark-mode .weight-minus:active {
+  background-color: var(--gray-400);
+}
+
+html.dark-mode .weight-display {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .weight-minus:active {
+  background-color: var(--gray-400);
+}
+
+html.dark-mode .weight-color-0 {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .weight-color-1 {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .weight-color-2 {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .weight-color-3 {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .weight-color-4 {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .weight-color-5 {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .weight-color-6 {
+  background-color: var(--card-background);
+}
+
+/* Banners */
+html.dark-mode .no-favorites-banner {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .no-selected-banner {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+/* Filter Divider */
+html.dark-mode .filter-divider-label {
+  color: var(--text-secondary);
+}
+
+/* Link Button */
+html.dark-mode .favorite-button:hover,
+html.dark-mode .quadrant-flip-button:hover {
+  background-color: var(--gray-300);
+}
+
+html.dark-mode .quadrant-flip-button {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .link-button {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .link-button:hover {
+  background-color: var(--gray-300);
+}
+
+html.dark-mode .no-selected-banner {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+/* Gallery Item Highlight */
+html.dark-mode .gallery-item.highlight-item {
+  border-color: var(--neon-pink);
+}
+
+/* Model Selector */
+html.dark-mode .model-dropdown {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .model-option {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .model-option:hover {
+  background-color: var(--gray-300);
+}
+
+html.dark-mode .model-option.active {
+  background-color: rgba(var(--neon-pink-rgb), 0.2);
+}
+
+/* Favorites Tools */
+html.dark-mode .favorites-tools-buttons {
+  background-color: var(--card-background);
+}
+
+html.dark-mode .favorites-tools .action-button {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .favorites-tools .action-button:hover {
+  background-color: var(--gray-300);
+}
+
+html.dark-mode .favorites-tools .action-button i {
+  color: var(--text-secondary);
+}
+
+html.dark-mode .favorites-tools .action-button:hover i {
+  color: var(--text-primary);
+}
+
+html.dark-mode .favorites-tools .action-button:hover i {
+  color: var(--text-primary);
+}
+
+/* Notifications */
+html.dark-mode .info-notification {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .warning-notification {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .error-notification {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+/* Menu Icons */
+html.dark-mode .menu-icon-style {
+  color: var(--text-secondary);
+}
+
+html.dark-mode .menu-icon-style:hover {
+  color: var(--text-primary);
+}
+
+html.dark-mode .action-button:hover {
+  background-color: var(--gray-300);
+}
+
+/* Model Selector Text */
+html.dark-mode .current-model span, html.dark-mode .model-option span {
+  color: var(--text-primary);
+}
+
+html.dark-mode .current-model i, html.dark-mode .model-option i {
+  color: var(--text-secondary);
+}
+
+/* Favorites Tools Header */
+html.dark-mode .favorites-tools-header {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .favorites-tools-header i.fa-star {
+  color: var(--neon-yellow);
+}
+
+html.dark-mode .favorites-tools-header h4 {
+  color: var(--text-primary);
+}
+
+/* New Styles Container Overrides */
+html.dark-mode .new-styles-container,
+html.dark-mode .new-styles-container .favorite-button i,
+html.dark-mode .new-styles-container .quadrant-flip-button i,
+html.dark-mode .new-styles-container .link-button i {
+  color: var(--text-secondary);
+}
+
+html.dark-mode .new-styles-container,
+html.dark-mode .new-styles-container .favorite-button i,
+html.dark-mode .new-styles-container .quadrant-flip-button i,
+html.dark-mode .new-styles-container .link-button i {
+  color: var(--text-secondary);
+}
+
+html.dark-mode .favorites-tools-header h4 {
+  color: var(--text-primary);
+} 

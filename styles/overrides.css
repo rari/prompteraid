@@ -1,0 +1,210 @@
+/* Overrides and high-specificity rules for PrompterAid */
+
+/* Viewport and base element overrides for background and border */
+html, body, #root, .container {
+  background-color: var(--background) !important;
+}
+
+html, body {
+  border: none !important;
+  border-top: none !important;
+  box-shadow: none !important;
+}
+
+/* Button state overrides for filled icons and active states */
+.input-group .button-trash.filled i {
+  font-weight: 900; /* Switch to filled */
+  color: var(--neon-pink) !important;
+  animation: pop 0.3s ease-in-out;
+}
+
+/* Clear button active state for two-click behavior */
+.input-group .button-trash.clear-button-active i {
+  font-weight: 900; /* Switch to filled */
+  color: var(--neon-pink) !important;
+}
+
+.input-group .button-clipboard.active i {
+  font-weight: 900; /* Switch to filled */
+  color: var(--neon-purple) !important;
+  animation: pop 0.3s ease-in-out;
+}
+
+/* Theme toggle override - ensure it's not affected by general button colors */
+.input-group .theme-toggle,
+.sticky-action-bar .theme-toggle {
+  color: transparent !important; /* Remove the gray color from the button itself */
+}
+
+/* Override theme transitions for keyboard shortcuts for an instant switch */
+.keyboard-shortcuts,
+.shortcuts-grid,
+.shortcut-item span,
+.keyboard-shortcuts summary {
+  transition: none !important;
+}
+
+/* Theme toggle colors - more specific selectors */
+.theme-toggle.theme-toggle-light .fa-sun,
+.input-group .theme-toggle.theme-toggle-light .fa-sun,
+.sticky-action-bar .theme-toggle.theme-toggle-light .fa-sun {
+  color: #ffd700 !important; /* Yellow sun color */
+  font-size: 1.4rem;
+}
+
+.theme-toggle.theme-toggle-dark .fa-moon,
+.input-group .theme-toggle.theme-toggle-dark .fa-moon,
+.sticky-action-bar .theme-toggle.theme-toggle-dark .fa-moon {
+  color: #007bff !important; /* Blue moon color */
+  font-size: 1.4rem;
+}
+
+/* Fallback colors for when classes aren't applied */
+.theme-toggle .fa-sun {
+  color: #ffd700 !important; /* Yellow sun color */
+  font-size: 1.4rem;
+}
+
+.theme-toggle .fa-moon {
+  color: #007bff !important; /* Blue moon color */
+  font-size: 1.4rem;
+}
+
+/* ===== UTILITIES ===== */
+.hidden {
+  display: none !important;
+}
+
+/* Mobile layout overrides for action buttons */
+@media (max-width: 768px) {
+  .action-buttons-row {
+    width: 100%;
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    margin-top: var(--space-3);
+    order: 2;
+    gap: var(--space-2);
+    margin-left: 0 !important;
+  }
+  
+  .sticky-action-bar .action-buttons-row {
+    width: 100%;
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    margin-top: var(--space-3);
+    order: 2;
+    gap: var(--space-2);
+    margin-left: 0 !important;
+  }
+}
+
+/* More info container overrides for favorites tools */
+.more-info-container:has(#favorites-tools.hidden) {
+  border-color: transparent !important;
+}
+
+.more-info-container:has(#favorites-tools) {
+  background: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.more-info-container summary {
+  color: var(--neon-yellow) !important;
+}
+
+/* Gallery button icon overrides for New Styles and Tutorial sections */
+.new-styles-container .favorite-button i,
+.new-styles-container .quadrant-flip-button i,
+.new-styles-container .link-button i,
+.more-info-container .favorite-button i,
+.more-info-container .quadrant-flip-button i,
+.more-info-container .link-button i {
+  color: var(--neon-yellow) !important;
+}
+
+.new-styles-container .quadrant-flip-button i,
+.more-info-container .quadrant-flip-button i {
+  color: var(--neon-orange) !important;
+}
+
+.new-styles-container .link-button i,
+.more-info-container .link-button i {
+  color: var(--neon-pink) !important;
+}
+
+/* Preserve neon colors for specific elements in New Styles and Tutorial sections */
+.new-styles-container .favorite-button i,
+.new-styles-container .quadrant-flip-button i,
+.new-styles-container .link-button i,
+.new-styles-container .weight-control-button i,
+.new-styles-container summary span i,
+.new-styles-container .close-button i,
+.more-info-container .favorite-button i,
+.more-info-container .quadrant-flip-button i,
+.more-info-container .link-button i,
+.more-info-container .weight-control-button i,
+.more-info-container summary span i,
+.more-info-container .close-button i,
+.new-styles-container .tutorial-icon,
+.more-info-container .tutorial-icon {
+  color: inherit !important;
+}
+
+/* Summary and close button color overrides */
+.new-styles-container summary span,
+.new-styles-container summary span i {
+  color: var(--neon-pink) !important;
+}
+
+.more-info-container summary span,
+.more-info-container summary span i {
+  color: var(--neon-orange) !important;
+}
+
+.new-styles-container .close-button i {
+  color: var(--neon-pink) !important;
+}
+
+.more-info-container .close-button i {
+  color: var(--neon-orange) !important;
+}
+
+/* Model selector color overrides */
+.current-model span, .model-option span {
+  color: var(--neon-blue) !important;
+}
+
+.current-model i, .model-option i {
+  color: var(--neon-blue) !important;
+}
+
+/* Footer link decoration overrides */
+.footer-links-section .social-link,
+.footer-links-section .social-link:active,
+.footer-links-section .social-link:focus,
+.footer-links-section .social-link:hover {
+  text-decoration: none !important;
+}
+
+.footer-credit a,
+.footer-credit a:active,
+.footer-credit a:focus,
+.footer-credit a:hover,
+.footer-legal a,
+.footer-legal a:active,
+.footer-legal a:focus,
+.footer-legal a:hover {
+  text-decoration: none !important;
+}
+
+.footer-links .social-link,
+.footer-links .social-link:active,
+.footer-links .social-link:focus,
+.footer-links .social-link:hover {
+  text-decoration: none !important;
+}
+
+/* (Paste all rules with !important or labeled as override here) */ 
