@@ -1519,6 +1519,7 @@ export default class GalleryView {
       
       // Execute the clear action after a brief delay to show the animation
       setTimeout(() => {
+        console.log('Executing clear handler...');
         handler(); // Execute handler on single click
         
         // Show info notification
