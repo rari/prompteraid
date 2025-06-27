@@ -2243,7 +2243,7 @@ export default class GalleryView {
     const imagesToShow = showAll ? newImages : newImages.slice(0, maxToShow);
 
     // Section header
-    let html = `<div class="new-styles-container">
+    let html = `<div class="new-styles-container${showAll ? ' show-all-images' : ''}">
       <details open>
         <summary>
           <span><i class=\"fa-solid fa-bolt\" style=\"color: var(--neon-pink); margin-right: 0.3em;\"></i>New Styles</span>
@@ -2422,7 +2422,7 @@ export default class GalleryView {
     });
 
     // Section header
-    let html = `<div class="new-styles-container">
+    let html = `<div class="new-styles-container${expanded ? ' show-all-images' : ''}">
       <details${expanded ? ' open' : ''}>
         <summary>
           <span><i class=\"fa-solid fa-crown\" style=\"color: var(--neon-orange); margin-right: 0.3em;\"></i>Styles of the Month</span>
