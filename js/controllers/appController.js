@@ -30,6 +30,7 @@
 export default class AppController {
   constructor() {
     this.currentModel = 'niji-6'; // Default model
+    this.themeToggle = null;
     this.init();
   }
 
@@ -161,9 +162,10 @@ export default class AppController {
           if (searchInput) {
             searchInput.value = sref;
           }
-          // Set searchNumber and trigger search
-          window.galleryController.searchNumber = sref;
-          window.galleryController.performSearch(sref);
+          // Set searchNumber and trigger search (filter out weight syntax)
+          const filteredSref = this.filterSearchInput(sref);
+          window.galleryController.searchNumber = filteredSref;
+          window.galleryController.performSearch(filteredSref);
         };
         setTimeout(trySearch, 800);
       }
@@ -188,9 +190,10 @@ export default class AppController {
         if (searchInput) {
           searchInput.value = searchQ;
         }
-        // Set searchNumber and trigger search
-        window.galleryController.searchNumber = searchQ;
-        window.galleryController.performSearch(searchQ);
+        // Set searchNumber and trigger search (filter out weight syntax)
+        const filteredSearchQ = this.filterSearchInput(searchQ);
+        window.galleryController.searchNumber = filteredSearchQ;
+        window.galleryController.performSearch(filteredSearchQ);
       };
       setTimeout(trySearch, 800);
     }
@@ -579,5 +582,20 @@ export default class AppController {
         newsContainer.classList.add('hidden');
       }
     }
+  }
+
+  /**
+   * Helper function to filter out weight syntax from search input
+   * @param {string} searchInput - The search input string
+   * @returns {string} Filtered search input with weight syntax removed
+   */
+  filterSearchInput(searchInput) {
+    if (!searchInput) return '';
+    
+    return searchInput
+      .replace(/::\d+(?:\.\d+)?/g, '') // Remove :: followed by numbers (including decimals)
+      .replace(/[^0-9\s]/g, '') // Remove any other non-numeric characters except spaces
+      .replace(/\s+/g, ' ') // Normalize multiple spaces to single spaces
+      .trim(); // Remove leading/trailing whitespace
   }
 } 

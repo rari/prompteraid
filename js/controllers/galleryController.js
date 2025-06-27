@@ -972,8 +972,12 @@ export default class GalleryController {
    * Supports multiple IDs separated by spaces (e.g., "1 2 7" will find images matching any of these)
    */
   performSearch(searchInput) {
-    // Filter search input to only allow numbers and spaces
-    const filteredInput = searchInput.replace(/[^0-9\s]/g, '');
+    // Filter search input to remove weight syntax (:: and numbers after it) while preserving main numbers
+    const filteredInput = searchInput
+      .replace(/::\d+(?:\.\d+)?/g, '') // Remove :: followed by numbers (including decimals)
+      .replace(/[^0-9\s]/g, '') // Remove any other non-numeric characters except spaces
+      .replace(/\s+/g, ' ') // Normalize multiple spaces to single spaces
+      .trim(); // Remove leading/trailing whitespace
     
     // Set the search input (use filtered version)
     this.searchNumber = filteredInput;
