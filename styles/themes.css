@@ -13,6 +13,17 @@
     text-shadow: 0 0 5px rgba(167, 66, 245, 0.5) !important;
   }
 
+
+
+/* Ensure the entire viewport is covered */
+:root {
+  background-color: var(--background);
+  --footer-wave-fill: #fff; /* Light theme default */
+}
+body.dark-mode {
+  --footer-wave-fill: #b6aaff; /* Example for dark mode, adjust as needed */
+}
+
   /* Light mode weight color classes */
   html:not(.dark-mode):not(.light-mode) .weight-color-0,
   html:not(.dark-mode):not(.light-mode) .weight-color-1,
@@ -80,41 +91,8 @@
     color: var(--text-primary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .modern-footer {
-    background-color: var(--card-background);
-  }
 
-  html:not(.dark-mode):not(.light-mode) .footer-wave .shape-fill {
-    fill: var(--card-background);
-  }
-
-  html:not(.dark-mode):not(.light-mode) .footer-wave .shape-fill:nth-child(2) {
-    fill: var(--background);
-  }
-
-  html:not(.dark-mode):not(.light-mode) .footer-wave .shape-fill:nth-child(3) {
-    fill: var(--border-color);
-  }
-
-  html:not(.dark-mode):not(.light-mode) .social-link {
-    color: var(--text-secondary);
-  }
-
-  html:not(.dark-mode):not(.light-mode) .social-link:hover {
-    color: var(--primary);
-  }
-
-  html:not(.dark-mode):not(.light-mode) .footer-credit {
-    color: var(--text-secondary);
-  }
-
-  html:not(.dark-mode):not(.light-mode) .footer-credit a {
-    color: var(--primary);
-  }
-
-  html:not(.dark-mode):not(.light-mode) .footer-credit a:hover {
-    color: var(--accent);
-  }
+  
 
   html:not(.dark-mode):not(.light-mode) .weight-control-button {
     background-color: var(--card-background);
@@ -379,7 +357,11 @@ html.dark-mode .social-link {
 }
 
 html.dark-mode .social-link:hover {
-  color: var(--primary);
+  color: var(--text-color);
+}
+
+html.dark-mode .social-link:hover i {
+  color: inherit;
 }
 
 html.dark-mode .footer-credit {

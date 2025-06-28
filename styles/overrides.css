@@ -199,6 +199,7 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
 .footer-links-section .social-link:active,
 .footer-links-section .social-link:focus,
 .footer-links-section .social-link:hover {
+  color: white !important;
   text-decoration: none !important;
 }
 
@@ -206,18 +207,67 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
 .footer-credit a:active,
 .footer-credit a:focus,
 .footer-credit a:hover,
-.footer-legal a,
-.footer-legal a:active,
-.footer-legal a:focus,
-.footer-legal a:hover {
-  text-decoration: none !important;
+.footer-credit a:visited {
+  color: white !important;
+  text-decoration: underline !important;
 }
 
 .footer-links .social-link,
 .footer-links .social-link:active,
 .footer-links .social-link:focus,
 .footer-links .social-link:hover {
+  color: white !important;
   text-decoration: none !important;
+}
+
+/* Footer icon color overrides - ensure icons inherit white color */
+.site-footer .social-link i,
+.site-footer .social-link:visited i,
+.site-footer .social-link:hover i,
+.site-footer .social-link:focus i,
+.site-footer .social-link:active i {
+  color: inherit !important;
+}
+
+.site-footer .footer-credit a i,
+.site-footer .footer-credit a:visited i,
+.site-footer .footer-credit a:hover i,
+.site-footer .footer-credit a:focus i,
+.site-footer .footer-credit a:active i {
+  color: inherit !important;
+}
+
+/* Comprehensive footer link overrides - ensure ALL footer links stay white */
+.site-footer a,
+.site-footer a:visited,
+.site-footer a:hover,
+.site-footer a:focus,
+.site-footer a:active {
+  color: white !important;
+}
+
+/* Specific footer legal link overrides */
+.site-footer .footer-legal a,
+.site-footer .footer-legal a:visited,
+.site-footer .footer-legal a:hover,
+.site-footer .footer-legal a:focus,
+.site-footer .footer-legal a:active {
+  color: white !important;
+  text-decoration: underline !important;
+}
+
+/* Override any theme-based footer link colors */
+html.dark-mode .site-footer a,
+html.dark-mode .site-footer a:visited,
+html.dark-mode .site-footer a:hover,
+html.dark-mode .site-footer a:focus,
+html.dark-mode .site-footer a:active,
+html:not(.dark-mode):not(.light-mode) .site-footer a,
+html:not(.dark-mode):not(.light-mode) .site-footer a:visited,
+html:not(.dark-mode):not(.light-mode) .site-footer a:hover,
+html:not(.dark-mode):not(.light-mode) .site-footer a:focus,
+html:not(.dark-mode):not(.light-mode) .site-footer a:active {
+  color: white !important;
 }
 
 /* Tutorial section icon color overrides */

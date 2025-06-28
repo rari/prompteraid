@@ -1,4 +1,6 @@
-﻿/* Import CSS Design Tokens */
+﻿@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&family=Quicksand:wght@400;500;700&display=swap');
+
+/* Import CSS Design Tokens */
 @import url('./tokens.css');
 @import url('./themes.css');
 @import url('./overrides.css');
@@ -38,11 +40,6 @@
   margin: 0;
   padding: 0;
   transition: var(--transition-theme);
-}
-
-/* Ensure the entire viewport is covered */
-:root {
-  background-color: var(--background);
 }
 
 /* Fix for any potential white gaps */
@@ -1030,6 +1027,8 @@ a:hover {
 
 /* ===== FOOTER ===== */
 .site-footer {
+  position: relative;
+  padding-top: 120px;
   margin-top: var(--space-8);
   padding: var(--space-5) var(--space-4);
   background: transparent;
@@ -1494,7 +1493,7 @@ button:hover i {
 }
 
 .inline-icon {
-  color: var(--neon-blue);
+  color: var(--neon-purple);
   font-size: 0.9em;
 }
 
@@ -1910,32 +1909,25 @@ button:hover i {
 }
 
 .footer-wave {
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
   height: 120px;
   z-index: 1;
 }
-
 .footer-wave svg {
-  position: relative;
   display: block;
-  width: calc(100% + 1.3px);
+  width: 100%;
   height: 120px;
+  position: relative;
 }
 
-.footer-wave .shape-fill {
-  fill: rgba(255, 255, 255, 0.1);
-}
-
-.footer-wave .shape-fill:nth-child(2) {
-  fill: rgba(255, 255, 255, 0.15);
-}
-
-.footer-wave .shape-fill:nth-child(3) {
-  fill: rgba(255, 255, 255, 0.2);
-}
+.footer-wave .shape-fill { fill: rgba(255,255,255,0.1); }
+.footer-wave .shape-fill:nth-child(2) { fill: rgba(255,255,255,0.15); }
+.footer-wave .shape-fill:nth-child(3) { fill: rgba(255,255,255,0.2); }
 
 .footer-content {
   position: relative;
@@ -1961,7 +1953,8 @@ button:hover i {
 .footer-brand {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-8);
+  flex-wrap: wrap;
 }
 
 .footer-logo-container {
@@ -2030,27 +2023,27 @@ button:hover i {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-1);
-  color: white;
-  text-decoration: none;
+  justify-content: center;
   padding: var(--space-3);
-  border-radius: var(--border-radius-lg);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  text-decoration: none;
+  color: white;
   transition: all 0.3s ease;
-  min-width: 80px;
+  width: 80px;
+  height: 80px;
 }
 
 .social-link:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background-color: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .social-link i {
-  font-size: 1.5rem;
+  font-size: 2rem;
   transition: transform 0.3s ease;
 }
 
@@ -2059,9 +2052,10 @@ button:hover i {
 }
 
 .social-label {
-  font-size: var(--font-size-xs);
+  font-size: 0.75rem;
   font-weight: 500;
   opacity: 0.9;
+  margin-top: 0.25rem;
 }
 
 .footer-bottom {
@@ -2861,15 +2855,12 @@ button:hover i {
 }
 
 .site-footer a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  margin: 0 10px;
-  transition: color 0.2s ease;
+  color: var(--text-primary, #fff);
+  transition: color 0.2s;
 }
 
-.site-footer a:hover {
-  color: var(--primary);
-  text-decoration: underline;
+.site-footer a:active {
+  color: var(--text-primary, #fff);
 }
 
 #export-favorites i {
@@ -3496,4 +3487,63 @@ a:hover {
 .footer-links .social-link:focus,
 .footer-links .social-link:hover {
   text-decoration: none !important;
+}
+
+h1, h2, h3, .site-title, .footer-title {
+  font-family: 'Baloo 2', cursive;
+}
+
+body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
+  font-family: 'Quicksand', sans-serif;
+}
+
+.site-footer .social-link {
+  transition: background 0.3s;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  border-radius: 12px;
+  padding: 0.5em 1.2em;
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: inherit;
+}
+.site-footer .social-link:hover,
+.site-footer .social-link:focus {
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.18);
+  color: inherit;
+}
+.site-footer .social-link:visited {
+  border: 1.5px solid rgba(255,255,255,0.18);
+  color: inherit;
+}
+.site-footer .social-link i {
+  transition: none;
+  color: inherit;
+}
+
+.site-footer .footer-credit a,
+.site-footer .footer-credit a:visited,
+.site-footer .footer-credit a:hover,
+.site-footer .footer-credit a:focus,
+.site-footer .footer-credit a:active {
+  color: var(--text-primary, #fff) !important;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.site-footer .footer-credit a i,
+.site-footer .footer-credit a:visited i,
+.site-footer .footer-credit a:hover i,
+.site-footer .footer-credit a:focus i,
+.site-footer .footer-credit a:active i {
+  color: inherit !important;
+}
+
+.site-footer .social-link i,
+.site-footer .social-link:visited i,
+.site-footer .social-link:hover i,
+.site-footer .social-link:focus i,
+.site-footer .social-link:active i {
+  color: inherit !important;
 }
