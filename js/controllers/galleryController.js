@@ -981,12 +981,12 @@ export default class GalleryController {
    * Supports multiple IDs separated by spaces (e.g., "1 2 7" will find images matching any of these)
    */
   performSearch(searchInput) {
-    // Filter search input to remove model tags, weight syntax, --ar ratios, and --iw/--cw/--sw numbers
+    // Filter search input to remove model tags, weight syntax, and non-numeric characters
     const filteredInput = searchInput
       .replace(/--niji\s*6/gi, '') // Remove --niji 6 (case-insensitive, optional space)
       .replace(/--v\s*7/gi, '')    // Remove --v 7 (case-insensitive, optional space)
-      .replace(/--ar\s*\d{1,2}:\d{1,2}/gi, '') // Remove --ar ratios like --ar 16:9
-      .replace(/--(iw|cw|sw)\s*-?\d+(?:\.\d+)?/gi, '') // Remove --iw, --cw, --sw followed by numbers (including negative and decimals)
+      .replace(/--ar\s*-?\d+(?::\d+)?/gi, '') // Remove --ar ratios like --ar 16:9 or --ar -1:2
+      .replace(/--(s|iw|cw|sw)\s*-?\d+(?:\.\d+)?/gi, '') // Remove --s, --iw, --cw, --sw followed by numbers (including negative and decimals)
       .replace(/::\d+(?:\.\d+)?/g, '') // Remove :: followed by numbers (including decimals)
       .replace(/[^0-9\s]/g, '') // Remove any other non-numeric characters except spaces
       .replace(/\s+/g, ' ') // Normalize multiple spaces to single spaces
