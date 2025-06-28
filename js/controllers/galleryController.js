@@ -997,15 +997,25 @@ export default class GalleryController {
     
     // If the search is empty, clear it
     if (!filteredInput || filteredInput.trim() === '') {
+      // Show error notification if the original input was not empty (user entered only text)
+      if (searchInput && searchInput.trim() !== '') {
+        this.view.showErrorNotification('Please enter one or more style reference numbers.');
+        // Clear the search input and keep the box open and focused
+        const searchInputBox = document.getElementById('search-input');
+        if (searchInputBox) {
+          searchInputBox.value = '';
+          searchInputBox.focus();
+        }
+        // Do not close the search box
+        return;
+      }
       this.clearSearchState();
       this.renderGallery();
-      
       // Update search button state
       const searchButton = document.getElementById('search-button');
       const stickySearchButton = document.getElementById('sticky-search-button');
       if (searchButton) searchButton.classList.remove('active');
       if (stickySearchButton) stickySearchButton.classList.remove('active');
-      
       return;
     }
     
