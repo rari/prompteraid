@@ -893,6 +893,8 @@ export default class GalleryController {
         case 's':
           // Toggle search - call the same handler as the button
           this.toggleSearch();
+          e.preventDefault();
+          e.stopPropagation();
           break;
           
         case 'a':
@@ -922,6 +924,10 @@ export default class GalleryController {
     if (searchButton) searchButton.classList.remove('active');
     if (stickySearchButton) stickySearchButton.classList.remove('active');
     if (searchInput) searchInput.value = '';
+    
+    // Update search button icons to show inactive state
+    this.view.updateSearchButtonIcons(false);
+    
     this.view.hideFilterDivider('search');
   }
 
@@ -948,6 +954,9 @@ export default class GalleryController {
       stickySearchButton.classList.toggle('active', !isNowHidden);
     }
 
+    // Update search button icons based on active state
+    this.view.updateSearchButtonIcons(!isNowHidden);
+
     // If search is now visible, focus the input
     if (!isNowHidden && searchInput) {
       searchInput.focus();
@@ -972,8 +981,10 @@ export default class GalleryController {
    * Supports multiple IDs separated by spaces (e.g., "1 2 7" will find images matching any of these)
    */
   performSearch(searchInput) {
-    // Filter search input to remove weight syntax (:: and numbers after it) while preserving main numbers
+    // Filter search input to remove model tags, weight syntax, and non-numeric characters
     const filteredInput = searchInput
+      .replace(/--niji\s*6/gi, '') // Remove --niji 6 (case-insensitive, optional space)
+      .replace(/--v\s*7/gi, '')    // Remove --v 7 (case-insensitive, optional space)
       .replace(/::\d+(?:\.\d+)?/g, '') // Remove :: followed by numbers (including decimals)
       .replace(/[^0-9\s]/g, '') // Remove any other non-numeric characters except spaces
       .replace(/\s+/g, ' ') // Normalize multiple spaces to single spaces
@@ -1082,57 +1093,17 @@ export default class GalleryController {
     if (searchButton) searchButton.classList.add('active');
     if (stickySearchButton) stickySearchButton.classList.add('active');
     
+    // Update search button icons to show active state
+    this.view.updateSearchButtonIcons(true);
+    
     // Show notification about search results
     const searchDisplay = searchTerms.length > 1 ? `"${searchTerms.join('", "')}"` : `"${filteredInput}"`;
     this.view.showInfoNotification(`Found ${matchingImages.length} image(s) matching ${searchDisplay}`);
   }
 
   /**
-   * Exports favorites to a JSON file for download
+   * Add a direct document-level handler for favorite button clicks
    */
-  exportFavorites() {
-    try {
-      this.model.exportFavorites();
-    } catch (error) {
-      console.error('Export failed:', error);
-      this.view.showErrorNotification('Failed to export favorites.');
-    }
-  }
-
-  /**
-   * Imports favorites from a JSON file
-   * @param {File} file - The JSON file to import
-   */
-  importFavorites(file) {
-    if (!file) {
-      this.view.showErrorNotification('No file selected for import.');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const fileContent = event.target.result;
-        const success = this.model.importFavorites(fileContent);
-        
-        if (success) {
-          this.view.showInfoNotification('Favorites imported successfully!');
-          this.renderGallery(); // Re-render to show newly imported favorites
-        }
-        // Error case is handled by the event listener in init()
-      } catch (e) {
-        this.view.showErrorNotification(e.message || 'An unexpected error occurred while importing favorites.');
-      }
-    };
-    
-    reader.onerror = () => {
-      this.view.showErrorNotification('Failed to read the selected file.');
-    };
-    
-    reader.readAsText(file);
-  }
-
-  // Add a direct document-level handler for favorite button clicks
   addDirectFavoriteHandler() {
     document.addEventListener('click', (event) => {
       // Check if the click was directly on a favorite button or its icon
@@ -1140,14 +1111,9 @@ export default class GalleryController {
       if (favoriteButton) {
         // Get the image ID from the button's data attribute
         const imageId = favoriteButton.dataset.id;
-        
         if (imageId) {
-          console.log('Direct document handler: favorite button clicked for image', imageId);
-          event.stopPropagation();
-          
           // Toggle the favorite state
           const isFavorite = this.model.toggleImageFavorite(imageId);
-          
           // Update all buttons with this ID
           document.querySelectorAll(`.favorite-button[data-id="${imageId}"]`).forEach(button => {
             button.innerHTML = isFavorite 
@@ -1155,7 +1121,6 @@ export default class GalleryController {
               : '<i class="far fa-star"></i>';
             button.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
           });
-            
           // If we're in favorites-only mode, re-render the gallery
           if (this.model.showOnlyFavorites) {
             this.renderGallery();
@@ -1166,33 +1131,22 @@ export default class GalleryController {
   }
 
   /**
-   * Randomly selects an unselected image
-   * This method is called by the keyboard shortcut 'L'
+   * Selects a random unselected image and adds it to the selection
    */
   randomizeSelection() {
-    // Get all unselected images
+    // Get all images that are not currently selected
     const unselectedImages = this.model.images.filter(img => !this.model.selectedImages.has(img.id));
-    
     if (unselectedImages.length === 0) {
-      this.view.showInfoNotification('All images are already selected.');
+      this.view.showWarningNotification('All images are already selected!');
       return;
     }
-    
-    // Randomly select one unselected image
+    // Pick a random image
     const randomIndex = Math.floor(Math.random() * unselectedImages.length);
     const randomImage = unselectedImages[randomIndex];
-    
-    // Add the randomly selected image to selections
-    this.model.toggleImageSelection(randomImage.id);
-    
-    // Extract just the numeric sref code for the notification
-    const srefCode = randomImage.sref;
-    
-    // Show notification with clean sref code
-    this.view.showInfoNotification(`Randomly selected: ${srefCode}`);
-    
-    // Re-render gallery and update prompt
+    // Add to selection
+    this.model.selectedImages.set(randomImage.id, 0); // 0 = default color index/weight
     this.renderGallery();
     this.updatePrompt();
+    this.view.showInfoNotification('Random image selected!');
   }
-} 
+}
