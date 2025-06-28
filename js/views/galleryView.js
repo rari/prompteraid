@@ -1328,30 +1328,7 @@ export default class GalleryView {
   }
 
   showNoSelectedWarning() {
-    // Create or show a warning message at the top of the gallery
-    let warning = document.getElementById('no-selected-warning');
-    if (!warning) {
-      warning = document.createElement('div');
-      warning.id = 'no-selected-warning';
-      warning.className = 'warning-message';
-      warning.textContent = 'No images are selected.';
-      warning.style.position = 'fixed';
-      warning.style.top = '24px';
-      warning.style.left = '50%';
-      warning.style.transform = 'translateX(-50%)';
-      warning.style.background = '#fffbe6';
-      warning.style.color = '#b26a00';
-      warning.style.padding = '12px 24px';
-      warning.style.border = '1px solid #ffe58f';
-      warning.style.borderRadius = '8px';
-      warning.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
-      warning.style.zIndex = '2000';
-      document.body.appendChild(warning);
-    }
-    warning.style.display = 'block';
-    setTimeout(() => {
-      warning.style.display = 'none';
-    }, 2000);
+    this.showWarningNotification('No images are selected.');
   }
 
   showNoFavoritesWarning() {
@@ -1801,7 +1778,32 @@ export default class GalleryView {
       searchButton.addEventListener('click', handler);
     }
   }
-  
+
+  /**
+   * Updates the search button icons based on active state
+   * @param {boolean} isActive - Whether the search is currently active
+   */
+  updateSearchButtonIcons(isActive) {
+    const searchButton = document.getElementById('search-button');
+    const stickySearchButton = document.getElementById('sticky-search-button');
+    
+    // Update main search button
+    if (searchButton) {
+      const icon = searchButton.querySelector('i');
+      if (icon) {
+        icon.className = isActive ? 'fa-solid fa-magnifying-glass-plus' : 'fa-solid fa-magnifying-glass';
+      }
+    }
+    
+    // Update sticky search button
+    if (stickySearchButton) {
+      const stickyIcon = stickySearchButton.querySelector('i');
+      if (stickyIcon) {
+        stickyIcon.className = isActive ? 'fa-solid fa-magnifying-glass-plus' : 'fa-solid fa-magnifying-glass';
+      }
+    }
+  }
+
   bindSearchInput(handler) {
     const searchInput = document.getElementById('search-input');
     const searchContainer = document.querySelector('.search-container');
