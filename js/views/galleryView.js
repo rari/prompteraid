@@ -473,6 +473,17 @@ export default class GalleryView {
         const event = new Event('input', { bubbles: true });
         mainInput.dispatchEvent(event);
       });
+      
+      // Add Enter key handler to the sticky prompt input
+      stickyInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault(); // Prevent default form submission behavior
+          // Blur (deselect) the input field
+          stickyInput.blur();
+          // Also focus on document body to ensure no element has focus
+          document.body.focus();
+        }
+      });
     }
     
     // Handle scroll events for sticky header visibility
