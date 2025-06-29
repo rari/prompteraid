@@ -1,6 +1,19 @@
-/* Overrides and high-specificity rules for PrompterAid */
+/* ===== PROMPTERAID OVERRIDES CSS ===== */
+/*
+ * Overrides and High-Specificity Rules
+ * 
+ * Purpose: This file contains CSS rules that need to override other styles
+ * due to specificity conflicts or to ensure consistent behavior across themes.
+ * 
+ * Usage:
+ * - Use !important sparingly and only when necessary
+ * - Target specific components that need override behavior
+ * - Maintain visual consistency across different themes
+ * - Fix theme-specific styling issues
+ */
 
-/* Viewport and base element overrides for background and border */
+/* ===== BASE ELEMENT OVERRIDES ===== */
+/* Viewport and base element overrides for background and border consistency */
 html, body, #root, .container {
   background-color: var(--background) !important;
 }
@@ -11,7 +24,8 @@ html, body {
   box-shadow: none !important;
 }
 
-/* Main gallery icon color overrides - ensure these take precedence */
+/* ===== BUTTON ICON COLOR OVERRIDES ===== */
+/* Main gallery icon color overrides - ensure semantic colors take precedence */
 .input-group .button-trash i { color: var(--neon-pink) !important; }    /* Destructive actions */
 .input-group .button-refresh i { color: var(--neon-orange) !important; } /* State changes */
 .input-group .button-star i { color: var(--neon-yellow) !important; }   /* Favorites/bookmarking */
@@ -20,16 +34,17 @@ html, body {
 .input-group .button-clipboard i { color: var(--neon-purple) !important; } /* Clipboard operations */
 .input-group .button-search i { color: var(--neon-teal) !important; }   /* Search operations */
 
-/* Main gallery item button icon color overrides - ensure these take precedence */
+/* Gallery item overlay button icon color overrides - ensure consistent colors */
 .favorite-button i { color: var(--neon-yellow) !important; }
 .quadrant-flip-button i { color: var(--neon-orange) !important; }
 .link-button i { color: var(--neon-pink) !important; }
 
-/* Dark mode overrides for New Styles button icons - ensure neon colors in dark mode */
+/* Dark mode overrides for New Styles button icons - preserve neon colors */
 html.dark-mode .new-styles-container .favorite-button i { color: var(--neon-yellow) !important; }
 html.dark-mode .new-styles-container .quadrant-flip-button i { color: var(--neon-orange) !important; }
 html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !important; }
 
+/* ===== BUTTON STATE OVERRIDES ===== */
 /* Button state overrides for filled icons and active states */
 .input-group .button-trash.filled i {
   font-weight: 900; /* Switch to filled */
@@ -43,19 +58,21 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   color: var(--neon-pink) !important;
 }
 
+/* Clipboard button active state with filled icon */
 .input-group .button-clipboard.active i {
   font-weight: 900; /* Switch to filled */
   color: var(--neon-purple) !important;
   animation: pop 0.3s ease-in-out;
 }
 
+/* ===== THEME TOGGLE OVERRIDES ===== */
 /* Theme toggle override - ensure it's not affected by general button colors */
 .input-group .theme-toggle,
 .sticky-action-bar .theme-toggle {
   color: transparent !important; /* Remove the gray color from the button itself */
 }
 
-/* Override theme transitions for keyboard shortcuts for an instant switch */
+/* Override theme transitions for keyboard shortcuts for instant switch */
 .keyboard-shortcuts,
 .shortcuts-grid,
 .shortcut-item span,
@@ -63,7 +80,7 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   transition: none !important;
 }
 
-/* Theme toggle colors - more specific selectors */
+/* Theme toggle colors - more specific selectors for consistent theming */
 .theme-toggle.theme-toggle-light .fa-sun,
 .input-group .theme-toggle.theme-toggle-light .fa-sun,
 .sticky-action-bar .theme-toggle.theme-toggle-light .fa-sun {
@@ -89,12 +106,14 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   font-size: 1.4rem;
 }
 
-/* ===== UTILITIES ===== */
+/* ===== UTILITY OVERRIDES ===== */
+/* Hide utility class with high specificity */
 .hidden {
   display: none !important;
 }
 
-/* Mobile layout overrides for action buttons */
+/* ===== MOBILE LAYOUT OVERRIDES ===== */
+/* Mobile layout overrides for action buttons - ensure proper centering */
 @media (max-width: 768px) {
   .action-buttons-row {
     width: 100%;
@@ -119,7 +138,8 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   }
 }
 
-/* More info container overrides for favorites tools */
+/* ===== INFO CONTAINER OVERRIDES ===== */
+/* More info container overrides for favorites tools - remove styling when hidden */
 .more-info-container:has(#favorites-tools.hidden) {
   border-color: transparent !important;
 }
@@ -134,6 +154,7 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   color: var(--neon-yellow) !important;
 }
 
+/* ===== GALLERY BUTTON OVERRIDES ===== */
 /* Gallery button icon overrides for New Styles and Tutorial sections */
 .new-styles-container .favorite-button i,
 .new-styles-container .quadrant-flip-button i,
@@ -166,7 +187,8 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   color: inherit !important;
 }
 
-/* Summary and close button color overrides */
+/* ===== SUMMARY AND CLOSE BUTTON OVERRIDES ===== */
+/* Summary and close button color overrides for consistent theming */
 .new-styles-container summary span,
 .new-styles-container summary span i {
   color: var(--neon-pink) !important;
@@ -185,7 +207,8 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   color: var(--neon-orange) !important;
 }
 
-/* Model selector color overrides */
+/* ===== MODEL SELECTOR OVERRIDES ===== */
+/* Model selector color overrides for consistent blue theming */
 .current-model span, .model-option span {
   color: var(--neon-blue) !important;
 }
@@ -194,7 +217,8 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   color: var(--neon-blue) !important;
 }
 
-/* Footer link decoration overrides */
+/* ===== FOOTER LINK OVERRIDES ===== */
+/* Footer link decoration overrides - ensure consistent white color */
 .footer-links-section .social-link,
 .footer-links-section .social-link:active,
 .footer-links-section .social-link:focus,
@@ -283,6 +307,4 @@ html:not(.dark-mode):not(.light-mode) .site-footer a:active {
 .more-info-container a { color: var(--neon-teal) !important; text-decoration: underline !important; }
 
 /* Tutorial section code color override */
-.more-info-container code { color: var(--neon-pink) !important; background: none !important; }
-
-/* (Paste all rules with !important or labeled as override here) */ 
+.more-info-container code { color: var(--neon-pink) !important; background: none !important; } 

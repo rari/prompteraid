@@ -735,12 +735,27 @@ export default class GalleryController {
     
     // Export favorites
     this.view.bindExportFavoritesButton(() => {
-      this.exportFavorites();
+      this.model.exportFavorites();
     });
     
     // Import favorites
     this.view.bindImportFavoritesButton((file) => {
-      this.importFavorites(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const result = this.model.importFavorites(e.target.result);
+          if (result) {
+            this.view.showInfoNotification('Favorites imported successfully.');
+            this.renderGallery();
+          }
+        } catch (error) {
+          this.view.showErrorNotification(error.message);
+        }
+      };
+      reader.onerror = () => {
+        this.view.showErrorNotification('Failed to read the file.');
+      };
+      reader.readAsText(file);
     });
 
     // Keyboard shortcuts

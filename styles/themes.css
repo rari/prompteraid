@@ -1,10 +1,30 @@
-/* CSS Theme Overrides for PrompterAid */
+/* ===== PROMPTERAID THEMES CSS ===== */
+/*
+ * Theme System Architecture:
+ * 
+ * 1. System Preference (prefers-color-scheme)
+ *    - Automatically applies based on user's OS preference
+ *    - Uses :not(.dark-mode):not(.light-mode) selectors
+ * 
+ * 2. Manual Override Classes
+ *    - .dark-mode: Forces dark theme regardless of system preference
+ *    - .light-mode: Forces light theme regardless of system preference
+ * 
+ * 3. CSS Custom Properties
+ *    - Color variables defined in tokens.css
+ *    - Theme-specific overrides applied here
+ * 
+ * 4. Component-Specific Styling
+ *    - Individual component overrides for each theme
+ *    - Maintains visual consistency across themes
+ */
 
 /* ===== SYSTEM PREFERENCE (prefers-color-scheme) ===== */
 /* These styles apply by default based on user's system preference */
 
 /* Light mode (default for prefers-color-scheme: light) */
 @media (prefers-color-scheme: light) {
+  /* Weight display styling for light mode system preference */
   html:not(.dark-mode):not(.light-mode) .weight-display {
     background-color: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -13,9 +33,7 @@
     text-shadow: 0 0 5px rgba(167, 66, 245, 0.5) !important;
   }
 
-
-
-/* Ensure the entire viewport is covered */
+/* Ensure the entire viewport is covered with theme colors */
 :root {
   background-color: var(--background);
   --footer-wave-fill: #fff; /* Light theme default */
@@ -24,7 +42,7 @@ body.dark-mode {
   --footer-wave-fill: #b6aaff; /* Example for dark mode, adjust as needed */
 }
 
-  /* Light mode weight color classes */
+  /* Light mode weight color classes - all weights use same light styling */
   html:not(.dark-mode):not(.light-mode) .weight-color-0,
   html:not(.dark-mode):not(.light-mode) .weight-color-1,
   html:not(.dark-mode):not(.light-mode) .weight-color-2,
@@ -42,6 +60,7 @@ body.dark-mode {
 
 /* Dark mode (default for prefers-color-scheme: dark) */
 @media (prefers-color-scheme: dark) {
+  /* Dark mode color palette - applied when no manual override is set */
   html:not(.dark-mode):not(.light-mode) {
     /* Neutral palette - Dark mode */
     --background: hsl(210, 30%, 8%);
@@ -50,6 +69,7 @@ body.dark-mode {
     --text-secondary: hsl(210, 20%, 80%);
     --border-color: hsl(210, 20%, 20%);
     
+    /* Gray scale for dark mode */
     --gray-50: hsl(210, 30%, 8%);
     --gray-100: hsl(210, 30%, 12%);
     --gray-200: hsl(210, 30%, 15%);
@@ -61,28 +81,30 @@ body.dark-mode {
     --gray-800: hsl(210, 20%, 80%);
     --gray-900: hsl(210, 20%, 92%);
     
-    /* Shadows for dark mode */
+    /* Enhanced shadows for dark mode depth */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
     
-    /* Gradients for dark mode */
+    /* Gradient definitions for dark mode */
     --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-dark));
     --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-dark));
     --gradient-tropical: linear-gradient(135deg, var(--neon-pink), var(--neon-purple), var(--neon-blue), var(--neon-teal));
     
-    /* Legacy compatibility */
+    /* Legacy compatibility - maintain old variable names */
     --secondary: var(--accent);
     --secondary-light: var(--accent-light);
     --secondary-dark: var(--accent-dark);
   }
 
-  /* Dark mode component styles for system preference */
+  /* ===== DARK MODE COMPONENT OVERRIDES ===== */
+  /* Sticky action bar with dark background and blur */
   html:not(.dark-mode):not(.light-mode) .sticky-action-bar {
     background-color: rgba(30, 41, 59, 0.95);
   }
 
+  /* Info containers with dark borders */
   html:not(.dark-mode):not(.light-mode) .more-info-container {
     border-color: var(--border-color);
   }
@@ -91,9 +113,7 @@ body.dark-mode {
     color: var(--text-primary);
   }
 
-
-  
-
+  /* Weight control buttons with dark styling */
   html:not(.dark-mode):not(.light-mode) .weight-control-button {
     background-color: var(--card-background);
     border-color: var(--border-color);
@@ -110,11 +130,13 @@ body.dark-mode {
     background-color: var(--gray-300);
   }
 
+  /* Weight display with dark background */
   html:not(.dark-mode):not(.light-mode) .weight-display {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
+  /* All weight color classes with dark background */
   html:not(.dark-mode):not(.light-mode) .weight-color-0,
   html:not(.dark-mode):not(.light-mode) .weight-color-1,
   html:not(.dark-mode):not(.light-mode) .weight-color-2,
@@ -125,6 +147,7 @@ body.dark-mode {
     background-color: var(--card-background);
   }
 
+  /* Gallery overlay buttons with dark styling */
   html:not(.dark-mode):not(.light-mode) .favorite-button,
   html:not(.dark-mode):not(.light-mode) .quadrant-flip-button {
     background-color: var(--card-background);
@@ -141,6 +164,7 @@ body.dark-mode {
     background-color: var(--gray-300);
   }
 
+  /* Link buttons with dark styling */
   html:not(.dark-mode):not(.light-mode) .link-button {
     background-color: var(--card-background);
     border-color: var(--border-color);
@@ -150,6 +174,7 @@ body.dark-mode {
     background-color: var(--gray-300);
   }
 
+  /* Model selector dropdown with dark styling */
   html:not(.dark-mode):not(.light-mode) .model-dropdown {
     background-color: var(--card-background);
     border-color: var(--border-color);
@@ -168,6 +193,7 @@ body.dark-mode {
     color: white;
   }
 
+  /* Favorites tools with dark styling */
   html:not(.dark-mode):not(.light-mode) .favorites-tools-buttons {
     background-color: var(--card-background);
   }
@@ -189,6 +215,7 @@ body.dark-mode {
     color: var(--text-primary);
   }
 
+  /* Notification styling for dark mode */
   html:not(.dark-mode):not(.light-mode) .info-notification {
     background-color: var(--card-background);
     border-color: var(--border-color);
