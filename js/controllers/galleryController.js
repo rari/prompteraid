@@ -998,16 +998,26 @@ export default class GalleryController {
    * Supports multiple IDs separated by spaces (e.g., "1 2 7" will find images matching any of these)
    */
   performSearch(searchInput) {
-    // Filter search input to remove model tags, weight syntax, and non-numeric characters
-    const filteredInput = searchInput
-      .replace(/--niji\s*6/gi, '') // Remove --niji 6 (case-insensitive, optional space)
-      .replace(/--v\s*7/gi, '')    // Remove --v 7 (case-insensitive, optional space)
-      .replace(/--ar\s*-?\d+(?::\d+)?/gi, '') // Remove --ar ratios like --ar 16:9 or --ar -1:2
-      .replace(/--(s|iw|cw|sw|weird|chaos)\s*-?\d+(?:\.\d+)?/gi, '') // Remove --s, --iw, --cw, --sw, --weird, --chaos followed by numbers (including negative and decimals)
-      .replace(/::\d+(?:\.\d+)?/g, '') // Remove :: followed by numbers (including decimals)
-      .replace(/[^0-9\s]/g, '') // Remove any other non-numeric characters except spaces
-      .replace(/\s+/g, ' ') // Normalize multiple spaces to single spaces
-      .trim(); // Remove leading/trailing whitespace
+    // Check if --sref is present in the search input
+    const srefMatch = searchInput.match(/--sref\s+([0-9\s]+)/gi);
+    let filteredInput;
+    
+    if (srefMatch) {
+      // If --sref is present, extract only the numbers after it
+      const srefNumbers = srefMatch[0].replace(/--sref\s+/gi, '').trim();
+      filteredInput = srefNumbers;
+    } else {
+      // Otherwise, use the existing filtering logic
+      filteredInput = searchInput
+        .replace(/--niji\s*6/gi, '') // Remove --niji 6 (case-insensitive, optional space)
+        .replace(/--v\s*7/gi, '')    // Remove --v 7 (case-insensitive, optional space)
+        .replace(/--ar\s*-?\d+(?::\d+)?/gi, '') // Remove --ar ratios like --ar 16:9 or --ar -1:2
+        .replace(/--(s|iw|cw|sw|weird|chaos)\s*-?\d+(?:\.\d+)?/gi, '') // Remove --s, --iw, --cw, --sw, --weird, --chaos followed by numbers (including negative and decimals)
+        .replace(/::\d+(?:\.\d+)?/g, '') // Remove :: followed by numbers (including decimals)
+        .replace(/[^0-9\s]/g, '') // Remove any other non-numeric characters except spaces
+        .replace(/\s+/g, ' ') // Normalize multiple spaces to single spaces
+        .trim(); // Remove leading/trailing whitespace
+    }
     
     // Set the search input (use filtered version)
     this.searchNumber = filteredInput;
