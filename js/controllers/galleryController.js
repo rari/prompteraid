@@ -1005,7 +1005,8 @@ export default class GalleryController {
     if (srefMatch) {
       // If --sref is present, extract only the numbers after it
       const srefNumbers = srefMatch[0].replace(/--sref\s+/gi, '').trim();
-      filteredInput = srefNumbers;
+      // Remove weight syntax (:: followed by numbers) from the style reference numbers
+      filteredInput = srefNumbers.replace(/::\d+(?:\.\d+)?/g, '').trim();
     } else {
       // Otherwise, use the existing filtering logic
       filteredInput = searchInput
