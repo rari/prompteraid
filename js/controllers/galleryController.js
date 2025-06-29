@@ -999,7 +999,7 @@ export default class GalleryController {
    */
   performSearch(searchInput) {
     // Check if --sref is present in the search input
-    const srefMatch = searchInput.match(/--sref\s+([0-9\s]+)/gi);
+    const srefMatch = searchInput.match(/--sref\s+([^-]+?)(?=\s*--|$)/gi);
     let filteredInput;
     
     if (srefMatch) {
