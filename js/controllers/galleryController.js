@@ -39,6 +39,8 @@ export default class GalleryController {
     this.view.currentModel = appController.currentModel;
     this.showOnlySelected = false;
     this.searchNumber = null; // Track current search number
+    this.isRandomizing = false;
+    this.randomizeTimeout = null;
     
     this.init();
   }
@@ -1144,8 +1146,16 @@ export default class GalleryController {
 
   /**
    * Selects a random unselected image and adds it to the selection
+   * Debounced/throttled and guarded to prevent double selection
    */
   randomizeSelection() {
+    if (this.isRandomizing) return;
+    this.isRandomizing = true;
+    clearTimeout(this.randomizeTimeout);
+    this.randomizeTimeout = setTimeout(() => {
+      this.isRandomizing = false;
+    }, 400); // 400ms throttle
+
     // Get all images that are not currently selected
     const unselectedImages = this.model.images.filter(img => !this.model.selectedImages.has(img.id));
     if (unselectedImages.length === 0) {
