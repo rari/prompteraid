@@ -1344,7 +1344,8 @@ a:hover {
 
   /* Make in-image buttons always visible on mobile */
   .gallery-item .favorite-button,
-  .gallery-item .quadrant-flip-button {
+  .gallery-item .quadrant-flip-button,
+  .gallery-item .link-button {
     opacity: 0.9;
   }
 
