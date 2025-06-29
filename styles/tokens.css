@@ -1,38 +1,64 @@
-/* CSS Design Tokens for PrompterAid */
+/* ===== PROMPTERAID CSS DESIGN TOKENS ===== */
+/*
+ * Design System Foundation
+ * 
+ * This file contains all CSS custom properties (variables) that define
+ * the visual design system for PrompterAid. These tokens ensure:
+ * 
+ * 1. Consistency across all components
+ * 2. Easy theme switching and customization
+ * 3. Maintainable and scalable design
+ * 4. Semantic color usage for accessibility
+ * 
+ * Usage Guidelines:
+ * - Always use these variables instead of hardcoded values
+ * - Colors have semantic meanings - use them appropriately
+ * - Spacing follows an 8px grid system
+ * - Typography uses relative units for accessibility
+ */
 
 /* ===== CSS VARIABLES ===== */
 :root {
-  /* Color palette - modern, vibrant colors */
+  /* ===== COLOR PALETTE ===== */
+  /* Primary brand colors - used for main actions and branding */
   --primary: hsl(210, 100%, 50%);
   --primary-light: hsl(210, 100%, 65%);
   --primary-dark: hsl(210, 100%, 40%);
   
+  /* Accent colors - used for secondary actions and highlights */
   --accent: hsl(280, 100%, 65%);
   --accent-light: hsl(280, 100%, 75%);
   --accent-dark: hsl(280, 100%, 55%);
   
+  /* Semantic colors - used for specific states and feedback */
   --success: hsl(150, 80%, 45%);
   --warning: hsl(40, 100%, 60%);
   --danger: hsl(0, 80%, 60%);
   
-  /* Neon Tropical palette */
-  --neon-pink: #ff1493;    /* Destructive actions */
-  --neon-purple: #9932cc;  /* State changes */
-  --neon-yellow: #ffd700;  /* Favorites/bookmarking */
-  --neon-orange: #ff7700;  /* Accent/highlight actions */
-  --neon-teal: #00e5ff;    /* View toggles */
-  --neon-blue: #007bff;    /* Clipboard operations */
-  --neon-green: #00ff88;   /* Success/positive actions */
+  /* ===== NEON TROPICAL PALETTE ===== */
+  /* High-contrast neon colors for interactive elements
+   * Each color has a specific semantic meaning for consistent UX */
+  --neon-pink: #ff1493;    /* Destructive actions (delete, clear) */
+  --neon-purple: #9932cc;  /* State changes (copy, clipboard) */
+  --neon-yellow: #ffd700;  /* Favorites/bookmarking (star, save) */
+  --neon-orange: #ff7700;  /* Accent/highlight actions (refresh, flip) */
+  --neon-teal: #00e5ff;    /* View toggles (search, eye) */
+  --neon-blue: #007bff;    /* Clipboard operations (copy, paste) */
+  --neon-green: #00ff88;   /* Success/positive actions (check, confirm) */
+  
+  /* RGB versions for use with opacity/alpha channels */
   --neon-pink-rgb: 255, 26, 117;
   --neon-blue-rgb: 0, 123, 255;
   
-  /* Neutral palette - Light mode */
+  /* ===== NEUTRAL PALETTE ===== */
+  /* Light mode neutral colors - provide contrast and structure */
   --background: hsl(210, 20%, 98%);
   --card-background: hsl(0, 0%, 100%);
   --text-primary: hsl(210, 20%, 15%);
   --text-secondary: hsl(210, 20%, 45%);
   --border-color: hsl(210, 20%, 90%);
   
+  /* Gray scale - 10-step scale for consistent neutral colors */
   --gray-50: hsl(210, 20%, 98%);
   --gray-100: hsl(210, 20%, 95%);
   --gray-200: hsl(210, 20%, 90%);
@@ -44,60 +70,70 @@
   --gray-800: hsl(210, 20%, 25%);
   --gray-900: hsl(210, 20%, 15%);
   
-  /* Typography */
+  /* ===== TYPOGRAPHY ===== */
+  /* Font family stack with fallbacks for cross-platform consistency */
   --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-md: 1rem;
-  --font-size-lg: 1.25rem;
-  --font-size-xl: 1.5rem;
-  --font-size-2xl: 1.875rem;
-  --font-size-3xl: 2.25rem;
-  --font-size-4xl: 2.625rem;
-  --font-size-5xl: 3rem;
   
-  /* Spacing */
+  /* Font size scale - relative units for accessibility */
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-md: 1rem;      /* 16px - base size */
+  --font-size-lg: 1.25rem;   /* 20px */
+  --font-size-xl: 1.5rem;    /* 24px */
+  --font-size-2xl: 1.875rem; /* 30px */
+  --font-size-3xl: 2.25rem;  /* 36px */
+  --font-size-4xl: 2.625rem; /* 42px */
+  --font-size-5xl: 3rem;     /* 48px */
+  
+  /* ===== SPACING ===== */
+  /* 8px grid system for consistent spacing throughout the app */
   --space-1: 0.25rem;  /* 4px */
   --space-2: 0.5rem;   /* 8px */
   --space-3: 0.75rem;  /* 12px */
   --space-4: 1rem;     /* 16px */
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-8: 3rem;
-  --space-10: 4rem;
-  --space-12: 5rem;
+  --space-5: 1.5rem;   /* 24px */
+  --space-6: 2rem;     /* 32px */
+  --space-8: 3rem;     /* 48px */
+  --space-10: 4rem;    /* 64px */
+  --space-12: 5rem;    /* 80px */
   
-  /* Shadows */
+  /* ===== SHADOWS ===== */
+  /* Elevation system for depth and hierarchy */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   
-  /* Borders */
+  /* ===== BORDERS ===== */
+  /* Border radius scale for consistent corner rounding */
   --border-radius: 8px;
-  --border-radius-sm: 0.125rem;
-  --border-radius-md: 0.25rem;
-  --border-radius-lg: 0.5rem;
-  --border-radius-xl: 0.75rem;
-  --border-radius-2xl: 1rem;
-  --border-radius-full: 9999px;
+  --border-radius-sm: 0.125rem;  /* 2px */
+  --border-radius-md: 0.25rem;   /* 4px */
+  --border-radius-lg: 0.5rem;    /* 8px */
+  --border-radius-xl: 0.75rem;   /* 12px */
+  --border-radius-2xl: 1rem;     /* 16px */
+  --border-radius-full: 9999px;  /* Fully rounded */
   
-  /* Transitions */
+  /* ===== TRANSITIONS ===== */
+  /* Animation timing for consistent motion design */
   --transition-fast: all 0.15s ease-in-out;
   --transition-normal: all 0.25s ease-in-out;
   --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-theme: background-color 0.25s ease-in-out, color 0.25s ease-in-out;
   
-  /* Gradients */
+  /* ===== GRADIENTS ===== */
+  /* Predefined gradients for visual interest and branding */
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--accent));
   --gradient-accent: linear-gradient(135deg, var(--accent), var(--primary));
   --gradient-success: linear-gradient(135deg, var(--success), hsl(170, 80%, 45%));
   --gradient-warning: linear-gradient(135deg, var(--warning), hsl(30, 100%, 60%));
   
-  /* Container width */
+  /* ===== LAYOUT ===== */
+  /* Container width for responsive design */
   --container-max-width: 1280px;
   
-  /* Legacy variables for compatibility */
+  /* ===== LEGACY VARIABLES ===== */
+  /* Backward compatibility for existing code */
   --primary-color: var(--primary);
   --secondary-color: var(--accent);
   --accent-color: var(--neon-yellow);
@@ -106,8 +142,9 @@
   --text-color: var(--text-primary);
   --box-shadow: var(--shadow-md);
   
-  /* Z-index Layers */
-  --z-sticky: 90;
-  --z-sticky-content: 91;
-  --z-sticky-buttons: 92;
+  /* ===== Z-INDEX LAYERS ===== */
+  /* Layering system for proper stacking order */
+  --z-sticky: 90;           /* Sticky elements */
+  --z-sticky-content: 91;   /* Sticky content above sticky elements */
+  --z-sticky-buttons: 92;   /* Sticky buttons above content */
 } 

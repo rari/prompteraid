@@ -5,8 +5,7 @@
 @import url('./themes.css');
 @import url('./overrides.css');
 
-/* Main CSS for PrompterAid - Consolidated stylesheet */
-
+/* ===== PROMPTERAID MAIN CSS ===== */
 /*
  * PrompterAid CSS Architecture
  * 
@@ -35,6 +34,7 @@
  */
 
 /* ===== BASE STYLES ===== */
+/* Reset and normalize all elements */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -42,11 +42,12 @@
   transition: var(--transition-theme);
 }
 
-/* Fix for any potential white gaps */
+/* Ensure consistent background color across all containers */
 html, body, #root, .container {
   background-color: var(--background) !important;
 }
 
+/* Global document styles with theme integration */
 html, body {
   border: none !important;
   border-top: none !important;
@@ -65,6 +66,7 @@ html, body {
   background: var(--background);
 }
 
+/* Body element with full viewport height and overflow control */
 body {
   font-family: var(--font-family);
   background-color: var(--background);
@@ -79,6 +81,7 @@ body {
 }
 
 /* ===== ANIMATIONS ===== */
+/* Animation for copy button feedback - creates a glowing effect */
 @keyframes glow-copied-icon {
   0% {
     box-shadow: 0 0 0px 0 #a78bfa;
@@ -106,18 +109,21 @@ body {
   }
 }
 
+/* Gradient animation for dynamic backgrounds */
 @keyframes gradient-shift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
+/* Tropical gradient rotation for visual interest */
 @keyframes tropical-gradient-rotate {
   0% { background-position: 0% 0%; }
   50% { background-position: 100% 100%; }
   100% { background-position: 0% 0%; }
 }
 
+/* Complex gradient animation for chevron elements */
 @keyframes chevron-gradient-shift {
   0% { background-position: 0% 50%; }
   20% { background-position: 100% 50%; }
@@ -127,33 +133,39 @@ body {
   100% { background-position: 0% 50%; }
 }
 
+/* Standard rotation animation */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
+/* Single rotation animation (180 degrees) */
 @keyframes spin-once {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(180deg); }
 }
 
+/* Shake animation for error feedback */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   10%, 30%, 50%, 70%, 90% { transform: translateX(-1px); }
   20%, 40%, 60%, 80% { transform: translateX(1px); }
 }
 
+/* Pop animation for button feedback */
 @keyframes pop {
   0% { transform: scale(1); }
   50% { transform: scale(1.2); }
   100% { transform: scale(1); }
 }
 
+/* Blink animation for attention */
 @keyframes blink {
   0%, 50% { opacity: 1; }
   25%, 75% { opacity: 0.3; }
 }
 
+/* Bounce animation for interactive feedback */
 @keyframes bounce {
   0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
   40%, 43% { transform: translate3d(0, -8px, 0); }
@@ -161,6 +173,7 @@ body {
   90% { transform: translate3d(0, -2px, 0); }
 }
 
+/* Float animation for visual elements */
 @keyframes float-up {
   0% {
     transform: translateY(0) scale(0.2);
@@ -179,6 +192,7 @@ body {
 }
 
 /* ===== LAYOUT ===== */
+/* Main container with responsive max-width */
 .container {
   width: 100%;
   max-width: var(--container-max-width);
@@ -187,12 +201,14 @@ body {
 }
 
 /* ===== TYPOGRAPHY ===== */
+/* Heading hierarchy with consistent spacing and weights */
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
   font-weight: 700;
   margin-bottom: var(--space-4);
 }
 
+/* Main title styling with brand color and gradient animation */
 h1 {
   font-size: var(--font-size-4xl);
   letter-spacing: -0.025em;
@@ -201,10 +217,12 @@ h1 {
   margin: 1rem 0 0.1rem;
 }
 
+/* Paragraph spacing for readability */
 p {
   margin-bottom: var(--space-4);
 }
 
+/* Link styling with theme-aware colors and smooth transitions */
 a {
   color: var(--primary);
   text-decoration: none;
@@ -216,6 +234,7 @@ a:hover {
 }
 
 /* ===== HEADER ===== */
+/* Interactive title container with hover effects */
 .cute-title-container {
   display: flex;
   align-items: center;
@@ -226,6 +245,7 @@ a:hover {
   cursor: pointer;
 }
 
+/* Title link with smooth scale animation on interaction */
 .title-link {
   text-decoration: none;
   display: flex;
@@ -243,6 +263,7 @@ a:hover {
   transform: scale(0.98);
 }
 
+/* Animated gradient title text */
 .cute-title {
   background: var(--gradient-primary);
   background-size: 200% auto;
@@ -253,12 +274,14 @@ a:hover {
   font-weight: 800;
 }
 
+/* Emoji decorations for the title */
 .emoji-prefix, .emoji-suffix {
   display: inline-block;
   font-size: 0.8em;
 }
 
 /* ===== IMAGE COUNT SUBHEADER ===== */
+/* Displays current image count and selection status */
 .image-count-subheader {
   display: flex;
   align-items: baseline; /* Align to baseline */
@@ -279,6 +302,7 @@ a:hover {
   vertical-align: baseline; /* Ensure baseline alignment */
 }
 
+/* Highlighted number display with gradient text */
 .image-count-number {
   color: var(--neon-teal);
   font-weight: 600;
@@ -288,6 +312,7 @@ a:hover {
   color: transparent;
 }
 
+/* Selected count with pink-to-purple gradient */
 .image-count-subheader .selected-count {
   background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple));
   background-clip: text;
@@ -296,6 +321,7 @@ a:hover {
   font-weight: 600;
 }
 
+/* Decorative lines on either side of the subheader */
 .image-count-subheader::before,
 .image-count-subheader::after {
   content: "";
@@ -307,6 +333,7 @@ a:hover {
 }
 
 /* ===== PROMPT CONTAINER ===== */
+/* Main prompt input area with card styling */
 .prompt-container {
   background-color: var(--card-background);
   border-radius: var(--border-radius-lg);
@@ -321,6 +348,7 @@ a:hover {
 }
 
 /* ===== INPUT GROUPS ===== */
+/* Flexbox layout for input fields and action buttons */
 .input-group, .sticky-action-bar .input-group {
   display: flex;
   flex-wrap: nowrap;
@@ -328,6 +356,7 @@ a:hover {
   align-items: center;
 }
 
+/* Button styling within input groups */
 .input-group > button,
 .sticky-action-bar .input-group > button {
   margin: 0;
@@ -348,6 +377,7 @@ a:hover {
 }
 
 /* ===== INPUT FIELD ===== */
+/* Main prompt input with theme-aware styling */
 #prompt-input {
   flex: 1 0 auto;
   min-width: 0;
@@ -366,7 +396,7 @@ a:hover {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Sticky prompt input styling */
+/* Sticky prompt input for mobile/scroll behavior */
 #sticky-prompt-input {
   flex: 1 0 auto;
   min-width: 0;
@@ -416,7 +446,7 @@ a:hover {
 }
 
 /* Button colors - Semantic color coding based on action type
- * Default state uses outlined icons
+ * Each button type has a specific neon color for visual consistency
  */
 .input-group .button-trash i { color: var(--neon-pink); }    /* Destructive actions */
 .input-group .button-refresh i { color: var(--neon-orange); } /* State changes */
@@ -428,34 +458,40 @@ a:hover {
 
 /* Button hover states are removed to prevent color change */
 
-/* Button Animations */
+/* ===== BUTTON ANIMATIONS ===== */
+/* Shake animation for error feedback on trash button */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   10%, 30%, 50%, 70%, 90% { transform: translateX(-1px); }
   20%, 40%, 60%, 80% { transform: translateX(1px); }
 }
 
+/* Continuous rotation for loading states */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
+/* Single rotation for state changes */
 @keyframes spin-once {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(180deg); }
 }
 
+/* Pop animation for successful actions */
 @keyframes pop {
   0% { transform: scale(1); }
   50% { transform: scale(1.2); }
   100% { transform: scale(1); }
 }
 
+/* Blink animation for attention */
 @keyframes blink {
   0%, 50% { opacity: 1; }
   25%, 75% { opacity: 0.3; }
 }
 
+/* Bounce animation for interactive feedback */
 @keyframes bounce {
   0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
   40%, 43% { transform: translate3d(0, -8px, 0); }
@@ -463,7 +499,8 @@ a:hover {
   90% { transform: translate3d(0, -2px, 0); }
 }
 
-/* Button States and Animations */
+/* ===== BUTTON STATES AND ANIMATIONS ===== */
+/* Trash button with outline/filled state switching */
 .input-group .button-trash i { 
   font-family: 'Font Awesome 5 Free';
   font-weight: 400; /* Start with outline */
@@ -486,6 +523,7 @@ a:hover {
   color: var(--neon-pink) !important;
 }
 
+/* Refresh button with spin animation */
 .input-group .button-refresh i {
   font-family: 'Font Awesome 5 Free';
   font-weight: 900; /* Always filled for better spin visibility */
@@ -496,6 +534,7 @@ a:hover {
   animation: spin-once 0.6s ease-in-out;
 }
 
+/* Star button with pop and bounce animations */
 .input-group .button-star i {
   transition: color var(--transition-normal);
 }
@@ -508,6 +547,7 @@ a:hover {
   animation: bounce 0.6s ease-in-out;
 }
 
+/* Eye button for view toggles */
 .input-group .button-eye i {
   transition: color var(--transition-normal);
 }
@@ -516,6 +556,7 @@ a:hover {
   animation: pop 0.3s ease-in-out;
 }
 
+/* Randomize button for random selection */
 .input-group .button-randomize i {
   transition: color var(--transition-normal);
 }
@@ -524,6 +565,7 @@ a:hover {
   animation: pop 0.3s ease-in-out;
 }
 
+/* Clipboard button with outline/filled state switching */
 .input-group .button-clipboard i {
   font-family: 'Font Awesome 5 Free';
   font-weight: 400; /* Start with outline */
@@ -536,6 +578,7 @@ a:hover {
   animation: pop 0.3s ease-in-out;
 }
 
+/* Search button for search functionality */
 .input-group .button-search i {
   transition: color var(--transition-normal);
 }
@@ -544,12 +587,12 @@ a:hover {
   animation: pop 0.3s ease-in-out;
 }
 
-/* Ensure transitions are smooth */
+/* Ensure transitions are smooth for all button icons */
 .input-group button i {
   transition: color 0.2s ease, transform 0.2s ease;
 }
 
-/* Button hover transform */
+/* Button hover transform for interactive feedback */
 .input-group button:hover {
   transform: scale(1.1);
 }
@@ -618,6 +661,7 @@ a:hover {
 }
 
 /* ===== GALLERY ===== */
+/* Responsive image grid using CSS Grid with auto-fill */
 .image-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -625,6 +669,7 @@ a:hover {
   margin-bottom: var(--space-6);
 }
 
+/* Individual gallery item with 4:5 aspect ratio and hover effects */
 .gallery-item {
   position: relative;
   aspect-ratio: 4 / 5;
@@ -642,11 +687,13 @@ a:hover {
   -webkit-touch-callout: none;
 }
 
+/* Hover effect: lift up and enhance shadow */
 .gallery-item:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
 }
 
+/* Overlay pseudo-element for hover effects */
 .gallery-item::before {
   content: "";
   position: absolute;
@@ -673,6 +720,7 @@ a:hover {
   pointer-events: none;
 }
 
+/* Gallery image with cover fit and smooth transitions */
 .gallery-item img {
   width: 100%;
   height: 100%;
@@ -681,6 +729,7 @@ a:hover {
   pointer-events: none;
 }
 
+/* Selection state with animated neon border */
 .gallery-item.selected::before {
   content: "";
   position: absolute;
@@ -698,13 +747,14 @@ a:hover {
   background: transparent;
 }
 
-/* Rotating selection colors */
+/* Rotating selection colors - each color represents a different weight/priority */
 .gallery-item.selected.selected-color-0::before { border-color: var(--neon-pink); }
 .gallery-item.selected.selected-color-1::before { border-color: var(--neon-orange); }
 .gallery-item.selected.selected-color-2::before { border-color: var(--neon-yellow); }
 .gallery-item.selected.selected-color-3::before { border-color: var(--neon-teal); }
 .gallery-item.selected.selected-color-4::before { border-color: var(--neon-blue); }
 
+/* Quadrant image positioning for 4-quadrant view */
 .gallery-item img.quadrant {
   position: absolute;
   width: 200%;
@@ -712,11 +762,13 @@ a:hover {
   transition: transform 0.3s ease;
 }
 
+/* Individual quadrant positions within the 4-quadrant layout */
 .gallery-item img.quadrant-0 { top: 0; left: 0; }
 .gallery-item img.quadrant-1 { top: 0; left: -100%; }
 .gallery-item img.quadrant-2 { top: -100%; left: 0; }
 .gallery-item img.quadrant-3 { top: -100%; left: -100%; }
 
+/* Standard image styling with hover scale effect */
 .gallery-item img {
   width: 100%;
   height: 100%;
@@ -725,15 +777,18 @@ a:hover {
   pointer-events: none;
 }
 
+/* Hover scale effect for images */
 .gallery-item:hover img {
   transform: scale(1.05);
 }
 
+/* Disable transitions for immediate state changes */
 .gallery-item img.no-transition {
   transition: none;
 }
 
-/* Favorite button */
+/* ===== OVERLAY BUTTONS ===== */
+/* Favorite/star button positioned in top-right corner */
 .favorite-button,
 .star-button {
   position: absolute;
@@ -759,11 +814,13 @@ a:hover {
   padding: 0;
 }
 
+/* Show favorite button on gallery item hover */
 .gallery-item:hover .favorite-button,
 .gallery-item:hover .star-button {
   opacity: 1;
 }
 
+/* Favorite button icon styling */
 .favorite-button i,
 .star-button i {
   font-size: 1.2rem;
@@ -774,12 +831,14 @@ a:hover {
   height: 100%;
 }
 
+/* Favorite button hover effects */
 .favorite-button:hover,
 .star-button:hover {
   background-color: rgba(255, 255, 255, 0.9);
   transform: scale(1.1);
 }
 
+/* Favorite button color states */
 .favorite-button {
   color: var(--neon-yellow);
 }
@@ -788,7 +847,7 @@ a:hover {
   color: #e6c200;
 }
 
-/* Quadrant flip button */
+/* Quadrant flip button for cycling through 4-quadrant views */
 .quadrant-flip-button {
   position: absolute;
   top: 3.2rem;
