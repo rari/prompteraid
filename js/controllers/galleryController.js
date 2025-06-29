@@ -1003,7 +1003,7 @@ export default class GalleryController {
       .replace(/--niji\s*6/gi, '') // Remove --niji 6 (case-insensitive, optional space)
       .replace(/--v\s*7/gi, '')    // Remove --v 7 (case-insensitive, optional space)
       .replace(/--ar\s*-?\d+(?::\d+)?/gi, '') // Remove --ar ratios like --ar 16:9 or --ar -1:2
-      .replace(/--(s|iw|cw|sw)\s*-?\d+(?:\.\d+)?/gi, '') // Remove --s, --iw, --cw, --sw followed by numbers (including negative and decimals)
+      .replace(/--(s|iw|cw|sw|weird|chaos)\s*-?\d+(?:\.\d+)?/gi, '') // Remove --s, --iw, --cw, --sw, --weird, --chaos followed by numbers (including negative and decimals)
       .replace(/::\d+(?:\.\d+)?/g, '') // Remove :: followed by numbers (including decimals)
       .replace(/[^0-9\s]/g, '') // Remove any other non-numeric characters except spaces
       .replace(/\s+/g, ' ') // Normalize multiple spaces to single spaces
