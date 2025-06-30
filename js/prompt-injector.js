@@ -53,7 +53,31 @@ generate(){if(!this.words)return;
   // Trigger the input event to integrate with the main application
   input.dispatchEvent(new Event('input', {bubbles: true}));
 }
-togglePanel(){const panel=document.getElementById('prompt-settings-panel');panel.classList.toggle('hidden');document.getElementById('prompt-settings-btn').classList.toggle('active');}
+togglePanel(){
+  const panel = document.getElementById('prompt-settings-panel');
+  const stickyPanel = document.getElementById('sticky-prompt-settings-panel');
+  const stickyActionBar = document.getElementById('sticky-action-bar');
+  
+  panel.classList.toggle('hidden');
+  
+  // Also toggle the sticky panel if it exists
+  if (stickyPanel) {
+    stickyPanel.classList.toggle('hidden');
+  }
+  
+  // Toggle the settings-open class on the sticky action bar
+  if (stickyActionBar) {
+    stickyActionBar.classList.toggle('settings-open');
+  }
+  
+  document.getElementById('prompt-settings-btn').classList.toggle('active');
+  
+  // Update the sticky settings button if it exists
+  const stickySettingsBtn = document.getElementById('sticky-prompt-settings-btn');
+  if (stickySettingsBtn) {
+    stickySettingsBtn.classList.toggle('active');
+  }
+}
 buildLogicalPrompt(parts) {
   // Build a logical, readable prompt structure
   let prompt = '';

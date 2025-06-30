@@ -981,12 +981,13 @@ a:hover {
   z-index: var(--z-sticky);
   transform: translateY(-100%);
   transition: transform var(--transition-normal), var(--transition-theme);
-  overflow: visible;
+  min-height: auto;
 }
 
-/* Sticky wrapper for proper positioning */
-#sticky-action-bar {
-  position: relative;
+/* When settings panel is open, extend the sticky bar */
+.sticky-action-bar.settings-open {
+  min-height: 100vh;
+  background-color: rgba(255, 255, 255, 0.98);
 }
 
 /* Visibility toggle - Controlled by JavaScript scroll handler */
@@ -3853,21 +3854,16 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
 
 /* Sticky prompt settings panel */
 .sticky-prompt-settings-panel {
-  position: absolute;
-  top: calc(100% - var(--space-4));
-  left: var(--space-4);
-  right: var(--space-4);
-  z-index: 1000;
+  position: relative;
+  margin-top: var(--space-4);
   background: var(--card-background);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   padding: var(--space-4);
-  margin-top: var(--space-2);
   box-shadow: var(--shadow-md);
-  max-height: 300px;
+  max-height: 400px;
   overflow-y: auto;
-  max-width: calc(100% - var(--space-8));
-  box-sizing: border-box;
+  z-index: 1000;
 }
 
 .sticky-prompt-settings-panel.hidden {
