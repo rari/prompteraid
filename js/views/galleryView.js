@@ -553,6 +553,19 @@ export default class GalleryView {
     
     document.body.appendChild(stickyWrapper);
 
+    // Initialize sticky toggle button state to match main button
+    const stickyToggleBtn = stickyWrapper.querySelector('#sticky-toggle-preview-button');
+    if (stickyToggleBtn) {
+      const mainPreviewRow = document.querySelector('.prompt-preview-row');
+      if (mainPreviewRow) {
+        const isHidden = mainPreviewRow.classList.contains('hidden');
+        console.log('Sticky toggle initialization:');
+        console.log('- Main preview hidden:', isHidden);
+        console.log('- Setting sticky toggle active to:', !isHidden);
+        stickyToggleBtn.classList.toggle('active', !isHidden);
+      }
+    }
+
     // Sync prompt input value
     const mainInput = document.getElementById('prompt-input');
     const stickyInput = stickyInputGroup.querySelector('#prompt-input');
@@ -643,29 +656,35 @@ export default class GalleryView {
   }
 
   togglePreview() {
-    const mainPreview = document.querySelector('.prompt-preview');
+    const mainPreviewRow = document.querySelector('.prompt-preview-row');
     const stickyPreview = document.querySelector('.sticky-prompt-preview');
     const mainToggle = document.getElementById('toggle-preview-button');
     const stickyToggle = document.getElementById('sticky-toggle-preview-button');
     
-    if (!mainPreview || !stickyPreview || !mainToggle || !stickyToggle) return;
+    if (!mainPreviewRow || !stickyPreview || !mainToggle || !stickyToggle) return;
     
-    const isHidden = mainPreview.classList.contains('hidden');
+    const isHidden = mainPreviewRow.classList.contains('hidden');
+    
+    console.log('togglePreview called:');
+    console.log('- Preview isHidden:', isHidden);
+    console.log('- Main toggle active before:', mainToggle.classList.contains('active'));
+    console.log('- Sticky toggle active before:', stickyToggle.classList.contains('active'));
         
     // Toggle both previews
-    mainPreview.classList.toggle('hidden', !isHidden);
+    mainPreviewRow.classList.toggle('hidden', !isHidden);
     stickyPreview.classList.toggle('hidden', !isHidden);
         
-    // Update both toggle buttons
-    mainToggle.classList.toggle('active', !isHidden);
-    stickyToggle.classList.toggle('active', !isHidden);
+    // Update both toggle buttons - when preview is visible, button should be active
+    const previewIsVisible = !mainPreviewRow.classList.contains('hidden');
+    mainToggle.classList.toggle('active', previewIsVisible);
+    stickyToggle.classList.toggle('active', previewIsVisible);
     
-    // Set both icons to chevron-up when active (open), chevron-down when inactive (closed)
-    const mainIcon = mainToggle.querySelector('i');
-    const stickyIcon = stickyToggle.querySelector('i');
+    console.log('- Preview isVisible:', previewIsVisible);
+    console.log('- Main toggle active after:', mainToggle.classList.contains('active'));
+    console.log('- Sticky toggle active after:', stickyToggle.classList.contains('active'));
     
-    if (mainIcon) mainIcon.className = !isHidden ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
-    if (stickyIcon) stickyIcon.className = !isHidden ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+    // Let CSS handle the icon rotation based on .active class
+    // No need to manually set icon classes
   }
 
   /*
@@ -1806,46 +1825,20 @@ export default class GalleryView {
   }
 
   addTogglePreviewFunctionality() {
-    if (!this.togglePreviewButton || !this.promptPreview) return;
+    const previewRow = document.querySelector('.prompt-preview-row');
+    if (!this.togglePreviewButton || !previewRow) return;
     
-    const isHidden = this.promptPreview.classList.contains('hidden');
+    const isHidden = previewRow.classList.contains('hidden');
+    console.log('addTogglePreviewFunctionality:');
+    console.log('- Preview row hidden:', isHidden);
+    console.log('- Setting main toggle active to:', !isHidden);
     
     this.togglePreviewButton.classList.toggle('active', !isHidden);
-    const icon = this.togglePreviewButton.querySelector('i');
-    if (icon) {
-      // Always use chevron-down, rotation is handled by CSS
-      icon.className = 'fas fa-chevron-down';
-    }
     
     this.togglePreviewButton.addEventListener('click', (e) => {
       e.stopPropagation();
-      
-      const willBeHidden = !this.promptPreview.classList.contains('hidden');
-      this.promptPreview.classList.toggle('hidden', willBeHidden);
-      
-      this.togglePreviewButton.classList.toggle('active', !willBeHidden);
-      
-      // No need to change icon class, CSS handles rotation
-      
-      // Also update any toggle button and preview in the sticky bar
-      const stickyBar = document.querySelector('.sticky-action-bar');
-      if (stickyBar) {
-        const stickyToggleBtn = stickyBar.querySelector('#sticky-toggle-preview-button');
-        const stickyPreview = stickyBar.querySelector('.sticky-prompt-preview');
-        
-        if (stickyToggleBtn) {
-          stickyToggleBtn.classList.toggle('active', !willBeHidden);
-          const stickyIcon = stickyToggleBtn.querySelector('i');
-          if (stickyIcon) {
-            // Always use chevron-down, rotation is handled by CSS
-            stickyIcon.className = 'fas fa-chevron-down';
-          }
-        }
-        
-        if (stickyPreview) {
-          stickyPreview.classList.toggle('hidden', willBeHidden);
-        }
-      }
+      console.log('Main toggle button clicked');
+      this.togglePreview(); // Use the centralized togglePreview function
     });
   }
 
