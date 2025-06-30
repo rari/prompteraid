@@ -158,67 +158,69 @@
 
         <div class="prompt-preview-panel">
           <div class="prompt-preview-row hidden">
-            <div class="prompt-preview" style="flex: 1 1 auto; display: flex; align-items: center;">
-              <p id="final-prompt" style="flex: 1 1 auto;"></p>
-            </div>
-            <div class="prompt-gen-inline-buttons">
-              <button id="generate-prompt-btn" class="action-button prompt-gen" title="Generate random prompt">
-                <i class="fa-solid fa-wand-magic wand-magic-icon"></i>
-                <i class="fa-solid fa-wand-magic-sparkles sparkle-wand-icon"></i>
-              </button>
-              <button id="prompt-settings-btn" class="action-button prompt-settings" title="Prompt generator settings"><i class="fas fa-cog"></i></button>
-            </div>
-          </div>
-          <div id="prompt-settings-panel" class="prompt-settings-panel hidden">
-            <h3>Prompt Generator Settings</h3>
-            <div class="setting-row">
-              <label>Categories to include:</label>
-              <div class="category-checkboxes">
-                <label class="checkbox-label">
-                  <input type="checkbox" id="cat-camera" checked>
-                  <span>Camera</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" id="cat-subject" checked>
-                  <span>Subject</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" id="cat-appearance" checked>
-                  <span>Appearance</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" id="cat-clothing" checked>
-                  <span>Clothing</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" id="cat-pose" checked>
-                  <span>Pose</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" id="cat-emotion" checked>
-                  <span>Emotion</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" id="cat-setting" checked>
-                  <span>Setting</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" id="cat-lighting" checked>
-                  <span>Lighting</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" id="cat-style" checked>
-                  <span>Style</span>
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" id="cat-details" checked>
-                  <span>Details</span>
-                </label>
+            <div class="preview-and-buttons">
+              <div class="prompt-preview" style="flex: 1 1 auto; display: flex; align-items: center;">
+                <p id="final-prompt" style="flex: 1 1 auto;"></p>
+              </div>
+              <div class="prompt-gen-inline-buttons">
+                <button id="generate-prompt-btn" class="action-button prompt-gen" title="Generate random prompt">
+                  <i class="fa-solid fa-wand-magic wand-magic-icon"></i>
+                  <i class="fa-solid fa-wand-magic-sparkles sparkle-wand-icon"></i>
+                </button>
+                <button id="prompt-settings-btn" class="action-button prompt-settings" title="Prompt generator settings"><i class="fas fa-cog"></i></button>
               </div>
             </div>
-            <div class="setting-row">
-              <label for="prompt-suffix">Suffix</label>
-              <input type="text" id="prompt-suffix" placeholder="e.g. --ar 16:9 --s 750">
+            <div id="prompt-settings-panel" class="prompt-settings-panel hidden">
+              <h3>Prompt Generator Settings</h3>
+              <div class="setting-row">
+                <label>Categories to include:</label>
+                <div class="category-checkboxes">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="cat-camera" checked>
+                    <span>Camera</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="cat-subject" checked>
+                    <span>Subject</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="cat-appearance" checked>
+                    <span>Appearance</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="cat-clothing" checked>
+                    <span>Clothing</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="cat-pose" checked>
+                    <span>Pose</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="cat-emotion" checked>
+                    <span>Emotion</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="cat-setting" checked>
+                    <span>Setting</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="cat-lighting" checked>
+                    <span>Lighting</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="cat-style" checked>
+                    <span>Style</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="cat-details" checked>
+                    <span>Details</span>
+                  </label>
+                </div>
+              </div>
+              <div class="setting-row">
+                <label for="prompt-suffix">Suffix</label>
+                <input type="text" id="prompt-suffix" placeholder="e.g. --ar 16:9 --s 750">
+              </div>
             </div>
           </div>
         </div>

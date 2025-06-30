@@ -387,6 +387,10 @@ export default class GalleryView {
     stickyWrapper.id = 'sticky-action-bar';
     stickyWrapper.className = 'sticky-action-bar';
     
+    // Create outer container for all sticky menu content
+    const stickyOuterContainer = document.createElement('div');
+    stickyOuterContainer.className = 'sticky-prompt-container-outer';
+    
     // Clone the input group and its buttons
     const stickyInputGroup = origInputGroup.cloneNode(true);
 
@@ -451,30 +455,45 @@ export default class GalleryView {
     // Ensure the show-selected button exists in sticky menu
     this.ensureStickyShowSelectedButton(stickyInputGroup);
     
-    stickyWrapper.appendChild(stickyInputGroup);
+    // Add input group to outer container
+    stickyOuterContainer.appendChild(stickyInputGroup);
     
     // Create prompt preview for sticky header
     const stickyPreviewContainer = document.createElement('div');
     stickyPreviewContainer.className = 'sticky-prompt-container';
     
+    // Create a row container that matches the main menu structure
+    const stickyPreviewRow = document.createElement('div');
+    stickyPreviewRow.className = 'prompt-preview-row sticky-prompt-preview-row hidden';
+    
+    // Create the preview and buttons container
+    const stickyPreviewAndButtons = document.createElement('div');
+    stickyPreviewAndButtons.className = 'preview-and-buttons';
+    
+    // Create the prompt preview section
     const stickyPreview = document.createElement('div');
-    stickyPreview.id = 'sticky-prompt-preview';
-    stickyPreview.className = 'prompt-preview sticky-prompt-preview hidden';
+    stickyPreview.className = 'prompt-preview';
+    stickyPreview.style.cssText = 'flex: 1 1 auto; display: flex; align-items: center;';
     
     const stickyFinalPrompt = document.createElement('p');
     stickyFinalPrompt.id = 'sticky-final-prompt';
+    stickyFinalPrompt.style.cssText = 'flex: 1 1 auto;';
     
     stickyPreview.appendChild(stickyFinalPrompt);
-    stickyPreviewContainer.appendChild(stickyPreview);
+    stickyPreviewAndButtons.appendChild(stickyPreview);
     
-    // Add prompt injector buttons next to the preview bar (not inside it)
+    // Create the inline buttons container (matching main menu structure)
+    const stickyInlineButtons = document.createElement('div');
+    stickyInlineButtons.className = 'prompt-gen-inline-buttons';
+    
+    // Add prompt injector buttons inside the inline buttons container
     const mainGenerateBtn = document.getElementById('generate-prompt-btn');
     const mainSettingsBtn = document.getElementById('prompt-settings-btn');
     
     if (mainGenerateBtn) {
       const stickyGenerateBtn = mainGenerateBtn.cloneNode(true);
       stickyGenerateBtn.id = 'sticky-generate-prompt-btn';
-      stickyGenerateBtn.className = 'action-button prompt-gen sticky-prompt-btn';
+      stickyGenerateBtn.className = 'action-button prompt-gen';
       
       // Add event listener to delegate to main button
       stickyGenerateBtn.addEventListener('click', (e) => {
@@ -482,13 +501,13 @@ export default class GalleryView {
         mainGenerateBtn.click();
       });
       
-      stickyPreviewContainer.appendChild(stickyGenerateBtn);
+      stickyInlineButtons.appendChild(stickyGenerateBtn);
     }
     
     if (mainSettingsBtn) {
       const stickySettingsBtn = mainSettingsBtn.cloneNode(true);
       stickySettingsBtn.id = 'sticky-prompt-settings-btn';
-      stickySettingsBtn.className = 'action-button prompt-settings sticky-prompt-btn';
+      stickySettingsBtn.className = 'action-button prompt-settings';
       
       // Add event listener to delegate to main button
       stickySettingsBtn.addEventListener('click', (e) => {
@@ -496,12 +515,16 @@ export default class GalleryView {
         mainSettingsBtn.click();
       });
       
-      stickyPreviewContainer.appendChild(stickySettingsBtn);
+      stickyInlineButtons.appendChild(stickySettingsBtn);
     }
     
-    stickyWrapper.appendChild(stickyPreviewContainer);
+    // Add the inline buttons to the preview and buttons container
+    stickyPreviewAndButtons.appendChild(stickyInlineButtons);
     
-    // Create prompt settings panel for sticky header
+    // Add the preview and buttons container to the row
+    stickyPreviewRow.appendChild(stickyPreviewAndButtons);
+    
+    // Create prompt settings panel for sticky header (inside the preview row)
     const mainSettingsPanel = document.getElementById('prompt-settings-panel');
     if (mainSettingsPanel) {
       const stickySettingsPanel = mainSettingsPanel.cloneNode(true);
@@ -516,41 +539,31 @@ export default class GalleryView {
         }
       });
       
-      stickyWrapper.appendChild(stickySettingsPanel);
-      
-      // Sync the sticky settings panel with the main panel
-      const stickySettingsBtn = stickyPreviewContainer.querySelector('#sticky-prompt-settings-btn');
-      if (stickySettingsBtn) {
-        stickySettingsBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          // Toggle both panels
-          mainSettingsPanel.classList.toggle('hidden');
-          stickySettingsPanel.classList.toggle('hidden');
-          
-          // Toggle the settings-open class on the sticky action bar
-          const stickyActionBar = document.getElementById('sticky-action-bar');
-          if (stickyActionBar) {
-            stickyActionBar.classList.toggle('settings-open');
-          }
-          
-          // Update both buttons
-          const mainSettingsBtn = document.getElementById('prompt-settings-btn');
-          if (mainSettingsBtn) {
-            mainSettingsBtn.classList.toggle('active');
-          }
-          stickySettingsBtn.classList.toggle('active');
-          
-          // Update icons
-          const mainIcon = mainSettingsBtn?.querySelector('i');
-          const stickyIcon = stickySettingsBtn.querySelector('i');
-          const isHidden = mainSettingsPanel.classList.contains('hidden');
-          
-          if (mainIcon) mainIcon.className = isHidden ? 'fas fa-cog' : 'fas fa-times';
-          if (stickyIcon) stickyIcon.className = isHidden ? 'fas fa-cog' : 'fas fa-times';
-        });
+      // Update the suffix input ID in the sticky panel
+      const stickySuffixInput = stickySettingsPanel.querySelector('#prompt-suffix');
+      if (stickySuffixInput) {
+        stickySuffixInput.id = 'sticky-prompt-suffix';
+        // Also update the label's for attribute
+        const stickySuffixLabel = stickySettingsPanel.querySelector('label[for="prompt-suffix"]');
+        if (stickySuffixLabel) {
+          stickySuffixLabel.setAttribute('for', 'sticky-prompt-suffix');
+        }
       }
+      
+      // Add the settings panel to the preview row (not the outer container)
+      stickyPreviewRow.appendChild(stickySettingsPanel);
+      
+      // Note: The sticky settings button event listener is handled by the delegation
+      // in the button mapping section above, which calls the main button's click event.
+      // The prompt-injector.js togglePanel() function handles syncing both panels.
     }
     
+    // Add the row to the container
+    stickyPreviewContainer.appendChild(stickyPreviewRow);
+    stickyOuterContainer.appendChild(stickyPreviewContainer);
+    
+    // Add outer container to sticky wrapper
+    stickyWrapper.appendChild(stickyOuterContainer);
     document.body.appendChild(stickyWrapper);
 
     // Initialize sticky toggle button state to match main button
@@ -566,6 +579,59 @@ export default class GalleryView {
       }
     }
 
+    // Initialize sticky settings button state to match main button
+    const stickySettingsBtn = stickyWrapper.querySelector('#sticky-prompt-settings-btn');
+    const mainSettingsBtnForInit = document.getElementById('prompt-settings-btn');
+    if (stickySettingsBtn && mainSettingsBtnForInit) {
+      const isActive = mainSettingsBtnForInit.classList.contains('active');
+      console.log('Sticky settings button initialization:');
+      console.log('- Main settings button active:', isActive);
+      console.log('- Setting sticky settings button active to:', isActive);
+      stickySettingsBtn.classList.toggle('active', isActive);
+    }
+
+    // Initialize sticky settings panel visibility to match main panel
+    const stickySettingsPanel = stickyWrapper.querySelector('#sticky-prompt-settings-panel');
+    const mainSettingsPanelForInit = document.getElementById('prompt-settings-panel');
+    if (stickySettingsPanel && mainSettingsPanelForInit) {
+      const isHidden = mainSettingsPanelForInit.classList.contains('hidden');
+      console.log('Sticky settings panel initialization:');
+      console.log('- Main settings panel hidden:', isHidden);
+      console.log('- Setting sticky settings panel hidden to:', isHidden);
+      stickySettingsPanel.classList.toggle('hidden', isHidden);
+      
+      // Also sync the sticky action bar settings-open class
+      const stickyActionBar = document.getElementById('sticky-action-bar');
+      if (stickyActionBar) {
+        stickyActionBar.classList.toggle('settings-open', !isHidden);
+      }
+    }
+
+    // Sync category checkboxes between main and sticky panels
+    const categoryIds = ['cat-camera', 'cat-subject', 'cat-appearance', 'cat-clothing', 'cat-pose', 'cat-emotion', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
+    categoryIds.forEach(categoryId => {
+      const mainCheckbox = document.getElementById(categoryId);
+      const stickyCheckbox = document.getElementById(`sticky-${categoryId}`);
+      
+      if (mainCheckbox && stickyCheckbox) {
+        // Sync initial state
+        stickyCheckbox.checked = mainCheckbox.checked;
+        
+        // Sync main checkbox changes to sticky
+        mainCheckbox.addEventListener('change', () => {
+          stickyCheckbox.checked = mainCheckbox.checked;
+        });
+        
+        // Sync sticky checkbox changes to main
+        stickyCheckbox.addEventListener('change', () => {
+          mainCheckbox.checked = stickyCheckbox.checked;
+        });
+      }
+    });
+
+    // Sync suffix input between main and sticky panels
+    // Note: This is now handled by bindSuffixInput method in the controller
+    
     // Sync prompt input value
     const mainInput = document.getElementById('prompt-input');
     const stickyInput = stickyInputGroup.querySelector('#prompt-input');
@@ -657,11 +723,11 @@ export default class GalleryView {
 
   togglePreview() {
     const mainPreviewRow = document.querySelector('.prompt-preview-row');
-    const stickyPreview = document.querySelector('.sticky-prompt-preview');
+    const stickyPreviewRow = document.querySelector('.sticky-prompt-preview-row');
     const mainToggle = document.getElementById('toggle-preview-button');
     const stickyToggle = document.getElementById('sticky-toggle-preview-button');
     
-    if (!mainPreviewRow || !stickyPreview || !mainToggle || !stickyToggle) return;
+    if (!mainPreviewRow || !stickyPreviewRow || !mainToggle || !stickyToggle) return;
     
     const isHidden = mainPreviewRow.classList.contains('hidden');
     
@@ -672,7 +738,7 @@ export default class GalleryView {
         
     // Toggle both previews
     mainPreviewRow.classList.toggle('hidden', !isHidden);
-    stickyPreview.classList.toggle('hidden', !isHidden);
+    stickyPreviewRow.classList.toggle('hidden', !isHidden);
         
     // Update both toggle buttons - when preview is visible, button should be active
     const previewIsVisible = !mainPreviewRow.classList.contains('hidden');
@@ -1166,16 +1232,35 @@ export default class GalleryView {
   }
 
   bindSuffixInput(handler) {
-    // Bind the suffix input to update the prompt when it changes
-    const suffixInput = document.getElementById('prompt-suffix');
-    if (suffixInput) {
-      suffixInput.addEventListener('input', () => {
-        handler();
-      });
-      suffixInput.addEventListener('blur', () => {
-        handler();
-      });
+    // Bind both suffix inputs to update the prompt when either changes
+    const mainSuffixInput = document.getElementById('prompt-suffix');
+    const stickySuffixInput = document.getElementById('sticky-prompt-suffix');
+    
+    // Sync initial values
+    if (mainSuffixInput && stickySuffixInput) {
+      stickySuffixInput.value = mainSuffixInput.value;
     }
+    
+    // Create a unified handler that syncs both inputs and calls the provided handler
+    const unifiedHandler = (e) => {
+      const newValue = e.target.value;
+      
+      // Sync both inputs
+      if (mainSuffixInput && stickySuffixInput) {
+        mainSuffixInput.value = stickySuffixInput.value = newValue;
+      }
+      
+      // Call the provided handler with the new value
+      handler(newValue);
+    };
+    
+    // Bind to both inputs
+    [mainSuffixInput, stickySuffixInput].forEach(input => {
+      if (input) {
+        input.addEventListener('input', unifiedHandler);
+        input.addEventListener('blur', unifiedHandler);
+      }
+    });
   }
 
   bindCopyButton(handler) {

@@ -2,7 +2,7 @@
 .prompt-gen,.prompt-settings{background:transparent;border:none;font-size:1.4rem;cursor:pointer;transition:transform .2s ease}
 .prompt-gen:hover{transform:rotate(5deg)}
 .prompt-settings:hover{transform:rotate(10deg)}
-.prompt-settings.active i{color:var(--neon-green)}
+.prompt-settings.active i{color:var(--neon-blue)}
 .prompt-settings-panel{background:var(--card-background);border:1px solid var(--border-color);border-radius:var(--border-radius);padding:1rem;margin-top:1rem;box-shadow:var(--shadow-sm);transition:max-height .3s ease,opacity .3s ease}
 .prompt-settings-panel.hidden{max-height:0;overflow:hidden;opacity:0;padding-top:0;padding-bottom:0;border:none;margin:0}
 .setting-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem}

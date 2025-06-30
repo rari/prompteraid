@@ -125,7 +125,15 @@ class PromptGenerator {
       return;
     }
 
-    const suffix = document.getElementById('prompt-suffix').value.trim();
+    // Get suffix from model if available, otherwise from DOM
+    let suffix = '';
+    if (window.galleryController && window.galleryController.model) {
+      suffix = window.galleryController.model.suffix || '';
+    } else {
+      let suffixInput = document.getElementById('prompt-suffix');
+      if (!suffixInput) suffixInput = document.getElementById('sticky-prompt-suffix');
+      suffix = suffixInput ? suffixInput.value.trim() : '';
+    }
     
     // Pick a random word for each selected category
     const selectedWords = {};

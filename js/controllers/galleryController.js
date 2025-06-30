@@ -569,11 +569,8 @@ export default class GalleryController {
     });
     
     // Suffix input
-    this.view.bindSuffixInput(() => {
-      const suffixInput = document.getElementById('prompt-suffix');
-      if (suffixInput) {
-        this.model.setSuffix(suffixInput.value.trim());
-      }
+    this.view.bindSuffixInput((newValue) => {
+      this.model.setSuffix(newValue.trim());
       this.updatePrompt();
     });
     
