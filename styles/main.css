@@ -609,8 +609,7 @@ a:hover {
 }
 
 /* ===== PROMPT PREVIEW ===== */
-.prompt-preview,
-.sticky-prompt-preview {
+.prompt-preview {
   margin-top: var(--space-2);
   padding: var(--space-2);
   background-color: var(--background);
@@ -628,15 +627,7 @@ a:hover {
   word-break: break-all; /* More aggressive breaking for long strings */
 }
 
-.sticky-prompt-preview {
-  max-width: var(--container-max-width);
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-}
-
-.prompt-preview.hidden,
-.sticky-prompt-preview.hidden {
+.prompt-preview.hidden {
   display: none;
 }
 
@@ -976,7 +967,7 @@ a:hover {
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: var(--space-4);
+  padding: 0;
   box-shadow: var(--shadow-md);
   z-index: var(--z-sticky);
   transform: translateY(-100%);
@@ -984,11 +975,25 @@ a:hover {
   min-height: auto;
 }
 
+/* Outer container for all sticky menu content */
+.sticky-prompt-container-outer {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: var(--space-3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
 /* When settings panel is open, extend the sticky bar */
 .sticky-action-bar.settings-open {
   min-height: auto;
   height: auto;
   background-color: rgba(255, 255, 255, 0.98);
+}
+
+.sticky-action-bar.settings-open .sticky-prompt-container-outer {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 /* Visibility toggle - Controlled by JavaScript scroll handler */
@@ -1000,15 +1005,22 @@ a:hover {
  * Inherits input-group styles for consistency
  */
 .sticky-action-bar .input-group {
-  max-width: var(--container-max-width);
-  margin: 0 auto;
   position: relative;
   z-index: var(--z-sticky-content);
+  width: 100%;
+}
+
+/* Ensure the prompt input in sticky menu fills available width */
+.sticky-action-bar .input-group #sticky-prompt-input {
+  flex: 1;
+  min-width: 0; /* Allow input to shrink */
+  width: 100%;
 }
 
 /* Z-index layering - Ensures buttons remain clickable above backdrop blur */
 .sticky-action-bar .input-group button {
   z-index: var(--z-sticky-buttons);
+  flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 /* ===== KEYBOARD SHORTCUTS ===== */
@@ -1385,7 +1397,7 @@ a:hover {
   .sticky-action-bar .input-group {
     flex-wrap: wrap;
     justify-content: space-between;
-  align-items: center;
+    align-items: center;
   }
   
   .sticky-action-bar #sticky-prompt-input {
@@ -1403,9 +1415,9 @@ a:hover {
   
   .sticky-action-bar .action-buttons-row {
     width: 100%;
-  display: flex;
+    display: flex;
     justify-content: center !important;
-  align-items: center;
+    align-items: center;
     margin-top: var(--space-3);
     order: 2;
     gap: var(--space-2);
@@ -3668,7 +3680,7 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
 }
 
 .wand-magic-icon.active, .sparkle-wand-icon.active {
-  color: #444; /* 50% grey when active */
+  color: var(--neon-purple) !important;
 }
 
 /* Remove the gradient animation for now */
@@ -3721,9 +3733,9 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   background: var(--card-background);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
-  padding: var(--space-4);
-  margin-top: var(--space-3);
+  padding: 0 var(--space-4) var(--space-4) var(--space-4);
   box-shadow: var(--shadow-md);
+  margin-top: 0 !important;
 }
 
 .prompt-settings-panel h3 {
@@ -3873,11 +3885,10 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
 /* Sticky prompt settings panel */
 .sticky-prompt-settings-panel {
   position: relative;
-  margin-top: var(--space-4);
   background: var(--card-background);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
-  padding: var(--space-4);
+  padding: 0 var(--space-4) var(--space-4) var(--space-4);
   box-shadow: var(--shadow-md);
   max-height: 400px;
   overflow-y: auto;
@@ -3885,6 +3896,7 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   max-width: var(--container-max-width);
   margin-left: auto;
   margin-right: auto;
+  margin-top: 0 !important;
 }
 
 .sticky-prompt-settings-panel.hidden {
@@ -3972,45 +3984,11 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   width: 100%;
 }
 
-/* Sticky prompt buttons inside preview bar */
-.sticky-prompt-preview {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--space-2);
-  padding: var(--space-2);
-  flex: 1;
-}
-
-.sticky-prompt-preview #sticky-final-prompt {
-  flex: 1;
-  margin: 0;
-}
-
-/* Sticky prompt buttons positioned next to preview */
-.sticky-prompt-btn {
-  flex-shrink: 0;
-  width: 2.5rem;
-  height: 2.5rem;
-  min-width: 2.5rem;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--background-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  color: var(--text-primary);
-  transition: var(--transition-theme);
-  cursor: pointer;
-}
-
 /* Prompt preview row for main menu */
 .prompt-preview-row {
   display: flex;
-  align-items: center;
-  gap: 1.5rem; /* Increased gap between preview and icons */
+  flex-direction: column;
+  gap: 1.5rem;
   width: 100%;
 }
 
@@ -4023,11 +4001,70 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
 .prompt-preview-row .prompt-gen-inline-buttons {
   display: flex;
   align-items: center;
-  gap: 1rem; /* Increased gap for more separation */
+  gap: 1rem;
   flex-shrink: 0;
-  height: 2.5rem; /* Match button height for vertical centering */
+  height: 2.5rem;
+}
+
+/* Top row containing preview and buttons */
+.prompt-preview-row .preview-and-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
 }
 
 .prompt-preview-panel .prompt-preview-row.hidden {
   display: none;
+}
+
+/* Sticky prompt preview row - matches main menu layout */
+.sticky-prompt-preview-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.sticky-prompt-preview-row .prompt-preview {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+}
+
+.sticky-prompt-preview-row .prompt-gen-inline-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+  height: 2.5rem;
+}
+
+/* Top row containing preview and buttons for sticky */
+.sticky-prompt-preview-row .preview-and-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.sticky-prompt-container .sticky-prompt-preview-row.hidden {
+  display: none;
+}
+
+.sticky-action-bar {
+  padding: 0;
+}
+.sticky-prompt-container-outer {
+  padding: var(--space-3);
+}
+
+.prompt-gen.active .sparkle-wand-icon,
+.prompt-gen.active .fa-wand-magic-sparkles {
+  color: var(--neon-purple) !important;
+}
+
+.prompt-gen:hover .fa-wand-magic-sparkles,
+.prompt-gen.active .fa-wand-magic-sparkles {
+  color: var(--neon-purple) !important;
 }
