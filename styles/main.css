@@ -981,6 +981,7 @@ a:hover {
   z-index: var(--z-sticky);
   transform: translateY(-100%);
   transition: transform var(--transition-normal), var(--transition-theme);
+  overflow: visible;
 }
 
 /* Visibility toggle - Controlled by JavaScript scroll handler */
@@ -3858,8 +3859,10 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   padding: var(--space-4);
   margin-top: var(--space-2);
   box-shadow: var(--shadow-md);
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .sticky-prompt-settings-panel.hidden {
