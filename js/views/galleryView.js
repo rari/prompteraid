@@ -1555,31 +1555,31 @@ export default class GalleryView {
       
       // Apply visual feedback immediately
       applyClearState(this.clearButton);
-      
-      // Also update sticky bar button if present
-      const sticky = document.getElementById('sticky-action-bar');
-      if (sticky) {
-        const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
-        if (stickyClearBtn) {
-          applyClearState(stickyClearBtn);
-        }
-      }
-      
-      // Execute the clear action after a brief delay to show the visual feedback
-      setTimeout(() => {
-        handler(); // Execute handler immediately on first click
         
-        // Reset button state after execution
-        resetButtonState(this.clearButton);
-        
-        // Also reset sticky bar button
+        // Also update sticky bar button if present
+        const sticky = document.getElementById('sticky-action-bar');
         if (sticky) {
           const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
           if (stickyClearBtn) {
-            resetButtonState(stickyClearBtn);
+          applyClearState(stickyClearBtn);
           }
         }
-      }, 300);
+        
+      // Execute the clear action after a brief delay to show the visual feedback
+        setTimeout(() => {
+        handler(); // Execute handler immediately on first click
+        
+        // Reset button state after execution
+          resetButtonState(this.clearButton);
+          
+          // Also reset sticky bar button
+          if (sticky) {
+            const stickyClearBtn = sticky.querySelector('#sticky-clear-button');
+            if (stickyClearBtn) {
+              resetButtonState(stickyClearBtn);
+            }
+          }
+        }, 300);
     });
     
     // Also bind in sticky bar if present
@@ -1771,7 +1771,7 @@ export default class GalleryView {
   }
   
   // Update mode toggle button state
-  updateModeToggle(isDiscordMode) {
+  updateModeToggle(isDiscordMode, showNotification = true) {
     const mainToggle = document.getElementById('mode-toggle');
     if (mainToggle) {
       if (isDiscordMode) {
@@ -1791,9 +1791,11 @@ export default class GalleryView {
       }
     }
     
-    // Show notification about mode change
-    const mode = isDiscordMode ? 'Discord' : 'Website';
-    this.showInfoNotification(`Switched to ${mode} mode`);
+    // Show notification about mode change only if requested
+    if (showNotification) {
+      const mode = isDiscordMode ? 'Discord' : 'Website';
+      this.showInfoNotification(`Switched to ${mode} mode`);
+    }
   }
 
   bindSearchButton(handler) {
@@ -1827,7 +1829,7 @@ export default class GalleryView {
       }
     }
   }
-
+  
   bindSearchInput(handler) {
     const searchInput = document.getElementById('search-input');
     const searchContainer = document.querySelector('.search-container');

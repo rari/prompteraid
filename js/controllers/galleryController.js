@@ -103,6 +103,9 @@ export default class GalleryController {
     
       // Update prompt initially
       this.updatePrompt();
+      
+      // Initialize mode toggle UI to reflect current state
+      this.view.updateModeToggle(this.model.isDiscordMode, false);
     
       // Listen for storage errors
       document.addEventListener('storage-error', (event) => {
@@ -934,13 +937,8 @@ export default class GalleryController {
   updatePrompt() {
     const finalPrompt = this.model.generateFinalPrompt();
     
-    // Only show the prompt preview if there's actual content
-    if (this.model.basePrompt.trim() || this.model.selectedImages.size > 0 || this.model.suffix.trim()) {
-      this.view.updateFinalPrompt(finalPrompt);
-    } else {
-      // Clear the prompt preview if there's no content
-      this.view.updateFinalPrompt('');
-    }
+    // Always show the prompt preview - generateFinalPrompt handles showing model tag and prefix
+    this.view.updateFinalPrompt(finalPrompt);
   }
   
   /**
@@ -1213,4 +1211,4 @@ export default class GalleryController {
     this.updatePrompt();
     this.view.showInfoNotification('Random image selected!');
   }
-}
+} 
