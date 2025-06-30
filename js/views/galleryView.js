@@ -512,8 +512,8 @@ export default class GalleryView {
         }
       });
       
-      // Add the settings panel as a child of the sticky preview
-      stickyPreview.appendChild(stickySettingsPanel);
+      // Add the settings panel as a child of the sticky wrapper
+      stickyWrapper.appendChild(stickySettingsPanel);
       
       // Sync the sticky settings panel with the main panel
       const stickySettingsBtn = stickyPreview.querySelector('#sticky-prompt-settings-btn');
