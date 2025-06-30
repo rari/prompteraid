@@ -76,11 +76,30 @@ export default class GalleryView {
     // Add sticky action bar
     this.addStickyActionBar();
     
-    // Unified scroll handler
+    // Enhanced scroll handler with direction detection
+    this.lastScrollY = 0;
+    this.scrollThreshold = 10; // Minimum scroll distance to trigger direction change
+    this.isScrollingUp = false;
+    this.isScrollingDown = false;
+    this.isInteractingWithSticky = false; // Track if user is interacting with sticky menu
+    this.interactionTimeout = null; // Timeout to reset interaction state
+    
     window.addEventListener('scroll', () => {
+      this.handleScrollDirection();
       this.handleStickyBarVisibility();
       this.handleBackToTopVisibility();
     });
+    
+    // Reset scroll direction on window resize (e.g., device rotation)
+    window.addEventListener('resize', () => {
+      this.lastScrollY = window.scrollY;
+      this.isScrollingUp = false;
+      this.isScrollingDown = false;
+      this.handleStickyBarVisibility(); // Re-evaluate visibility after resize
+    });
+    
+    // Track interactions with sticky menu to prevent hiding during use
+    this.setupStickyMenuInteractionTracking();
     
     // Add bubble animation to title
     this.addTitleBubbleEffect();
@@ -755,18 +774,55 @@ export default class GalleryView {
 
   /*
    * Scroll Handler
-   * - Shows/hides sticky header based on scroll position
+   * - Shows/hides sticky header based on scroll position and direction
    * - Uses CSS classes for smooth transitions
    * - Maintains scroll position state
+   * - On mobile: hides on scroll down, shows on scroll up
+   * - Only shows when main menu is out of view
+   * - Prevents hiding when user is interacting with sticky menu
    */
   handleStickyBarVisibility() {
     const stickyBar = document.getElementById('sticky-action-bar');
     if (!stickyBar) return;
     
-    if (window.scrollY > 200) {
-      stickyBar.classList.add('visible');
+    const isMobile = window.innerWidth <= 768;
+    const scrollY = window.scrollY;
+    
+    // Get the main menu element to calculate when it's out of view
+    const mainMenu = document.querySelector('.prompt-container');
+    if (!mainMenu) return;
+    
+    const mainMenuRect = mainMenu.getBoundingClientRect();
+    const mainMenuBottom = mainMenuRect.bottom;
+    const isMainMenuVisible = mainMenuBottom > 0;
+    
+    // Don't hide if user is currently interacting with sticky menu
+    if (this.isInteractingWithSticky) {
+      if (!isMainMenuVisible) {
+        stickyBar.classList.add('visible');
+      }
+      return;
+    }
+    
+    if (isMobile) {
+      // Mobile behavior: hide on scroll down, show on scroll up, but only when main menu is out of view
+      if (!isMainMenuVisible) {
+        if (this.isScrollingUp) {
+          stickyBar.classList.add('visible');
+        } else if (this.isScrollingDown) {
+          stickyBar.classList.remove('visible');
+        }
+      } else {
+        // Hide when main menu is visible
+        stickyBar.classList.remove('visible');
+      }
     } else {
-      stickyBar.classList.remove('visible');
+      // Desktop behavior: show/hide based on main menu visibility
+      if (!isMainMenuVisible) {
+        stickyBar.classList.add('visible');
+      } else {
+        stickyBar.classList.remove('visible');
+      }
     }
   }
 
@@ -2803,4 +2859,78 @@ export default class GalleryView {
     this.closeTutorialSection();
     this.closeStylesOfTheMonthSection();
   }
-} 
+
+  /*
+   * Scroll Direction Detection
+   * - Tracks scroll direction for mobile sticky menu behavior
+   * - Uses threshold to prevent jittery behavior
+   */
+  handleScrollDirection() {
+    const currentScrollY = window.scrollY;
+    const scrollDelta = Math.abs(currentScrollY - this.lastScrollY);
+    
+    // Only update direction if scroll distance exceeds threshold
+    if (scrollDelta > this.scrollThreshold) {
+      if (currentScrollY > this.lastScrollY) {
+        this.isScrollingDown = true;
+        this.isScrollingUp = false;
+      } else if (currentScrollY < this.lastScrollY) {
+        this.isScrollingUp = true;
+        this.isScrollingDown = false;
+      }
+      this.lastScrollY = currentScrollY;
+    }
+  }
+
+  /*
+   * Sticky Menu Interaction Tracking
+   * - Prevents sticky menu from hiding when user is interacting with it
+   * - Tracks clicks, hovers, and focus events
+   * - Uses timeout to reset interaction state
+   */
+  setupStickyMenuInteractionTracking() {
+    const stickyBar = document.getElementById('sticky-action-bar');
+    if (!stickyBar) return;
+
+    const setInteractionActive = () => {
+      this.isInteractingWithSticky = true;
+      
+      // Clear existing timeout
+      if (this.interactionTimeout) {
+        clearTimeout(this.interactionTimeout);
+      }
+      
+      // Reset interaction state after 2 seconds of no interaction
+      this.interactionTimeout = setTimeout(() => {
+        this.isInteractingWithSticky = false;
+      }, 2000);
+    };
+
+    // Track mouse interactions
+    stickyBar.addEventListener('mouseenter', setInteractionActive);
+    stickyBar.addEventListener('click', setInteractionActive);
+    
+    // Track focus events (for keyboard navigation)
+    stickyBar.addEventListener('focusin', setInteractionActive);
+    
+    // Track when submenus are opened
+    const stickySettingsPanel = stickyBar.querySelector('.sticky-prompt-settings-panel');
+    if (stickySettingsPanel) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            const isOpen = !stickySettingsPanel.classList.contains('hidden');
+            if (isOpen) {
+              setInteractionActive();
+            }
+          }
+        });
+      });
+      
+      observer.observe(stickySettingsPanel, {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
+  }
+}

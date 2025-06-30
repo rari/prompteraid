@@ -971,7 +971,7 @@ a:hover {
   box-shadow: var(--shadow-md);
   z-index: var(--z-sticky);
   transform: translateY(-100%);
-  transition: transform var(--transition-normal), var(--transition-theme);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), var(--transition-theme);
   min-height: auto;
 }
 
@@ -999,7 +999,20 @@ a:hover {
 /* Visibility toggle - Controlled by JavaScript scroll handler */
 .sticky-action-bar.visible {
   transform: translateY(0);
-  }
+}
+
+/* Enhanced animation for sticky menu appearance */
+.sticky-action-bar.visible {
+  transform: translateY(0);
+  opacity: 1;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sticky-action-bar:not(.visible) {
+  transform: translateY(-100%);
+  opacity: 0.95;
+  box-shadow: var(--shadow-md);
+}
   
 /* Sticky header layout - Centers content and maintains max width
  * Inherits input-group styles for consistency
