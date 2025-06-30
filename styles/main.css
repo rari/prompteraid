@@ -3805,20 +3805,11 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   justify-content: flex-start;
   gap: var(--space-2);
   padding: var(--space-2);
-  flex: 1;
 }
 
 .sticky-prompt-preview #sticky-final-prompt {
   flex: 1;
   margin: 0;
-}
-
-/* Sticky wrapper layout for prompt preview and buttons */
-#sticky-action-bar .sticky-wrapper {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  width: 100%;
 }
 
 .sticky-prompt-btn {
@@ -3954,4 +3945,46 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
 .sticky-prompt-settings-panel .checkbox-label span {
   color: var(--text-primary);
   font-weight: 500;
+}
+
+/* Sticky prompt container */
+.sticky-prompt-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+/* Sticky prompt buttons inside preview bar */
+.sticky-prompt-preview {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  flex: 1;
+}
+
+.sticky-prompt-preview #sticky-final-prompt {
+  flex: 1;
+  margin: 0;
+}
+
+/* Sticky prompt buttons positioned next to preview */
+.sticky-prompt-btn {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  transition: var(--transition-theme);
+  cursor: pointer;
 }

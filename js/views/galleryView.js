@@ -454,6 +454,9 @@ export default class GalleryView {
     stickyWrapper.appendChild(stickyInputGroup);
     
     // Create prompt preview for sticky header
+    const stickyPreviewContainer = document.createElement('div');
+    stickyPreviewContainer.className = 'sticky-prompt-container';
+    
     const stickyPreview = document.createElement('div');
     stickyPreview.id = 'sticky-prompt-preview';
     stickyPreview.className = 'prompt-preview sticky-prompt-preview hidden';
@@ -462,10 +465,9 @@ export default class GalleryView {
     stickyFinalPrompt.id = 'sticky-final-prompt';
     
     stickyPreview.appendChild(stickyFinalPrompt);
+    stickyPreviewContainer.appendChild(stickyPreview);
     
-    stickyWrapper.appendChild(stickyPreview);
-    
-    // Add prompt injector buttons outside the preview bar
+    // Add prompt injector buttons next to the preview bar (not inside it)
     const mainGenerateBtn = document.getElementById('generate-prompt-btn');
     const mainSettingsBtn = document.getElementById('prompt-settings-btn');
     
@@ -480,7 +482,7 @@ export default class GalleryView {
         mainGenerateBtn.click();
       });
       
-      stickyWrapper.appendChild(stickyGenerateBtn);
+      stickyPreviewContainer.appendChild(stickyGenerateBtn);
     }
     
     if (mainSettingsBtn) {
@@ -494,8 +496,10 @@ export default class GalleryView {
         mainSettingsBtn.click();
       });
       
-      stickyWrapper.appendChild(stickySettingsBtn);
+      stickyPreviewContainer.appendChild(stickySettingsBtn);
     }
+    
+    stickyWrapper.appendChild(stickyPreviewContainer);
     
     // Create prompt settings panel for sticky header
     const mainSettingsPanel = document.getElementById('prompt-settings-panel');
@@ -515,7 +519,7 @@ export default class GalleryView {
       stickyWrapper.appendChild(stickySettingsPanel);
       
       // Sync the sticky settings panel with the main panel
-      const stickySettingsBtn = stickyWrapper.querySelector('#sticky-prompt-settings-btn');
+      const stickySettingsBtn = stickyPreviewContainer.querySelector('#sticky-prompt-settings-btn');
       if (stickySettingsBtn) {
         stickySettingsBtn.addEventListener('click', (e) => {
           e.preventDefault();
