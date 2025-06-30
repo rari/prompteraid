@@ -181,9 +181,7 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
 .new-styles-container .close-button i,
 .more-info-container .weight-control-button i,
 .more-info-container summary span i,
-.more-info-container .close-button i,
-.new-styles-container .tutorial-icon,
-.more-info-container .tutorial-icon {
+.more-info-container .close-button i {
   color: inherit !important;
 }
 

@@ -944,14 +944,14 @@ a:hover {
 
 #toggle-preview-button.active i,
 #sticky-toggle-preview-button.active i {
-  transform: rotate(180deg); /* Point down when active/open */
-  animation: chevron-gradient-shift 3s ease infinite, rotate-to-down 0.3s ease forwards;
+  transform: rotate(0deg); /* Point up when active/open */
+  animation: chevron-gradient-shift 3s ease infinite, rotate-to-up 0.3s ease forwards;
 }
 
 #toggle-preview-button:not(.active) i,
 #sticky-toggle-preview-button:not(.active) i {
-  transform: rotate(0deg); /* Point up when inactive/closed */
-  animation: chevron-gradient-shift 3s ease infinite, rotate-to-up 0.3s ease forwards;
+  transform: rotate(180deg); /* Point down when inactive/closed */
+  animation: chevron-gradient-shift 3s ease infinite, rotate-to-down 0.3s ease forwards;
 }
 
 @keyframes rotate-to-down {
@@ -986,7 +986,7 @@ a:hover {
 /* Visibility toggle - Controlled by JavaScript scroll handler */
 .sticky-action-bar.visible {
   transform: translateY(0);
-}
+  }
   
 /* Sticky header layout - Centers content and maintains max width
  * Inherits input-group styles for consistency
@@ -1406,9 +1406,7 @@ a:hover {
 }
 
 /* ===== HOVER EFFECTS ===== */
-button:hover i {
-  transform: scale(1.1);
-}
+/* Removed button:hover i rule that was causing unwanted scale effects */
 
 /* ===== CONSISTENT STYLING ===== */
 .input-group button,
@@ -1534,9 +1532,32 @@ button:hover i {
 }
 
 .sref-guide-section ul,
-.hints-section ul {
+.hints-section ul,
+.prompt-generator-section ul {
   list-style-type: disc;
   padding-left: var(--space-5);
+}
+
+/* Nested lists (sub-bullets) use hollow bullets */
+.sref-guide-section ul ul,
+.hints-section ul ul,
+.prompt-generator-section ul ul {
+  list-style-type: circle;
+  padding-left: var(--space-4);
+}
+
+/* Ordered lists should be indented */
+.sref-guide-section ol,
+.hints-section ol,
+.prompt-generator-section ol {
+  padding-left: var(--space-5);
+}
+
+/* Nested ordered lists */
+.sref-guide-section ol ol,
+.hints-section ol ol,
+.prompt-generator-section ol ol {
+  padding-left: var(--space-4);
 }
 
 .info-section li {
@@ -2840,6 +2861,12 @@ button:hover i {
 /* Add neon-pink-rgb variable for rgba usage */
 :root {
   --neon-pink-rgb: 255, 20, 147;
+  --hover-background: #eee; /* Light grey for light mode */
+}
+
+/* Dark mode hover background */
+html.dark-mode {
+  --hover-background: #1a1a1a; /* Very dark grey for dark mode */
 }
 
 /* Image loading state */
@@ -3106,10 +3133,10 @@ a:focus-visible {
   border: 1px solid var(--border-color);
 }
 
-.action-button:hover {
-  background-color: var(--neon-pink);
-  color: white;
-  border-color: var(--neon-pink);
+.action-button:hover:not(.prompt-gen):not(.prompt-settings) {
+  background-color: var(--hover-background, #eee);
+  color: var(--text-primary);
+  border-color: var(--hover-background, #eee);
 }
 
 /* Improve text contrast */
@@ -3606,4 +3633,158 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
 .site-footer .social-link:focus i,
 .site-footer .social-link:active i {
   color: inherit !important;
+}
+
+/* Prompt generator inline buttons */
+.prompt-gen-inline-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: 0.5rem;
+}
+
+/* Remove .prompt-extra-buttons if present (legacy) */
+.prompt-extra-buttons { display: none !important; }
+
+.wand-magic-icon, .sparkle-wand-icon {
+  font-size: 1em;
+  color: #888; /* Grey by default */
+  transition: color 0.3s ease;
+}
+
+.wand-magic-icon.active, .sparkle-wand-icon.active {
+  color: #444; /* 50% grey when active */
+}
+
+/* Remove the gradient animation for now */
+.wand-magic-icon, .sparkle-wand-icon {
+  background: none;
+  background-clip: unset;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  animation: none;
+}
+
+.prompt-preview-panel {
+  /* By default, visible */
+}
+.prompt-preview.hidden ~ #prompt-settings-panel,
+.prompt-preview.hidden {
+  display: none !important;
+}
+
+/* Make gear and wand the same color and transparency */
+.prompt-settings i {
+  color: #888; /* Same grey as wand */
+  transition: color 0.3s ease;
+}
+
+.prompt-settings.active i {
+  color: #444; /* Same 50% grey when active */
+}
+
+/* Wand hover effect - swap to sparkle version */
+.prompt-gen:hover .fa-wand-magic {
+  display: none;
+}
+
+.prompt-gen:hover .fa-wand-magic-sparkles {
+  display: inline-block;
+}
+
+.prompt-gen .fa-wand-magic-sparkles {
+  display: none;
+}
+
+/* Prompt generator settings panel */
+.prompt-settings-panel {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-4);
+  margin-top: var(--space-3);
+  box-shadow: var(--shadow-md);
+}
+
+.prompt-settings-panel h3 {
+  margin: 0 0 var(--space-3) 0;
+  color: var(--text-primary);
+  font-size: var(--font-size-lg);
+}
+
+.setting-row {
+  margin-bottom: var(--space-3);
+}
+
+.setting-row:last-child {
+  margin-bottom: 0;
+}
+
+.setting-row label {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.setting-row input[type="text"] {
+  width: 100%;
+  padding: var(--space-2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background: var(--background);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.setting-row input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-alpha);
+}
+
+.category-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background: var(--background);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-sm);
+  flex: 0 0 auto;
+  min-width: 100px;
+}
+
+.checkbox-label:hover {
+  border-color: var(--primary);
+  background: var(--primary-alpha);
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin: 0;
+  accent-color: var(--primary);
+}
+
+.checkbox-label span {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.info-section ol {
+  list-style-type: decimal;
+  padding-left: var(--space-5);
+  margin-left: 0;
+}
+
+.info-section ol ol {
+  padding-left: var(--space-4);
 }

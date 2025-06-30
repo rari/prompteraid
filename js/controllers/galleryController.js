@@ -565,6 +565,15 @@ export default class GalleryController {
       this.updatePrompt();
     });
     
+    // Suffix input
+    this.view.bindSuffixInput(() => {
+      const suffixInput = document.getElementById('prompt-suffix');
+      if (suffixInput) {
+        this.model.setSuffix(suffixInput.value.trim());
+      }
+      this.updatePrompt();
+    });
+    
     // Copy button
     this.view.bindCopyButton(() => {
       const promptText = this.model.generateFinalPrompt();
@@ -924,7 +933,14 @@ export default class GalleryController {
 
   updatePrompt() {
     const finalPrompt = this.model.generateFinalPrompt();
-    this.view.updateFinalPrompt(finalPrompt);
+    
+    // Only show the prompt preview if there's actual content
+    if (this.model.basePrompt.trim() || this.model.selectedImages.size > 0 || this.model.suffix.trim()) {
+      this.view.updateFinalPrompt(finalPrompt);
+    } else {
+      // Clear the prompt preview if there's no content
+      this.view.updateFinalPrompt('');
+    }
   }
   
   /**

@@ -239,7 +239,7 @@ body.dark-mode {
     color: var(--text-primary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .action-button:hover {
+  html:not(.dark-mode):not(.light-mode) .action-button:hover:not(.prompt-gen):not(.prompt-settings) {
     background-color: var(--gray-300);
   }
 
@@ -634,7 +634,7 @@ html.dark-mode .menu-icon-style:hover {
   color: var(--text-primary);
 }
 
-html.dark-mode .action-button:hover {
+html.dark-mode .action-button:hover:not(.prompt-gen):not(.prompt-settings) {
   background-color: var(--gray-300);
 }
 

@@ -38,12 +38,14 @@ export default class ImageModel {
     this.favoriteImages = new Set();
     this.showOnlyFavorites = false;
     this.basePrompt = '';
+    this.suffix = '';
     this.currentColorIndex = 0;
     this.numSelectionColors = 5; // Pink, Orange, Yellow, Teal, Blue
     this.numWeightColors = 7; // Pink, Orange, Yellow, Green, Teal, Blue, Purple
     this.isDiscordMode = true; // Default to Discord mode
     this.imageWeights = new Map(); // Store weights for each selected image
     this.weightColorIndices = new Map(); // Store color indices for weight displays
+    this.currentModel = 'niji-6'; // Default model
     
     // Detect if we're on GitHub Pages and get the repository name
     this.basePath = '';
@@ -71,10 +73,19 @@ export default class ImageModel {
       if (isDiscordMode !== null) {
         this.isDiscordMode = isDiscordMode === 'true';
       }
+      
+      // Do NOT load basePrompt or suffix from storage anymore
+      // const basePrompt = localStorage.getItem('prompteraid_basePrompt');
+      // if (basePrompt !== null) {
+      //   this.basePrompt = basePrompt;
+      // }
+      // const suffix = localStorage.getItem('prompteraid_suffix');
+      // if (suffix !== null) {
+      //   this.suffix = suffix;
+      // }
     } catch (e) {
       // Show a friendly error notification
       console.warn('Error loading preferences from local storage:', e);
-      // We'll use a callback to show the error notification after the view is initialized
       setTimeout(() => {
         const event = new CustomEvent('storage-error', { 
           detail: { message: 'Unable to load your preferences. Your favorites might not be available.' } 
@@ -92,6 +103,9 @@ export default class ImageModel {
       
       // Save global preferences
       localStorage.setItem('prompteraid_isDiscordMode', this.isDiscordMode);
+      // Do NOT save basePrompt or suffix anymore
+      // localStorage.setItem('prompteraid_basePrompt', this.basePrompt);
+      // localStorage.setItem('prompteraid_suffix', this.suffix);
     } catch (e) {
       // Show a friendly error notification
       console.warn('Error saving preferences to local storage:', e);
@@ -271,7 +285,12 @@ export default class ImageModel {
 
   setBasePrompt(prompt) {
     this.basePrompt = prompt;
-    // No longer saving prompt to storage
+    this.saveToStorage();
+  }
+
+  setSuffix(suffix) {
+    this.suffix = suffix;
+    this.saveToStorage();
   }
 
   getSelectedSrefs() {
@@ -333,7 +352,7 @@ export default class ImageModel {
     const prefix = this.isDiscordMode ? '/imagine prompt: ' : '';
     
     // Combine all parts, ensuring there are spaces where needed
-    const parts = [this.basePrompt, modelTag, srefsString].filter(part => part.trim() !== '');
+    const parts = [this.basePrompt, modelTag, srefsString, this.suffix].filter(part => part.trim() !== '');
     
     // If no user input and no styles selected, still show the model parameter and prefix
     if (parts.length === 0) {

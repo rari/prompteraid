@@ -564,12 +564,12 @@ export default class GalleryView {
     mainToggle.classList.toggle('active', !isHidden);
     stickyToggle.classList.toggle('active', !isHidden);
     
-    // Set both icons to chevron-down, rotation is handled by CSS
+    // Set both icons to chevron-up when active (open), chevron-down when inactive (closed)
     const mainIcon = mainToggle.querySelector('i');
     const stickyIcon = stickyToggle.querySelector('i');
     
-    if (mainIcon) mainIcon.className = 'fas fa-chevron-down';
-    if (stickyIcon) stickyIcon.className = 'fas fa-chevron-down';
+    if (mainIcon) mainIcon.className = !isHidden ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+    if (stickyIcon) stickyIcon.className = !isHidden ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
   }
 
   /*
@@ -1047,6 +1047,19 @@ export default class GalleryView {
           }
         });
       }
+    }
+  }
+
+  bindSuffixInput(handler) {
+    // Bind the suffix input to update the prompt when it changes
+    const suffixInput = document.getElementById('prompt-suffix');
+    if (suffixInput) {
+      suffixInput.addEventListener('input', () => {
+        handler();
+      });
+      suffixInput.addEventListener('blur', () => {
+        handler();
+      });
     }
   }
 

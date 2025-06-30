@@ -1,0 +1,242 @@
+/* Prompt Generator Styles */
+
+/*
+Prompt Generator Category Order (for instructional/reference text):
+- Camera: Camera angles and composition
+- Emotion: Mood and emotional state
+- Subject: Main character or object
+- Appearance: Physical characteristics
+- Clothing: Outfits and attire
+- Pose: Body position and stance
+- Setting: Location and environment (use 'at' as connector)
+- Lighting: Lighting conditions
+- Style: Overall artistic style
+- Details: Specific effects and elements
+*/
+
+.prompt-generator-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+
+.prompt-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: var(--space-4);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  font-family: var(--font-family);
+  font-size: var(--font-size-lg);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--background);
+  resize: vertical;
+  transition: all var(--transition-fast), var(--transition-theme);
+  box-shadow: var(--shadow-sm);
+}
+
+.prompt-textarea:focus {
+  outline: none;
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.1), var(--shadow-md);
+}
+
+.prompt-textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.button-group {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  justify-content: center;
+  align-items: center;
+}
+
+.button-group .action-button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  border-radius: var(--border-radius-lg);
+  transition: all var(--transition-fast);
+  min-width: 140px;
+  justify-content: center;
+}
+
+.button-group .action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+#generate-btn {
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+  color: white;
+  border: none;
+}
+
+#generate-btn:hover {
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+}
+
+#copy-btn {
+  background: linear-gradient(135deg, var(--neon-teal), var(--neon-blue));
+  color: white;
+  border: none;
+}
+
+#copy-btn:hover {
+  background: linear-gradient(135deg, var(--neon-blue), var(--neon-teal));
+}
+
+#copy-btn.copied {
+  background: linear-gradient(135deg, var(--neon-green), var(--neon-teal));
+}
+
+#copy-btn.copied i {
+  animation: pop 0.3s ease-out;
+}
+
+.settings-toggle {
+  background: linear-gradient(135deg, var(--neon-orange), var(--neon-yellow));
+  color: white;
+  border: none;
+  min-width: auto;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.settings-toggle:hover {
+  background: linear-gradient(135deg, var(--neon-yellow), var(--neon-orange));
+  transform: rotate(90deg) translateY(-2px);
+}
+
+.settings-toggle.active {
+  background: linear-gradient(135deg, var(--neon-green), var(--neon-teal));
+}
+
+.settings-panel {
+  margin-top: var(--space-6);
+  padding: var(--space-4);
+  background: var(--card-background);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  overflow: hidden;
+}
+
+.settings-panel.hidden {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  opacity: 0;
+  border: none;
+}
+
+.settings-panel h3 {
+  margin: 0 0 var(--space-3) 0;
+  color: var(--text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+.setting-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.setting-group:last-child {
+  margin-bottom: 0;
+}
+
+.setting-group label {
+  font-weight: 500;
+  color: var(--text-primary);
+  min-width: 140px;
+}
+
+.setting-group input {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+  text-align: center;
+  transition: all var(--transition-fast);
+}
+
+.setting-group input:focus {
+  outline: none;
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 0 2px rgba(255, 20, 147, 0.1);
+}
+
+.setting-group input[type="number"] {
+  width: 80px;
+}
+
+.suffix-input {
+  flex: 1;
+  min-width: 200px;
+  text-align: left;
+}
+
+/* Animation for copy button */
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .prompt-generator-container {
+    padding: var(--space-4);
+  }
+  
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .button-group .action-button {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .settings-toggle {
+    width: 50px;
+    height: 50px;
+    min-width: auto;
+  }
+  
+  .setting-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  
+  .setting-group label {
+    min-width: auto;
+  }
+  
+  .setting-group input {
+    width: 100%;
+    max-width: 120px;
+  }
+  
+  .suffix-input {
+    max-width: none;
+  }
+} 
