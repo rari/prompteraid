@@ -984,6 +984,11 @@ a:hover {
   overflow: visible;
 }
 
+/* Sticky wrapper for proper positioning */
+#sticky-action-bar {
+  position: relative;
+}
+
 /* Visibility toggle - Controlled by JavaScript scroll handler */
 .sticky-action-bar.visible {
   transform: translateY(0);
@@ -3849,9 +3854,9 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
 /* Sticky prompt settings panel */
 .sticky-prompt-settings-panel {
   position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+  top: calc(100% - var(--space-4));
+  left: var(--space-4);
+  right: var(--space-4);
   z-index: 1000;
   background: var(--card-background);
   border: 1px solid var(--border-color);
@@ -3861,7 +3866,7 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   box-shadow: var(--shadow-md);
   max-height: 300px;
   overflow-y: auto;
-  max-width: 100%;
+  max-width: calc(100% - var(--space-8));
   box-sizing: border-box;
 }
 
