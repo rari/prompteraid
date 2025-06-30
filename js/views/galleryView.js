@@ -512,7 +512,6 @@ export default class GalleryView {
         }
       });
       
-      // Add the settings panel as a child of the sticky wrapper
       stickyWrapper.appendChild(stickySettingsPanel);
       
       // Sync the sticky settings panel with the main panel
@@ -523,6 +522,12 @@ export default class GalleryView {
           // Toggle both panels
           mainSettingsPanel.classList.toggle('hidden');
           stickySettingsPanel.classList.toggle('hidden');
+          
+          // Toggle the settings-open class on the sticky action bar
+          const stickyActionBar = document.getElementById('sticky-action-bar');
+          if (stickyActionBar) {
+            stickyActionBar.classList.toggle('settings-open');
+          }
           
           // Update both buttons
           const mainSettingsBtn = document.getElementById('prompt-settings-btn');
