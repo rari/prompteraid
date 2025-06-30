@@ -937,21 +937,21 @@ a:hover {
   color: transparent;
   animation: chevron-gradient-shift 3s ease infinite;
   display: inline-block;
-  transform: rotate(0deg); /* Start pointing up (inactive) */
+  transform: rotate(0deg); /* Start pointing up (menu closed) */
   transform-origin: center;
-  transition: none; /* Remove default transition */
+  transition: transform 0.3s ease; /* Add transform transition back */
 }
 
 #toggle-preview-button.active i,
 #sticky-toggle-preview-button.active i {
-  transform: rotate(0deg); /* Point up when active/open */
-  animation: chevron-gradient-shift 3s ease infinite, rotate-to-up 0.3s ease forwards;
+  transform: rotate(180deg); /* Point down when active/open */
+  animation: chevron-gradient-shift 3s ease infinite;
 }
 
 #toggle-preview-button:not(.active) i,
 #sticky-toggle-preview-button:not(.active) i {
-  transform: rotate(180deg); /* Point down when inactive/closed */
-  animation: chevron-gradient-shift 3s ease infinite, rotate-to-down 0.3s ease forwards;
+  transform: rotate(0deg); /* Point up when inactive/closed */
+  animation: chevron-gradient-shift 3s ease infinite;
 }
 
 @keyframes rotate-to-down {
@@ -3644,11 +3644,13 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
 }
 
 /* Prompt generator inline buttons */
-.prompt-gen-inline-buttons {
+.prompt-gen-inline-buttons, .prompt-preview-row .prompt-gen-inline-buttons {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  margin-left: 0.5rem;
+  gap: 1rem; /* Increased gap for more separation */
+  flex-shrink: 0;
+  height: 2.5rem; /* Match button height for vertical centering */
+  margin-top: var(--space-2); /* Match the prompt preview top margin */
 }
 
 /* Remove .prompt-extra-buttons if present (legacy) */
@@ -3658,6 +3660,11 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   font-size: 1em;
   color: #888; /* Grey by default */
   transition: color 0.3s ease;
+  width: 1em; /* Fixed width to prevent layout shift */
+  height: 1em; /* Fixed height to prevent layout shift */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .wand-magic-icon.active, .sparkle-wand-icon.active {
@@ -3685,6 +3692,11 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
 .prompt-settings i {
   color: #888; /* Same grey as wand */
   transition: color 0.3s ease;
+  width: 1em; /* Fixed width to prevent layout shift */
+  height: 1em; /* Fixed height to prevent layout shift */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .prompt-settings.active i {
@@ -3838,6 +3850,11 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
 .sticky-prompt-btn i {
   font-size: 1.125rem;
   color: #888; /* Same grey as main menu */
+  width: 1em; /* Fixed width to prevent layout shift */
+  height: 1em; /* Fixed height to prevent layout shift */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sticky-prompt-btn.prompt-gen i {
@@ -3987,4 +4004,30 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   color: var(--text-primary);
   transition: var(--transition-theme);
   cursor: pointer;
+}
+
+/* Prompt preview row for main menu */
+.prompt-preview-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* Increased gap between preview and icons */
+  width: 100%;
+}
+
+.prompt-preview-row .prompt-preview {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+}
+
+.prompt-preview-row .prompt-gen-inline-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Increased gap for more separation */
+  flex-shrink: 0;
+  height: 2.5rem; /* Match button height for vertical centering */
+}
+
+.prompt-preview-panel .prompt-preview-row.hidden {
+  display: none;
 }

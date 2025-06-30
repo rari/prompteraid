@@ -151,14 +151,16 @@
               <i class="far fa-clipboard"></i>
             </button>
             <button id="toggle-preview-button" class="action-button button-toggle" title="Toggle prompt preview" aria-label="Toggle prompt preview">
-              <i class="fas fa-chevron-down"></i>
+              <i class="fas fa-chevron-up"></i>
             </button>
           </div>
         </div>
 
         <div class="prompt-preview-panel">
-          <div class="prompt-preview" style="display: flex; align-items: center; gap: 0.5rem;">
-            <p id="final-prompt" style="flex: 1 1 auto;"></p>
+          <div class="prompt-preview-row hidden">
+            <div class="prompt-preview" style="flex: 1 1 auto; display: flex; align-items: center;">
+              <p id="final-prompt" style="flex: 1 1 auto;"></p>
+            </div>
             <div class="prompt-gen-inline-buttons">
               <button id="generate-prompt-btn" class="action-button prompt-gen" title="Generate random prompt">
                 <i class="fa-solid fa-wand-magic wand-magic-icon"></i>
