@@ -497,6 +497,50 @@ export default class GalleryView {
     
     stickyWrapper.appendChild(stickyPreview);
     
+    // Create prompt settings panel for sticky header
+    const mainSettingsPanel = document.getElementById('prompt-settings-panel');
+    if (mainSettingsPanel) {
+      const stickySettingsPanel = mainSettingsPanel.cloneNode(true);
+      stickySettingsPanel.id = 'sticky-prompt-settings-panel';
+      stickySettingsPanel.className = 'prompt-settings-panel sticky-prompt-settings-panel hidden';
+      
+      // Update any IDs in the cloned panel to avoid conflicts
+      const checkboxes = stickySettingsPanel.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach((checkbox, index) => {
+        if (checkbox.id) {
+          checkbox.id = `sticky-${checkbox.id}`;
+        }
+      });
+      
+      stickyWrapper.appendChild(stickySettingsPanel);
+      
+      // Sync the sticky settings panel with the main panel
+      const stickySettingsBtn = stickyPreview.querySelector('#sticky-prompt-settings-btn');
+      if (stickySettingsBtn) {
+        stickySettingsBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          // Toggle both panels
+          mainSettingsPanel.classList.toggle('hidden');
+          stickySettingsPanel.classList.toggle('hidden');
+          
+          // Update both buttons
+          const mainSettingsBtn = document.getElementById('prompt-settings-btn');
+          if (mainSettingsBtn) {
+            mainSettingsBtn.classList.toggle('active');
+          }
+          stickySettingsBtn.classList.toggle('active');
+          
+          // Update icons
+          const mainIcon = mainSettingsBtn?.querySelector('i');
+          const stickyIcon = stickySettingsBtn.querySelector('i');
+          const isHidden = mainSettingsPanel.classList.contains('hidden');
+          
+          if (mainIcon) mainIcon.className = isHidden ? 'fas fa-cog' : 'fas fa-times';
+          if (stickyIcon) stickyIcon.className = isHidden ? 'fas fa-cog' : 'fas fa-times';
+        });
+      }
+    }
+    
     document.body.appendChild(stickyWrapper);
 
     // Sync prompt input value
