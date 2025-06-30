@@ -986,7 +986,8 @@ a:hover {
 
 /* When settings panel is open, extend the sticky bar */
 .sticky-action-bar.settings-open {
-  min-height: 100vh;
+  min-height: auto;
+  height: auto;
   background-color: rgba(255, 255, 255, 0.98);
 }
 
