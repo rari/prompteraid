@@ -44,12 +44,14 @@ generate(){if(!this.words)return;
   const input = document.getElementById('prompt-input');
   input.value = finalPrompt;
   
+  // Use the main application's prompt system to preserve prefix and suffix
+  if (window.galleryController && window.galleryController.model) {
+    window.galleryController.model.setBasePrompt(finalPrompt);
+    window.galleryController.updatePrompt();
+  }
+  
   // Trigger the input event to integrate with the main application
   input.dispatchEvent(new Event('input', {bubbles: true}));
-  
-  // Update the preview
-  const preview = document.getElementById('final-prompt');
-  if (preview) preview.textContent = finalPrompt;
 }
 togglePanel(){const panel=document.getElementById('prompt-settings-panel');panel.classList.toggle('hidden');document.getElementById('prompt-settings-btn').classList.toggle('active');}
 buildLogicalPrompt(parts) {

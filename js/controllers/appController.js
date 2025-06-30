@@ -125,25 +125,25 @@ export default class AppController {
       if (srefParts.length === 1) {
         // Single image link - can have optional quadrant
         console.log(`Looking for single style reference: ${sref} with quadrant: ${quadrant || 'none'}`);
-        // Wait for the gallery to load and the controller to be initialized
-        const checkAndCreateLinkedView = () => {
-          // Check if gallery controller is available
-          if (!window.galleryController || !window.galleryController.view || !window.galleryController.model) {
-            console.log("Gallery controller not yet available, waiting...");
-            setTimeout(checkAndCreateLinkedView, 500);
-            return;
-          }
-          // Find the image with the matching style reference
-          const galleryItem = document.querySelector(`.gallery-item[data-sref="${sref}"]`);
-          if (galleryItem) {
-            // Create a linked view with divider
-            this.createLinkedView(galleryItem, sref, quadrant);
-          } else {
-            console.warn(`Style reference ${sref} not found in gallery`);
-          }
-        };
-        // Start checking
-        setTimeout(checkAndCreateLinkedView, 1000);
+      // Wait for the gallery to load and the controller to be initialized
+      const checkAndCreateLinkedView = () => {
+        // Check if gallery controller is available
+        if (!window.galleryController || !window.galleryController.view || !window.galleryController.model) {
+          console.log("Gallery controller not yet available, waiting...");
+          setTimeout(checkAndCreateLinkedView, 500);
+          return;
+        }
+        // Find the image with the matching style reference
+        const galleryItem = document.querySelector(`.gallery-item[data-sref="${sref}"]`);
+        if (galleryItem) {
+          // Create a linked view with divider
+          this.createLinkedView(galleryItem, sref, quadrant);
+        } else {
+          console.warn(`Style reference ${sref} not found in gallery`);
+        }
+      };
+      // Start checking
+      setTimeout(checkAndCreateLinkedView, 1000);
       } else {
         // Multiple images link - treat as search query
         console.log(`Multiple style references detected, treating as search: ${srefParts.join(', ')}`);
@@ -454,7 +454,7 @@ export default class AppController {
       localStorage.removeItem('prompteraid_theme');
       this.setSystemTheme();
     } else {
-      this.setTheme(newTheme);
+    this.setTheme(newTheme);
     }
   }
 

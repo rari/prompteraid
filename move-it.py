@@ -1,18 +1,53 @@
+"""
+File Management Script for PrompterAid Image Pipeline
+
+This module manages the workflow of moving images from a downloads folder to the
+processing pipeline. It handles file organization, duplicate detection, and
+preparation for the main processing script (process.py).
+
+The script works with two AI model folders:
+- niji6: Niji Journey v6 anime-style images
+- mj7: Midjourney v7 photorealistic images
+
+Workflow:
+1. Rename files in downloads folder to standardized format
+2. Check for duplicate IDs (files with same numeric prefix)
+3. Copy cleaned files to source-images for processing
+4. Generate comprehensive reports of all operations
+
+This script is typically run before process.py to prepare files for web processing.
+
+Author: PrompterAid Team
+"""
+
 import os
 import re
 import shutil
 import time
 from pathlib import Path
+from typing import Dict, List, Tuple, Optional
 from PIL import Image
 import sys
 
 # --- CONFIG ---
 PROJECT_ROOT = Path(r"C:/Users/imiko/Documents/GitHub/website/prompteraid")
-SOURCE_IMG_ROOT = PROJECT_ROOT / "source-images"
-DOWNLOADS_SREF_ROOT = Path(r"C:/Users/imiko/Downloads/sref")
-MODEL_FOLDERS = {"niji6": "niji-6", "mj7": "midjourney-7"}
+SOURCE_IMG_ROOT = PROJECT_ROOT / "source-images"  # Destination for processed files
+DOWNLOADS_SREF_ROOT = Path(r"C:/Users/imiko/Downloads/sref")  # Source downloads folder
+MODEL_FOLDERS = {"niji6": "niji-6", "mj7": "midjourney-7"}  # Model ID to folder mapping
 
-def clean_filename(filename):
+def clean_filename(filename: str) -> str:
+    """
+    Standardize filenames by removing unwanted text and fixing formatting.
+    
+    Removes specific substrings (jennajuffuffles, mermaid), normalizes spaces
+    and underscores, and ensures consistent naming pattern.
+    
+    Args:
+        filename: Original filename to clean
+        
+    Returns:
+        Cleaned filename with standardized format
+    """
     # Remove unwanted substrings and fix underscores/spaces
     name = filename
     name = re.sub(r'jennajuffuffles|mermaid', '', name, flags=re.IGNORECASE)
@@ -27,21 +62,40 @@ def clean_filename(filename):
         name = parts[0]
     return name
 
-def restart_script():
+def restart_script() -> None:
+    """Restart the script from the beginning after resolving conflicts."""
     print("Conflicts resolved. Restarting from the beginning...")
     python = sys.executable
     os.execv(python, [python] + sys.argv)
 
-def get_image_size(image_path):
-    """Get image dimensions without loading the full image into memory"""
+def get_image_size(image_path: Path) -> Optional[Tuple[int, int]]:
+    """
+    Get image dimensions without loading the full image into memory.
+    
+    Args:
+        image_path: Path to the image file
+        
+    Returns:
+        Tuple of (width, height) or None if image cannot be read
+    """
     try:
         with Image.open(image_path) as img:
             return img.size
     except Exception:
         return None
 
-def rename_and_check_duplicates_in_model_folders():
-    report = []
+def rename_and_check_duplicates_in_model_folders() -> List[str]:
+    """
+    Rename files in downloads folder and resolve conflicts/duplicates.
+    
+    Processes all PNG files in the downloads model folders, cleaning filenames
+    and handling conflicts when multiple files would have the same name.
+    Provides interactive resolution for conflicts and duplicate detection.
+    
+    Returns:
+        List of report messages describing actions taken
+    """
+    report: List[str] = []
     conflicts_resolved = False
     
     while True:  # Loop until all conflicts are resolved
@@ -54,8 +108,8 @@ def rename_and_check_duplicates_in_model_folders():
                 
             print(f"\nProcessing {model_id} model folder...")
             print(f"  Processing folder: {folder_path}")
-            seen = {}
-            dups = []
+            seen: Dict[str, Path] = {}
+            dups: List[Tuple[Path, Path]] = []
             
             for png in folder_path.glob("*.png"):
                 new_name = clean_filename(png.name)
@@ -179,9 +233,18 @@ def rename_and_check_duplicates_in_model_folders():
         restart_script()
     return report
 
-def check_duplicate_ids():
-    """Check for duplicate IDs (numeric sequence before underscore) in each model folder"""
-    report = []
+def check_duplicate_ids() -> List[str]:
+    """
+    Check for duplicate IDs (numeric sequence before underscore) in each model folder.
+    
+    AI generators sometimes create multiple files with the same numeric ID but
+    different suffixes. This function groups files by their ID and allows
+    interactive selection of which file to keep.
+    
+    Returns:
+        List of report messages describing actions taken
+    """
+    report: List[str] = []
     conflicts_resolved = False
     
     for model_id, folder in MODEL_FOLDERS.items():
@@ -193,7 +256,7 @@ def check_duplicate_ids():
         print(f"  Processing folder: {folder_path}")
         
         # Group files by their ID (numeric part before underscore)
-        id_groups = {}
+        id_groups: Dict[str, List[Path]] = {}
         for png in folder_path.glob("*.png"):
             # Extract the numeric ID from filename (e.g., "123_something.png" -> "123")
             match = re.match(r'^(\d+)', png.name)
@@ -213,7 +276,7 @@ def check_duplicate_ids():
                     print(f"  {i}. {file.name}")
                 
                 # Check if images are different sizes
-                sizes = []
+                sizes: List[Optional[Tuple[int, int]]] = []
                 for file in files:
                     size = get_image_size(file)
                     sizes.append(size)
@@ -272,9 +335,18 @@ def check_duplicate_ids():
         restart_script()
     return report
 
-def copy_files_to_source():
-    """Copy all PNG files from Downloads/sref model folders to source-images/model folders"""
-    report = []
+def copy_files_to_source() -> List[str]:
+    """
+    Copy all PNG files from Downloads/sref model folders to source-images/model folders.
+    
+    This function prepares files for processing by moving them from the downloads
+    location to the source-images directory where process.py expects to find them.
+    Skips files that already exist in the destination to avoid overwriting.
+    
+    Returns:
+        List of report messages describing copy operations
+    """
+    report: List[str] = []
     
     for model_id, folder in MODEL_FOLDERS.items():
         downloads_folder_path = DOWNLOADS_SREF_ROOT / folder
@@ -316,7 +388,17 @@ def copy_files_to_source():
     
     return report
 
-def print_report(rename_report, duplicate_report, copy_report, total_time):
+def print_report(rename_report: List[str], duplicate_report: List[str], 
+                copy_report: List[str], total_time: float) -> None:
+    """
+    Print a comprehensive report of all file management activities.
+    
+    Args:
+        rename_report: List of rename operations performed
+        duplicate_report: List of duplicate resolution operations
+        copy_report: List of copy operations performed
+        total_time: Total processing time in seconds
+    """
     print("\n--- RENAME REPORT ---")
     for line in rename_report:
         print(line)
