@@ -401,9 +401,7 @@ export default class GalleryView {
       'copy-button': 'sticky-copy-button',
       'toggle-preview-button': 'sticky-toggle-preview-button',
       'mode-toggle': 'sticky-mode-toggle',
-      'theme-toggle': 'sticky-theme-toggle',
-      'generate-prompt-btn': 'sticky-generate-prompt-btn',
-      'prompt-settings-btn': 'sticky-prompt-settings-btn'
+      'theme-toggle': 'sticky-theme-toggle'
     };
     
     // Update button IDs and maintain event delegation
@@ -464,51 +462,40 @@ export default class GalleryView {
     stickyFinalPrompt.id = 'sticky-final-prompt';
     
     stickyPreview.appendChild(stickyFinalPrompt);
-    stickyWrapper.appendChild(stickyPreview);
     
-    // Create prompt settings panel for sticky header
-    const mainSettingsPanel = document.getElementById('prompt-settings-panel');
-    if (mainSettingsPanel) {
-      const stickySettingsPanel = mainSettingsPanel.cloneNode(true);
-      stickySettingsPanel.id = 'sticky-prompt-settings-panel';
-      stickySettingsPanel.className = 'prompt-settings-panel sticky-prompt-settings-panel hidden';
+    // Add prompt injector buttons inside the preview bar
+    const mainGenerateBtn = document.getElementById('generate-prompt-btn');
+    const mainSettingsBtn = document.getElementById('prompt-settings-btn');
+    
+    if (mainGenerateBtn) {
+      const stickyGenerateBtn = mainGenerateBtn.cloneNode(true);
+      stickyGenerateBtn.id = 'sticky-generate-prompt-btn';
+      stickyGenerateBtn.className = 'action-button prompt-gen sticky-prompt-btn';
       
-      // Update any IDs in the cloned panel to avoid conflicts
-      const checkboxes = stickySettingsPanel.querySelectorAll('input[type="checkbox"]');
-      checkboxes.forEach((checkbox, index) => {
-        if (checkbox.id) {
-          checkbox.id = `sticky-${checkbox.id}`;
-        }
+      // Add event listener to delegate to main button
+      stickyGenerateBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        mainGenerateBtn.click();
       });
       
-      stickyWrapper.appendChild(stickySettingsPanel);
-      
-      // Sync the sticky settings panel with the main panel
-      const stickySettingsBtn = stickyInputGroup.querySelector('#sticky-prompt-settings-btn');
-      if (stickySettingsBtn) {
-        stickySettingsBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          // Toggle both panels
-          mainSettingsPanel.classList.toggle('hidden');
-          stickySettingsPanel.classList.toggle('hidden');
-          
-          // Update both buttons
-          const mainSettingsBtn = document.getElementById('prompt-settings-btn');
-          if (mainSettingsBtn) {
-            mainSettingsBtn.classList.toggle('active');
-          }
-          stickySettingsBtn.classList.toggle('active');
-          
-          // Update icons
-          const mainIcon = mainSettingsBtn?.querySelector('i');
-          const stickyIcon = stickySettingsBtn.querySelector('i');
-          const isHidden = mainSettingsPanel.classList.contains('hidden');
-          
-          if (mainIcon) mainIcon.className = isHidden ? 'fas fa-cog' : 'fas fa-times';
-          if (stickyIcon) stickyIcon.className = isHidden ? 'fas fa-cog' : 'fas fa-times';
-        });
-      }
+      stickyPreview.appendChild(stickyGenerateBtn);
     }
+    
+    if (mainSettingsBtn) {
+      const stickySettingsBtn = mainSettingsBtn.cloneNode(true);
+      stickySettingsBtn.id = 'sticky-prompt-settings-btn';
+      stickySettingsBtn.className = 'action-button prompt-settings sticky-prompt-btn';
+      
+      // Add event listener to delegate to main button
+      stickySettingsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        mainSettingsBtn.click();
+      });
+      
+      stickyPreview.appendChild(stickySettingsBtn);
+    }
+    
+    stickyWrapper.appendChild(stickyPreview);
     
     document.body.appendChild(stickyWrapper);
 
@@ -597,53 +584,6 @@ export default class GalleryView {
         lightbulbBtn.parentNode.insertBefore(stickySearchBtn, lightbulbBtn);
       } else {
         stickyInputGroup.appendChild(stickySearchBtn);
-      }
-    }
-    
-    // Check if the prompt injector buttons exist in main menu but not in sticky
-    const mainGenerateBtn = document.getElementById('generate-prompt-btn');
-    const stickyGenerateBtn = stickyInputGroup.querySelector('#sticky-generate-prompt-btn');
-    
-    if (mainGenerateBtn && !stickyGenerateBtn) {
-      console.log('Adding missing generate prompt button to sticky menu');
-      
-      // Create the sticky generate prompt button
-      const stickyGenerateBtn = mainGenerateBtn.cloneNode(true);
-      stickyGenerateBtn.id = 'sticky-generate-prompt-btn';
-      stickyGenerateBtn.className = mainGenerateBtn.className;
-      
-      // Don't add event listener here - it will be handled by event delegation
-      console.log('Created sticky generate prompt button - event listener will be added by delegation');
-      
-      // Insert after the copy button
-      const copyBtn = stickyInputGroup.querySelector('#sticky-copy-button');
-      if (copyBtn && copyBtn.parentNode) {
-        copyBtn.parentNode.insertBefore(stickyGenerateBtn, copyBtn.nextSibling);
-      } else {
-        stickyInputGroup.appendChild(stickyGenerateBtn);
-      }
-    }
-    
-    const mainSettingsBtn = document.getElementById('prompt-settings-btn');
-    const stickySettingsBtn = stickyInputGroup.querySelector('#sticky-prompt-settings-btn');
-    
-    if (mainSettingsBtn && !stickySettingsBtn) {
-      console.log('Adding missing prompt settings button to sticky menu');
-      
-      // Create the sticky prompt settings button
-      const stickySettingsBtn = mainSettingsBtn.cloneNode(true);
-      stickySettingsBtn.id = 'sticky-prompt-settings-btn';
-      stickySettingsBtn.className = mainSettingsBtn.className;
-      
-      // Don't add event listener here - it will be handled by event delegation
-      console.log('Created sticky prompt settings button - event listener will be added by delegation');
-      
-      // Insert after the generate prompt button
-      const generateBtn = stickyInputGroup.querySelector('#sticky-generate-prompt-btn');
-      if (generateBtn && generateBtn.parentNode) {
-        generateBtn.parentNode.insertBefore(stickySettingsBtn, generateBtn.nextSibling);
-      } else {
-        stickyInputGroup.appendChild(stickySettingsBtn);
       }
     }
   }
