@@ -3802,15 +3802,23 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: var(--space-2);
   padding: var(--space-2);
+  flex: 1;
 }
 
 .sticky-prompt-preview #sticky-final-prompt {
   flex: 1;
   margin: 0;
-  padding-right: var(--space-2);
+}
+
+/* Sticky wrapper layout for prompt preview and buttons */
+#sticky-action-bar .sticky-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
 }
 
 .sticky-prompt-btn {

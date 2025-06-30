@@ -463,7 +463,9 @@ export default class GalleryView {
     
     stickyPreview.appendChild(stickyFinalPrompt);
     
-    // Add prompt injector buttons inside the preview bar
+    stickyWrapper.appendChild(stickyPreview);
+    
+    // Add prompt injector buttons outside the preview bar
     const mainGenerateBtn = document.getElementById('generate-prompt-btn');
     const mainSettingsBtn = document.getElementById('prompt-settings-btn');
     
@@ -478,7 +480,7 @@ export default class GalleryView {
         mainGenerateBtn.click();
       });
       
-      stickyPreview.appendChild(stickyGenerateBtn);
+      stickyWrapper.appendChild(stickyGenerateBtn);
     }
     
     if (mainSettingsBtn) {
@@ -492,10 +494,8 @@ export default class GalleryView {
         mainSettingsBtn.click();
       });
       
-      stickyPreview.appendChild(stickySettingsBtn);
+      stickyWrapper.appendChild(stickySettingsBtn);
     }
-    
-    stickyWrapper.appendChild(stickyPreview);
     
     // Create prompt settings panel for sticky header
     const mainSettingsPanel = document.getElementById('prompt-settings-panel');
@@ -515,7 +515,7 @@ export default class GalleryView {
       stickyWrapper.appendChild(stickySettingsPanel);
       
       // Sync the sticky settings panel with the main panel
-      const stickySettingsBtn = stickyPreview.querySelector('#sticky-prompt-settings-btn');
+      const stickySettingsBtn = stickyWrapper.querySelector('#sticky-prompt-settings-btn');
       if (stickySettingsBtn) {
         stickySettingsBtn.addEventListener('click', (e) => {
           e.preventDefault();
