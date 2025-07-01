@@ -335,7 +335,7 @@ def check_duplicate_ids() -> List[str]:
         restart_script()
     return report
 
-def copy_files_to_source() -> List[str]:
+def copy_files_to_source() -> Tuple[List[str], Dict[str, int]]:
     """
     Copy all PNG files from Downloads/sref model folders to source-images/model folders.
     
@@ -344,9 +344,10 @@ def copy_files_to_source() -> List[str]:
     Skips files that already exist in the destination to avoid overwriting.
     
     Returns:
-        List of report messages describing copy operations
+        Tuple of (report messages, model file counts)
     """
     report: List[str] = []
+    model_counts: Dict[str, int] = {}
     
     for model_id, folder in MODEL_FOLDERS.items():
         downloads_folder_path = DOWNLOADS_SREF_ROOT / folder
@@ -354,6 +355,7 @@ def copy_files_to_source() -> List[str]:
         
         if not downloads_folder_path.exists():
             print(f"Source folder {downloads_folder_path} does not exist, skipping...")
+            model_counts[model_id] = 0
             continue
             
         print(f"\nCopying files for {model_id} model...")
@@ -385,11 +387,12 @@ def copy_files_to_source() -> List[str]:
                 copied_count += 1
         
         print(f"  Summary: {copied_count} copied, {skipped_count} skipped")
+        model_counts[model_id] = copied_count
     
-    return report
+    return report, model_counts
 
 def print_report(rename_report: List[str], duplicate_report: List[str], 
-                copy_report: List[str], total_time: float) -> None:
+                copy_report: List[str], model_counts: Dict[str, int], total_time: float) -> None:
     """
     Print a comprehensive report of all file management activities.
     
@@ -397,6 +400,7 @@ def print_report(rename_report: List[str], duplicate_report: List[str],
         rename_report: List of rename operations performed
         duplicate_report: List of duplicate resolution operations
         copy_report: List of copy operations performed
+        model_counts: Dictionary of model file counts
         total_time: Total processing time in seconds
     """
     print("\n--- RENAME REPORT ---")
@@ -408,6 +412,15 @@ def print_report(rename_report: List[str], duplicate_report: List[str],
     print("\n--- COPY REPORT ---")
     for line in copy_report:
         print(line)
+    
+    print("\n--- FILE COUNT SUMMARY ---")
+    total_files = 0
+    for model_id, count in model_counts.items():
+        model_name = "Midjourney 7" if model_id == "mj7" else "NijiJourney 6"
+        print(f"{model_name}: {count} files moved")
+        total_files += count
+    print(f"Total files moved: {total_files}")
+    
     print(f"\nTotal processing time: {total_time:.2f} seconds")
 
 if __name__ == "__main__":
@@ -429,9 +442,9 @@ if __name__ == "__main__":
     
     # Step 3: Copy files to source-images
     print("\nStep 3: Copying files to source-images...")
-    copy_report = copy_files_to_source()
+    copy_report, model_counts = copy_files_to_source()
     
     total_time = time.time() - start_time
-    print_report(rename_report, duplicate_report, copy_report, total_time)
+    print_report(rename_report, duplicate_report, copy_report, model_counts, total_time)
     
     print("\nScript completed!") 
