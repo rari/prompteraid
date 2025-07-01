@@ -99,9 +99,12 @@ export default class AppController {
         console.error('Failed to save model preference to localStorage:', e);
       }
 
-      // Reload the page with the new model parameter
+      // Reload the page with the new model parameter, removing sref and q/quadrant
       const url = new URL(window.location);
       url.searchParams.set('model', modelId);
+      url.searchParams.delete('sref');
+      url.searchParams.delete('q');
+      url.searchParams.delete('quadrant');
       window.location.href = url.href;
     }
   }
