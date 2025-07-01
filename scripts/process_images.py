@@ -228,7 +228,7 @@ def process_image_set(args):
         folder = "misc"
     return (image_file, style_id, model_name, quadrants, folder)
 
-def process_source_images(source_dir="source-images", output_dir="processed-images"):
+def process_source_images(source_dir="data/source-images", output_dir="data/processed-images"):
     """
     Process all images in source-images directory
     
@@ -295,8 +295,8 @@ def process_source_images(source_dir="source-images", output_dir="processed-imag
 
 def main():
     parser = argparse.ArgumentParser(description="Process source images into Instagram-optimized quadrants")
-    parser.add_argument("--source", default="source-images", help="Source directory (default: source-images)")
-    parser.add_argument("--output", default="processed-images", help="Output directory (default: processed-images)")
+    parser.add_argument("--source", default="data/source-images", help="Source directory (default: data/source-images)")
+    parser.add_argument("--output", default="data/processed-images", help="Output directory (default: data/processed-images)")
     
     args = parser.parse_args()
     
