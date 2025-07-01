@@ -979,7 +979,7 @@ export default class GalleryView {
       const url = new URL(window.location.href);
       // Use the correct style reference (sref) from the image object
       url.searchParams.set('sref', image.sref);
-      url.searchParams.set('q', currentQuadrant); // Using shorter parameter name
+      url.searchParams.set('quadrant', currentQuadrant); // Using full parameter name for SEO
       if (currentModel) {
         url.searchParams.set('model', currentModel);
       }

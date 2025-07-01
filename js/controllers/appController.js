@@ -99,7 +99,7 @@ export default class AppController {
         console.error('Failed to save model preference to localStorage:', e);
       }
 
-      // Reload the page with the new model parameter, removing sref and q/quadrant
+      // Reload the page with the new model parameter, removing sref and quadrant (and legacy q for backward compatibility)
       const url = new URL(window.location);
       url.searchParams.set('model', modelId);
       url.searchParams.delete('sref');
@@ -118,7 +118,7 @@ export default class AppController {
       localStorage.setItem('prompteraid_model', modelFromUrl);
     }
     const sref = urlParams.get('sref');
-    const quadrant = urlParams.get('q') || urlParams.get('quadrant'); // Support both short and long parameter names
+    const quadrant = urlParams.get('quadrant'); // Use full parameter name for SEO
     
     // Handle sref (style reference) - this takes priority over search
     if (sref) {
