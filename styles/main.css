@@ -928,20 +928,20 @@ a:hover {
   color: transparent;
   animation: chevron-gradient-shift 3s ease infinite;
   display: inline-block;
-  transform: rotate(0deg); /* Start pointing up (menu closed) */
+  transform: rotate(-180deg); /* Start pointing up (menu closed) */
   transform-origin: center;
   transition: transform 0.3s ease; /* Add transform transition back */
 }
 
 #toggle-preview-button.active i,
 #sticky-toggle-preview-button.active i {
-  transform: rotate(180deg); /* Point down when active/open */
+  transform: rotate(0deg); /* Point down when active/open */
   animation: chevron-gradient-shift 3s ease infinite;
 }
 
 #toggle-preview-button:not(.active) i,
 #sticky-toggle-preview-button:not(.active) i {
-  transform: rotate(0deg); /* Point up when inactive/closed */
+  transform: rotate(-180deg); /* Point up when inactive/closed */
   animation: chevron-gradient-shift 3s ease infinite;
 }
 
