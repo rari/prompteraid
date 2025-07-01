@@ -1,6 +1,3 @@
 User-agent: *
-Allow: /
-
 Sitemap: https://www.prompteraid.com/sitemap.xml
-
 Disallow: /debug.html 
