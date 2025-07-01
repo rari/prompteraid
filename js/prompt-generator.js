@@ -26,6 +26,7 @@ class PromptGenerator {
     const settingsBtn = document.getElementById('prompt-settings-btn');
     const settingsPanel = document.getElementById('prompt-settings-panel');
     const promptOutput = document.getElementById('prompt-output');
+    const randomizeCheckbox = document.getElementById('randomize-categories');
 
     // Ensure icon starts with correct classes
     const icon = generateBtn.querySelector('i');
@@ -45,6 +46,13 @@ class PromptGenerator {
     settingsBtn.addEventListener('click', () => {
       this.toggleSettings();
     });
+
+    // Handle randomize checkbox
+    if (randomizeCheckbox) {
+      randomizeCheckbox.addEventListener('change', () => {
+        this.toggleRandomize(randomizeCheckbox.checked);
+      });
+    }
 
     // Add keyboard shortcuts
     document.addEventListener('keydown', (e) => {
@@ -80,6 +88,36 @@ class PromptGenerator {
     }
   }
 
+  toggleRandomize(enabled) {
+    const categoryCheckboxes = document.querySelector('.category-checkboxes');
+    const categoryIds = ['cat-presentation', 'cat-emotion', 'cat-subject', 'cat-clothing', 'cat-appearance', 'cat-pose', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
+    
+    if (enabled) {
+      // Disable all category checkboxes
+      categoryCheckboxes.classList.add('disabled');
+      categoryIds.forEach(id => {
+        const checkbox = document.getElementById(id);
+        if (checkbox) {
+          checkbox.disabled = true;
+        }
+      });
+      // Always ensure Subject is checked when randomize is enabled
+      const subjectCheckbox = document.getElementById('cat-subject');
+      if (subjectCheckbox) {
+        subjectCheckbox.checked = true;
+      }
+    } else {
+      // Re-enable all category checkboxes
+      categoryCheckboxes.classList.remove('disabled');
+      categoryIds.forEach(id => {
+        const checkbox = document.getElementById(id);
+        if (checkbox) {
+          checkbox.disabled = false;
+        }
+      });
+    }
+  }
+
   buildNaturalPrompt(parts) {
     // parts: { Framing, View, Subject, Clothing, Appearance, Pose, Keyword, Effects }
     let prompt = '';
@@ -107,22 +145,41 @@ class PromptGenerator {
       return;
     }
 
+    const randomizeCheckbox = document.getElementById('randomize-categories');
+    const isRandomizeMode = randomizeCheckbox && randomizeCheckbox.checked;
+
     // Get selected categories from checkboxes
     const selectedCategories = [];
     const categoryIds = ['cat-presentation', 'cat-emotion', 'cat-subject', 'cat-clothing', 'cat-appearance', 'cat-pose', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
     const categoryNames = ['Presentation', 'Emotion', 'Subject', 'Clothing', 'Appearance', 'Pose', 'Setting', 'Lighting', 'Style', 'Details'];
     
-    categoryIds.forEach((id, index) => {
-      const checkbox = document.getElementById(id);
-      if (checkbox && checkbox.checked) {
-        selectedCategories.push(categoryNames[index]);
+    if (isRandomizeMode) {
+      // In randomize mode, randomly select categories (Subject is always included)
+      const availableCategories = categoryNames.filter(name => name !== 'Subject');
+      const numToSelect = Math.floor(Math.random() * 4) + 2; // Select 2-5 categories plus Subject
+      
+      // Always include Subject
+      selectedCategories.push('Subject');
+      
+      // Randomly select other categories
+      const shuffled = this.shuffleArray(availableCategories);
+      for (let i = 0; i < Math.min(numToSelect - 1, shuffled.length); i++) {
+        selectedCategories.push(shuffled[i]);
       }
-    });
+    } else {
+      // Normal mode - get selected categories from checkboxes
+      categoryIds.forEach((id, index) => {
+        const checkbox = document.getElementById(id);
+        if (checkbox && checkbox.checked) {
+          selectedCategories.push(categoryNames[index]);
+        }
+      });
 
-    // Ensure at least Subject is selected
-    if (selectedCategories.length === 0) {
-      this.showError('Please select at least one category.');
-      return;
+      // Ensure at least Subject is selected
+      if (selectedCategories.length === 0) {
+        this.showError('Please select at least one category.');
+        return;
+      }
     }
 
     // Get suffix from model if available, otherwise from DOM
