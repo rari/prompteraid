@@ -31,7 +31,7 @@ import sys
 
 # --- CONFIG ---
 PROJECT_ROOT = Path(r"C:/Users/imiko/Documents/GitHub/website/prompteraid")
-SOURCE_IMG_ROOT = PROJECT_ROOT / "source-images"  # Destination for processed files
+SOURCE_IMG_ROOT = PROJECT_ROOT / "data" / "source-images"  # Destination for processed files
 DOWNLOADS_SREF_ROOT = Path(r"C:/Users/imiko/Downloads/sref")  # Source downloads folder
 MODEL_FOLDERS = {"niji6": "niji-6", "mj7": "midjourney-7"}  # Model ID to folder mapping
 

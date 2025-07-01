@@ -1,10 +1,10 @@
 # But still ignore these even if they're in allowed folders
 node_modules/
 node_modules/**
-source-images/
-source-images/**
-processed-images/
-processed-images/**
+data/source-images/
+data/source-images/**
+data/processed-images/
+data/processed-images/**
 dist/
 dist/**
 .env
