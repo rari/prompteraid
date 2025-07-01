@@ -30,7 +30,7 @@ def install_git_hook():
 # PrompterAid Pre-commit Hook
 # Automatically updates sitemap.xml when HTML files are changed
 
-python3 "{script_path.absolute()}"
+python "{script_path.absolute()}"
 """
         
         with open(hook_file, 'w') as f:
