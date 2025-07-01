@@ -31,7 +31,8 @@ def check_if_html_files_changed():
                 
         return False
         
-    except subprocess.CalledProcessError:
+    except subprocess.CalledProcessError as e:
+        print(f"⚠️  Warning: Could not check staged files: {e}")
         return False
 
 def main():
@@ -43,9 +44,13 @@ def main():
         print("📝 HTML files detected in commit. Updating sitemap...")
         
         # Change to the repository root
-        repo_root = subprocess.run(['git', 'rev-parse', '--show-toplevel'], 
-                                 capture_output=True, text=True, check=True).stdout.strip()
-        os.chdir(repo_root)
+        try:
+            repo_root = subprocess.run(['git', 'rev-parse', '--show-toplevel'], 
+                                     capture_output=True, text=True, check=True).stdout.strip()
+            os.chdir(repo_root)
+        except subprocess.CalledProcessError as e:
+            print(f"❌ Error: Could not find repository root: {e}")
+            sys.exit(1)
         
         # Update the sitemap
         if update_sitemap():
@@ -55,8 +60,8 @@ def main():
             try:
                 subprocess.run(['git', 'add', 'sitemap.xml'], check=True)
                 print("📦 Updated sitemap.xml staged for commit")
-            except subprocess.CalledProcessError:
-                print("⚠️  Warning: Could not stage updated sitemap.xml")
+            except subprocess.CalledProcessError as e:
+                print(f"⚠️  Warning: Could not stage updated sitemap.xml: {e}")
         else:
             print("❌ Failed to update sitemap!")
             sys.exit(1)

@@ -25,12 +25,18 @@ def install_git_hook():
         # Create hooks directory if it doesn't exist
         hooks_dir.mkdir(parents=True, exist_ok=True)
         
-        # Create the hook file
+        # Create the hook file with cross-platform compatibility
         hook_content = f"""#!/bin/bash
 # PrompterAid Pre-commit Hook
 # Automatically updates sitemap.xml when HTML files are changed
+# Works with any GitHub authentication method (PAT, SSH, etc.)
 
-python "{script_path.absolute()}"
+# Get the script directory
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+
+# Run the Python script
+python "${{PROJECT_ROOT}}/scripts/sitemap/pre-commit-hook.py"
 """
         
         with open(hook_file, 'w') as f:
@@ -42,6 +48,7 @@ python "{script_path.absolute()}"
         print("✅ Git pre-commit hook installed successfully!")
         print(f"📁 Hook location: {hook_file}")
         print("🔄 The sitemap will now be automatically updated when you commit HTML files.")
+        print("🔐 Works with any GitHub authentication method (PAT, SSH, etc.)")
         
         return True
         

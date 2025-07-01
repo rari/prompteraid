@@ -42,10 +42,13 @@ Install the pre-commit hook to automatically update the sitemap when HTML files 
 
 ```bash
 # Install the hook
-python3 scripts/sitemap/setup_git_hook.py
+python scripts/sitemap/setup_git_hook.py
 
 # Uninstall the hook (if needed)
-python3 scripts/sitemap/setup_git_hook.py --uninstall
+python scripts/sitemap/setup_git_hook.py --uninstall
+
+# Check authentication status
+python scripts/sitemap/check-auth.py
 ```
 
 ### What It Does
@@ -106,4 +109,10 @@ chmod +x scripts/update_sitemap.sh
 **Git hook not working:**
 - Ensure you're in a Git repository
 - Check that the hook file exists in `.git/hooks/pre-commit`
-- Verify the hook file is executable 
+- Verify the hook file is executable
+- Run `python scripts/sitemap/check-auth.py` to verify authentication
+
+**Authentication issues:**
+- The scripts work with any GitHub authentication method (PAT, SSH, etc.)
+- Your account (rari) is properly configured and authenticated
+- If you encounter issues, run the authentication check script 
