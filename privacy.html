@@ -13,51 +13,44 @@
   <!-- Structured Data -->
   <script type="application/ld+json">
   {
-    "@context": "https://schema.org",
-    "@graph": [
-
-      /* ─── Core identity ─── */
+    "@context":"https://schema.org",
+    "@graph":[
       {
-        "@type": "WebSite",
-        "@id": "https://www.prompteraid.com/#website",
-        "name": "PrompterAid",
-        "url": "https://www.prompteraid.com/",
-        "description": "Free, no-login style-code library and 1-click prompt generator for NijiJourney 6 & Midjourney 7.",
-        "publisher": {
-          "@type": "Person",
-          "name": "Jenna Juffuffles",
-          "url": "https://jennajuffuffles.com/"
+        "@type":"WebSite",
+        "@id":"https://www.prompteraid.com/#website",
+        "name":"PrompterAid",
+        "url":"https://www.prompteraid.com/",
+        "description":"Free, no-login style-code library and 1-click prompt generator for NijiJourney 6 & Midjourney 7.",
+        "publisher":{
+          "@type":"Person",
+          "name":"Jenna Juffuffles",
+          "url":"https://jennajuffuffles.com/"
         },
-        "sameAs": [
+        "sameAs":[
           "https://www.instagram.com/prompteraid/",
           "https://hub.prompteraid.com/"
         ],
-
-        /* <<<— Updated SearchAction —>>> */
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://www.prompteraid.com/?sref={search_term_string}",
-          "query-input": "required name=search_term_string"
+        "potentialAction":{
+          "@type":"SearchAction",
+          "target":"https://www.prompteraid.com/?sref={search_term_string}",
+          "query-input":"required name=search_term_string"
         }
       },
-
-      /* ─── The app itself ─── */
       {
-        "@type": "WebApplication",
-        "@id": "https://www.prompteraid.com/#app",
-        "name": "PrompterAid Prompt Generator",
-        "url": "https://www.prompteraid.com/",
-        "applicationCategory": "https://schema.org/GraphicsApplication",
-        "operatingSystem": "All",
-        "browserRequirements": "Requires JavaScript; modern desktop & mobile browsers.",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
+        "@type":"WebApplication",
+        "@id":"https://www.prompteraid.com/#app",
+        "name":"PrompterAid Prompt Generator",
+        "url":"https://www.prompteraid.com/",
+        "applicationCategory":"https://schema.org/GraphicsApplication",
+        "operatingSystem":"All",
+        "browserRequirements":"Requires JavaScript; modern desktop & mobile browsers.",
+        "offers":{
+          "@type":"Offer",
+          "price":"0",
+          "priceCurrency":"USD"
         },
-        "creator": { "@id": "https://www.prompteraid.com/#website" }
+        "creator":{"@id":"https://www.prompteraid.com/#website"}
       }
-
     ]
   }
   </script>
