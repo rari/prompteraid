@@ -9,6 +9,58 @@
   <meta name="description" content="Terms of Service for PrompterAid.">
   <link rel="icon" href="img/favicon.ico" type="image/x-icon">
 
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+
+      /* ─── Core identity ─── */
+      {
+        "@type": "WebSite",
+        "@id": "https://rari.github.io/prompteraid/#website",
+        "name": "PrompterAid",
+        "url": "https://rari.github.io/prompteraid/",
+        "description": "Free, no-login style-code library and 1-click prompt generator for NijiJourney 6 & Midjourney 7.",
+        "publisher": {
+          "@type": "Person",
+          "name": "Jenna Juffuffles",
+          "url": "https://jennajuffuffles.com/"
+        },
+        "sameAs": [
+          "https://www.instagram.com/prompteraid/",
+          "https://hub.prompteraid.com/"
+        ],
+
+        /* <<<— Updated SearchAction —>>> */
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://rari.github.io/prompteraid/?sref={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+
+      /* ─── The app itself ─── */
+      {
+        "@type": "WebApplication",
+        "@id": "https://rari.github.io/prompteraid/#app",
+        "name": "PrompterAid Prompt Generator",
+        "url": "https://rari.github.io/prompteraid/",
+        "applicationCategory": "https://schema.org/GraphicsApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript; modern desktop & mobile browsers.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "creator": { "@id": "https://rari.github.io/prompteraid/#website" }
+      }
+
+    ]
+  }
+  </script>
+
   <link rel="stylesheet" href="styles/main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
