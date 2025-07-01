@@ -11,7 +11,7 @@ class PromptGenerator {
 
   async loadPromptWords() {
     try {
-      const response = await fetch('prompt-words.json');
+      const response = await fetch('data/prompt-words.json');
       this.promptWords = await response.json();
       console.log('Prompt words loaded successfully');
     } catch (error) {

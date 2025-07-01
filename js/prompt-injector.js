@@ -6,7 +6,7 @@ class PromptInjector{
   
   async load(){
     try{
-      const r=await fetch('prompt-words.json');
+      const r=await fetch('data/prompt-words.json');
       this.words=await r.json();
       // Don't bind here - wait for DOM to be ready
     }catch(e){
