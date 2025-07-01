@@ -1,0 +1,112 @@
+# SEO Workflow Automation
+
+name: seo_workflow
+description: Comprehensive SEO automation for PrompterAid including sitemap updates, structured data, and best practices
+filters:
+  # Match HTML files
+  - type: file_extension
+    pattern: "\\.html$"
+  # Match sitemap and robots files
+  - type: file_path
+    pattern: "(sitemap|robots)\\.(xml|txt)$"
+  # Match git events
+  - type: event
+    pattern: "git_(commit|push)"
+
+actions:
+  - type: suggest
+    message: |
+      🔍 SEO Workflow Checklist:
+      
+      **Before Committing:**
+      1. ✅ **Sitemap Update:**
+         ```bash
+         python scripts/sitemap/update_sitemap.py
+         ```
+      
+      2. ✅ **Structured Data Check:**
+         - Verify JSON-LD is present in HTML files
+         - Check for proper schema.org markup
+         - Ensure URLs match current domain
+      
+      3. ✅ **Meta Tags Review:**
+         - Title is descriptive and under 60 characters
+         - Description is compelling and under 160 characters
+         - Open Graph tags are present
+         - Twitter Card tags are present
+      
+      4. ✅ **Accessibility:**
+         - Alt text on images
+         - Proper heading hierarchy
+         - ARIA labels where needed
+      
+      **After Pushing:**
+      1. ✅ **Verify Sitemap:**
+         - Check https://rari.github.io/prompteraid/sitemap.xml
+         - Ensure lastmod dates are current
+      
+      2. ✅ **Test Structured Data:**
+         - Use Google's Rich Results Test
+         - Validate JSON-LD syntax
+      
+      3. ✅ **Performance Check:**
+         - Run Lighthouse audit
+         - Check Core Web Vitals
+      
+      **Monthly Maintenance:**
+      1. ✅ **Update sitemap.xml dates**
+      2. ✅ **Review and update meta descriptions**
+      3. ✅ **Check for broken links**
+      4. ✅ **Update structured data if needed**
+
+  - type: command
+    when: "git_push"
+    command: |
+      echo "🔍 Running SEO checks..."
+      
+      # Update sitemap
+      python scripts/sitemap/update_sitemap.py
+      
+      # Check for structured data in HTML files
+      echo "📊 Checking structured data..."
+      grep -r "application/ld+json" *.html || echo "⚠️  No structured data found"
+      
+      # Verify meta tags
+      echo "🏷️  Checking meta tags..."
+      grep -r "meta name=\"description\"" *.html || echo "⚠️  Missing meta descriptions"
+      
+      echo "✅ SEO checks complete"
+
+examples:
+  - input: |
+      # Complete SEO workflow
+      git add .
+      python scripts/sitemap/update_sitemap.py
+      git add sitemap.xml
+      git commit -m "feat: add new feature with SEO updates"
+      git push
+    output: |
+      🔍 Running SEO checks...
+      ✅ Updated index.html: 2024-12-19 → 2024-12-20
+      📊 Checking structured data...
+      application/ld+json found in index.html
+      🏷️  Checking meta tags...
+      meta name="description" found in index.html
+      ✅ SEO checks complete
+
+  - input: |
+      # Quick push without HTML changes
+      git push
+    output: |
+      🔍 Running SEO checks...
+      ✨ Sitemap is already up to date!
+      📊 Checking structured data...
+      application/ld+json found in index.html
+      🏷️  Checking meta tags...
+      meta name="description" found in index.html
+      ✅ SEO checks complete
+
+metadata:
+  priority: high
+  version: 1.0
+  tags: ["seo", "automation", "sitemap", "structured-data", "meta-tags"] 

@@ -1,0 +1,86 @@
+# Sitemap Automation Rule
+
+name: sitemap_automation
+description: Automatically update sitemap.xml when pushing changes to keep SEO current
+filters:
+  # Match HTML files that are in the sitemap
+  - type: file_path
+    pattern: "(index|privacy|terms|404)\\.html$"
+  # Match sitemap.xml itself
+  - type: file_path
+    pattern: "sitemap\\.xml$"
+  # Match git push events
+  - type: event
+    pattern: "git_push"
+
+actions:
+  - type: suggest
+    message: |
+      🗺️ Sitemap Update Reminder:
+      
+      When pushing changes that affect HTML files, ensure the sitemap is current:
+      
+      1. **Automatic Update (Recommended):**
+         ```bash
+         # The Git hook should automatically update sitemap.xml
+         # If it doesn't work, run manually:
+         python scripts/sitemap/update_sitemap.py
+         ```
+      
+      2. **Manual Update (if needed):**
+         ```bash
+         # Windows
+         scripts\sitemap\update_sitemap.bat
+         
+         # Unix/Linux/macOS
+         ./scripts/sitemap/update_sitemap.sh
+         
+         # Direct Python
+         python scripts/sitemap/update_sitemap.py
+         ```
+      
+      3. **Verify Changes:**
+         - Check that sitemap.xml has updated lastmod dates
+         - Ensure all HTML files are properly referenced
+         - Commit the updated sitemap if changes were made
+      
+      4. **Git Hook Status:**
+         ```bash
+         # Check if hook is installed
+         ls .git/hooks/pre-commit
+         
+         # Reinstall if needed
+         python scripts/sitemap/setup_git_hook.py
+         ```
+
+  - type: command
+    when: "git_push"
+    command: |
+      echo "🔄 Checking sitemap status..."
+      python scripts/sitemap/update_sitemap.py
+      echo "✅ Sitemap check complete"
+
+examples:
+  - input: |
+      # After making changes to index.html
+      git add index.html
+      git commit -m "feat: add new feature to main page"
+      git push
+    output: |
+      🔄 Checking sitemap status...
+      ✅ Updated index.html: 2024-12-19 → 2024-12-20
+      🎉 Successfully updated 1 entries in sitemap.xml
+      ✅ Sitemap check complete
+
+  - input: |
+      # When sitemap is already current
+      git push
+    output: |
+      🔄 Checking sitemap status...
+      ✨ Sitemap is already up to date!
+      ✅ Sitemap check complete
+
+metadata:
+  priority: high
+  version: 1.0
+  tags: ["seo", "automation", "sitemap", "git"] 
