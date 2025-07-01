@@ -4,6 +4,58 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lost at Sea - PrompterAid</title>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+
+        /* ─── Core identity ─── */
+        {
+          "@type": "WebSite",
+          "@id": "https://rari.github.io/prompteraid/#website",
+          "name": "PrompterAid",
+          "url": "https://rari.github.io/prompteraid/",
+          "description": "Free, no-login style-code library and 1-click prompt generator for NijiJourney 6 & Midjourney 7.",
+          "publisher": {
+            "@type": "Person",
+            "name": "Jenna Juffuffles",
+            "url": "https://jennajuffuffles.com/"
+          },
+          "sameAs": [
+            "https://www.instagram.com/prompteraid/",
+            "https://hub.prompteraid.com/"
+          ],
+
+          /* <<<— Updated SearchAction —>>> */
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://rari.github.io/prompteraid/?sref={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+
+        /* ─── The app itself ─── */
+        {
+          "@type": "WebApplication",
+          "@id": "https://rari.github.io/prompteraid/#app",
+          "name": "PrompterAid Prompt Generator",
+          "url": "https://rari.github.io/prompteraid/",
+          "applicationCategory": "https://schema.org/GraphicsApplication",
+          "operatingSystem": "All",
+          "browserRequirements": "Requires JavaScript; modern desktop & mobile browsers.",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "creator": { "@id": "https://rari.github.io/prompteraid/#website" }
+        }
+
+      ]
+    }
+    </script>
     <style>
       :root {
         --background: hsl(210, 30%, 95%);
