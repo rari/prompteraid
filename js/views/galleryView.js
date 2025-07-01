@@ -712,11 +712,19 @@ export default class GalleryView {
         // Sync main checkbox changes to sticky
         mainCheckbox.addEventListener('change', () => {
           stickyCheckbox.checked = mainCheckbox.checked;
+          // Show info notification if Subject is unchecked
+          if (categoryId === 'cat-subject' && !mainCheckbox.checked) {
+            this.showInfoNotification('It is recommended to keep the Subject category enabled for best results.');
+          }
         });
         
         // Sync sticky checkbox changes to main
         stickyCheckbox.addEventListener('change', () => {
           mainCheckbox.checked = stickyCheckbox.checked;
+          // Show info notification if Subject is unchecked
+          if (categoryId === 'cat-subject' && !stickyCheckbox.checked) {
+            this.showInfoNotification('It is recommended to keep the Subject category enabled for best results.');
+          }
         });
       }
     });
@@ -2175,15 +2183,18 @@ export default class GalleryView {
         // Handle Escape key to close search
         if (e.key === 'Escape' && !searchContainer.classList.contains('hidden')) {
           // Clear search and hide the search container
-          searchInput.value = '';
-          handler(null);
-          searchContainer.classList.add('hidden');
-          
-          // Update button states
-          const searchButton = document.getElementById('search-button');
-          const stickySearchButton = document.getElementById('sticky-search-button');
-          if (searchButton) searchButton.classList.remove('active');
-          if (stickySearchButton) stickySearchButton.classList.remove('active');
+          if (window.galleryController && typeof window.galleryController.clearSearchState === 'function') {
+            window.galleryController.clearSearchState();
+          } else {
+            searchInput.value = '';
+            handler(null);
+            searchContainer.classList.add('hidden');
+            // Update button states
+            const searchButton = document.getElementById('search-button');
+            const stickySearchButton = document.getElementById('sticky-search-button');
+            if (searchButton) searchButton.classList.remove('active');
+            if (stickySearchButton) stickySearchButton.classList.remove('active');
+          }
         }
       });
     }

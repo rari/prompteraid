@@ -167,6 +167,7 @@ export default class GalleryController {
    * - Uses efficient data structures (Set, Map) for lookups
    */
   renderGallery() {
+    console.debug('renderGallery: searchNumber is', this.searchNumber);
     // Ensure only one filter is active at a time
     if (this.model.showOnlyFavorites && this.showOnlySelected) {
       // If both filters are somehow active, prioritize the most recently activated one
@@ -946,7 +947,9 @@ export default class GalleryController {
    * Clears the search state and updates UI accordingly
    */
   clearSearchState() {
+    console.debug('clearSearchState called');
     this.searchNumber = null;
+    console.debug('searchNumber:', this.searchNumber);
     const searchContainer = document.querySelector('.search-container');
     const searchButton = document.getElementById('search-button');
     const stickySearchButton = document.getElementById('sticky-search-button');
@@ -964,6 +967,9 @@ export default class GalleryController {
     this.view.updateSearchButtonIcons(false);
     
     this.view.hideFilterDivider('search');
+    
+    console.debug('renderGallery called from clearSearchState');
+    this.renderGallery();
   }
 
   /**
@@ -971,16 +977,20 @@ export default class GalleryController {
    * Shows/hides the search input and updates button state
    */
   toggleSearch() {
+    console.debug('toggleSearch called');
     const searchContainer = document.querySelector('.search-container');
     const searchButton = document.getElementById('search-button');
     const stickySearchButton = document.getElementById('sticky-search-button');
     const searchInput = document.getElementById('search-input');
 
     const isNowHidden = searchContainer.classList.toggle('hidden');
+    console.debug('Search button clicked. Search is now', isNowHidden ? 'inactive (hidden)' : 'active (visible)');
+    console.debug('Current searchNumber:', this.searchNumber);
 
-    // If search is being activated (not hidden), close collapsible sections
-    if (!isNowHidden) {
-      this.view.closeAllCollapsibleSections();
+    // If search is being deactivated (now hidden), clear search state
+    if (isNowHidden) {
+      this.clearSearchState();
+      return; // Prevent further UI updates since clearSearchState handles them
     }
 
     // Sync active state on both buttons
