@@ -159,6 +159,16 @@ export default class GalleryView {
         } else {
           console.log('Tutorial summary not found');
         }
+
+        // Add toggle event listener to track state changes and update icon
+        const details = tutorialSection.querySelector('details');
+        if (details) {
+          details.addEventListener('toggle', () => {
+            this.updateSectionIcon(details, 'minimize-tutorial');
+          });
+          // Initialize the icon state
+          this.updateSectionIcon(details, 'minimize-tutorial');
+        }
       } else {
         console.log('Tutorial section not found');
       }
@@ -181,6 +191,7 @@ export default class GalleryView {
     if (details) {
       details.open = !details.open;
       console.log('Tutorial section toggled, open:', details.open);
+      this.updateSectionIcon(details, 'minimize-tutorial');
     }
   }
 
@@ -199,7 +210,29 @@ export default class GalleryView {
       if (details) {
         details.open = !details.open;
         console.log('Tutorial section toggled via icon/span, open:', details.open);
+        this.updateSectionIcon(details, 'minimize-tutorial');
       }
+    }
+  }
+
+  /**
+   * Updates the icon of a section based on its open/closed state
+   * @param {HTMLElement} details - The details element
+   * @param {string} buttonId - The ID of the button to update
+   */
+  updateSectionIcon(details, buttonId) {
+    const button = document.getElementById(buttonId);
+    if (!button) return;
+    
+    const icon = button.querySelector('i');
+    if (!icon) return;
+    
+    if (details.open) {
+      // Section is open - show compress icon (arrows pointing inward) to indicate you can close it
+      icon.className = 'fa-solid fa-down-left-and-up-right-to-center';
+    } else {
+      // Section is closed - show expand icon (arrows pointing outward) to indicate you can open it
+      icon.className = 'fa-solid fa-up-right-and-down-left-from-center';
     }
   }
 
@@ -2554,7 +2587,7 @@ export default class GalleryView {
       <details${expanded ? ' open' : ''}>
         <summary>
           <span><i class=\"fa-solid fa-bolt\" style=\"color: var(--neon-pink); margin-right: 0.3em;\"></i>New Styles</span>
-          <button id="minimize-new-styles" class="close-button" title="Minimize this section" aria-label="Minimize new styles section"><i class="fas fa-compress-alt"></i></button>
+          <button id="minimize-new-styles" class="close-button" title="Minimize this section" aria-label="Minimize new styles section"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
         </summary>
         <div class="new-styles-content">`;
     html += '<div class="new-styles-gallery">';
@@ -2621,6 +2654,7 @@ export default class GalleryView {
           if (details) {
             details.open = !details.open;
             localStorage.setItem(storageKey, details.open ? 'true' : 'false');
+            this.updateSectionIcon(details, 'minimize-new-styles');
           }
         }
       });
@@ -2633,7 +2667,10 @@ export default class GalleryView {
     if (detailsElem) {
       detailsElem.addEventListener('toggle', () => {
         localStorage.setItem(storageKey, detailsElem.open ? 'true' : 'false');
+        this.updateSectionIcon(detailsElem, 'minimize-new-styles');
       });
+      // Initialize the icon state
+      this.updateSectionIcon(detailsElem, 'minimize-new-styles');
     }
   }
 
@@ -2734,7 +2771,7 @@ export default class GalleryView {
       <details${expanded ? ' open' : ''}>
         <summary>
           <span><i class=\"fa-solid fa-crown\" style=\"color: var(--neon-orange); margin-right: 0.3em;\"></i>Styles of the Month</span>
-          <button id="minimize-styles-of-the-month" class="close-button" title="Minimize this section" aria-label="Minimize styles of the month section"><i class="fas fa-compress-alt"></i></button>
+          <button id="minimize-styles-of-the-month" class="close-button" title="Minimize this section" aria-label="Minimize styles of the month section"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
         </summary>
         <div class="new-styles-content">
           <div class="new-styles-gallery">`;
@@ -2774,6 +2811,7 @@ export default class GalleryView {
         e.preventDefault();
         details.open = !details.open;
         localStorage.setItem(storageKey, details.open ? 'true' : 'false');
+        this.updateSectionIcon(details, 'minimize-styles-of-the-month');
       };
     }
 
@@ -2794,6 +2832,7 @@ export default class GalleryView {
           if (details) {
             details.open = !details.open;
             localStorage.setItem(storageKey, details.open ? 'true' : 'false');
+            this.updateSectionIcon(details, 'minimize-styles-of-the-month');
           }
         }
       });
@@ -2806,7 +2845,10 @@ export default class GalleryView {
     if (detailsElem) {
       detailsElem.addEventListener('toggle', () => {
         localStorage.setItem(storageKey, detailsElem.open ? 'true' : 'false');
+        this.updateSectionIcon(detailsElem, 'minimize-styles-of-the-month');
       });
+      // Initialize the icon state
+      this.updateSectionIcon(detailsElem, 'minimize-styles-of-the-month');
     }
   }
 
