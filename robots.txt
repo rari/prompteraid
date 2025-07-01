@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rari.github.io/prompteraid/sitemap.xml
+Sitemap: https://www.prompteraid.com/sitemap.xml
 
 Disallow: /debug.html 
