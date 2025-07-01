@@ -199,6 +199,24 @@ Prompt Generator Category Order (for instructional/reference text):
   100% { transform: scale(1); }
 }
 
+/* Disabled state for category checkboxes when randomize is active */
+.category-checkboxes.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.category-checkboxes.disabled .checkbox-label {
+  cursor: not-allowed;
+}
+
+.category-checkboxes.disabled input[type="checkbox"] {
+  cursor: not-allowed;
+}
+
+.category-checkboxes.disabled span {
+  color: var(--text-secondary);
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .prompt-generator-container {
