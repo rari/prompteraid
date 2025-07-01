@@ -72,11 +72,14 @@ export default class GalleryView {
       // Clear after restore
       sessionStorage.removeItem('prompteraid-menu-state');
       sessionStorage.removeItem('prompteraid-model-switch');
+      return true; // Indicate that restoration happened
     }
+    return false; // No restoration happened
   }
 
   constructor() {
-    GalleryView.restoreMenuStateIfModelSwitch();
+    const wasRestored = GalleryView.restoreMenuStateIfModelSwitch();
+    this.wasModelSwitchRestored = wasRestored; // Store this for later use
     this.gallery = document.getElementById('image-gallery');
     this.promptInput = document.getElementById('prompt-input');
     this.finalPrompt = document.getElementById('final-prompt');
@@ -697,7 +700,7 @@ export default class GalleryView {
     }
 
     // Sync category checkboxes between main and sticky panels
-    const categoryIds = ['cat-camera', 'cat-subject', 'cat-appearance', 'cat-clothing', 'cat-pose', 'cat-emotion', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
+    const categoryIds = ['cat-presentation', 'cat-subject', 'cat-appearance', 'cat-clothing', 'cat-pose', 'cat-emotion', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
     categoryIds.forEach(categoryId => {
       const mainCheckbox = document.getElementById(categoryId);
       const stickyCheckbox = document.getElementById(`sticky-${categoryId}`);
@@ -720,7 +723,7 @@ export default class GalleryView {
 
     // Sync suffix input between main and sticky panels
     // Note: This is now handled by bindSuffixInput method in the controller
-    
+
     // Sync prompt input value
     const mainInput = document.getElementById('prompt-input');
     const stickyInput = stickyInputGroup.querySelector('#prompt-input');
@@ -865,7 +868,7 @@ export default class GalleryView {
     // Don't hide if user is currently interacting with sticky menu
     if (this.isInteractingWithSticky) {
       if (!isMainMenuVisible) {
-        stickyBar.classList.add('visible');
+      stickyBar.classList.add('visible');
       }
       return;
     }
@@ -1372,7 +1375,7 @@ export default class GalleryView {
         input.addEventListener('input', unifiedHandler);
         input.addEventListener('blur', unifiedHandler);
       }
-    });
+      });
   }
 
   bindCopyButton(handler) {
@@ -1821,7 +1824,7 @@ export default class GalleryView {
             // Save menu state to sessionStorage
             const promptInput = document.getElementById('prompt-input');
             const suffixInput = document.getElementById('prompt-suffix');
-            const categoryIds = ['cat-camera', 'cat-subject', 'cat-appearance', 'cat-clothing', 'cat-pose', 'cat-emotion', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
+            const categoryIds = ['cat-presentation', 'cat-subject', 'cat-appearance', 'cat-clothing', 'cat-pose', 'cat-emotion', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
             const checkboxes = {};
             categoryIds.forEach(id => {
               const cb = document.getElementById(id);
@@ -2095,8 +2098,8 @@ export default class GalleryView {
     
     // Show notification about mode change only if requested
     if (showNotification) {
-      const mode = isDiscordMode ? 'Discord' : 'Website';
-      this.showInfoNotification(`Switched to ${mode} mode`);
+    const mode = isDiscordMode ? 'Discord' : 'Website';
+    this.showInfoNotification(`Switched to ${mode} mode`);
     }
   }
 
@@ -2119,7 +2122,14 @@ export default class GalleryView {
     if (searchButton) {
       const icon = searchButton.querySelector('i');
       if (icon) {
-        icon.className = isActive ? 'fa-solid fa-magnifying-glass-plus' : 'fa-solid fa-magnifying-glass';
+        const newClass = isActive ? 'fa-solid fa-magnifying-glass-plus' : 'fa-solid fa-magnifying-glass';
+        icon.className = newClass;
+      }
+      // Also update the button's active class
+      if (isActive) {
+        searchButton.classList.add('active');
+      } else {
+        searchButton.classList.remove('active');
       }
     }
     
@@ -2127,7 +2137,14 @@ export default class GalleryView {
     if (stickySearchButton) {
       const stickyIcon = stickySearchButton.querySelector('i');
       if (stickyIcon) {
-        stickyIcon.className = isActive ? 'fa-solid fa-magnifying-glass-plus' : 'fa-solid fa-magnifying-glass';
+        const newClass = isActive ? 'fa-solid fa-magnifying-glass-plus' : 'fa-solid fa-magnifying-glass';
+        stickyIcon.className = newClass;
+      }
+      // Also update the button's active class
+      if (isActive) {
+        stickySearchButton.classList.add('active');
+      } else {
+        stickySearchButton.classList.remove('active');
       }
     }
   }
@@ -3014,4 +3031,18 @@ export default class GalleryView {
       });
     }
   }
-}
+
+  // Method to sync model with current DOM values (for external use)
+  syncModelWithDOM(model) {
+    const promptInput = document.getElementById('prompt-input');
+    const suffixInput = document.getElementById('prompt-suffix');
+    
+    if (promptInput && promptInput.value !== undefined) {
+      model.setBasePrompt(promptInput.value);
+    }
+    
+    if (suffixInput && suffixInput.value !== undefined) {
+      model.setSuffix(suffixInput.value);
+    }
+  }
+} 

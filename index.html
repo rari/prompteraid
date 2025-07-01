@@ -160,66 +160,66 @@
           <div class="prompt-preview-row hidden">
             <div class="preview-and-buttons">
               <div class="prompt-preview" style="flex: 1 1 auto; display: flex; align-items: center;">
-                <p id="final-prompt" style="flex: 1 1 auto;"></p>
+            <p id="final-prompt" style="flex: 1 1 auto;"></p>
               </div>
-              <div class="prompt-gen-inline-buttons">
-                <button id="generate-prompt-btn" class="action-button prompt-gen" title="Generate random prompt">
-                  <i class="fa-solid fa-wand-magic wand-magic-icon"></i>
-                  <i class="fa-solid fa-wand-magic-sparkles sparkle-wand-icon"></i>
-                </button>
-                <button id="prompt-settings-btn" class="action-button prompt-settings" title="Prompt generator settings"><i class="fas fa-cog"></i></button>
+            <div class="prompt-gen-inline-buttons">
+              <button id="generate-prompt-btn" class="action-button prompt-gen" title="Generate random prompt">
+                <i class="fa-solid fa-wand-magic wand-magic-icon"></i>
+                <i class="fa-solid fa-wand-magic-sparkles sparkle-wand-icon"></i>
+              </button>
+              <button id="prompt-settings-btn" class="action-button prompt-settings" title="Prompt generator settings"><i class="fas fa-cog"></i></button>
+            </div>
+          </div>
+          <div id="prompt-settings-panel" class="prompt-settings-panel hidden">
+            <h3>Prompt Generator Settings</h3>
+            <div class="setting-row">
+              <label>Categories to include:</label>
+              <div class="category-checkboxes">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="cat-presentation" checked>
+                  <span>Presentation</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="cat-subject" checked>
+                  <span>Subject</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="cat-appearance" checked>
+                  <span>Appearance</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="cat-clothing" checked>
+                  <span>Clothing</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="cat-pose" checked>
+                  <span>Pose</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="cat-emotion" checked>
+                  <span>Emotion</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="cat-setting" checked>
+                  <span>Setting</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="cat-lighting" checked>
+                  <span>Lighting</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="cat-style" checked>
+                  <span>Style</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="cat-details" checked>
+                  <span>Details</span>
+                </label>
               </div>
             </div>
-            <div id="prompt-settings-panel" class="prompt-settings-panel hidden">
-              <h3>Prompt Generator Settings</h3>
-              <div class="setting-row">
-                <label>Categories to include:</label>
-                <div class="category-checkboxes">
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="cat-camera" checked>
-                    <span>Camera</span>
-                  </label>
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="cat-subject" checked>
-                    <span>Subject</span>
-                  </label>
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="cat-appearance" checked>
-                    <span>Appearance</span>
-                  </label>
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="cat-clothing" checked>
-                    <span>Clothing</span>
-                  </label>
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="cat-pose" checked>
-                    <span>Pose</span>
-                  </label>
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="cat-emotion" checked>
-                    <span>Emotion</span>
-                  </label>
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="cat-setting" checked>
-                    <span>Setting</span>
-                  </label>
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="cat-lighting" checked>
-                    <span>Lighting</span>
-                  </label>
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="cat-style" checked>
-                    <span>Style</span>
-                  </label>
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="cat-details" checked>
-                    <span>Details</span>
-                  </label>
-                </div>
-              </div>
-              <div class="setting-row">
-                <label for="prompt-suffix">Suffix</label>
-                <input type="text" id="prompt-suffix" placeholder="e.g. --ar 16:9 --s 750">
+            <div class="setting-row">
+              <label for="prompt-suffix">Suffix</label>
+              <input type="text" id="prompt-suffix" placeholder="e.g. --ar 16:9 --s 750">
               </div>
             </div>
           </div>
@@ -320,7 +320,7 @@
             <div class="info-section prompt-generator-section">
               <h4>Prompt Generator</h4>
               <p>The prompt generator helps you create natural-language prompts by combining words from different categories. It's perfect for when you need inspiration or want to quickly generate a base prompt.</p>
-              <p>Generated prompts follow a natural language template: <code>&lt;camera&gt; &lt;emotion&gt; &lt;subject&gt; wearing &lt;clothing&gt; with &lt;appearance&gt; is &lt;pose&gt; at &lt;setting&gt;, &lt;lighting&gt;, &lt;style&gt;, &lt;details&gt;</code></p>
+              <p>Generated prompts follow a natural language template: <code>&lt;presentation&gt; &lt;emotion&gt; &lt;subject&gt; wearing &lt;clothing&gt; with &lt;appearance&gt; is &lt;pose&gt; at &lt;setting&gt;, &lt;lighting&gt;, &lt;style&gt;, &lt;details&gt;</code></p>
               <div style="display: flex; flex-direction: column; gap: 0.5em; margin-bottom: 1em;">
                 <div style="display: flex; align-items: center;">
                   <span style="margin-right: 0.7em;"><i class="fa-solid fa-wand-magic tutorial-icon tutorial-icon-purple"></i></span>
@@ -336,7 +336,7 @@
                 <li>Use the checkboxes to choose which categories to include in your generated prompts. Only the categories you have selected will be included, and the connectors (like "wearing", "with", "is", "at") only appear when the relevant categories are present so that results read like natural English sentences rather than keyword lists. All categories are selected by default, but you can uncheck categories you don't want to include.</li>
                 <li>
                   <ul>
-                    <li><strong>Camera:</strong> Camera angles and composition</li>
+                    <li><strong>Presentation:</strong> Camera angles, art mediums, and composition styles</li>
                     <li><strong>Subject:</strong> Main character or object</li>
                     <li><strong>Appearance:</strong> Physical characteristics</li>
                     <li><strong>Clothing:</strong> Outfits and attire</li>

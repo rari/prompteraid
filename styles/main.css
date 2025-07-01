@@ -2007,6 +2007,21 @@ a:hover {
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
+#search-input.search-active {
+  border-color: var(--neon-teal);
+  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.2);
+  animation: search-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes search-glow {
+  0% {
+    box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 6px rgba(0, 255, 255, 0.1);
+  }
+}
+
 #search-input::placeholder {
   color: var(--text-secondary);
 }

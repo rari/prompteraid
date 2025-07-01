@@ -109,8 +109,8 @@ class PromptGenerator {
 
     // Get selected categories from checkboxes
     const selectedCategories = [];
-    const categoryIds = ['cat-camera', 'cat-emotion', 'cat-subject', 'cat-clothing', 'cat-appearance', 'cat-pose', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
-    const categoryNames = ['Camera', 'Emotion', 'Subject', 'Clothing', 'Appearance', 'Pose', 'Setting', 'Lighting', 'Style', 'Details'];
+    const categoryIds = ['cat-presentation', 'cat-emotion', 'cat-subject', 'cat-clothing', 'cat-appearance', 'cat-pose', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
+    const categoryNames = ['Presentation', 'Emotion', 'Subject', 'Clothing', 'Appearance', 'Pose', 'Setting', 'Lighting', 'Style', 'Details'];
     
     categoryIds.forEach((id, index) => {
       const checkbox = document.getElementById(id);
@@ -163,9 +163,9 @@ class PromptGenerator {
     // Build a logical, readable prompt structure
     let prompt = '';
     
-    // <camera>
-    if (parts.Camera) {
-      prompt += parts.Camera + ' of ';
+    // <presentation>
+    if (parts.Presentation) {
+      prompt += parts.Presentation + ' of ';
     }
     
     // <emotion> <subject>
