@@ -2902,6 +2902,15 @@ html.dark-mode {
   --hover-background: #1a1a1a; /* Very dark grey for dark mode */
 }
 
+/* Dark mode model selector text color */
+html.dark-mode .model-selector .current-model {
+  color: white;
+}
+
+html.dark-mode .model-option {
+  color: white;
+}
+
 /* Image loading state */
 .gallery-item img.loading {
   opacity: 0.5;
@@ -4080,4 +4089,12 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
 .prompt-gen:hover .fa-wand-magic-sparkles,
 .prompt-gen.active .fa-wand-magic-sparkles {
   color: var(--neon-purple) !important;
+}
+
+/* Force model name and icon to white in dark mode, override all !important */
+html.dark-mode .current-model span,
+html.dark-mode .model-option span,
+html.dark-mode .current-model i,
+html.dark-mode .model-option i {
+  color: white !important;
 }

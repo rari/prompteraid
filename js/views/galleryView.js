@@ -39,7 +39,44 @@
  */
 
 export default class GalleryView {
+  // At the top of the class, add this static method:
+  static restoreMenuStateIfModelSwitch() {
+    if (sessionStorage.getItem('prompteraid-model-switch') === '1') {
+      const state = JSON.parse(sessionStorage.getItem('prompteraid-menu-state') || '{}');
+      // Restore prompt
+      if (state.prompt !== undefined) {
+        const promptInput = document.getElementById('prompt-input');
+        if (promptInput) {
+          promptInput.value = state.prompt;
+          promptInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }
+      // Restore suffix
+      if (state.suffix !== undefined) {
+        const suffixInput = document.getElementById('prompt-suffix');
+        if (suffixInput) {
+          suffixInput.value = state.suffix;
+          suffixInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }
+      // Restore checkboxes
+      if (state.checkboxes) {
+        Object.entries(state.checkboxes).forEach(([id, checked]) => {
+          const cb = document.getElementById(id);
+          if (cb) {
+            cb.checked = checked;
+            cb.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        });
+      }
+      // Clear after restore
+      sessionStorage.removeItem('prompteraid-menu-state');
+      sessionStorage.removeItem('prompteraid-model-switch');
+    }
+  }
+
   constructor() {
+    GalleryView.restoreMenuStateIfModelSwitch();
     this.gallery = document.getElementById('image-gallery');
     this.promptInput = document.getElementById('prompt-input');
     this.finalPrompt = document.getElementById('final-prompt');
@@ -228,11 +265,11 @@ export default class GalleryView {
     if (!icon) return;
     
     if (details.open) {
-      // Section is open - show compress icon (arrows pointing inward) to indicate you can close it
-      icon.className = 'fa-solid fa-down-left-and-up-right-to-center';
-    } else {
-      // Section is closed - show expand icon (arrows pointing outward) to indicate you can open it
+      // Section is open - show expand icon (arrows pointing outward)
       icon.className = 'fa-solid fa-up-right-and-down-left-from-center';
+    } else {
+      // Section is closed - show compress icon (arrows pointing inward)
+      icon.className = 'fa-solid fa-down-left-and-up-right-to-center';
     }
   }
 
@@ -818,17 +855,13 @@ export default class GalleryView {
     const stickyBar = document.getElementById('sticky-action-bar');
     if (!stickyBar) return;
     
-    const isMobile = window.innerWidth <= 768;
     const scrollY = window.scrollY;
-    
     // Get the main menu element to calculate when it's out of view
     const mainMenu = document.querySelector('.prompt-container');
     if (!mainMenu) return;
-    
     const mainMenuRect = mainMenu.getBoundingClientRect();
     const mainMenuBottom = mainMenuRect.bottom;
     const isMainMenuVisible = mainMenuBottom > 0;
-    
     // Don't hide if user is currently interacting with sticky menu
     if (this.isInteractingWithSticky) {
       if (!isMainMenuVisible) {
@@ -836,26 +869,16 @@ export default class GalleryView {
       }
       return;
     }
-    
-    if (isMobile) {
-      // Mobile behavior: hide on scroll down, show on scroll up, but only when main menu is out of view
-      if (!isMainMenuVisible) {
-        if (this.isScrollingUp) {
-          stickyBar.classList.add('visible');
-        } else if (this.isScrollingDown) {
-          stickyBar.classList.remove('visible');
-        }
-      } else {
-        // Hide when main menu is visible
+    // Unified behavior: hide on scroll down, show on scroll up, but only when main menu is out of view
+    if (!isMainMenuVisible) {
+      if (this.isScrollingUp) {
+        stickyBar.classList.add('visible');
+      } else if (this.isScrollingDown) {
         stickyBar.classList.remove('visible');
       }
     } else {
-      // Desktop behavior: show/hide based on main menu visibility
-      if (!isMainMenuVisible) {
-        stickyBar.classList.add('visible');
-      } else {
-        stickyBar.classList.remove('visible');
-      }
+      // Hide when main menu is visible
+      stickyBar.classList.remove('visible');
     }
   }
 
@@ -1795,8 +1818,24 @@ export default class GalleryView {
           const selectedModel = option.dataset.model;
           
           if (selectedModel !== this.currentModel) {
+            // Save menu state to sessionStorage
+            const promptInput = document.getElementById('prompt-input');
+            const suffixInput = document.getElementById('prompt-suffix');
+            const categoryIds = ['cat-camera', 'cat-subject', 'cat-appearance', 'cat-clothing', 'cat-pose', 'cat-emotion', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
+            const checkboxes = {};
+            categoryIds.forEach(id => {
+              const cb = document.getElementById(id);
+              if (cb) checkboxes[id] = cb.checked;
+            });
+            const state = {
+              prompt: promptInput ? promptInput.value : '',
+              suffix: suffixInput ? suffixInput.value : '',
+              checkboxes
+            };
+            sessionStorage.setItem('prompteraid-menu-state', JSON.stringify(state));
+            sessionStorage.setItem('prompteraid-model-switch', '1');
+
             this.currentModel = selectedModel;
-            
             // Dispatch custom event for model change
             const event = new CustomEvent('modelChange', { 
               detail: { model: selectedModel } 
