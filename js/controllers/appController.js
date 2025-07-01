@@ -161,6 +161,8 @@ export default class AppController {
           const searchInput = document.getElementById('search-input');
           if (searchInput) {
             searchInput.value = sref;
+            // Add search-active class for neon-teal border
+            searchInput.classList.add('search-active');
           }
           // Set searchNumber and trigger search (filter out weight syntax)
           const filteredSref = this.filterSearchInput(sref);
@@ -189,6 +191,8 @@ export default class AppController {
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
           searchInput.value = searchQ;
+          // Add search-active class for neon-teal border
+          searchInput.classList.add('search-active');
         }
         // Set searchNumber and trigger search (filter out weight syntax)
         const filteredSearchQ = this.filterSearchInput(searchQ);
@@ -314,8 +318,14 @@ export default class AppController {
       // Set the search input value to the style reference
       searchInput.value = sref;
       
+      // Add search-active class for neon-teal border
+      searchInput.classList.add('search-active');
+      
       // Set the search number in the gallery controller
       galleryController.searchNumber = sref;
+      
+      // Update search button icons to show active state
+      galleryController.view.updateSearchButtonIcons(true);
     }
     
     // Scroll to top to show the linked image

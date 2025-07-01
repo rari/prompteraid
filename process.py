@@ -382,14 +382,14 @@ def process_images_concurrently() -> Tuple[Dict[str, List[Path]], List[str], flo
                     webp_path.parent.mkdir(parents=True, exist_ok=True)
                     futures.append(executor.submit(convert_png_to_webp, png, webp_path))
                     webp_paths[model_id].append(webp_path)
-                
-                # Show progress as files complete
-                completed = 0
-                for fut in as_completed(futures):
-                    completed += 1
-                    if completed % 10 == 0 or completed == len(futures):  # Show progress every 10 files
-                        print(f"  Converted {completed}/{len(futures)} files...")
-                    report.append(fut.result())
+            
+            # Show progress as files complete
+            completed = 0
+            for fut in as_completed(futures):
+                completed += 1
+                if completed % 10 == 0 or completed == len(futures):  # Show progress every 10 files
+                    print(f"  Converted {completed}/{len(futures)} files...")
+                report.append(fut.result())
         
         # Add orphaned files to the results
         if orphaned_files[model_id]:
@@ -664,5 +664,5 @@ if __name__ == "__main__":
     processed_pngs = len([msg for msg in convert_report if msg.startswith("Converted:")])
     efficiency_stats = calculate_efficiency_stats(total_pngs, processed_pngs, total_time)
     
-    print_report(rename_report, convert_report, changes, total_time, total_files)
+    print_report(rename_report, convert_report, changes, total_time, total_files) 
     print_efficiency_report(efficiency_stats) 

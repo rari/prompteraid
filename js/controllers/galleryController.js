@@ -101,9 +101,13 @@ export default class GalleryController {
       // Add direct document-level handler for favorite button clicks
       this.addDirectFavoriteHandler();
     
+      // Sync model with current DOM values before updating prompt
+      // Use the view's method to ensure proper syncing, especially after model switching
+      this.view.syncModelWithDOM(this.model);
+    
       // Update prompt initially
       this.updatePrompt();
-      
+    
       // Initialize mode toggle UI to reflect current state
       this.view.updateModeToggle(this.model.isDiscordMode, false);
     
@@ -951,7 +955,10 @@ export default class GalleryController {
     if (searchContainer) searchContainer.classList.add('hidden');
     if (searchButton) searchButton.classList.remove('active');
     if (stickySearchButton) stickySearchButton.classList.remove('active');
-    if (searchInput) searchInput.value = '';
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.classList.remove('search-active');
+    }
     
     // Update search button icons to show inactive state
     this.view.updateSearchButtonIcons(false);
@@ -988,6 +995,9 @@ export default class GalleryController {
     // If search is now visible, focus the input
     if (!isNowHidden && searchInput) {
       searchInput.focus();
+    } else if (isNowHidden && searchInput) {
+      // Remove search-active class when search is hidden
+      searchInput.classList.remove('search-active');
     }
 
     // Turn off other exclusive views when activating search
@@ -1050,11 +1060,6 @@ export default class GalleryController {
       }
       this.clearSearchState();
       this.renderGallery();
-      // Update search button state
-      const searchButton = document.getElementById('search-button');
-      const stickySearchButton = document.getElementById('sticky-search-button');
-      if (searchButton) searchButton.classList.remove('active');
-      if (stickySearchButton) stickySearchButton.classList.remove('active');
       return;
     }
     
@@ -1085,6 +1090,11 @@ export default class GalleryController {
       this.view.showErrorNotification(`No images found matching ${searchDisplay}`);
       this.view.hideFilterDivider('search');
       this.renderGallery();
+      // Add search-active class even when no matches found
+      const searchInputElement = document.getElementById('search-input');
+      if (searchInputElement) {
+        searchInputElement.classList.add('search-active');
+      }
       return;
     }
     
@@ -1146,6 +1156,12 @@ export default class GalleryController {
     
     // Update search button icons to show active state
     this.view.updateSearchButtonIcons(true);
+    
+    // Add search-active class to search input for neon-teal border
+    const searchInputElement = document.getElementById('search-input');
+    if (searchInputElement) {
+      searchInputElement.classList.add('search-active');
+    }
     
     // Show notification about search results
     const searchDisplay = searchTerms.length > 1 ? `"${searchTerms.join('", "')}"` : `"${filteredInput}"`;
