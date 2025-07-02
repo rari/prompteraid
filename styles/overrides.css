@@ -275,7 +275,6 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
 .site-footer .footer-legal a:focus,
 .site-footer .footer-legal a:active {
   color: white !important;
-  text-decoration: underline !important;
 }
 
 /* Override any theme-based footer link colors */
