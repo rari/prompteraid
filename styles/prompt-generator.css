@@ -199,21 +199,28 @@ Prompt Generator Category Order (for instructional/reference text):
   100% { transform: scale(1); }
 }
 
-/* Disabled state for category checkboxes when randomize is active */
+/* Disabled state when randomize is active */
 .category-checkboxes.disabled {
+  /* dim everything inside */
+  opacity: 0.3;
+}
+
+/* Block pointer events for anything inside the disabled container */
+.category-checkboxes.disabled *,
+.category-checkboxes.disabled {
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+  filter: grayscale(100%) brightness(70%);
+}
+
+/* Ensure text looks dimmer */
+.category-checkboxes.disabled .checkbox-label span {
+  color: var(--text-secondary);
+}
+
+/* In case inputs are individually disabled (for other panels) */
+.checkbox-label input:disabled + span {
   opacity: 0.5;
-  pointer-events: none;
-}
-
-.category-checkboxes.disabled .checkbox-label {
-  cursor: not-allowed;
-}
-
-.category-checkboxes.disabled input[type="checkbox"] {
-  cursor: not-allowed;
-}
-
-.category-checkboxes.disabled span {
   color: var(--text-secondary);
 }
 

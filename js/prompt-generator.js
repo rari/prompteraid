@@ -52,6 +52,10 @@ class PromptGenerator {
       randomizeCheckbox.addEventListener('change', () => {
         this.toggleRandomize(randomizeCheckbox.checked);
       });
+
+      // Apply initial state on load
+      console.log('[PromptGen] Randomize checkbox default state:', randomizeCheckbox.checked);
+      this.toggleRandomize(randomizeCheckbox.checked);
     }
 
     // Add keyboard shortcuts
@@ -69,6 +73,7 @@ class PromptGenerator {
           this.copyPrompt();
           break;
         case 'p':
+          this.ensurePromptMenuVisible();
           this.toggleSettings();
           break;
       }
@@ -89,33 +94,42 @@ class PromptGenerator {
   }
 
   toggleRandomize(enabled) {
-    const categoryCheckboxes = document.querySelector('.category-checkboxes');
+    const categoryContainers = document.querySelectorAll('.category-checkboxes');
     const categoryIds = ['cat-presentation', 'cat-emotion', 'cat-subject', 'cat-clothing', 'cat-appearance', 'cat-pose', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
-    
+
+    console.log('[PromptGen] toggleRandomize called. enabled=', enabled);
     if (enabled) {
-      // Disable all category checkboxes
-      categoryCheckboxes.classList.add('disabled');
+      console.log('[PromptGen] Enabling randomize visual lock');
+      // Save current states
+      this.prevCategoryStates = {};
       categoryIds.forEach(id => {
         const checkbox = document.getElementById(id);
         if (checkbox) {
+          this.prevCategoryStates[id] = checkbox.checked;
+          checkbox.checked = true; // visually show all selected
           checkbox.disabled = true;
         }
       });
-      // Always ensure Subject is checked when randomize is enabled
-      const subjectCheckbox = document.getElementById('cat-subject');
-      if (subjectCheckbox) {
-        subjectCheckbox.checked = true;
-      }
+      categoryContainers.forEach(c=>{
+        c.classList.add('disabled');
+      });
     } else {
-      // Re-enable all category checkboxes
-      categoryCheckboxes.classList.remove('disabled');
+      console.log('[PromptGen] Disabling randomize visual lock');
+      // Restore previous states
       categoryIds.forEach(id => {
         const checkbox = document.getElementById(id);
         if (checkbox) {
           checkbox.disabled = false;
+          if (this.prevCategoryStates && id in this.prevCategoryStates) {
+            checkbox.checked = this.prevCategoryStates[id];
+          }
         }
       });
+      categoryContainers.forEach(c=>{
+        c.classList.remove('disabled');
+      });
     }
+    console.log('[PromptGen] toggleRandomize done');
   }
 
   buildNaturalPrompt(parts) {
@@ -168,17 +182,17 @@ class PromptGenerator {
       }
     } else {
       // Normal mode - get selected categories from checkboxes
-      categoryIds.forEach((id, index) => {
-        const checkbox = document.getElementById(id);
-        if (checkbox && checkbox.checked) {
-          selectedCategories.push(categoryNames[index]);
-        }
-      });
+    categoryIds.forEach((id, index) => {
+      const checkbox = document.getElementById(id);
+      if (checkbox && checkbox.checked) {
+        selectedCategories.push(categoryNames[index]);
+      }
+    });
 
-      // Ensure at least Subject is selected
-      if (selectedCategories.length === 0) {
-        this.showError('Please select at least one category.');
-        return;
+    // Ensure at least Subject is selected
+    if (selectedCategories.length === 0) {
+      this.showError('Please select at least one category.');
+      return;
       }
     }
 
@@ -334,6 +348,18 @@ class PromptGenerator {
         notification.parentNode.removeChild(notification);
       }
     }, 3000);
+  }
+
+  /**
+   * Ensures the prompt generator panel is visible by opening the preview menu
+   * if it is currently collapsed (simulates clicking the chevron button).
+   */
+  ensurePromptMenuVisible() {
+    const previewRow = document.querySelector('.prompt-preview-row');
+    const toggleBtn = document.getElementById('toggle-preview-button');
+    if (previewRow && previewRow.classList.contains('hidden') && toggleBtn) {
+      toggleBtn.click();
+    }
   }
 }
 
