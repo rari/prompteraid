@@ -265,13 +265,26 @@ a:hover {
 
 /* Animated gradient title text */
 .cute-title {
-  background: var(--gradient-primary);
-  background-size: 200% auto;
-  color: transparent;
-  background-clip: text;
-  -webkit-background-clip: text;
-  animation: gradient-shift 8s ease infinite;
-  font-weight: 800;
+  font-family: 'Baloo 2', 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-weight: bold;
+  font-size: 2.8rem;
+  color: #3ee6ff;
+  text-shadow:
+    0 0 2px #fff,
+    0 2px 0 #ff4fcf,
+    0 -2px 0 #ff4fcf,
+    2px 0 0 #ff4fcf,
+    -2px 0 0 #ff4fcf,
+    2px 2px 0 #ff4fcf,
+    -2px -2px 0 #ff4fcf,
+    2px -2px 0 #ff4fcf,
+    -2px 2px 0 #ff4fcf,
+    0 0 12px #ff4fcf;
+  border-radius: 0.2em;
+  padding: 0.1em 0.4em;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  display: inline-block;
 }
 
 /* Emoji decorations for the title */
