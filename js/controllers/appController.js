@@ -153,8 +153,10 @@ export default class AppController {
           window.galleryController.view.hideFilterDivider('linked');
         }
         
-        // Reload images for the new model
-        window.galleryController.model.reloadImagesForModel(modelId).then(() => {
+        // Reload images for the new model with error boundary if available
+        const switchModel = async () => {
+          await window.galleryController.model.reloadImagesForModel(modelId);
+          
           // Clear selections and favorites when switching models
           window.galleryController.model.selectedImages.clear();
           window.galleryController.model.favoriteImages.clear();
@@ -172,9 +174,25 @@ export default class AppController {
               gallery.classList.remove('model-change-active');
             }, 1000);
           }
-        }).catch(error => {
-          console.error('Failed to load images for new model:', error);
-        });
+        };
+        
+        if (window.errorBoundary && window.errorBoundary.wrapAsyncWithRetry) {
+          window.errorBoundary.wrapAsyncWithRetry(
+            switchModel,
+            2,
+            'Model Switch'
+          ).catch(error => {
+            console.error('Failed to switch models:', error);
+            if (window.errorBoundary && window.errorBoundary.showErrorMessage) {
+              window.errorBoundary.showErrorMessage('Failed to switch models. Please try again.', 'error');
+            }
+          });
+        } else {
+          // Fallback to direct call if error boundary not available
+          switchModel().catch(error => {
+            console.error('Failed to switch models:', error);
+          });
+        }
       }
     }
   }

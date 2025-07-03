@@ -118,7 +118,19 @@ export default class ImageModel {
 
   async loadImages() {
     try {
-      const imagePaths = await this.getImageFiles();
+      // Use error boundary if available, otherwise fall back to direct call
+      let imagePaths;
+      if (window.errorBoundary && window.errorBoundary.wrapAsyncWithRetry) {
+        imagePaths = await window.errorBoundary.wrapAsyncWithRetry(
+          () => this.getImageFiles(),
+          3,
+          'Image Files Fetch'
+        ) || [];
+      } else {
+        // Fallback to direct call if error boundary not available
+        imagePaths = await this.getImageFiles();
+      }
+      
       this.images = imagePaths.map(pathOrObj => {
         // If the entry is an object (new format), preserve all fields
         if (typeof pathOrObj === 'object' && pathOrObj !== null) {
@@ -149,6 +161,10 @@ export default class ImageModel {
       return this.images;
     } catch (error) {
       console.error('Error loading images:', error);
+      // Show user-friendly error message if error boundary is available
+      if (window.errorBoundary && window.errorBoundary.showErrorMessage) {
+        window.errorBoundary.showErrorMessage('Failed to load images. Please refresh the page.', 'error');
+      }
       return [];
     }
   }
@@ -158,12 +174,15 @@ export default class ImageModel {
    * This method is used when switching between models to ensure fresh data
    */
   async reloadImagesForModel(modelId) {
+    console.log(`🔄 Reloading images for model: ${modelId}`);
     // Update the current model
     this.currentModel = modelId;
     
     // Clear current images and reload
     this.images = [];
-    return await this.loadImages();
+    const result = await this.loadImages();
+    console.log(`✅ Reloaded ${result.length} images for model ${modelId}`);
+    return result;
   }
 
   /**
@@ -222,6 +241,7 @@ export default class ImageModel {
             if (data && typeof data === 'object' && data.sets) {
               // Get the current model (default to the one specified in the JSON or niji-6)
               const currentModel = this.currentModel || data.default || 'niji-6';
+              console.log(`🔍 Current model: ${currentModel}`);
               
               // Map UI model IDs to JSON keys
               const modelKeyMap = {
@@ -231,14 +251,17 @@ export default class ImageModel {
               };
               
               const jsonKey = modelKeyMap[currentModel] || currentModel;
+              console.log(`🔍 JSON key: ${jsonKey}`);
+              console.log(`🔍 Available sets:`, Object.keys(data.sets));
               
               // Get the images for the current model
               const modelSet = data.sets[jsonKey];
               if (modelSet && Array.isArray(modelSet.images)) {
-                console.log(`Successfully loaded ${modelSet.images.length} images for model ${currentModel} (JSON key: ${jsonKey})`);
+                console.log(`✅ Successfully loaded ${modelSet.images.length} images for model ${currentModel} (JSON key: ${jsonKey})`);
                 return modelSet.images;
               } else {
-                console.warn(`No images found for model ${currentModel} (JSON key: ${jsonKey})`);
+                console.warn(`❌ No images found for model ${currentModel} (JSON key: ${jsonKey})`);
+                console.warn(`Available models:`, Object.keys(data.sets));
               }
             }
             

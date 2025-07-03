@@ -2982,6 +2982,35 @@ html.dark-mode .model-option {
   animation: modelChangeFlash 1s ease;
 }
 
+/* Image error handling */
+.gallery-item.image-error {
+  position: relative;
+  background: var(--card-background);
+  border: 2px dashed var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.image-error-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  z-index: 10;
+}
+
+.image-error-indicator i {
+  margin-right: 6px;
+  color: var(--neon-orange);
+}
+
 /* Legal Page Styles */
 .legal-page {
   max-width: 800px;
