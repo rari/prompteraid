@@ -6993,7 +6993,8 @@
           "dateadded": "2024-06-25T01:10:23.351644Z",
           "new": false
         }
-      ]
+      ],
+      "numsamples": 1398
     },
     "mj7": {
       "name": "mj7",
@@ -12423,8 +12424,10 @@
           "dateadded": "2024-06-25T01:10:23.351644Z",
           "new": false
         }
-      ]
+      ],
+      "numsamples": 1085
     }
   },
-  "default": "niji6"
+  "default": "niji6",
+  "numsamples": 2483
 }
