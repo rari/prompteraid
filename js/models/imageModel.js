@@ -154,6 +154,19 @@ export default class ImageModel {
   }
 
   /**
+   * Reload images for a specific model
+   * This method is used when switching between models to ensure fresh data
+   */
+  async reloadImagesForModel(modelId) {
+    // Update the current model
+    this.currentModel = modelId;
+    
+    // Clear current images and reload
+    this.images = [];
+    return await this.loadImages();
+  }
+
+  /**
    * Loads image file paths with robust fallback strategy for different deployment environments
    * 
    * This method implements a multi-path resolution strategy to handle various deployment

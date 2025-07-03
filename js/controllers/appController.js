@@ -99,13 +99,83 @@ export default class AppController {
         console.error('Failed to save model preference to localStorage:', e);
       }
 
-      // Reload the page with the new model parameter, removing sref and quadrant (and legacy q for backward compatibility)
+      // Update URL without page reload - clear all parameters except model
       const url = new URL(window.location);
       url.searchParams.set('model', modelId);
+      // Clear all other parameters that might interfere with the new model
       url.searchParams.delete('sref');
       url.searchParams.delete('q');
       url.searchParams.delete('quadrant');
-      window.location.href = url.href;
+      url.searchParams.delete('search');
+      url.searchParams.delete('favorites');
+      url.searchParams.delete('selected');
+      window.history.replaceState({}, '', url.href);
+
+      // Update the gallery controller's model and re-render
+      if (window.galleryController && window.galleryController.model) {
+        // Clear search state and UI
+        if (window.galleryController.searchNumber !== null && window.galleryController.searchNumber !== '') {
+          window.galleryController.clearSearchState();
+        }
+        
+        // Clear any active filters (favorites, selected, etc.)
+        if (window.galleryController.model.showOnlyFavorites) {
+          window.galleryController.model.showOnlyFavorites = false;
+          if (window.galleryController.view) {
+            window.galleryController.view.updateFavoritesToggle(false);
+          }
+        }
+        
+        if (window.galleryController.showOnlySelected) {
+          window.galleryController.showOnlySelected = false;
+          if (window.galleryController.view) {
+            window.galleryController.view.updateShowSelectedToggle(false);
+          }
+        }
+        
+        // Clear search input and hide search container
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+          searchInput.value = '';
+          searchInput.classList.remove('search-active');
+        }
+        
+        const searchContainer = document.querySelector('.search-container');
+        if (searchContainer) {
+          searchContainer.classList.add('hidden');
+        }
+        
+        // Clear any warning banners
+        if (window.galleryController.view) {
+          window.galleryController.view.hideFullWidthNoSelectedWarning();
+          window.galleryController.view.hideFilterDivider('search');
+          window.galleryController.view.hideFilterDivider('selected');
+          window.galleryController.view.hideFilterDivider('linked');
+        }
+        
+        // Reload images for the new model
+        window.galleryController.model.reloadImagesForModel(modelId).then(() => {
+          // Clear selections and favorites when switching models
+          window.galleryController.model.selectedImages.clear();
+          window.galleryController.model.favoriteImages.clear();
+          window.galleryController.model.imageWeights.clear();
+          window.galleryController.model.weightColorIndices.clear();
+          
+          // Re-render the gallery
+          window.galleryController.renderGallery();
+          
+          // Add a brief flash animation to indicate model change
+          const gallery = document.getElementById('image-gallery');
+          if (gallery) {
+            gallery.classList.add('model-change-active');
+            setTimeout(() => {
+              gallery.classList.remove('model-change-active');
+            }, 1000);
+          }
+        }).catch(error => {
+          console.error('Failed to load images for new model:', error);
+        });
+      }
     }
   }
   
