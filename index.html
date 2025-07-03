@@ -1,76 +1,180 @@
 <!DOCTYPE html>
 <!-- PrompterAid - NijiJourney 6 & Midjourney 7 Visual Style Library -->
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- SEO -->
-  <title>Free Style-Code Library & 1-Click Prompt Generator – PrompterAid</title>
-  <meta name="description" content="Free style-code library and 1-click prompt generator for NijiJourney 6 & Midjourney 7. Compare and combine --sref style codes using mermaid-themed examples.">
-  <meta name="robots" content="index,follow">
-  <link rel="canonical" href="https://www.prompteraid.com/">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.prompteraid.com/">
-  <meta property="og:title" content="Free Style-Code Library & 1-Click Prompt Generator – PrompterAid">
-  <meta property="og:description" content="Free style-code library and 1-click prompt generator for NijiJourney 6 & Midjourney 7. Compare and combine --sref style codes using mermaid-themed examples.">
-  <meta property="og:image" content="https://www.prompteraid.com/img/prompteraid-summary-card-grid-1.png">
-  <meta property="og:image:alt" content="Mermaid-style AI artworks generated with different --sref codes">
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://www.prompteraid.com/">
-  <meta property="twitter:title" content="Free NijiJourney 6 & Midjourney 7 Style-Code Library + 1-Click Prompt Generator | PrompterAid">
-  <meta property="twitter:description" content="Free style-code library and 1-click prompt generator for NijiJourney 6 & Midjourney 7. Compare and combine --sref style codes using mermaid-themed examples.">
-  <meta property="twitter:image" content="https://www.prompteraid.com/img/prompteraid-summary-card-grid-1.png">
-
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <!-- SEO -->
+    <title>Free Midjourney &amp; Niji Style‑Code Library | PrompterAid</title>
+    <meta name="description" content="Free library of 1,000+ Midjourney &amp; Niji style‑codes. Preview, mix, and copy prompts in one click.">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://www.prompteraid.com/">
+    <link rel="icon" href="https://www.prompteraid.com/favicon.ico" type="image/x-icon">
+    <meta name="theme-color" content="#0E1117">
+  
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.prompteraid.com/">
+    <meta property="og:title" content="Free Midjourney &amp; Niji Style‑Code Library — PrompterAid">
+    <meta property="og:description" content="Free library of 1,000+ Midjourney &amp; Niji style‑codes. Preview, mix, and copy prompts in one click.">
+    <meta property="og:image" content="https://www.prompteraid.com/img/prompteraid-summary-card-grid-1.png">
+    <meta property="og:image:alt" content="PrompterAid—AI Image Generation Style Library">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="PrompterAid">
+    <meta property="og:locale" content="en_US">
+  
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@PrompterAid">
+    <meta name="twitter:creator" content="@JennaJuffuffles">
+    <meta property="twitter:url" content="https://www.prompteraid.com/">
+    <meta property="twitter:title" content="Free Midjourney &amp; Niji Style‑Code Library | PrompterAid">
+    <meta property="twitter:description" content="Free library of 1,000+ Midjourney &amp; Niji style‑codes. Preview, mix, and copy prompts in one click.">
+    <meta property="twitter:image" content="https://www.prompteraid.com/img/prompteraid-summary-card-grid-1.png">
+  </head>
+  
   <!-- Structured Data -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": "https://www.prompteraid.com/#website",
-        "name": "PrompterAid",
-        "url": "https://www.prompteraid.com/",
-        "description": "Free style-code library and 1-click prompt generator for NijiJourney 6 & Midjourney 7.",
-        "publisher": {
-          "@type": "Person",
-          "name": "Jenna Juffuffles",
-          "url": "https://jennajuffuffles.com/"
-        },
-        "sameAs": [
-          "https://www.instagram.com/prompteraid/",
-          "https://hub.prompteraid.com/"
-        ],
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://www.prompteraid.com/?sref={search_term_string}",
-          "query-input": "required name=search_term_string"
-        }
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://www.prompteraid.com/#website",
+      "name": "PrompterAid",
+      "url": "https://www.prompteraid.com/",
+      "description": "Free style-code library and 1-click prompt generator for NijiJourney 6 & Midjourney 7.",
+      "publisher": {
+        "@id": "https://www.prompteraid.com/#org"
       },
-      {
-        "@type": "WebApplication",
-        "@id": "https://www.prompteraid.com/#app",
-        "name": "PrompterAid Prompt Generator",
-        "url": "https://www.prompteraid.com/",
-        "applicationCategory": "https://schema.org/GraphicsApplication",
-        "operatingSystem": "All",
-        "browserRequirements": "Requires JavaScript; modern desktop & mobile browsers.",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "creator": { "@id": "https://www.prompteraid.com/#website" }
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.prompteraid.com/?sref={search_term_string}",
+        "query-input": "required name=search_term_string"
+      },
+      "about": {
+        "@id": "https://www.prompteraid.com/#catalog"
       }
-    ]
-  }
-  </script>
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://www.prompteraid.com/#org",
+      "name": "PrompterAid",
+      "url": "https://www.prompteraid.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.prompteraid.com/img/logo.png"
+      },
+      "founder": {
+        "@type": "Person",
+        "@id": "https://jennajuffuffles.com/#me",
+        "name": "Jenna Juffuffles",
+        "sameAs": [
+          "https://twitter.com/jennajuffuffles",
+          "https://jennajuffuffles.com/"
+        ]
+      },
+      "sameAs": [
+        "https://www.instagram.com/prompteraid/",
+        "https://hub.prompteraid.com/"
+      ]
+    },
+    {
+      "@type": "DataCatalog",
+      "@id": "https://www.prompteraid.com/#catalog",
+      "name": "PrompterAid Style-Code Library",
+      "dateModified": "2025-07-03",
+      "dataset": [
+        {
+          "@type": "Dataset",
+          "@id": "https://www.prompteraid.com/#dataset-niji6",
+          "name": "NijiJourney 6 SREF Library",
+          "identifier": "niji6",
+          "dateModified": "2025-07-03",
+          "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "keywords": "sref, style-code, niji 6, ai art, prompt library",
+          "author": {
+            "@id": "https://jennajuffuffles.com/#me"
+          },
+          "creator": {
+            "@id": "https://www.prompteraid.com/#org"
+          },
+          "description": "Side-by-side thumbnails of 1398 Niji 6 style-codes for AI art and prompt engineering.",
+          "inLanguage": "en",
+          "isAccessibleForFree": true,
+          "includedInDataCatalog": {
+            "@id": "https://www.prompteraid.com/#catalog"
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "numSamples",
+              "value": 1398
+            }
+          ]
+        },
+        {
+          "@type": "Dataset",
+          "@id": "https://www.prompteraid.com/#dataset-mj7",
+          "name": "Midjourney v7 SREF Library",
+          "identifier": "mj7",
+          "dateModified": "2025-07-03",
+          "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "keywords": "sref, style-code, midjourney v7, ai art, prompt library",
+          "author": {
+            "@id": "https://jennajuffuffles.com/#me"
+          },
+          "creator": {
+            "@id": "https://www.prompteraid.com/#org"
+          },
+          "description": "Side-by-side thumbnails of 1085 Midjourney v7 style-codes for AI art and prompt engineering.",
+          "inLanguage": "en",
+          "isAccessibleForFree": true,
+          "includedInDataCatalog": {
+            "@id": "https://www.prompteraid.com/#catalog"
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "numSamples",
+              "value": 1085
+            }
+          ]
+        }
+      ],
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "numSamples",
+          "value": 2483
+        }
+      ]
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.prompteraid.com/#app",
+      "name": "PrompterAid Prompt Generator",
+      "url": "https://www.prompteraid.com/",
+      "applicationCategory": "GraphicsApplication",
+      "operatingSystem": "All",
+      "softwareRequirements": "JavaScript; modern desktop & mobile browsers",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@id": "https://www.prompteraid.com/#website"
+      }
+    }
+  ]
+}
+</script>
 
   <link rel="stylesheet" href="styles/main.css">
   <link rel="stylesheet" href="styles/no-hover.css">
