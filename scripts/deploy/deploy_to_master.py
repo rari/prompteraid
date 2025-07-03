@@ -89,12 +89,12 @@ def deploy_to_master():
     
     # Update sitemap
     print("\n📝 Updating sitemap...")
-    if not run_command(['python', 'scripts/sitemap/update_sitemap.py']):
+    if not run_command(['python', 'scripts/deploy/update_sitemap.py']):
         print("⚠️  Sitemap update failed, but continuing with deployment...")
     
     # Update schema
     print("🔧 Updating schema...")
-    if not run_command(['python', 'scripts/sitemap/update_schema.py']):
+    if not run_command(['python', 'scripts/deploy/update_schema.py']):
         print("⚠️  Schema update failed, but continuing with deployment...")
     
     # Stage any updated files

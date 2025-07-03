@@ -36,7 +36,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 
 # Run the Python script
-python "${{PROJECT_ROOT}}/scripts/sitemap/pre-commit-hook.py"
+python "${{PROJECT_ROOT}}/scripts/deploy/pre-commit-hook.py"
 """
         
         with open(hook_file, 'w') as f:

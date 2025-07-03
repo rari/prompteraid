@@ -9,7 +9,7 @@ REM Change to the project root directory
 cd ..
 
 REM Run the Python deployment script
-python scripts/sitemap/deploy_to_master.py
+python scripts/deploy/deploy_to_master.py
 
 REM Pause to show results
 echo.
