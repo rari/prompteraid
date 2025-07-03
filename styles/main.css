@@ -347,10 +347,11 @@ a:hover {
 .image-count-subheader::after {
   content: "";
   display: inline-block;
-  height: 1px;
+  height: 2px; /* was 1px */
   width: 30px;
   background: linear-gradient(90deg, transparent, rgba(0, 180, 216, 0.3), transparent);
   margin: 0 10px;
+  align-self: center; /* ensure vertical centering in flex */
 }
 
 /* ===== PROMPT CONTAINER ===== */
