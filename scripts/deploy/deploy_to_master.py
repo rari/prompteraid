@@ -8,6 +8,12 @@ import os
 import sys
 import subprocess
 from pathlib import Path
+from getpass import getpass
+
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    load_dotenv = None
 
 def run_command(cmd, check=True, capture_output=False):
     """Run a git command and return the result."""
@@ -30,13 +36,49 @@ def get_current_branch():
         return result.stdout.strip()
     return None
 
+def load_env_user_info():
+    """Load user name and email from .env file in project root if available."""
+    env_path = Path(__file__).resolve().parents[2] / '.env'
+    name = email = None
+    if load_dotenv and env_path.exists():
+        load_dotenv(str(env_path))
+        name = os.environ.get('GIT_USER_NAME')
+        email = os.environ.get('GIT_USER_EMAIL')
+    return name, email
+
+def prompt_for_user_info():
+    print("Please enter your Git user info for this commit:")
+    name = input("Name: ").strip()
+    email = input("Email: ").strip()
+    return name, email
+
+def ensure_git_user_info():
+    name, email = load_env_user_info()
+    if not name or not email:
+        name, email = prompt_for_user_info()
+    # Set git config for this repo
+    subprocess.run(['git', 'config', 'user.name', name], check=True)
+    subprocess.run(['git', 'config', 'user.email', email], check=True)
+    return name, email
+
+def commit_uncommitted_changes():
+    print("\n⚠️  You have uncommitted changes.")
+    ensure_git_user_info()
+    print("Please enter a commit message for your changes:")
+    msg = input("Commit message: ").strip()
+    if not msg:
+        print("❌ Commit message cannot be empty. Aborting.")
+        sys.exit(1)
+    subprocess.run(['git', 'add', '.'], check=True)
+    subprocess.run(['git', 'commit', '-m', msg], check=True)
+    print("✅ Changes committed.")
+
 def check_working_directory_clean():
-    """Check if the working directory is clean."""
+    """Check if the working directory is clean. If not, prompt to commit."""
     result = run_command(['git', 'status', '--porcelain'], capture_output=True)
     if result and result.stdout.strip():
-        print("⚠️  Working directory has uncommitted changes:")
-        print(result.stdout)
-        return False
+        commit_uncommitted_changes()
+        return True
     return True
 
 def deploy_to_master():
@@ -129,7 +171,7 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] == '--help':
         print("🚀 PrompterAid Deploy to Master Script")
         print("=" * 40)
-        print("Usage: python scripts/sitemap/deploy_to_master.py")
+        print("Usage: python scripts/deploy/deploy_to_master.py")
         print("\nThis script will:")
         print("1. Check you're on explore branch")
         print("2. Ensure working directory is clean")
