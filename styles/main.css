@@ -268,18 +268,26 @@ a:hover {
   font-family: 'Baloo 2', 'Arial Rounded MT Bold', Arial, sans-serif;
   font-weight: bold;
   font-size: 2.8rem;
-  color: #3ee6ff;
+  color: var(--neon-teal);
   text-shadow:
     0 0 2px #fff,
-    0 2px 0 #ff4fcf,
-    0 -2px 0 #ff4fcf,
-    2px 0 0 #ff4fcf,
-    -2px 0 0 #ff4fcf,
-    2px 2px 0 #ff4fcf,
-    -2px -2px 0 #ff4fcf,
-    2px -2px 0 #ff4fcf,
-    -2px 2px 0 #ff4fcf,
-    0 0 12px #ff4fcf;
+    0 1px 0 #0051b8,
+    0 -1px 0 #0051b8,
+    1px 0 0 #0051b8,
+    -1px 0 0 #0051b8,
+    1px 1px 0 #0051b8,
+    -1px -1px 0 #0051b8,
+    1px -1px 0 #0051b8,
+    -1px 1px 0 #0051b8,
+    0 3px 0 var(--neon-pink),
+    0 -3px 0 var(--neon-pink),
+    3px 0 0 var(--neon-pink),
+    -3px 0 0 var(--neon-pink),
+    3px 3px 0 var(--neon-pink),
+    -3px -3px 0 var(--neon-pink),
+    3px -3px 0 var(--neon-pink),
+    -3px 3px 0 var(--neon-pink),
+    0 0 15px var(--neon-pink);
   border-radius: 0.2em;
   padding: 0.1em 0.4em;
   letter-spacing: 0.02em;
