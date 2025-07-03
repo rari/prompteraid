@@ -1,0 +1,61 @@
+---
+description: Git workflow and management best practices for the PrompterAid project
+globs: ["**/*"]
+alwaysApply: false
+---
+
+# Git Management Best Practices
+
+## Workflow Guidelines
+
+### Branch Strategy
+- Use feature branches for new development
+- Keep main branch stable and deployable
+- Use descriptive branch names: `feature/new-feature`, `fix/bug-description`
+
+### Commit Standards
+- Write clear, descriptive commit messages
+- Use conventional commit format when possible
+- Include issue numbers in commit messages
+- Keep commits atomic and focused
+
+### Pull Request Process
+- Create PRs for all changes to main
+- Include clear descriptions and screenshots
+- Request reviews from team members
+- Address review feedback promptly
+
+## Common Commands
+
+### Branch Management
+```bash
+# Create and switch to new feature branch
+git checkout -b feature/new-feature
+
+# Update branch with latest main
+git checkout main
+git pull origin main
+git checkout feature/new-feature
+git merge main
+```
+
+### Commit Workflow
+```bash
+# Stage changes
+git add .
+
+# Commit with conventional format
+git commit -m "feat: add new image gallery feature"
+
+# Push to remote
+git push origin feature/new-feature
+```
+
+### Cleanup
+```bash
+# Delete local branch after merge
+git branch -d feature/new-feature
+
+# Clean up remote tracking branches
+git remote prune origin
+```

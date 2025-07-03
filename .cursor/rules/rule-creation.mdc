@@ -1,0 +1,204 @@
+# Rule Creation Guidelines
+
+## 📋 Creating New Cursor Rules
+
+When creating new rules for the PrompterAid project, follow these guidelines:
+
+### 1. File Structure
+- **Location**: Place rules in `.cursor/rules/` directory
+- **Format**: Use `.mdc` extension (Markdown Configuration)
+- **Naming**: Use kebab-case with descriptive names (e.g., `seo-workflow.mdc`)
+
+### 2. Frontmatter Requirements
+```yaml
+---
+description: Clear, concise description of what the rule covers
+globs: ["file-patterns", "that-trigger", "this-rule"]
+alwaysApply: false
+---
+```
+
+**Frontmatter Fields:**
+- `description`: One sentence explaining the rule's purpose
+- `globs`: Array of file patterns where this rule should apply
+- `alwaysApply`: Usually `false` unless rule should apply to all files
+
+### 3. Content Structure
+```markdown
+# Rule Title
+
+## Brief Overview
+What this rule covers and when to use it.
+
+## Guidelines
+- Specific guidelines or best practices
+- Step-by-step instructions when needed
+- Examples of good vs bad practices
+
+## Examples
+
+### Good Example
+```bash
+# Example of correct usage
+command --option value
+```
+
+### Bad Example
+```bash
+# Example of what to avoid
+command --wrong-option
+```
+
+## Common Patterns
+- Recurring patterns or workflows
+- Templates for common tasks
+- Standard procedures
+```
+
+## 🎯 Rule Categories
+
+### Development Workflow Rules
+- **Purpose**: Guide development processes
+- **Examples**: `git-management.mdc`, `sitemap-automation.mdc`
+- **Globs**: `["**/*", "scripts/**/*"]`
+
+### Code Quality Rules
+- **Purpose**: Maintain code standards
+- **Examples**: `javascript-standards.mdc`, `css-guidelines.mdc`
+- **Globs**: `["**/*.js", "**/*.css", "**/*.html"]`
+
+### Project-Specific Rules
+- **Purpose**: PrompterAid-specific conventions
+- **Examples**: `seo-workflow.mdc`, `image-processing.mdc`
+- **Globs**: `["**/*.html", "img/**/*", "api/**/*"]`
+
+## 📝 Writing Guidelines
+
+### Be Specific
+- **Good**: "Use conventional commit format: `type(scope): description`"
+- **Bad**: "Write good code"
+
+### Include Examples
+- Provide real-world examples
+- Show both correct and incorrect usage
+- Include expected outputs when relevant
+
+### Use Clear Formatting
+- Use emojis for visual organization
+- Structure with clear headings
+- Use code blocks for commands and examples
+- Include checklists for multi-step processes
+
+### Keep It Focused
+- Each rule should have a single, clear purpose
+- Avoid mixing unrelated topics
+- Split complex rules into multiple focused rules
+
+## 🔄 Maintaining Rules
+
+### When to Update Rules
+- When workflows change
+- When new tools or processes are added
+- When common issues arise
+- When team feedback indicates confusion
+
+### Rule Review Process
+1. **Assess Usage**: Are developers following the rule?
+2. **Check Relevance**: Is the rule still applicable?
+3. **Update Examples**: Are examples current and helpful?
+4. **Simplify**: Can the rule be made clearer or more concise?
+
+### Version Control
+- Commit rule changes with descriptive messages
+- Reference related issues or discussions
+- Update related documentation if needed
+
+## 📚 Rule Examples
+
+### Simple Rule (git-management.mdc)
+```markdown
+---
+description: Git workflow and management best practices
+globs: ["**/*"]
+alwaysApply: false
+---
+
+# Git Management Best Practices
+
+## Commit Standards
+- Use conventional commit format
+- Write descriptive commit messages
+- Include issue numbers when relevant
+
+## Examples
+```bash
+# Good
+git commit -m "feat: add new image gallery feature"
+
+# Bad
+git commit -m "fix stuff"
+```
+```
+
+### Complex Rule (seo-workflow.mdc)
+```markdown
+---
+description: Comprehensive SEO automation workflow
+globs: ["**/*.html", "sitemap.xml", "robots.txt"]
+alwaysApply: false
+---
+
+# SEO Workflow Automation
+
+## 🔍 Pre-commit Checklist
+1. ✅ Update sitemap.xml
+2. ✅ Check structured data
+3. ✅ Verify meta tags
+4. ✅ Test accessibility
+
+## Examples
+### Complete Workflow
+```bash
+python scripts/deploy/update_sitemap.py
+git add sitemap.xml
+git commit -m "feat: update sitemap for SEO"
+```
+```
+
+## 🚫 Common Mistakes
+
+### Avoid These Patterns
+- **Too Vague**: "Write good code" (be specific)
+- **Too Broad**: Rules that apply to everything
+- **Outdated Examples**: Examples that don't match current tools
+- **Missing Context**: Rules without clear when/why to apply them
+
+### Don't Create Rules For
+- Personal preferences (unless team-wide)
+- Temporary processes
+- Tools that might change soon
+- Overly specific edge cases
+
+## ✅ Rule Checklist
+
+Before creating a new rule, ask:
+
+- [ ] Is this a recurring pattern or process?
+- [ ] Would this help other developers?
+- [ ] Is the scope focused and clear?
+- [ ] Are there good examples to include?
+- [ ] Is the file pattern specific enough?
+- [ ] Does the description clearly explain the purpose?
+- [ ] Are there both good and bad examples?
+- [ ] Is the rule maintainable and updateable?
+
+## 🔗 Related Resources
+
+- [Cursor Rules Documentation](https://cursor.sh/docs/rules)
+- [Markdown Configuration Format](https://cursor.sh/docs/rules#markdown-configuration)
+- [Git Conventional Commits](https://www.conventionalcommits.org/)
+- [PrompterAid Project Structure](./README.md)
+description:
+globs:
+alwaysApply: false
+---

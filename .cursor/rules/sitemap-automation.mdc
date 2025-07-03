@@ -1,0 +1,180 @@
+---
+description: Comprehensive deployment and sitemap automation for PrompterAid with Git hooks and deployment scripts
+globs: ["index.html", "privacy.html", "terms.html", "404.html", "sitemap.xml", "scripts/deploy/**/*"]
+alwaysApply: false
+---
+
+# Deployment & Sitemap Automation
+
+## 🚀 Complete Deployment Workflow
+
+PrompterAid now uses a comprehensive deployment system that handles sitemap updates, schema updates, and deployment to master branch.
+
+### 1. Development Workflow (explore branch)
+```bash
+# Make changes on explore branch
+git checkout explore
+# ... make your changes ...
+
+# Commit changes (sitemap auto-updates via pre-commit hook)
+git add .
+git commit -m "feat: add new feature"
+git push origin explore
+```
+
+### 2. Deployment to Master
+```bash
+# Deploy from explore to master (includes sitemap & schema updates)
+python scripts/deploy/deploy_to_master.py
+
+# Or use the batch file on Windows
+scripts\deploy\deploy_to_master.bat
+```
+
+### 3. Manual Sitemap Updates (if needed)
+```bash
+# Windows
+scripts\deploy\update_sitemap.bat
+
+# Unix/Linux/macOS
+./scripts/deploy/update_sitemap.sh
+
+# Direct Python
+python scripts/deploy/update_sitemap.py
+```
+
+## 🔧 Setup & Maintenance
+
+### Install Git Hook
+```bash
+# Install pre-commit hook for automatic sitemap updates
+python scripts/deploy/setup_git_hook.py
+
+# Uninstall if needed
+python scripts/deploy/setup_git_hook.py --uninstall
+```
+
+### Check Authentication
+```bash
+# Verify GitHub authentication and configuration
+python scripts/deploy/check-auth.py
+```
+
+### Verify Hook Status
+```bash
+# Check if pre-commit hook is installed
+ls .git/hooks/pre-commit
+
+# Check if hook is executable
+ls -la .git/hooks/pre-commit
+```
+
+## 📋 What the Deployment Script Does
+
+The `deploy_to_master.py` script performs a complete deployment:
+
+1. **Pre-deployment Checks:**
+   - Verifies you're on `explore` branch
+   - Ensures working directory is clean
+   - Checks if explore branch is up to date
+
+2. **Branch Management:**
+   - Switches to `master` branch
+   - Pulls latest changes
+   - Merges `explore` into `master`
+
+3. **Content Updates:**
+   - Updates `sitemap.xml` with current file dates
+   - Updates `index.html` schema.org JSON-LD
+   - Stages all updated files
+
+4. **Deployment:**
+   - Commits updates
+   - Pushes to `master` for live deployment
+   - Switches back to `explore` branch
+
+## Examples
+
+### Complete Development to Deployment
+```bash
+# 1. Make changes on explore branch
+git checkout explore
+# ... edit files ...
+
+# 2. Commit (sitemap auto-updates)
+git add .
+git commit -m "feat: add new gallery feature"
+git push origin explore
+
+# 3. Deploy to master
+python scripts/deploy/deploy_to_master.py
+```
+
+**Expected Output:**
+```
+🚀 Deploying PrompterAid to master branch...
+==================================================
+📍 Current branch: explore
+📥 Fetching latest changes...
+🔄 Switching to master branch...
+📥 Pulling latest master...
+🔀 Merging explore branch into master...
+📝 Updating sitemap...
+✅ Updated index.html: 2024-12-19 → 2024-12-20
+🔧 Updating schema...
+📦 Staging updated files...
+💾 Committing updates...
+🚀 Pushing to master branch...
+🔄 Switching back to explore branch...
+✅ Deployment completed successfully!
+🌐 Your changes should be live in 2-5 minutes.
+```
+
+### Manual Sitemap Update
+```bash
+python scripts/deploy/update_sitemap.py
+```
+
+**Expected Output:**
+```
+🔄 Updating PrompterAid sitemap.xml...
+==================================================
+✅ Updated index.html: 2024-12-19 → 2024-12-20
+ℹ️  privacy.html: Already up to date (2024-12-19)
+ℹ️  terms.html: Already up to date (2024-12-19)
+ℹ️  404.html: Already up to date (2024-12-19)
+🎉 Successfully updated 1 entries in sitemap.xml
+✅ Sitemap update completed successfully!
+```
+
+## 🔍 Troubleshooting
+
+### Authentication Issues
+```bash
+# Check authentication status
+python scripts/deploy/check-auth.py
+
+# Verify Git configuration
+git config --list | grep user
+```
+
+### Hook Not Working
+```bash
+# Reinstall the hook
+python scripts/deploy/setup_git_hook.py
+
+# Check hook permissions
+ls -la .git/hooks/pre-commit
+```
+
+### Deployment Fails
+```bash
+# Check if you're on explore branch
+git branch
+
+# Ensure working directory is clean
+git status
+
+# Pull latest changes
+git pull origin explore
+```
