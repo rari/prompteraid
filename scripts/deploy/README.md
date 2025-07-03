@@ -1,6 +1,6 @@
-# PrompterAid Scripts
+# PrompterAid Deployment & Maintenance Scripts
 
-This directory contains utility scripts for maintaining the PrompterAid website.
+This directory contains utility scripts for deploying and maintaining the PrompterAid website.
 
 ## Sitemap Updater
 
@@ -30,19 +30,19 @@ The deployment script merges changes from the `explore` branch to `master` and p
 **Windows:**
 ```bash
 # From project root
-scripts\sitemap\update_sitemap.bat
+scripts\deploy\update_sitemap.bat
 
 # Or directly with Python
-python scripts/sitemap/update_sitemap.py
+python scripts/deploy/update_sitemap.py
 ```
 
 **Unix/Linux/macOS:**
 ```bash
 # From project root
-./scripts/sitemap/update_sitemap.sh
+./scripts/deploy/update_sitemap.sh
 
 # Or directly with Python
-python3 scripts/sitemap/update_sitemap.py
+python3 scripts/deploy/update_sitemap.py
 ```
 
 #### Automatic Updates with Git Hook
@@ -51,13 +51,13 @@ Install the pre-commit hook to automatically update the sitemap when HTML files 
 
 ```bash
 # Install the hook
-python scripts/sitemap/setup_git_hook.py
+python scripts/deploy/setup_git_hook.py
 
 # Uninstall the hook (if needed)
-python scripts/sitemap/setup_git_hook.py --uninstall
+python scripts/deploy/setup_git_hook.py --uninstall
 
 # Check authentication status
-python scripts/sitemap/check-auth.py
+python scripts/deploy/check-auth.py
 ```
 
 #### Deploy to Master
@@ -66,16 +66,44 @@ Deploy changes from the `explore` branch to `master` for live deployment:
 
 ```bash
 # Windows
-scripts\sitemap\deploy_to_master.bat
+scripts\deploy\deploy_to_master.bat
 
 # Or directly with Python
-python scripts/sitemap/deploy_to_master.py
+python scripts/deploy/deploy_to_master.py
 
 # Get help
-python scripts/sitemap/deploy_to_master.py --help
+python scripts/deploy/deploy_to_master.py --help
 ```
 
 **Note:** Make sure you're on the `explore` branch before running the deployment script.
+
+### What the Deployment Script Does
+
+The deployment script performs a complete deployment workflow:
+
+1. **Pre-deployment Checks:**
+   - Verifies you're on the `explore` branch
+   - Ensures working directory is clean (no uncommitted changes)
+   - Checks if explore branch is up to date with origin
+
+2. **Branch Management:**
+   - Switches to `master` branch
+   - Pulls latest changes from master
+   - Merges `explore` branch into master
+
+3. **Content Updates:**
+   - Updates `sitemap.xml` with current file modification dates
+   - Updates `index.html` schema.org JSON-LD with latest data
+   - Stages all updated files
+
+4. **Deployment:**
+   - Commits any updates (sitemap, schema, etc.)
+   - Pushes to `master` branch for live deployment
+   - Switches back to `explore` branch
+
+5. **Post-deployment:**
+   - Confirms successful deployment
+   - Provides feedback on deployment status
 
 ### What It Does
 

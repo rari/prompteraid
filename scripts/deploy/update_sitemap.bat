@@ -9,7 +9,7 @@ REM Change to the project root directory (assuming script is run from scripts fo
 cd ..
 
 REM Run the Python script
-python scripts/sitemap/update_sitemap.py
+python scripts/deploy/update_sitemap.py
 
 REM Pause to show results
 echo.
