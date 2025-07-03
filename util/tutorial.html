@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-mode">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrompterAid Tutorial</title>
+
+  <!-- Tokens & Fonts -->
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+  <!-- Tutorial specific styles -->
+  <link rel="stylesheet" href="../styles/tutorial.css">
+</head>
+<body>
+  <a href="#tutorial-start" class="skip-link">Skip to tutorial</a>
+
+  <header class="tutorial-header">
+    <h1 class="cute-title-container" id="tutorial-start">
+      <span class="emoji-prefix">📖✨</span>
+      <span class="cute-title">PrompterAid Tutorial</span>
+      <span class="emoji-suffix">✨📖</span>
+    </h1>
+    <p class="tutorial-intro">Scroll down to learn about each toolbar action.</p>
+  </header>
+
+  <main class="tutorial-content">
+    <!-- Each section represents a tool -->
+    <section class="tutorial-section gradient-pink">
+      <div class="tool-container">
+        <i class="far fa-trash-can tutorial-icon tutorial-icon-pink"></i>
+        <h2 class="tool-name">Deselect</h2>
+      </div>
+      <p class="tool-description">Clear all selected images.</p>
+    </section>
+
+    <section class="tutorial-section gradient-orange">
+      <div class="tool-container">
+        <i class="fas fa-sync-alt tutorial-icon tutorial-icon-orange"></i>
+        <h2 class="tool-name">Refresh</h2>
+      </div>
+      <p class="tool-description">Shuffle the order of all images and randomize their starting view.</p>
+    </section>
+
+    <section class="tutorial-section gradient-yellow">
+      <div class="tool-container">
+        <i class="far fa-star tutorial-icon tutorial-icon-yellow"></i>
+        <h2 class="tool-name">Favorites View</h2>
+      </div>
+      <p class="tool-description">Show only your starred images.</p>
+    </section>
+
+    <section class="tutorial-section gradient-green">
+      <div class="tool-container">
+        <i class="far fa-eye tutorial-icon tutorial-icon-green"></i>
+        <h2 class="tool-name">Selected View</h2>
+      </div>
+      <p class="tool-description">Show only your currently selected images.</p>
+    </section>
+
+    <section class="tutorial-section gradient-teal">
+      <div class="tool-container">
+        <i class="fa-solid fa-magnifying-glass tutorial-icon tutorial-icon-teal"></i>
+        <h2 class="tool-name">Search</h2>
+      </div>
+      <p class="tool-description">Search for images by their number(s). Use spaces to search for multiple numbers (e.g., "1 2 7").</p>
+    </section>
+
+    <section class="tutorial-section gradient-blue">
+      <div class="tool-container">
+        <i class="far fa-lightbulb tutorial-icon tutorial-icon-blue"></i>
+        <h2 class="tool-name">Randomize</h2>
+      </div>
+      <p class="tool-description">Randomly select an unselected image.</p>
+    </section>
+
+    <section class="tutorial-section gradient-purple">
+      <div class="tool-container">
+        <i class="far fa-clipboard tutorial-icon tutorial-icon-purple"></i>
+        <h2 class="tool-name">Copy</h2>
+      </div>
+      <p class="tool-description">Copy the final generated prompt to your clipboard.</p>
+    </section>
+
+    <!-- End slide -->
+    <section class="tutorial-section gradient-pink">
+      <div class="tool-container">
+        <i class="far fa-check-circle tutorial-icon tutorial-icon-green"></i>
+        <h2 class="tool-name">You're All Set!</h2>
+      </div>
+      <p class="tool-description">You now know how to use all the PrompterAid toolbar features. Happy prompting!</p>
+    </section>
+  </main>
+
+  <script>
+    // Intersection Observer to reveal sections on scroll
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('.tutorial-section');
+
+      // Observer for fade-in when section enters viewport
+      const showObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            showObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.25 });
+
+      sections.forEach(sec => showObserver.observe(sec));
+
+      // Observer for mid-view reveal (description + shrink icon)
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal');
+          } else {
+            entry.target.classList.remove('reveal');
+          }
+        });
+      }, { threshold: 0.6 });
+
+      sections.forEach(sec => revealObserver.observe(sec));
+
+      // Arrow key navigation between panels
+      const scrollToSection = (dir) => {
+        const secArray = Array.from(sections);
+        // find section whose middle is closest to viewport center
+        const centerY = window.innerHeight / 2;
+        const currentIndex = secArray.findIndex(s => {
+          const r = s.getBoundingClientRect();
+          return r.top <= centerY && r.bottom >= centerY;
+        });
+        const targetIndex = currentIndex + dir;
+        if (targetIndex >= 0 && targetIndex < secArray.length) {
+          secArray[targetIndex].scrollIntoView({ behavior: 'smooth' });
+        }
+      };
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          scrollToSection(1);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          scrollToSection(-1);
+        }
+      });
+    });
+  </script>
+</body>
+</html> 
