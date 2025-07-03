@@ -14,6 +14,15 @@ The sitemap updater automatically updates the `lastmod` dates in `sitemap.xml` b
 - `pre-commit-hook.py` - Git pre-commit hook
 - `setup_git_hook.py` - Hook installation script
 
+## Deployment Script
+
+The deployment script merges changes from the `explore` branch to `master` and pushes for live deployment.
+
+### Files
+
+- `deploy_to_master.py` - Main Python deployment script
+- `deploy_to_master.bat` - Windows batch file
+
 ### Usage
 
 #### Manual Update
@@ -50,6 +59,23 @@ python scripts/sitemap/setup_git_hook.py --uninstall
 # Check authentication status
 python scripts/sitemap/check-auth.py
 ```
+
+#### Deploy to Master
+
+Deploy changes from the `explore` branch to `master` for live deployment:
+
+```bash
+# Windows
+scripts\sitemap\deploy_to_master.bat
+
+# Or directly with Python
+python scripts/sitemap/deploy_to_master.py
+
+# Get help
+python scripts/sitemap/deploy_to_master.py --help
+```
+
+**Note:** Make sure you're on the `explore` branch before running the deployment script.
 
 ### What It Does
 
