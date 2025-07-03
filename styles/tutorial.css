@@ -1,0 +1,244 @@
+/* Tutorial Page Styles */
+@import url('tokens.css');
+
+:root {
+  /* Inherit token variables */
+  --transition-duration: 1.2s;
+  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Override primary text color for dark tutorial */
+  --text-primary: #ebf0fa;
+}
+
+/* Dark mode background */
+body {
+  background-color: #10151c;
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  overflow-y: scroll;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  scroll-behavior: smooth;
+  height: 100vh;
+  scroll-snap-type: y mandatory;
+  scroll-snap-stop: always;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--neon-pink);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: top 0.3s;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+.tutorial-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.tutorial-intro {
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.tutorial-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tutorial-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #181f29;
+  border: 1px solid #232c3a;
+  margin: 0;
+  box-shadow: none;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all var(--transition-duration) var(--transition-timing);
+  padding: 2.5rem 1rem;
+  text-align: center;
+  border-radius: var(--border-radius-lg);
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.tutorial-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Container for icon and name to allow them to move together */
+.tool-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all var(--transition-duration) var(--transition-timing);
+  transform-origin: center;
+  margin-bottom: 0;
+}
+
+.tutorial-icon {
+  font-size: 18rem;
+  margin-bottom: 1.5rem;
+  transition: all var(--transition-duration) var(--transition-timing);
+  transform-origin: center;
+}
+
+.tutorial-icon-pink { color: var(--neon-pink); }
+.tutorial-icon-orange { color: var(--neon-orange); }
+.tutorial-icon-yellow { color: var(--neon-yellow); }
+.tutorial-icon-green { color: var(--neon-green); }
+.tutorial-icon-teal  { color: var(--neon-teal); }
+.tutorial-icon-blue  { color: var(--neon-blue); }
+.tutorial-icon-purple{ color: var(--neon-purple); }
+
+.tool-name {
+  margin: 0.5rem 0 1rem;
+  font-size: 4rem;
+  color: var(--text-primary);
+  transition: all var(--transition-duration) var(--transition-timing);
+  transform-origin: center;
+}
+
+.tool-description {
+  max-width: 70ch;
+  color: var(--text-secondary);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all var(--transition-duration) var(--transition-timing);
+  margin: 0.25rem auto 0;
+  padding: 0 2rem;
+  pointer-events: none;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .tutorial-section {
+    padding: 2rem 0.8rem;
+  }
+  
+  .tutorial-icon {
+    font-size: 12rem;
+  }
+  
+  .tool-name {
+    font-size: 3rem;
+  }
+}
+
+/* When section is in reveal state */
+.tutorial-section.reveal .tool-container {
+  transform: scale(0.8) translateY(-4vh);
+}
+
+.tutorial-section.reveal .tutorial-icon {
+  font-size: 7rem;
+}
+
+.tutorial-section.reveal .tool-name {
+  font-size: 2.5rem;
+}
+
+.tutorial-section.reveal .tool-description {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ----- Scroll-driven full-page layout ----- */
+html {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  scroll-snap-type: y mandatory;
+}
+
+/* refine border radius off for full page */
+.tutorial-section:first-child { border-top: none; }
+.tutorial-section:last-child { border-bottom: none; }
+
+/* Text colors */
+.tutorial-section {
+  color: var(--text-secondary);
+}
+
+.tutorial-header, .cute-title {
+  color: var(--text-primary);
+}
+
+/* ===== Gradient overlays for cards ===== */
+.tutorial-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.05; /* Subtle overlay */
+  background: transparent;
+  transition: opacity var(--transition-duration) var(--transition-timing);
+  z-index: 0;
+}
+
+/* Color-specific gradient classes */
+.tutorial-section.gradient-pink::before {
+  background: radial-gradient(circle at bottom right, var(--neon-pink) 0%, var(--neon-pink) 40%, transparent 85%);
+}
+
+.tutorial-section.gradient-orange::before {
+  background: radial-gradient(circle at bottom right, var(--neon-orange) 0%, var(--neon-orange) 40%, transparent 85%);
+}
+
+.tutorial-section.gradient-yellow::before {
+  background: radial-gradient(circle at bottom right, var(--neon-yellow) 0%, var(--neon-yellow) 40%, transparent 85%);
+}
+
+.tutorial-section.gradient-green::before {
+  background: radial-gradient(circle at bottom right, var(--neon-green) 0%, var(--neon-green) 40%, transparent 85%);
+}
+
+.tutorial-section.gradient-teal::before {
+  background: radial-gradient(circle at bottom right, var(--neon-teal) 0%, var(--neon-teal) 40%, transparent 85%);
+}
+
+.tutorial-section.gradient-blue::before {
+  background: radial-gradient(circle at bottom right, var(--neon-blue) 0%, var(--neon-blue) 40%, transparent 85%);
+}
+
+.tutorial-section.gradient-purple::before {
+  background: radial-gradient(circle at bottom right, var(--neon-purple) 0%, var(--neon-purple) 60%, transparent 90%);
+  opacity: 0.1; /* Higher opacity for purple */
+}
+
+/* Elevate content above gradient overlay */
+.tutorial-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure all h2s use primary text color */
+h2 {
+  color: var(--text-primary);
+} 

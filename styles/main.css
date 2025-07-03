@@ -1457,6 +1457,22 @@ a:hover {
     gap: var(--space-2);
     margin-left: 0 !important;
   }
+
+  .image-count-subheader {
+    text-align: center;
+  }
+  
+  .subheader-inline, .model-selector-inline {
+    display: block;
+    margin-top: 0.5rem;
+  }
+  
+  /* Make model selector drop to next line on mobile */
+  .model-selector-inline {
+    display: block;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
 }
 
 /* ===== HOVER EFFECTS ===== */
@@ -2847,8 +2863,8 @@ a:hover {
   display: inline-block;
   vertical-align: middle; /* Align with the text */
   /* The border is now on the child element */
-  padding-bottom: 12px; /* This creates the invisible "bridge" for the mouse */
-  margin-bottom: -12px; /* This compensates for the padding */
+  padding-bottom: 6px; /* Reduced from 12px to create smaller gap */
+  margin-bottom: -6px; /* This compensates for the padding */
   transition: all 0.2s ease;
   z-index: 1001;
 }
@@ -2897,7 +2913,7 @@ a:hover {
   transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
   margin-top: 0; /* Remove margin, rely on parent padding */
   pointer-events: none;
-  transform: translateY(10px) translateX(-50%); /* Start slightly lower */
+  transform: translateY(5px) translateX(-50%); /* Reduced from 10px to 5px */
 }
 
 .model-selector:hover .model-dropdown {
@@ -3273,11 +3289,16 @@ a:hover {
 
 @media (max-width: 768px) {
   .image-count-subheader {
-    flex-wrap: nowrap !important;
-    white-space: nowrap !important;
+    text-align: center;
   }
-  .subheader-inline, .model-selector-inline {
-    white-space: nowrap !important;
+  .subheader-inline {
+    display: inline;
+    white-space: nowrap;
+  }
+  .model-selector-inline {
+    display: block;
+    margin-top: 0.5rem;
+    text-align: center;
   }
 }
 
