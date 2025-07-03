@@ -47,11 +47,22 @@ export default class GalleryController {
 
   async init() {
     try {
+      console.log(`🎯 Gallery Controller init - Current model: ${this.model.currentModel}`);
+      
       // Load model-specific favorites
       this.model.loadFromStorage();
       
-      // Load images
-      await this.model.loadImages();
+      // Load images with error boundary if available, otherwise direct call
+      if (window.errorBoundary && window.errorBoundary.wrapAsyncWithRetry) {
+        await window.errorBoundary.wrapAsyncWithRetry(
+          () => this.model.loadImages(),
+          3,
+          'Gallery Image Loading'
+        );
+      } else {
+        // Fallback to direct call if error boundary not available
+        await this.model.loadImages();
+      }
 
       // Build imagesById map (id = sref from filename)
       const imagesById = {};
