@@ -30,7 +30,8 @@ def update_sitemap():
         'https://rari.github.io/prompteraid/': 'index.html',
         'https://rari.github.io/prompteraid/privacy.html': 'privacy.html',
         'https://rari.github.io/prompteraid/terms.html': 'terms.html',
-        'https://rari.github.io/prompteraid/404.html': '404.html'
+        'https://rari.github.io/prompteraid/404.html': '404.html',
+        'https://rari.github.io/prompteraid/docs.html': 'docs.html'
     }
     
     sitemap_path = Path('sitemap.xml')

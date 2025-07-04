@@ -32,7 +32,7 @@
     <meta property="twitter:url" content="https://www.prompteraid.com/">
     <meta property="twitter:title" content="Free Midjourney &amp; Niji Style‑Code Library | PrompterAid">
     <meta property="twitter:description" content="Free library of 1,000+ Midjourney &amp; Niji style‑codes. Preview, mix, and copy prompts in one click.">
-    <meta property="twitter:image" content="https://www.prompteraid.com/img/prompteraid-summary-card-grid-1.png">
+    <meta property="twitter:image" content="https://www.prompteraid.com/img/prompteraid-summary-card-grid.png">
   </head>
   
   <!-- Structured Data -->
@@ -65,7 +65,7 @@
       "url": "https://www.prompteraid.com/",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.prompteraid.com/img/logo.png"
+        "url": "https://www.prompteraid.com/img/wordmark.png"
       },
       "founder": {
         "@type": "Person",
@@ -354,187 +354,65 @@
       -->
 
       <!-- Tutorial Section -->
+      <!--
       <div class="more-info-container">
         <details>
           <summary>
             <span><i class="fa-solid fa-graduation-cap" style="color: var(--neon-orange); margin-right: 0.3em;"></i>Tutorial</span>
-            <button id="minimize-tutorial" class="close-button" title="Minimize this section" aria-label="Minimize tutorial section"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
+            <div class="tutorial-buttons">
+              <button id="close-tutorial" class="close-button" title="Close tutorial permanently" aria-label="Close tutorial permanently"><i class="fas fa-times"></i></button>
+              <button id="minimize-tutorial" class="close-button" title="Minimize this section" aria-label="Minimize tutorial section"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
+            </div>
           </summary>
           <div class="more-info-content">
-            <div class="info-section about-section" style="padding-top: 1.2rem;">
-              <h4>About PrompterAid</h4>
-              <p><strong>PrompterAid</strong> is a visual reference tool for users of the NijiJourney and Midjourney AI models. It displays pre-generated style references (<code>--sref</code> codes) using a consistent series of mermaid-themed images, all created with the same seed and a simple <code>mermaid</code> prompt. This uniform approach makes it easy to compare styles directly and combine them to fine-tune your prompts with precision.</p>
-            </div>
-
-            <div class="info-section how-to-use-section">
-              <h4>How to use PrompterAid</h4>
-              <ol>
-                <li>Hover over the model name (e.g., "Niji 6") in the subheader to switch between NijiJourney and Midjourney models. The appropriate version tag (<code>--niji 6</code> or <code>--v 7</code>) will be automatically added to your prompt.</li>
-                <li>Enter your base prompt in the text field.</li>
-                <li>Click one or more images to select their styles.</li>
-                <li>The final prompt, including <code>--sref</code> and the correct version tag, is auto-generated.</li>
-                <li>Click <i class="far fa-clipboard inline-icon"></i> or press 'C' to copy the prompt to your clipboard.</li>
-              </ol>
-            </div>
-            
-            <div class="info-section platform-section">
-              <h4>Platform</h4>
-              <ul class="tool-guide-list">
-                <li><i class="fab fa-discord" style="color: var(--neon-blue);"></i><div><strong>Discord</strong>: Paste the prompt into the MidJourney or NijiJourney Discord bot, just like any other prompt.</div></li>
-                <li><i class="fas fa-globe" style="color: var(--neon-teal);"></i><div><strong>Website</strong>: Use the generated prompt directly on the <a href="https://www.midjourney.com" target="_blank">Midjourney</a> or <a href="https://nijijourney.com" target="_blank">NijiJourney</a> website.</div></li>
-              </ul>
-              <p>Both bots and websites can accept the same <code>--sref</code>, <code>--niji 6</code> and <code>--v 7</code> parameters!</p>
-            </div>
-
-            <div class="info-section sref-guide-section">
-              <h4>How to Use Style References</h4>
-              <p>An <code>--sref</code> code is a unique numeric ID that points to a predefined visual style stored by NijiJourney controlling the look, mood, and aesthetic of an image (like color, lighting, or composition) without needing an image upload.</p>
-              <p>The code represents a specific direction within MidJourney's multidimensional style space. Think of your prompt as starting at the center of a sphere. Each style reference is a vector—an arrow—pointing outward toward a particular visual aesthetic.</p>
-              <p>The <code>--sw</code> parameter controls how far along that vector your prompt travels, adjusting the strength of the style influence.</p>
+            <div class="info-section quickstart-section" style="padding-top: 1.2rem;">
+              <h4>Quick Start</h4>
+              <div class="quickstart-flowchart">
+                <svg width="100%" height="60">
+                  <g font-size="14" font-family="sans-serif" fill="#fff">
+                    <rect x="0" y="10" width="90" height="40" rx="10" fill="#8b5cf6"/>
+                    <text x="45" y="30" text-anchor="middle">Select</text>
+                    <text x="45" y="45" text-anchor="middle">Mode</text>
+                    <rect x="100" y="10" width="90" height="40" rx="10" fill="#6366f1"/>
+                    <text x="145" y="30" text-anchor="middle">Choose</text>
+                    <text x="145" y="45" text-anchor="middle">Model</text>
+                    <rect x="200" y="10" width="90" height="40" rx="10" fill="#06b6d4"/>
+                    <text x="245" y="30" text-anchor="middle">Browse</text>
+                    <text x="245" y="45" text-anchor="middle">& Select</text>
+                    <rect x="300" y="10" width="90" height="40" rx="10" fill="#10b981"/>
+                    <text x="345" y="30" text-anchor="middle">Generate</text>
+                    <text x="345" y="45" text-anchor="middle">Prompt</text>
+                    <rect x="400" y="10" width="90" height="40" rx="10" fill="#f59e0b"/>
+                    <text x="445" y="30" text-anchor="middle">Copy</text>
+                    <text x="445" y="45" text-anchor="middle">& Use</text>
+                    <polygon points="90,30 100,30 100,35 90,35" fill="#fff"/>
+                    <polygon points="190,30 200,30 200,35 190,35" fill="#fff"/>
+                    <polygon points="290,30 300,30 300,35 290,35" fill="#fff"/>
+                    <polygon points="390,30 400,30 400,35 390,35" fill="#fff"/>
+                  </g>
+                </svg>
+              </div>
               
-              <h5>Advanced Options:</h5>
-              <ul>
-                <li><strong>Multiple styles:</strong> Apply more than one style by listing multiple <code>--sref</code> codes to blend their visual influences.</li>
-                <li><strong>Weighted styles:</strong> Add <code>::weight</code> to each <code>--sref</code> code to control how strongly each one affects the output.</li>
-                <li><strong>Style strength (0–1000):</strong> Use <code>--sw</code> to adjust the overall intensity of the style reference's influence on the image.</li>
-              </ul>
-              <p><a href="https://docs.midjourney.com/hc/en-us/articles/32180011136653-Style-Reference" target="_blank">Learn more about this topic in the official documentation.</a></p>
-            </div>
-
-            <div class="info-section tool-guide-section">
-              <h4>Menu Tools</h4>
-              <ul class="tool-guide-list">
-                <li><i class="far fa-trash-can tutorial-icon tutorial-icon-pink"></i><div><strong>Deselect:</strong> Clear all selected images.</div></li>
-                <li><i class="fas fa-sync-alt tutorial-icon tutorial-icon-orange"></i><div><strong>Refresh:</strong> Shuffle the order of all images and randomize their starting view.</div></li>
-                <li><i class="far fa-star tutorial-icon tutorial-icon-yellow"></i><div><strong>Favorites View:</strong> Show only your starred images.</div></li>
-                <li><i class="far fa-eye tutorial-icon tutorial-icon-green"></i><div><strong>Selected View:</strong> Show only your currently selected images.</div></li>
-                <li><i class="fa-solid fa-magnifying-glass tutorial-icon tutorial-icon-teal"></i><div><strong>Search:</strong> Search for images by their number(s). Use spaces to search for multiple numbers (e.g., "1 2 7").</div></li>
-                <li><i class="far fa-lightbulb tutorial-icon tutorial-icon-blue"></i><div><strong>Randomize:</strong> Randomly select an unselected image.</div></li>
-                <li><i class="far fa-clipboard tutorial-icon tutorial-icon-purple"></i><div><strong>Copy:</strong> Copy the final generated prompt to your clipboard.</div></li>
-              </ul>
-            </div>
-
-            <div class="info-section image-tools-section">
-              <h4>Image Tools</h4>
-              <ul class="tool-guide-list">
-                <li><i class="far fa-star tutorial-icon tutorial-icon-yellow"></i><div><strong>Favorite:</strong> Add the image to your favorites collection.</div></li>
-                <li><i class="fas fa-sync-alt tutorial-icon tutorial-icon-orange"></i><div><strong>Rotate:</strong> Cycle through other visual examples from the same style reference code.</div></li>
-                <li><i class="fas fa-hand-pointer tutorial-icon tutorial-icon-green"></i><div><strong>Select:</strong> Left-click the image to add its style code to your prompt. Selected images are shown with a colored border.</div></li>
-                <li><i class="fas fa-link tutorial-icon tutorial-icon-pink"></i><div><strong>Link:</strong> Share a direct link to any style reference!</div></li>
-                <li><i class="fas fa-balance-scale tutorial-icon tutorial-icon-teal"></i><div><strong>Weight:</strong> Adjust the relative importance of each code.</div></li>
-              </ul>
-            </div>
-
-            <div class="info-section prompt-generator-section">
-              <h4>Prompt Generator</h4>
-              <p>The prompt generator helps you create natural-language prompts by combining words from different categories. It's perfect for when you need inspiration or want to quickly generate a base prompt.</p>
-              <p>Generated prompts follow a natural language template: <code>&lt;presentation&gt; &lt;emotion&gt; &lt;subject&gt; wearing &lt;clothing&gt; with &lt;appearance&gt; is &lt;pose&gt; at &lt;setting&gt;, &lt;lighting&gt;, &lt;style&gt;, &lt;details&gt;</code></p>
-              <div style="display: flex; flex-direction: column; gap: 0.5em; margin-bottom: 1em;">
-                <div style="display: flex; align-items: center;">
-                  <span style="margin-right: 0.7em;"><i class="fa-solid fa-wand-magic tutorial-icon tutorial-icon-purple"></i></span>
-                  <div><strong>Generate:</strong> <span style="font-weight: 400;">Create a random prompt using selected categories.</span></div>
-                </div>
-                <div style="display: flex; align-items: center;">
-                  <span style="margin-right: 0.7em;"><i class="fas fa-cog tutorial-icon tutorial-icon-blue"></i></span>
-                  <div><strong>Generator Settings:</strong> <span style="font-weight: 400;">Toggle the prompt generator settings panel.</span></div>
-                </div>
-              </div>
-              <h5>Settings Panel:</h5>
-              <ul>
-                <li>Use the checkboxes to choose which categories to include in your generated prompts. Only the categories you have selected will be included, and the connectors (like "wearing", "with", "is", "at") only appear when the relevant categories are present so that results read like natural English sentences rather than keyword lists. All categories are selected by default, but you can uncheck categories you don't want to include.</li>
-                <li>
-                  <ul>
-                    <li><strong>Presentation:</strong> Camera angles, art mediums, and composition styles</li>
-                    <li><strong>Subject:</strong> Main character or object</li>
-                    <li><strong>Appearance:</strong> Physical characteristics</li>
-                    <li><strong>Clothing:</strong> Outfits and attire</li>
-                    <li><strong>Pose:</strong> Body position and stance</li>
-                    <li><strong>Setting:</strong> Location and environment</li>
-                    <li><strong>Emotion:</strong> Mood and emotional state</li>
-                    <li><strong>Lighting:</strong> Lighting conditions</li>
-                    <li><strong>Style:</strong> Overall artistic style</li>
-                    <li><strong>Details:</strong> Specific effects and elements</li>
-                  </ul>
-                </li>
-                <li><strong>Custom Suffix:</strong> Add your own text to the end of generated prompts. This won't be cleared or updated when you generate new prompts, so you can lock things down here!</li>
-              </ul>
-
-              <h5>Tips:</h5>
-              <ul>
-                <li>Use the custom suffix to add specific details or parameters.</li>
-                <li>Generated prompts are perfect starting points - feel free to edit them!</li>
-                <li>Combine generated prompts with style references for the best results.</li>
-              </ul>
-            </div>
-            
-            <div class="info-section hints-section">
-              <h4>Hints</h4>
-              <ul>
-                <li>You can pick more than one style at a time!</li>
-                <li>You can add <a href="https://docs.midjourney.com/hc/en-us/articles/32859204029709-Parameter-List" target="_blank">extra parameters</a> to your base prompt like <code>--ar</code> or <code>--p</code>.</li>
-                <li>Use the rotate button to see different examples of the same style.</li>
-                <li>Try combining complementary styles for unique results.</li>
-                <li>Toggle dark mode for better nighttime viewing.</li>
-                <li>You can close this info menu by clicking on the colorful bar at the top of it.</li>
-                <li>Keep prompts focused on <strong>subject</strong>, not style. Let <code>--sref</code> handle the visual tone.</li>
-              </ul>
-            </div>
-            
-            <div class="info-section shortcuts-section">
-              <h4>Keyboard Shortcuts</h4>
-              <div class="shortcuts-grid">
-                <div class="shortcut-item">
-                  <kbd>G</kbd>
-                  <span>Generate random prompt</span>
-                </div>
-                <div class="shortcut-item">
-                  <kbd>P</kbd>
-                  <span>Toggle prompt generator settings</span>
-                </div>
-                <div class="shortcut-item">
-                  <kbd>C</kbd>
-                  <span>Copy prompt to clipboard</span>
-                </div>
-                <div class="shortcut-item">
-                  <kbd>R</kbd>
-                  <span>Refresh all images</span>
-                </div>
-                <div class="shortcut-item">
-                  <kbd>D</kbd>
-                  <span>Deselect all images</span>
-                </div>
-                <div class="shortcut-item">
-                  <kbd>F</kbd>
-                  <span>Toggle favorites view</span>
-                </div>
-                <div class="shortcut-item">
-                  <kbd>V</kbd>
-                  <span>Toggle selected view</span>
-                </div>
-                <div class="shortcut-item">
-                  <kbd>S</kbd>
-                  <span>Toggle search</span>
-                </div>
-                <div class="shortcut-item">
-                  <kbd>A</kbd>
-                  <span>Randomize selection</span>
-                </div>
-              </div>
-            </div>
+                             <div class="quickstart-explainer">
+                 <h5>Step-by-Step Guide</h5>
+                 <ol>
+                   <li><strong>Select Mode:</strong> Switch between Discord and Website modes to get the right format for your platform</li>
+                   <li><strong>Choose a Model:</strong> Switch between NijiJourney 6 and Midjourney 7 using the model selector</li>
+                   <li><strong>Browse & Select Styles:</strong> Scroll through the style library and click on images to select them for your prompt</li>
+                   <li><strong>Generate Prompt:</strong> Use the prompt generator or create your own</li>
+                   <li><strong>Copy & Use:</strong> Copy the final prompt to use in your AI art tool</li>
+                 </ol>
+               </div>
+               
+               <div class="docs-link-section">
+                 <p><strong>Need more help?</strong> Check out our <a href="docs.html" target="_blank">complete documentation</a> for detailed guides and advanced features.</p>
+               </div>
+             </div>
           </div>
         </details>
       </div>
+      -->
 
-      <!-- Styles of the Month Section -->
-      <div id="styles-of-the-month-section" class="new-styles-section" style="display: none;">
-        <details open>
-          <summary>
-            <span><i class="fa-solid fa-crown" style="color: var(--neon-orange); margin-right: 0.3em;"></i>Styles of the Month</span>
-            <button id="minimize-styles-of-the-month" class="close-button" title="Minimize this section" aria-label="Minimize styles of the month section"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
-          </summary>
-          <div class="new-styles-content"></div>
-        </details>
-      </div>
 
       <!-- Favorites Tools -->
       <div class="more-info-container">
@@ -561,63 +439,66 @@
         <div id="image-gallery" class="image-gallery">
           <!-- Images will be dynamically loaded here -->
           <div id="no-favorites" class="hidden">
-            <p>No favorite images selected. Star some images to see them here.</p>
+            <p>No images to display..</p>
           </div>
         </div>
       </div>
     </main>
     
-    <footer class="site-footer modern-footer"><div class="footer-wave">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
-        <!-- Topmost wave: most transparent, highest curve -->
-        <path d="M0,35 Q300,0 600,35 T1200,35 V0 H0 Z" fill="var(--footer-wave-fill)" opacity="0.07"/>
-        <!-- Middle wave: more opaque, slightly lower -->
-        <path d="M0,55 Q300,25 600,55 T1200,55 V0 H0 Z" fill="var(--footer-wave-fill)" opacity="0.14"/>
-        <!-- Foreground wave: most opaque, lowest, still only at the top -->
-        <path d="M0,75 Q300,50 600,75 T1200,75 V0 H0 Z" fill="var(--footer-wave-fill)" opacity="0.22"/>
-        </svg>
+    <!-- Documentation Notification (shown when tutorial is closed) -->
+    <div id="docs-notification" class="docs-notification hidden">
+      <div class="docs-notification-content">
+        <i class="fas fa-book-open"></i>
+        <span>Need help? Check out our <a href="docs.html" target="_blank">documentation</a> for detailed guides.</span>
+        <button id="dismiss-docs-notification" class="docs-notification-dismiss" aria-label="Dismiss notification">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
-      <div class="footer-content">
-        <div class="footer-main">
-          <div class="footer-brand-section">
-            <div class="footer-brand">
-              <div class="footer-logo-container">
-                <span class="footer-logo" aria-label="PrompterAid logo">🧜‍♀️</span>
-                <div class="logo-glow"></div>
-              </div>
-              <div class="brand-text">
-                <h2 class="footer-title">PrompterAid</h2>
-                <p class="footer-subtitle">Visual reference tool for NijiJourney 6 & Midjourney v7</p>
-              </div>
-              <div class="footer-links-section">
-                <div class="social-links">
-                  <a href="https://www.instagram.com/prompteraid/" target="_blank" rel="noopener noreferrer nofollow" class="social-link" title="Instagram">
-                    <i class="fa-brands fa-instagram"></i>
-                    <span class="social-label">Instagram</span>
-                  </a>
-                  <a href="https://hub.prompteraid.com/" target="_blank" rel="noopener noreferrer nofollow" class="social-link" title="Hub">
-                    <i class="fa-solid fa-users"></i>
-                    <span class="social-label">Hub</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <div class="footer-credit">
-            <span>Created with ❤️ by <a href="http://jennajuffuffles.com/" target="_blank" rel="noopener noreferrer nofollow" class="creator-link">JennaJuffuffles</a></span>
-            <span>Powered by <a href="http://cursor.com/" target="_blank" rel="noopener noreferrer nofollow" class="tool-link">Cursor</a></span>
-          </div>
-          <div class="footer-legal">
-            <p>&copy; 2025 PrompterAid</p>
-            <a href="terms.html">Terms of Service</a>
-            <a href="privacy.html">Privacy Policy</a>
-          </div>
+    </div>
+    
+  </div> <!-- end .container -->
+  <footer class="footer-glass-demo">
+    <div class="footer-bubbles-bg">
+      <div class="bubble bubble1"></div>
+      <div class="bubble bubble2"></div>
+      <div class="bubble bubble3"></div>
+      <div class="bubble bubble4"></div>
+      <div class="bubble bubble5"></div>
+      <div class="bubble bubble6"></div>
+      <div class="bubble bubble7"></div>
+      <div class="bubble bubble8"></div>
+      <div class="bubble bubble9"></div>
+      <div class="bubble bubble10"></div>
+      <div class="bubble bubble11"></div>
+      <div class="bubble bubble12"></div>
+      <div class="bubble bubble13"></div>
+      <div class="bubble bubble14"></div>
+      <div class="bubble bubble15"></div>
+      <div class="bubble bubble16"></div>
+    </div>
+    <div class="footer-glass-content">
+      <div class="footer-glass-brand">
+        <span class="footer-glass-logo" aria-label="Demo logo">🧜‍♀️</span>
+        <div class="footer-glass-brand-text">
+          <img src="img/wordmark.png" alt="PrompterAid wordmark" class="footer-glass-wordmark" style="height:48px; max-width:220px; margin-bottom: 4px; background: none;">
+          <p>Visual reference tool for NijiJourney 6 & Midjourney v7</p>
         </div>
       </div>
-    </footer>
-  </div>
+      <div class="footer-glass-links">
+        <a href="https://www.instagram.com/prompteraid/" class="footer-glass-link" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i> <span>Official Instagram</span></a>
+        <a href="https://hub.prompteraid.com/" class="footer-glass-link" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-users"></i> <span>Community Hub</span></a>
+      </div>
+      <div class="footer-glass-legal">
+        <a href="docs.html">Documentation</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+      <div class="footer-glass-credit">
+        <span>Created with <span style="color:#f472b6">&#10084;&#65039;</span> by <a href="http://jennajuffuffles.carrd.co/" target="_blank" rel="noopener noreferrer" class="footer-author-link">JennaJuffuffles</a></span>
+        <span>Powered by <a href="https://cursor.com/" target="_blank" rel="noopener noreferrer" class="footer-link">Cursor</a></span>
+      </div>
+    </div>
+  </footer>
 
   <button id="back-to-top-btn" title="Back to top" aria-label="Back to top of page">
     <i class="fas fa-arrow-up"></i>
