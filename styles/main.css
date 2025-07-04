@@ -1970,17 +1970,10 @@ a:hover {
   color: var(--text-secondary);
 }
 
-
-
 /* Add new bobbing animation for water effect */
 @keyframes float-in-water {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
-}
-
-
-.footer-divider {
-  color: rgba(255, 255, 255, 0.4);
 }
 
 /* Dark mode adjustments */
@@ -2520,6 +2513,9 @@ a:hover {
   z-index: 1001;
 }
 
+.model-selector:hover {
+  /* The hover effect is now on the child */
+}
 
 .model-selector .current-model {
   background: linear-gradient(90deg, rgba(0,229,255,0.22) 0%, rgba(0,229,255,0.44) 40%, rgba(0,255,136,0.44) 60%, rgba(0,229,255,0.22) 100%);
@@ -2698,7 +2694,6 @@ html.dark-mode .model-option {
 .legal-page a:hover {
   text-decoration: underline;
 }
-
 
 #export-favorites i {
   color: var(--neon-yellow);
@@ -2969,7 +2964,6 @@ a:hover {
   user-select: none;
 }
 
-
 .legal-page h2 a {
   text-decoration: none;
   color: inherit;
@@ -3198,6 +3192,10 @@ a:hover {
   box-shadow: var(--shadow-md);
 }
 
+.new-styles-container summary span,
+.new-styles-container summary span i {
+  color: var(--neon-pink) !important;
+}
 
 .more-info-container summary span,
 .more-info-container summary span i {
@@ -3254,22 +3252,6 @@ a:hover {
   color: var(--neon-pink) !important;
 }
 
-/* Footer social links: no underline on any state */
-.footer-links-section .social-link,
-.footer-links-section .social-link:active,
-.footer-links-section .social-link:focus,
-.footer-links-section .social-link:hover 
-
-/* Also for .footer-legal and .footer-credit links if needed */
-.footer-credit a,
-.footer-credit a:active,
-.footer-credit a:focus,
-.footer-credit a:hover,
-.footer-legal a,
-.footer-legal a:active,
-.footer-legal a:focus,
-.footer-legal a:hover 
-
 .footer-links .social-link,
 .footer-links .social-link:active,
 .footer-links .social-link:focus,
@@ -3285,30 +3267,6 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   font-family: 'Quicksand', sans-serif;
 }
 
-.site-footer .social-link 
-.site-footer .social-link:hover,
-.site-footer .social-link:focus 
-.site-footer .social-link:visited 
-.site-footer .social-link i 
-
-.site-footer .footer-credit a,
-.site-footer .footer-credit a:visited,
-.site-footer .footer-credit a:hover,
-.site-footer .footer-credit a:focus,
-.site-footer .footer-credit a:active 
-
-.site-footer .footer-credit a i,
-.site-footer .footer-credit a:visited i,
-.site-footer .footer-credit a:hover i,
-.site-footer .footer-credit a:focus i,
-.site-footer .footer-credit a:active i 
-
-.site-footer .social-link i,
-.site-footer .social-link:visited i,
-.site-footer .social-link:hover i,
-.site-footer .social-link:focus i,
-.site-footer .social-link:active i 
-
 /* Prompt generator inline buttons */
 .prompt-gen-inline-buttons, .prompt-preview-row .prompt-gen-inline-buttons {
   display: flex;
@@ -3318,7 +3276,6 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   height: 2.5rem; /* Match button height for vertical centering */
   margin-top: var(--space-2); /* Match the prompt preview top margin */
 }
-
 
 .wand-magic-icon, .sparkle-wand-icon {
   font-size: 1em;
@@ -3867,121 +3824,5 @@ html.dark-mode .model-option i {
       opacity: 1;
       transform: translateY(0);
     }
-  }
-}
-
-/* ===== COPY TIP OVERLAY ===== */
-.copy-tip-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-}
-
-.copy-tip-overlay.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-.copy-tip-overlay.hiding {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.copy-tip-content {
-  background: var(--card-background);
-  border: 2px solid var(--neon-purple);
-  border-radius: var(--border-radius-lg);
-  padding: var(--space-4);
-  max-width: 320px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  position: relative;
-  transform: scale(0.9) translateY(20px);
-  transition: all 0.3s ease;
-}
-
-.copy-tip-overlay.show .copy-tip-content {
-  transform: scale(1) translateY(0);
-}
-
-.copy-tip-header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-}
-
-.copy-tip-icon {
-  color: var(--neon-purple);
-  font-size: 1.2rem;
-}
-
-.copy-tip-title {
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 1.1rem;
-  flex: 1;
-}
-
-.copy-tip-close {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  padding: var(--space-1);
-  border-radius: var(--border-radius-sm);
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.copy-tip-close:hover {
-  background: var(--background-hover);
-  color: var(--text-primary);
-}
-
-.copy-tip-text {
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin: 0;
-  font-size: 0.95rem;
-}
-
-/* Dark mode adjustments */
-html.dark-mode .copy-tip-content {
-  background: var(--card-background);
-  border-color: var(--neon-purple);
-}
-
-/* Light mode adjustments */
-html.light-mode .copy-tip-content {
-  background: var(--card-background);
-  border-color: var(--neon-purple);
-}
-
-/* Responsive adjustments */
-@media (max-width: 480px) {
-  .copy-tip-content {
-    margin: var(--space-4);
-    max-width: calc(100vw - 2rem);
-  }
-  
-  .copy-tip-title {
-    font-size: 1rem;
-  }
-  
-  .copy-tip-text {
-    font-size: 0.9rem;
   }
 }
