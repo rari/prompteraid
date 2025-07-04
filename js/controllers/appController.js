@@ -740,24 +740,38 @@ export default class AppController {
    * Show a popup tip for the copy button on first visit
    */
   showCopyButtonTip() {
+    console.log('showCopyButtonTip called');
+    
     // Check if user has already seen the tip
     const tipShown = localStorage.getItem('prompteraid_copyTipShown');
+    console.log('Tip shown status:', tipShown);
+    
+    // TEMPORARY: Force show for testing
+    localStorage.removeItem('prompteraid_copyTipShown');
+    
     if (tipShown === 'true') {
+      console.log('Tip already shown, skipping');
       return;
     }
+
+    console.log('Tip not shown yet, proceeding...');
 
     // Wait for the page to be fully loaded and the copy button to exist
     const checkForCopyButton = () => {
       const copyButton = document.getElementById('copy-button');
+      console.log('Checking for copy button:', copyButton);
       if (copyButton) {
+        console.log('Copy button found, creating tip');
         this.createCopyButtonTip(copyButton);
       } else {
+        console.log('Copy button not found, retrying...');
         // If button doesn't exist yet, try again in a moment
         setTimeout(checkForCopyButton, 100);
       }
     };
 
     // Start checking after a short delay to ensure DOM is ready
+    console.log('Starting copy button check in 1 second...');
     setTimeout(checkForCopyButton, 1000);
   }
 
@@ -766,6 +780,8 @@ export default class AppController {
    * @param {HTMLElement} copyButton - The copy button element
    */
   createCopyButtonTip(copyButton) {
+    console.log('createCopyButtonTip called with button:', copyButton);
+    
     // Create the tip overlay
     const tipOverlay = document.createElement('div');
     tipOverlay.className = 'copy-tip-overlay';
@@ -782,8 +798,11 @@ export default class AppController {
       </div>
     `;
 
+    console.log('Tip overlay created:', tipOverlay);
+
     // Add to body
     document.body.appendChild(tipOverlay);
+    console.log('Tip overlay added to body');
 
     // Position the tip near the copy button
     this.positionTipOverlay(tipOverlay, copyButton);
@@ -791,28 +810,33 @@ export default class AppController {
     // Handle close button
     const closeButton = tipOverlay.querySelector('.copy-tip-close');
     closeButton.addEventListener('click', () => {
+      console.log('Close button clicked');
       this.hideCopyButtonTip(tipOverlay);
     });
 
     // Auto-hide after 8 seconds
     setTimeout(() => {
+      console.log('Auto-hiding tip after 8 seconds');
       this.hideCopyButtonTip(tipOverlay);
     }, 8000);
 
     // Hide when copy button is clicked
     copyButton.addEventListener('click', () => {
+      console.log('Copy button clicked, hiding tip');
       this.hideCopyButtonTip(tipOverlay);
     }, { once: true });
 
     // Hide when clicking outside the tip
     tipOverlay.addEventListener('click', (e) => {
       if (e.target === tipOverlay) {
+        console.log('Clicked outside tip, hiding');
         this.hideCopyButtonTip(tipOverlay);
       }
     });
 
     // Show the tip with animation
     setTimeout(() => {
+      console.log('Adding show class to tip');
       tipOverlay.classList.add('show');
     }, 100);
   }
