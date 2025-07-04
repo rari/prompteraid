@@ -114,6 +114,7 @@ The script:
    - `privacy.html`
    - `terms.html`
    - `404.html`
+   - `docs.html`
 
 2. Gets the modification date of each file
 
@@ -130,6 +131,7 @@ The script:
 ℹ️  privacy.html: Already up to date (2024-12-19)
 ℹ️  terms.html: Already up to date (2024-12-19)
 ℹ️  404.html: Already up to date (2024-12-19)
+ℹ️  docs.html: Already up to date (2024-12-19)
 
 🎉 Successfully updated 1 entries in sitemap.xml
 

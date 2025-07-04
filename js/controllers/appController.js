@@ -58,6 +58,9 @@ export default class AppController {
     
     // Initialize model change listener
     this.initModelChangeListener();
+    
+    // Initialize docs notification (since tutorial is commented out)
+    this.initDocsNotification();
   }
   
   initializeModel() {
@@ -638,6 +641,8 @@ export default class AppController {
     });
   }
 
+
+
   initNewsSection() {
     const newsContainer = document.querySelector('.news-container');
     const closeButton = document.getElementById('close-news');
@@ -654,6 +659,32 @@ export default class AppController {
       // Save preference to localStorage with prefix
       localStorage.setItem('prompteraid_hideNews', 'true');
     });
+  }
+
+  initDocsNotification() {
+    const dismissNotificationButton = document.getElementById('dismiss-docs-notification');
+    const docsNotification = document.getElementById('docs-notification');
+    
+    // Since tutorial is commented out, show notification by default unless dismissed
+    const notificationDismissed = localStorage.getItem('prompteraid_docsNotificationDismissed');
+    
+    if (notificationDismissed !== 'true' && docsNotification) {
+      // Add a delay to ensure the page is fully loaded
+      setTimeout(() => {
+        docsNotification.classList.remove('hidden');
+      }, 1500);
+    }
+
+    // Handle dismiss notification button
+    if (dismissNotificationButton && docsNotification) {
+      dismissNotificationButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        docsNotification.classList.add('hidden');
+        localStorage.setItem('prompteraid_docsNotificationDismissed', 'true');
+      });
+    }
   }
 
   checkInitialSettings() {
@@ -683,6 +714,8 @@ export default class AppController {
         newsContainer.classList.add('hidden');
       }
     }
+    
+
   }
 
   /**
