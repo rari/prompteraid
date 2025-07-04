@@ -24,6 +24,7 @@ def check_if_html_files_changed():
         
         # Check if any sitemap HTML files are staged
         sitemap_files = ['index.html', 'privacy.html', 'terms.html', '404.html']
+        sitemap_files.append('docs.html')
         
         for file in staged_files:
             if file in sitemap_files:
