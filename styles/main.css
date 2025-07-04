@@ -1970,32 +1970,7 @@ a:hover {
   color: var(--text-secondary);
 }
 
-/* ===== MODERN FOOTER STYLES ===== */
-.modern-footer 
 
-.footer-wave 
-.footer-wave svg 
-
-.footer-wave .shape-fill 
-.footer-wave .shape-fill:nth-child(2) 
-.footer-wave .shape-fill:nth-child(3) 
-
-.footer-content 
-
-.footer-main 
-
-.footer-brand-section 
-
-.footer-brand 
-
-.footer-logo-container 
-
-.footer-logo 
-
-.footer-logo:hover 
-
-/* Remove the glow bubble completely */
-.logo-glow 
 
 /* Add new bobbing animation for water effect */
 @keyframes float-in-water {
@@ -2003,37 +1978,6 @@ a:hover {
   50% { transform: translateY(-10px); }
 }
 
-.brand-text 
-
-.footer-title 
-
-.footer-subtitle 
-
-.footer-links-section 
-
-.social-links 
-
-.social-link 
-
-.social-link:hover 
-
-.social-link i 
-
-.social-link:hover i 
-
-.social-label 
-
-.footer-bottom 
-
-.footer-credit 
-
-.footer-legal 
-
-.footer-legal p 
-
-.footer-legal a 
-
-.footer-legal a:hover 
 
 .footer-divider {
   color: rgba(255, 255, 255, 0.4);
@@ -2576,9 +2520,6 @@ a:hover {
   z-index: 1001;
 }
 
-.model-selector:hover {
-  /* The hover effect is now on the child */
-}
 
 .model-selector .current-model {
   background: linear-gradient(90deg, rgba(0,229,255,0.22) 0%, rgba(0,229,255,0.44) 40%, rgba(0,255,136,0.44) 60%, rgba(0,229,255,0.22) 100%);
@@ -2758,14 +2699,6 @@ html.dark-mode .model-option {
   text-decoration: underline;
 }
 
-/* Footer Styles */
-.site-footer 
-
-.site-footer nav 
-
-.site-footer a 
-
-.site-footer a:active 
 
 #export-favorites i {
   color: var(--neon-yellow);
@@ -3036,8 +2969,6 @@ a:hover {
   user-select: none;
 }
 
-/* Remove list-style if any ul/li is used in the footer */
-.footer-credit li, .footer-legal li 
 
 .legal-page h2 a {
   text-decoration: none;
@@ -3267,42 +3198,6 @@ a:hover {
   box-shadow: var(--shadow-md);
 }
 
-/* New Styles More Button - REMOVED */
-/*
-.new-styles-more-btn {
-  background: var(--neon-pink);
-  color: #fff;
-  border: none;
-  font: 700 1.1rem/1.2 var(--font-family, inherit);
-  width: 100%;
-  display: block;
-  padding: 1.1rem 0;
-  letter-spacing: 0.01em;
-  cursor: pointer;
-  box-shadow: var(--shadow-md);
-  text-align: center;
-  border-radius: 2em;
-  transition: background 0.18s, color 0.18s, box-shadow 0.18s, outline 0.18s;
-}
-
-.new-styles-more-btn:hover,
-.new-styles-more-btn:focus {
-  background: #c2126e;
-  color: #fff;
-  outline: 3px solid #fff;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(255,20,147,0.25), var(--shadow-md);
-}
-*/
-
-.new-styles-container summary {
-  /* border-bottom: 1px solid #bbb; */
-}
-
-.new-styles-container summary span,
-.new-styles-container summary span i {
-  color: var(--neon-pink) !important;
-}
 
 .more-info-container summary span,
 .more-info-container summary span i {
@@ -3424,8 +3319,6 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   margin-top: var(--space-2); /* Match the prompt preview top margin */
 }
 
-/* Remove .prompt-extra-buttons if present (legacy) */
-.prompt-extra-buttons { display: none !important; }
 
 .wand-magic-icon, .sparkle-wand-icon {
   font-size: 1em;
@@ -3451,9 +3344,6 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   animation: none;
 }
 
-.prompt-preview-panel {
-  /* By default, visible */
-}
 .prompt-preview.hidden ~ #prompt-settings-panel,
 .prompt-preview.hidden {
   display: none !important;
@@ -3977,5 +3867,121 @@ html.dark-mode .model-option i {
       opacity: 1;
       transform: translateY(0);
     }
+  }
+}
+
+/* ===== COPY TIP OVERLAY ===== */
+.copy-tip-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.copy-tip-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.copy-tip-overlay.hiding {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.copy-tip-content {
+  background: var(--card-background);
+  border: 2px solid var(--neon-purple);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-4);
+  max-width: 320px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+  transform: scale(0.9) translateY(20px);
+  transition: all 0.3s ease;
+}
+
+.copy-tip-overlay.show .copy-tip-content {
+  transform: scale(1) translateY(0);
+}
+
+.copy-tip-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.copy-tip-icon {
+  color: var(--neon-purple);
+  font-size: 1.2rem;
+}
+
+.copy-tip-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  flex: 1;
+}
+
+.copy-tip-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--border-radius-sm);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-tip-close:hover {
+  background: var(--background-hover);
+  color: var(--text-primary);
+}
+
+.copy-tip-text {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Dark mode adjustments */
+html.dark-mode .copy-tip-content {
+  background: var(--card-background);
+  border-color: var(--neon-purple);
+}
+
+/* Light mode adjustments */
+html.light-mode .copy-tip-content {
+  background: var(--card-background);
+  border-color: var(--neon-purple);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .copy-tip-content {
+    margin: var(--space-4);
+    max-width: calc(100vw - 2rem);
+  }
+  
+  .copy-tip-title {
+    font-size: 1rem;
+  }
+  
+  .copy-tip-text {
+    font-size: 0.9rem;
   }
 }
