@@ -1978,33 +1978,30 @@ a:hover {
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .footer-main 
-  .footer-brand 
-  .brand-text 
-  .footer-links-section 
-  .social-links 
-  .footer-bottom 
-  .footer-credit 
-  .footer-legal 
+  .footer-main,
+  .footer-brand,
+  .brand-text,
+  .footer-links-section,
+  .social-links,
+  .footer-bottom,
+  .footer-credit,
+  .footer-legal,
   .footer-legal p,
-  .footer-legal a 
+  .footer-legal a,
   .footer-divider {
     display: none;
   }
 }
 
 @media (max-width: 480px) {
-  .footer-content 
-  
-  .social-links 
-  
-  .social-link 
-  
-  .social-link i 
-  
-  .social-label 
-  
-  .footer-logo 
+  .footer-content,
+  .social-links,
+  .social-link,
+  .social-link i,
+  .social-label,
+  .footer-logo {
+    display: none;
+  }
 }
 
 /* Weight Controls */
