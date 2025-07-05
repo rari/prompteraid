@@ -3826,3 +3826,12 @@ html.dark-mode .model-option i {
     }
   }
 }
+
+/* === Mobile Gallery Button Visibility Fix === */
+@media (max-width: 768px) {
+  .gallery-item .favorite-button,
+  .gallery-item .quadrant-flip-button,
+  .gallery-item .link-button {
+    opacity: 0.9;
+  }
+}
