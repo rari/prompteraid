@@ -1301,8 +1301,6 @@ a:hover {
     padding: var(--space-3);
   }
   
-  .site-footer 
-
   /* Make in-image buttons always visible on mobile */
   .gallery-item .favorite-button,
   .gallery-item .quadrant-flip-button,
