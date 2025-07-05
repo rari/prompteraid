@@ -138,15 +138,6 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   }
 }
 
-/* ===== MOBILE FAVORITE BUTTON OVERRIDE ===== */
-@media (max-width: 768px) {
-  /* Ensure favorite/star buttons are always visible on mobile where hover isn't available */
-  .gallery-item .favorite-button,
-  .gallery-item .star-button {
-    opacity: 1 !important;
-  }
-}
-
 /* ===== INFO CONTAINER OVERRIDES ===== */
 /* More info container overrides for favorites tools - remove styling when hidden */
 .more-info-container:has(#favorites-tools.hidden) {
