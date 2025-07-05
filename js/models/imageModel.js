@@ -387,8 +387,11 @@ export default class ImageModel {
     const srefsString = srefs.length > 0 ? `--sref ${srefs.join(' ')}` : '';
     const prefix = this.isDiscordMode ? '/imagine prompt: ' : '';
     
-    // Combine all parts, ensuring there are spaces where needed
-    const parts = [this.basePrompt, modelTag, srefsString, this.suffix].filter(part => part.trim() !== '');
+    // IMPORTANT: The suffix MUST follow the base prompt *before* the model tag and any style refs.
+    // Order: base prompt ➜ suffix ➜ model tag (e.g., --niji 6) ➜ style references.  
+    // Changing this ordering will break expected prompt format like
+    //   "<base prompt> <suffix> --niji 6 --sref ..."
+    const parts = [this.basePrompt, this.suffix, modelTag, srefsString].filter(part => part.trim() !== '');
     
     // If no user input and no styles selected, still show the model parameter and prefix
     if (parts.length === 0) {
