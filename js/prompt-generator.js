@@ -58,30 +58,6 @@ class PromptGenerator {
       this.toggleRandomize(randomizeCheckbox.checked);
     }
 
-    // Handle aspect ratio dropdown
-    const aspectRatioSelect = document.getElementById('aspect-ratio-select');
-    const stickyAspectRatioSelect = document.getElementById('sticky-aspect-ratio-select');
-    
-    if (aspectRatioSelect) {
-      aspectRatioSelect.addEventListener('change', () => {
-        this.updateAspectRatio(aspectRatioSelect.value);
-        // Sync with sticky dropdown
-        if (stickyAspectRatioSelect) {
-          stickyAspectRatioSelect.value = aspectRatioSelect.value;
-        }
-      });
-    }
-    
-    if (stickyAspectRatioSelect) {
-      stickyAspectRatioSelect.addEventListener('change', () => {
-        this.updateAspectRatio(stickyAspectRatioSelect.value);
-        // Sync with main dropdown
-        if (aspectRatioSelect) {
-          aspectRatioSelect.value = stickyAspectRatioSelect.value;
-        }
-      });
-    }
-
     // Add keyboard shortcuts
     document.addEventListener('keydown', (e) => {
       // Only trigger shortcuts if not typing in an input field
@@ -154,31 +130,6 @@ class PromptGenerator {
       });
     }
     console.log('[PromptGen] toggleRandomize done');
-  }
-
-  updateAspectRatio(ratio) {
-    // Update the suffix input with the new aspect ratio
-    let suffixInput = document.getElementById('prompt-suffix');
-    if (!suffixInput) suffixInput = document.getElementById('sticky-prompt-suffix');
-    
-    if (suffixInput) {
-      let currentSuffix = suffixInput.value.trim();
-      
-      // Remove any existing --ar parameter
-      currentSuffix = currentSuffix.replace(/--ar\s+\S+/g, '');
-      
-      // Add the new aspect ratio
-      const newArParam = `--ar ${ratio}`;
-      
-      // Combine with existing suffix, ensuring proper spacing
-      if (currentSuffix) {
-        suffixInput.value = `${currentSuffix} ${newArParam}`.trim();
-      } else {
-        suffixInput.value = newArParam;
-      }
-      
-      console.log(`[PromptGen] Updated aspect ratio to: ${ratio}`);
-    }
   }
 
   buildNaturalPrompt(parts) {

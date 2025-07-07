@@ -39,6 +39,7 @@ export default class ImageModel {
     this.showOnlyFavorites = false;
     this.basePrompt = '';
     this.suffix = '';
+    this.aspectRatio = '1:1'; // Default aspect ratio
     this.currentColorIndex = 0;
     this.numSelectionColors = 5; // Pink, Orange, Yellow, Teal, Blue
     this.numWeightColors = 7; // Pink, Orange, Yellow, Green, Teal, Blue, Purple
@@ -74,6 +75,12 @@ export default class ImageModel {
         this.isDiscordMode = isDiscordMode === 'true';
       }
       
+      // Load aspect ratio preference
+      const aspectRatio = localStorage.getItem('prompteraid_aspectRatio');
+      if (aspectRatio !== null) {
+        this.aspectRatio = aspectRatio;
+      }
+      
       // Do NOT load basePrompt or suffix from storage anymore
       // const basePrompt = localStorage.getItem('prompteraid_basePrompt');
       // if (basePrompt !== null) {
@@ -103,6 +110,7 @@ export default class ImageModel {
       
       // Save global preferences
       localStorage.setItem('prompteraid_isDiscordMode', this.isDiscordMode);
+      localStorage.setItem('prompteraid_aspectRatio', this.aspectRatio);
       // Do NOT save basePrompt or suffix anymore
       // localStorage.setItem('prompteraid_basePrompt', this.basePrompt);
       // localStorage.setItem('prompteraid_suffix', this.suffix);
@@ -329,6 +337,11 @@ export default class ImageModel {
     this.saveToStorage();
   }
 
+  setAspectRatio(aspectRatio) {
+    this.aspectRatio = aspectRatio;
+    this.saveToStorage();
+  }
+
   getSelectedSrefs() {
     return Array.from(this.selectedImages.keys())
       .map(id => {
@@ -340,7 +353,13 @@ export default class ImageModel {
         // Extract only the numeric sref code from the image.sref
         // The sref should be the filename before the first underscore
         const srefCode = image.sref;
-        return `${srefCode}::${weight}`;
+        
+        // Don't include weights for Midjourney 7 since multiprompt is not available
+        if (this.currentModel === 'midjourney-7') {
+          return srefCode;
+        } else {
+          return `${srefCode}::${weight}`;
+        }
       })
       .filter(sref => sref !== null);
   }
@@ -385,10 +404,12 @@ export default class ImageModel {
     }
 
     const srefsString = srefs.length > 0 ? `--sref ${srefs.join(' ')}` : '';
+    const aspectRatioString = `--ar ${this.aspectRatio}`;
     const prefix = this.isDiscordMode ? '/imagine prompt: ' : '';
     
     // Combine all parts, ensuring there are spaces where needed
-    const parts = [this.basePrompt, modelTag, srefsString, this.suffix].filter(part => part.trim() !== '');
+    // Order: basePrompt, suffix, modelTag, aspectRatio, srefsString
+    const parts = [this.basePrompt, this.suffix, modelTag, aspectRatioString, srefsString].filter(part => part.trim() !== '');
     
     // If no user input and no styles selected, still show the model parameter and prefix
     if (parts.length === 0) {

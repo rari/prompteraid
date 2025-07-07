@@ -112,6 +112,9 @@ export default class GalleryController {
       // Add direct document-level handler for favorite button clicks
       this.addDirectFavoriteHandler();
     
+      // Initialize DOM with model values
+      this.view.initDOMWithModel(this.model);
+    
       // Sync model with current DOM values before updating prompt
       // Use the view's method to ensure proper syncing, especially after model switching
       this.view.syncModelWithDOM(this.model);
@@ -587,6 +590,12 @@ export default class GalleryController {
     // Suffix input
     this.view.bindSuffixInput((newValue) => {
       this.model.setSuffix(newValue.trim());
+      this.updatePrompt();
+    });
+
+    // Aspect ratio dropdown
+    this.view.bindAspectRatioDropdown((newValue) => {
+      this.model.setAspectRatio(newValue);
       this.updatePrompt();
     });
     
