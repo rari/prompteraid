@@ -641,6 +641,17 @@ export default class GalleryView {
           stickySuffixLabel.setAttribute('for', 'sticky-prompt-suffix');
         }
       }
+
+      // Update the aspect ratio dropdown ID in the sticky panel
+      const stickyAspectRatioSelect = stickySettingsPanel.querySelector('#aspect-ratio-select');
+      if (stickyAspectRatioSelect) {
+        stickyAspectRatioSelect.id = 'sticky-aspect-ratio-select';
+        // Also update the label's for attribute
+        const stickyAspectRatioLabel = stickySettingsPanel.querySelector('label[for="aspect-ratio-select"]');
+        if (stickyAspectRatioLabel) {
+          stickyAspectRatioLabel.setAttribute('for', 'sticky-aspect-ratio-select');
+        }
+      }
       
       // Add the settings panel to the preview row (not the outer container)
       stickyPreviewRow.appendChild(stickySettingsPanel);

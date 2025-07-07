@@ -60,9 +60,25 @@ class PromptGenerator {
 
     // Handle aspect ratio dropdown
     const aspectRatioSelect = document.getElementById('aspect-ratio-select');
+    const stickyAspectRatioSelect = document.getElementById('sticky-aspect-ratio-select');
+    
     if (aspectRatioSelect) {
       aspectRatioSelect.addEventListener('change', () => {
         this.updateAspectRatio(aspectRatioSelect.value);
+        // Sync with sticky dropdown
+        if (stickyAspectRatioSelect) {
+          stickyAspectRatioSelect.value = aspectRatioSelect.value;
+        }
+      });
+    }
+    
+    if (stickyAspectRatioSelect) {
+      stickyAspectRatioSelect.addEventListener('change', () => {
+        this.updateAspectRatio(stickyAspectRatioSelect.value);
+        // Sync with main dropdown
+        if (aspectRatioSelect) {
+          aspectRatioSelect.value = stickyAspectRatioSelect.value;
+        }
       });
     }
 
