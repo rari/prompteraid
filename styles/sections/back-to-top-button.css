@@ -1,0 +1,28 @@
+/* ===== BACK TO TOP BUTTON ===== */
+#back-to-top-btn {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  background: var(--gradient-primary);
+  color: white;
+  border-radius: var(--border-radius-full);
+  width: 3rem;
+  height: 3rem;
+  font-size: var(--font-size-xl);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
+  border: none;
+}
+
+#back-to-top-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#back-to-top-btn:hover {
+  transform: translateY(-4px);
+}
+

@@ -1,0 +1,14 @@
+/* ===== INPUT GROUPS ===== */
+/* Flexbox layout for input fields and action buttons */
+.input-group, .sticky-action-bar .input-group {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.input-group > button:last-child,
+.sticky-action-bar .input-group > button:last-child {
+  margin-right: 0;
+}
+

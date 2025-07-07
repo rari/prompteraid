@@ -1,0 +1,47 @@
+/* ===== BASE STYLES ===== */
+/* Reset and normalize all elements */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  transition: var(--transition-theme);
+}
+
+/* Ensure consistent background color across all containers */
+html, body, #root, .container {
+  background-color: var(--background) !important;
+}
+
+/* Global document styles with theme integration */
+html, body {
+  border: none !important;
+  border-top: none !important;
+  box-shadow: none !important;
+  font-family: var(--font-family);
+  font-size: 16px;
+  color: var(--text-primary);
+  background-color: var(--background);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+}
+
+/* Body element with full viewport height and overflow control */
+body {
+  font-family: var(--font-family);
+  background-color: var(--background);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  height: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+}
+

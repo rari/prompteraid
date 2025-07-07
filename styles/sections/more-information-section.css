@@ -1,0 +1,185 @@
+/* ===== MORE INFORMATION SECTION ===== */
+.more-info-container {
+  margin-bottom: var(--space-6);
+  border-radius: 1.2rem;
+  /* background: rgba(30, 30, 60, 0.55); */
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12), 0 1.5px 8px 0 rgba(0,255,255,0.08);
+  backdrop-filter: blur(12px) saturate(1.2);
+  border: 1.5px solid var(--neon-yellow);
+  transition: box-shadow 0.2s, border 0.2s;
+  overflow: hidden;
+}
+
+.more-info-container:has(#favorites-tools.hidden) {
+  border-color: transparent !important;
+}
+
+.more-info-container:has(#favorites-tools) {
+  background: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.more-info-container details {
+  border: none;
+}
+
+.more-info-container summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.2rem;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  gap: 0.7em;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--neon-yellow) !important;
+  letter-spacing: 0.01em;
+  transition: background 0.2s;
+  background: inherit;
+  /* border-bottom: 1px solid #bbb; */
+  box-sizing: border-box;
+}
+
+.more-info-container summary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.more-info-container summary::marker {
+  display: none;
+}
+
+.more-info-content {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+.info-section {
+  margin-bottom: var(--space-5);
+}
+
+.info-section:last-child {
+  margin-bottom: 0;
+}
+
+.info-section h4 {
+  font-size: var(--font-size-lg);
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: var(--space-2);
+}
+
+.sref-guide-section h5 {
+  font-size: var(--font-size-md);
+  color: var(--text-secondary);
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+.info-section ul {
+  list-style: none;
+  padding-left: var(--space-2);
+}
+
+.sref-guide-section ul,
+.hints-section ul,
+.prompt-generator-section ul {
+  list-style-type: disc;
+  padding-left: var(--space-5);
+}
+
+/* Nested lists (sub-bullets) use hollow bullets */
+.sref-guide-section ul ul,
+.hints-section ul ul,
+.prompt-generator-section ul ul {
+  list-style-type: circle;
+  padding-left: var(--space-4);
+}
+
+/* Ordered lists should be indented */
+.sref-guide-section ol,
+.hints-section ol,
+.prompt-generator-section ol {
+  padding-left: var(--space-5);
+}
+
+/* Nested ordered lists */
+.sref-guide-section ol ol,
+.hints-section ol ol,
+.prompt-generator-section ol ol {
+  padding-left: var(--space-4);
+}
+
+.info-section li {
+  margin-bottom: var(--space-3);
+  padding-left: var(--space-2);
+}
+
+.info-section code {
+  background-color: var(--gray-200);
+  color: var(--neon-pink);
+  padding: 0.1em 0.3em;
+  border-radius: var(--border-radius-sm);
+  font-family: monospace;
+}
+
+.inline-icon {
+  color: var(--neon-purple);
+  font-size: 0.9em;
+}
+
+.tool-guide-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.tool-guide-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.menu-icon-style {
+  font-size: 1.2rem;
+  width: 1.5rem;
+  text-align: center;
+}
+.menu-icon-style.fa-trash-can { color: var(--neon-pink); }
+.menu-icon-style.fa-sync-alt { color: var(--neon-orange); }
+.menu-icon-style.fa-star { color: var(--neon-yellow); }
+.menu-icon-style.fa-eye { color: var(--neon-green); }
+.menu-icon-style.fa-lightbulb { color: var(--neon-blue); }
+.menu-icon-style.fa-clipboard { color: var(--neon-purple); }
+.menu-icon-style.fa-hand-pointer { color: var(--neon-green); }
+.menu-icon-style.fa-discord { color: #5865F2; }
+.menu-icon-style.fa-globe { color: var(--neon-teal); }
+.menu-icon-style.fa-magnifying-glass { color: var(--neon-teal); }
+.menu-icon-style.fa-link { color: rgba(255, 255, 255, 0.8); }
+.menu-icon-style.fa-balance-scale { color: rgba(255, 255, 255, 0.8); }
+
+.select-icon-placeholder {
+  width: 1.5rem; /* Matches .menu-icon-style width */
+  height: 1.2rem; /* Matches .menu-icon-style font-size */
+  border: 2px solid var(--neon-pink);
+  border-radius: var(--border-radius-sm);
+  display: inline-block;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.5rem;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.close-button:hover {
+  opacity: 1;
+}
+

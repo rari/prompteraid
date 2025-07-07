@@ -1,0 +1,49 @@
+/* ===== THEME TOGGLE ===== */
+.theme-toggle {
+  position: fixed;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 100;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+/* Theme toggle colors - more specific selectors */
+.theme-toggle.theme-toggle-light .fa-sun,
+.input-group .theme-toggle.theme-toggle-light .fa-sun,
+.sticky-action-bar .theme-toggle.theme-toggle-light .fa-sun {
+  color: #ffd700 !important; /* Yellow sun color */
+  font-size: 1.4rem;
+}
+
+.theme-toggle.theme-toggle-dark .fa-moon,
+.input-group .theme-toggle.theme-toggle-dark .fa-moon,
+.sticky-action-bar .theme-toggle.theme-toggle-dark .fa-moon {
+  color: #007bff !important; /* Blue moon color */
+  font-size: 1.4rem;
+}
+
+/* Fallback colors for when classes aren't applied */
+.theme-toggle .fa-sun {
+  color: #ffd700 !important; /* Yellow sun color */
+  font-size: 1.4rem;
+}
+
+.theme-toggle .fa-moon {
+  color: #007bff !important; /* Blue moon color */
+  font-size: 1.4rem;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+

@@ -1,0 +1,15 @@
+/* ===== PROMPT CONTAINER ===== */
+/* Main prompt input area with card styling */
+.prompt-container {
+  background-color: var(--card-background);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+  transition: box-shadow var(--transition-normal), var(--transition-theme);
+}
+
+.prompt-container:hover {
+  box-shadow: var(--shadow-lg);
+}
+

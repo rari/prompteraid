@@ -1,0 +1,28 @@
+/* ===== PROMPTERAID MAIN CSS ===== */
+/*
+ * PrompterAid CSS Architecture
+ * 
+ * Design System:
+ * 1. CSS Variables
+ *    - Color palette uses CSS custom properties for theming
+ *    - Spacing scale follows 4px grid (var(--space-*))
+ *    - Typography uses relative units (rem) for accessibility
+ * 
+ * 2. Component Architecture
+ *    - BEM-like naming (.block__element--modifier)
+ *    - Shared styles through class composition
+ *    - Semantic color classes for button actions
+ * 
+ * 3. Layout Patterns
+ *    - Flexbox for component layout
+ *    - CSS Grid for perfect centering
+ *    - Z-index layers follow strict hierarchy
+ * 
+ * AI Maintenance Guidelines:
+ * - Keep button dimensions consistent (2.5rem × 2.5rem)
+ * - Maintain color semantic meanings
+ * - Use CSS custom properties for theming
+ * - Follow existing naming patterns
+ * - Preserve accessibility features
+ */
+

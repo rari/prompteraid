@@ -1,0 +1,33 @@
+/* ===== TYPOGRAPHY ===== */
+/* Heading hierarchy with consistent spacing and weights */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+}
+
+/* Main title styling with brand color and gradient animation */
+h1 {
+  font-size: var(--font-size-4xl);
+  letter-spacing: -0.025em;
+  color: var(--primary);
+  text-align: center;
+  margin: 1rem 0 0.1rem;
+}
+
+/* Paragraph spacing for readability */
+p {
+  margin-bottom: var(--space-4);
+}
+
+/* Link styling with theme-aware colors and smooth transitions */
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+

@@ -1,0 +1,54 @@
+/* ===== TOGGLE PREVIEW BUTTONS ===== */
+#toggle-preview-button,
+#sticky-toggle-preview-button {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  }
+  
+#toggle-preview-button i, 
+#sticky-toggle-preview-button i {
+  background: linear-gradient(
+    135deg,
+    var(--neon-pink) 0%,
+    var(--neon-pink) 15%,
+    var(--neon-purple) 25%,
+    var(--neon-yellow) 40%,
+    var(--neon-teal) 55%,
+    var(--neon-blue) 70%,
+    var(--neon-pink) 85%,
+    var(--neon-pink) 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: chevron-gradient-shift 3s ease infinite;
+  display: inline-block;
+  transform: rotate(-180deg); /* Start pointing up (menu closed) */
+  transform-origin: center;
+  transition: transform 0.3s ease; /* Add transform transition back */
+}
+
+#toggle-preview-button.active i,
+#sticky-toggle-preview-button.active i {
+  transform: rotate(0deg); /* Point down when active/open */
+  animation: chevron-gradient-shift 3s ease infinite;
+}
+
+#toggle-preview-button:not(.active) i,
+#sticky-toggle-preview-button:not(.active) i {
+  transform: rotate(-180deg); /* Point up when inactive/closed */
+  animation: chevron-gradient-shift 3s ease infinite;
+}
+
+@keyframes rotate-to-down {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(180deg); }
+}
+
+@keyframes rotate-to-up {
+  from { transform: rotate(180deg); }
+  to { transform: rotate(0deg); }
+}
+

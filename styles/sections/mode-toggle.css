@@ -1,0 +1,107 @@
+/* ===== MODE TOGGLE ===== */
+.mode-toggle-container {
+  position: relative;
+  margin: 0 0.5rem 0 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Theme toggle container inside input group */
+.theme-toggle-container {
+  position: relative;
+  margin: 0 0 0 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Theme toggle inside input group */
+.input-group .theme-toggle {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: 2.5rem;
+  height: 2.25rem;
+  margin: 0;
+  z-index: 1;
+  box-shadow: none;
+  border: none;
+  background-color: transparent;
+}
+
+/* Action buttons row for second line */
+.action-buttons-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.mode-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.25rem;
+  border-radius: var(--border-radius-md);
+  background: transparent;
+  border: 2px solid var(--neon-blue);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  overflow: hidden;
+}
+
+.mode-toggle:hover {
+  transform: translateY(-2px);
+  border-color: var(--neon-purple);
+}
+
+.mode-toggle i {
+  position: absolute;
+  font-size: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.discord-icon {
+  color: var(--neon-blue);
+  transform-origin: center;
+  animation: pulse-subtle 2s infinite alternate;
+}
+
+.website-icon {
+  color: var(--neon-teal);
+  transform: translateY(30px) scale(0.8);
+  opacity: 0;
+  animation: pulse-subtle 2s infinite alternate;
+  animation-delay: 0.5s;
+}
+
+.mode-toggle.website-mode {
+  border-color: var(--neon-teal);
+}
+
+.mode-toggle.website-mode .discord-icon {
+  transform: translateY(-30px) scale(0.8);
+  opacity: 0;
+}
+
+.mode-toggle.website-mode .website-icon {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+@keyframes pulse-subtle {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+/* Mode labels are visually indicated by the icons */
+
+/* Sticky header version of the toggle */
+#sticky-action-bar .mode-toggle-container {
+  margin: 0 0.5rem 0 0;
+}
+

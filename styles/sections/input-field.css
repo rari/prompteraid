@@ -1,0 +1,39 @@
+/* ===== INPUT FIELD ===== */
+/* Main prompt input with theme-aware styling */
+#prompt-input {
+  flex: 1 0 auto;
+  min-width: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-md);
+  color: var(--text-primary);
+  background-color: var(--background);
+  transition: all var(--transition-fast), var(--transition-theme);
+}
+
+#prompt-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Sticky prompt input for mobile/scroll behavior */
+#sticky-prompt-input {
+  flex: 1 0 auto;
+  min-width: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-md);
+  color: var(--text-primary);
+  background-color: var(--background);
+  transition: all var(--transition-fast), var(--transition-theme);
+}
+
+#sticky-prompt-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+

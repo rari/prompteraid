@@ -1,0 +1,111 @@
+/* ===== ANIMATIONS ===== */
+/* Animation for copy button feedback - creates a glowing effect */
+@keyframes glow-copied-icon {
+  0% {
+    box-shadow: 0 0 0px 0 #a78bfa;
+    background: inherit;
+    color: #7c3aed;
+    transform: scale(1);
+  }
+  10% {
+    box-shadow: 0 4px 24px 0 #a78bfa99, 0 0 0 4px #ede9fe;
+    background: #ede9fe;
+    color: #a78bfa;
+    transform: scale(1.18);
+  }
+  60% {
+    box-shadow: 0 4px 24px 0 #a78bfa99, 0 0 0 4px #ede9fe;
+    background: #ede9fe;
+    color: #a78bfa;
+    transform: scale(1.18);
+  }
+  100% {
+    box-shadow: 0 0 0px 0 #a78bfa;
+    background: inherit;
+    color: #7c3aed;
+    transform: scale(1);
+  }
+}
+
+/* Gradient animation for dynamic backgrounds */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Tropical gradient rotation for visual interest */
+@keyframes tropical-gradient-rotate {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* Complex gradient animation for chevron elements */
+@keyframes chevron-gradient-shift {
+  0% { background-position: 0% 50%; }
+  20% { background-position: 100% 50%; }
+  40% { background-position: 100% 100%; }
+  60% { background-position: 0% 100%; }
+  80% { background-position: 50% 0%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Standard rotation animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Single rotation animation (180 degrees) */
+@keyframes spin-once {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(180deg); }
+}
+
+/* Shake animation for error feedback */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-1px); }
+  20%, 40%, 60%, 80% { transform: translateX(1px); }
+}
+
+/* Pop animation for button feedback */
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Blink animation for attention */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  25%, 75% { opacity: 0.3; }
+}
+
+/* Bounce animation for interactive feedback */
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
+  40%, 43% { transform: translate3d(0, -8px, 0); }
+  70% { transform: translate3d(0, -4px, 0); }
+  90% { transform: translate3d(0, -2px, 0); }
+}
+
+/* Float animation for visual elements */
+@keyframes float-up {
+  0% {
+    transform: translateY(0) scale(0.2);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-60px) scale(0.7);
+    opacity: 0;
+  }
+}
+
