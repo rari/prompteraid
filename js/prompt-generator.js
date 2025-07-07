@@ -378,8 +378,12 @@ class PromptGenerator {
   }
 
   initAspectRatioDropdownForPanel(panelId) {
+    console.log(`[AspectRatio] Initializing dropdown for panel: ${panelId}`);
     const panel = document.getElementById(panelId);
-    if (!panel) return;
+    if (!panel) {
+      console.warn(`[AspectRatio] Panel not found: ${panelId}`);
+      return;
+    }
 
     // Handle both main and sticky panel IDs
     const isSticky = panelId === 'sticky-prompt-settings-panel';
@@ -389,15 +393,28 @@ class PromptGenerator {
     const customRatioInput = panel.querySelector(isSticky ? '#sticky-custom-ratio-input' : '#custom-ratio-input');
     const selectedRatioSpan = panel.querySelector('.selected-ratio');
 
+    console.log(`[AspectRatio] Found elements:`, {
+      panel: !!panel,
+      aspectRatioBtn: !!aspectRatioBtn,
+      dropdownMenu: !!dropdownMenu,
+      customRatioContainer: !!customRatioContainer,
+      customRatioInput: !!customRatioInput,
+      selectedRatioSpan: !!selectedRatioSpan
+    });
+
     if (!aspectRatioBtn || !dropdownMenu) {
-      console.warn(`Aspect ratio dropdown elements not found in ${panelId}`);
+      console.warn(`[AspectRatio] Aspect ratio dropdown elements not found in ${panelId}`);
       return;
     }
 
     // Toggle dropdown menu
     aspectRatioBtn.addEventListener('click', (e) => {
+      console.log(`[AspectRatio] Button clicked for panel: ${panelId}`);
       e.stopPropagation();
+      const isHidden = dropdownMenu.classList.contains('hidden');
+      console.log(`[AspectRatio] Dropdown was hidden: ${isHidden}, toggling...`);
       dropdownMenu.classList.toggle('hidden');
+      console.log(`[AspectRatio] Dropdown is now hidden: ${dropdownMenu.classList.contains('hidden')}`);
     });
 
     // Handle ratio option selection
