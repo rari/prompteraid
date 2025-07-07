@@ -51,6 +51,13 @@
   display: none;
 }
 
+/* Debug: Make dropdown always visible for testing */
+.aspect-ratio-dropdown-menu {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 .ratio-option {
   display: flex;
   align-items: center;
