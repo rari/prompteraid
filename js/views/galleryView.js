@@ -642,34 +642,8 @@ export default class GalleryView {
         }
       }
       
-      // Update aspect ratio dropdown IDs in the sticky panel
-      const stickyAspectRatioBtn = stickySettingsPanel.querySelector('#aspect-ratio-select');
-      if (stickyAspectRatioBtn) {
-        stickyAspectRatioBtn.id = 'sticky-aspect-ratio-select';
-      }
-      
-      const stickyDropdownMenu = stickySettingsPanel.querySelector('#aspect-ratio-dropdown-menu');
-      if (stickyDropdownMenu) {
-        stickyDropdownMenu.id = 'sticky-aspect-ratio-dropdown-menu';
-      }
-      
-      const stickyCustomRatioContainer = stickySettingsPanel.querySelector('#custom-ratio-container');
-      if (stickyCustomRatioContainer) {
-        stickyCustomRatioContainer.id = 'sticky-custom-ratio-container';
-      }
-      
-      const stickyCustomRatioInput = stickySettingsPanel.querySelector('#custom-ratio-input');
-      if (stickyCustomRatioInput) {
-        stickyCustomRatioInput.id = 'sticky-custom-ratio-input';
-      }
-      
       // Add the settings panel to the preview row (not the outer container)
       stickyPreviewRow.appendChild(stickySettingsPanel);
-      
-      // Re-initialize aspect ratio dropdown for the sticky panel
-      if (window.promptGenerator && window.promptGenerator.reinitAspectRatioDropdown) {
-        window.promptGenerator.reinitAspectRatioDropdown();
-      }
       
       // Note: The sticky settings button event listener is handled by the delegation
       // in the button mapping section above, which calls the main button's click event.

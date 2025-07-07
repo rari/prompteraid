@@ -27,9 +27,6 @@ class PromptGenerator {
     const settingsPanel = document.getElementById('prompt-settings-panel');
     const promptOutput = document.getElementById('prompt-output');
     const randomizeCheckbox = document.getElementById('randomize-categories');
-    
-    // Initialize aspect ratio dropdown
-    this.initAspectRatioDropdown();
 
     // Ensure icon starts with correct classes
     const icon = generateBtn.querySelector('i');
@@ -59,6 +56,14 @@ class PromptGenerator {
       // Apply initial state on load
       console.log('[PromptGen] Randomize checkbox default state:', randomizeCheckbox.checked);
       this.toggleRandomize(randomizeCheckbox.checked);
+    }
+
+    // Handle aspect ratio dropdown
+    const aspectRatioSelect = document.getElementById('aspect-ratio-select');
+    if (aspectRatioSelect) {
+      aspectRatioSelect.addEventListener('change', () => {
+        this.updateAspectRatio(aspectRatioSelect.value);
+      });
     }
 
     // Add keyboard shortcuts
@@ -135,6 +140,31 @@ class PromptGenerator {
     console.log('[PromptGen] toggleRandomize done');
   }
 
+  updateAspectRatio(ratio) {
+    // Update the suffix input with the new aspect ratio
+    let suffixInput = document.getElementById('prompt-suffix');
+    if (!suffixInput) suffixInput = document.getElementById('sticky-prompt-suffix');
+    
+    if (suffixInput) {
+      let currentSuffix = suffixInput.value.trim();
+      
+      // Remove any existing --ar parameter
+      currentSuffix = currentSuffix.replace(/--ar\s+\S+/g, '');
+      
+      // Add the new aspect ratio
+      const newArParam = `--ar ${ratio}`;
+      
+      // Combine with existing suffix, ensuring proper spacing
+      if (currentSuffix) {
+        suffixInput.value = `${currentSuffix} ${newArParam}`.trim();
+      } else {
+        suffixInput.value = newArParam;
+      }
+      
+      console.log(`[PromptGen] Updated aspect ratio to: ${ratio}`);
+    }
+  }
+
   buildNaturalPrompt(parts) {
     // parts: { Framing, View, Subject, Clothing, Appearance, Pose, Keyword, Effects }
     let prompt = '';
@@ -207,12 +237,6 @@ class PromptGenerator {
       let suffixInput = document.getElementById('prompt-suffix');
       if (!suffixInput) suffixInput = document.getElementById('sticky-prompt-suffix');
       suffix = suffixInput ? suffixInput.value.trim() : '';
-    }
-    
-    // Add aspect ratio to suffix if selected
-    const aspectRatioSuffix = this.getAspectRatioSuffix();
-    if (aspectRatioSuffix) {
-      suffix = suffix ? `${suffix} ${aspectRatioSuffix}` : aspectRatioSuffix;
     }
     
     // Pick a random word for each selected category
@@ -370,165 +394,9 @@ class PromptGenerator {
       toggleBtn.click();
     }
   }
-
-  initAspectRatioDropdown() {
-    // Handle both main and sticky panels
-    this.initAspectRatioDropdownForPanel('prompt-settings-panel');
-    this.initAspectRatioDropdownForPanel('sticky-prompt-settings-panel');
-  }
-
-  initAspectRatioDropdownForPanel(panelId) {
-    console.log(`[AspectRatio] Initializing dropdown for panel: ${panelId}`);
-    const panel = document.getElementById(panelId);
-    if (!panel) {
-      console.warn(`[AspectRatio] Panel not found: ${panelId}`);
-      return;
-    }
-
-    // Handle both main and sticky panel IDs
-    const isSticky = panelId === 'sticky-prompt-settings-panel';
-    const aspectRatioBtn = panel.querySelector(isSticky ? '#sticky-aspect-ratio-select' : '#aspect-ratio-select');
-    const dropdownMenu = panel.querySelector(isSticky ? '#sticky-aspect-ratio-dropdown-menu' : '#aspect-ratio-dropdown-menu');
-    const customRatioContainer = panel.querySelector(isSticky ? '#sticky-custom-ratio-container' : '#custom-ratio-container');
-    const customRatioInput = panel.querySelector(isSticky ? '#sticky-custom-ratio-input' : '#custom-ratio-input');
-    const selectedRatioSpan = panel.querySelector('.selected-ratio');
-
-    console.log(`[AspectRatio] Found elements:`, {
-      panel: !!panel,
-      aspectRatioBtn: !!aspectRatioBtn,
-      dropdownMenu: !!dropdownMenu,
-      customRatioContainer: !!customRatioContainer,
-      customRatioInput: !!customRatioInput,
-      selectedRatioSpan: !!selectedRatioSpan
-    });
-
-    if (!aspectRatioBtn || !dropdownMenu) {
-      console.warn(`[AspectRatio] Aspect ratio dropdown elements not found in ${panelId}`);
-      return;
-    }
-
-    // Toggle dropdown menu
-    aspectRatioBtn.addEventListener('click', (e) => {
-      console.log(`[AspectRatio] Button clicked for panel: ${panelId}`);
-      e.stopPropagation();
-      const isHidden = dropdownMenu.classList.contains('hidden');
-      console.log(`[AspectRatio] Dropdown was hidden: ${isHidden}, toggling...`);
-      dropdownMenu.classList.toggle('hidden');
-      console.log(`[AspectRatio] Dropdown is now hidden: ${dropdownMenu.classList.contains('hidden')}`);
-    });
-
-    // Handle ratio option selection
-    dropdownMenu.addEventListener('click', (e) => {
-      const ratioOption = e.target.closest('.ratio-option');
-      if (!ratioOption) return;
-
-      const ratio = ratioOption.dataset.ratio;
-      const ratioText = ratioOption.querySelector('span').textContent;
-
-      // Update selected ratio display for both panels
-      this.updateSelectedRatioDisplay(ratioText);
-
-      // Handle custom ratio
-      if (ratio === 'custom') {
-        customRatioContainer.classList.remove('hidden');
-        customRatioInput.focus();
-      } else {
-        customRatioContainer.classList.add('hidden');
-        // Store the selected ratio
-        this.selectedAspectRatio = ratio;
-      }
-
-      // Update visual selection
-      dropdownMenu.querySelectorAll('.ratio-option').forEach(option => {
-        option.classList.remove('selected');
-      });
-      ratioOption.classList.add('selected');
-
-      // Close dropdown
-      dropdownMenu.classList.add('hidden');
-    });
-
-    // Handle custom ratio input
-    if (customRatioInput) {
-      customRatioInput.addEventListener('input', (e) => {
-        const value = e.target.value.trim();
-        if (value && this.isValidAspectRatio(value)) {
-          this.selectedAspectRatio = value;
-          this.updateSelectedRatioDisplay(`Custom: ${value}`);
-        }
-      });
-
-      customRatioInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          dropdownMenu.classList.add('hidden');
-        }
-      });
-    }
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!aspectRatioBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-        dropdownMenu.classList.add('hidden');
-      }
-    });
-
-    // Set default selection
-    const defaultOption = dropdownMenu.querySelector('[data-ratio="1:1"]');
-    if (defaultOption) {
-      defaultOption.classList.add('selected');
-      this.selectedAspectRatio = '1:1';
-    }
-  }
-
-  isValidAspectRatio(ratio) {
-    // Simple validation for aspect ratio format (e.g., "16:9", "4:3", "1.91:1")
-    const ratioPattern = /^\d+(\.\d+)?:\d+(\.\d+)?$/;
-    return ratioPattern.test(ratio);
-  }
-
-  updateSelectedRatioDisplay(ratioText) {
-    // Update both main and sticky panels
-    const mainSpan = document.querySelector('#prompt-settings-panel .selected-ratio');
-    const stickySpan = document.querySelector('#sticky-prompt-settings-panel .selected-ratio');
-    
-    if (mainSpan) mainSpan.textContent = ratioText;
-    if (stickySpan) stickySpan.textContent = ratioText;
-    
-    // Also sync the visual selection in both dropdowns
-    const mainDropdown = document.querySelector('#aspect-ratio-dropdown-menu');
-    const stickyDropdown = document.querySelector('#sticky-aspect-ratio-dropdown-menu');
-    
-    if (mainDropdown && stickyDropdown) {
-      // Find the selected option in main dropdown and apply same selection to sticky
-      const mainSelected = mainDropdown.querySelector('.ratio-option.selected');
-      if (mainSelected) {
-        const ratio = mainSelected.dataset.ratio;
-        const stickyOption = stickyDropdown.querySelector(`[data-ratio="${ratio}"]`);
-        if (stickyOption) {
-          stickyDropdown.querySelectorAll('.ratio-option').forEach(option => {
-            option.classList.remove('selected');
-          });
-          stickyOption.classList.add('selected');
-        }
-      }
-    }
-  }
-
-  getAspectRatioSuffix() {
-    if (this.selectedAspectRatio && this.selectedAspectRatio !== '1:1') {
-      return ` --ar ${this.selectedAspectRatio}`;
-    }
-    return '';
-  }
-
-  // Public method to re-initialize aspect ratio dropdown after sticky panel is created
-  reinitAspectRatioDropdown() {
-    console.log('Re-initializing aspect ratio dropdown for sticky panel');
-    this.initAspectRatioDropdownForPanel('sticky-prompt-settings-panel');
-  }
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  window.promptGenerator = new PromptGenerator();
+  new PromptGenerator();
 }); 
