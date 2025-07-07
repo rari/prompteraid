@@ -666,6 +666,11 @@ export default class GalleryView {
       // Add the settings panel to the preview row (not the outer container)
       stickyPreviewRow.appendChild(stickySettingsPanel);
       
+      // Re-initialize aspect ratio dropdown for the sticky panel
+      if (window.promptGenerator && window.promptGenerator.reinitAspectRatioDropdown) {
+        window.promptGenerator.reinitAspectRatioDropdown();
+      }
+      
       // Note: The sticky settings button event listener is handled by the delegation
       // in the button mapping section above, which calls the main button's click event.
       // The prompt-injector.js togglePanel() function handles syncing both panels.
