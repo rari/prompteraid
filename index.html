@@ -275,6 +275,21 @@
           <div id="prompt-settings-panel" class="prompt-settings-panel hidden">
             <h3>Prompt Options</h3>
             <div class="setting-row">
+              <label for="aspect-ratio-select">Aspect Ratio:</label>
+              <select id="aspect-ratio-select" class="aspect-ratio-dropdown">
+                <option value="1:1">1:1 (Default)</option>
+                <option value="4:5">4:5 (Instagram Post)</option>
+                <option value="2:3">2:3 (Pinterest Pin)</option>
+                <option value="3:2">3:2 (Older Photo Format)</option>
+                <option value="5:4">5:4 (Facebook Group Cover Photo)</option>
+                <option value="4:3">4:3 (Legacy Video)</option>
+                <option value="1.91:1">1.91:1 (Facebook Ad)</option>
+                <option value="2:1">2:1 (Account Header)</option>
+                <option value="16:9">16:9 (YouTube Thumbnail)</option>
+                <option value="9:16">9:16 (Reels)</option>
+              </select>
+            </div>
+            <div class="setting-row">
               <label class="checkbox-label">
                 <input type="checkbox" id="randomize-categories" checked>
                 <span>🎲 Randomize Prompts</span>
@@ -328,66 +343,8 @@
             <div class="setting-row">
               <label for="prompt-suffix">Suffix</label>
               <input type="text" id="prompt-suffix" placeholder="e.g. --ar 16:9 --s 750">
-            </div>
-            <div class="setting-row">
-              <label for="aspect-ratio-select">Aspect Ratio:</label>
-              <div class="aspect-ratio-dropdown">
-                <button id="aspect-ratio-select" class="aspect-ratio-select-btn" type="button">
-                  <span class="selected-ratio">1:1 (Default)</span>
-                  <i class="fas fa-chevron-down"></i>
-                </button>
-                <div id="aspect-ratio-dropdown-menu" class="aspect-ratio-dropdown-menu hidden">
-                  <div class="ratio-option" data-ratio="1:1">
-                    <div class="ratio-preview" style="width: 20px; height: 20px; background: var(--accent-color); border-radius: 2px;"></div>
-                    <span>1:1 (Default)</span>
-                  </div>
-                  <div class="ratio-option" data-ratio="4:5">
-                    <div class="ratio-preview" style="width: 16px; height: 20px; background: var(--accent-color); border-radius: 2px;"></div>
-                    <span>4:5 (Instagram Post)</span>
-                  </div>
-                  <div class="ratio-option" data-ratio="2:3">
-                    <div class="ratio-preview" style="width: 13px; height: 20px; background: var(--accent-color); border-radius: 2px;"></div>
-                    <span>2:3 (Pinterest Pin)</span>
-                  </div>
-                  <div class="ratio-option" data-ratio="3:2">
-                    <div class="ratio-preview" style="width: 20px; height: 13px; background: var(--accent-color); border-radius: 2px;"></div>
-                    <span>3:2 (Older Photo Format)</span>
-                  </div>
-                  <div class="ratio-option" data-ratio="5:4">
-                    <div class="ratio-preview" style="width: 20px; height: 16px; background: var(--accent-color); border-radius: 2px;"></div>
-                    <span>5:4 (Facebook Group Cover Photo)</span>
-                  </div>
-                  <div class="ratio-option" data-ratio="4:3">
-                    <div class="ratio-preview" style="width: 20px; height: 15px; background: var(--accent-color); border-radius: 2px;"></div>
-                    <span>4:3 (Legacy Video)</span>
-                  </div>
-                  <div class="ratio-option" data-ratio="1.91:1">
-                    <div class="ratio-preview" style="width: 20px; height: 10px; background: var(--accent-color); border-radius: 2px;"></div>
-                    <span>1.91:1 (Facebook Ad)</span>
-                  </div>
-                  <div class="ratio-option" data-ratio="2:1">
-                    <div class="ratio-preview" style="width: 20px; height: 10px; background: var(--accent-color); border-radius: 2px;"></div>
-                    <span>2:1 (Account Header)</span>
-                  </div>
-                  <div class="ratio-option" data-ratio="16:9">
-                    <div class="ratio-preview" style="width: 20px; height: 11px; background: var(--accent-color); border-radius: 2px;"></div>
-                    <span>16:9 (YouTube Thumbnail)</span>
-                  </div>
-                  <div class="ratio-option" data-ratio="9:16">
-                    <div class="ratio-preview" style="width: 11px; height: 20px; background: var(--accent-color); border-radius: 2px;"></div>
-                    <span>9:16 (Reels)</span>
-                  </div>
-                  <div class="ratio-option" data-ratio="custom">
-                    <div class="ratio-preview" style="width: 20px; height: 20px; background: var(--accent-color); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 10px;">?</div>
-                    <span>Custom...</span>
-                  </div>
-                </div>
-                <div id="custom-ratio-container" class="custom-ratio-container hidden">
-                  <input type="text" id="custom-ratio-input" placeholder="e.g. 3:4" class="custom-ratio-input">
-                </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
 
@@ -568,7 +525,6 @@
   <div id="prompt-updates" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
   <script src="js/app.js" type="module"></script>
-  <script src="js/prompt-generator.js"></script>
   <script src="js/prompt-injector.js"></script>
 </body>
 </html> 

@@ -1,0 +1,44 @@
+/* ===== ASPECT RATIO DROPDOWN ===== */
+/* Aspect ratio dropdown styling */
+.aspect-ratio-dropdown {
+  width: 100%;
+  padding: var(--space-2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background: var(--background);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.aspect-ratio-dropdown:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-alpha);
+}
+
+.aspect-ratio-dropdown:hover {
+  border-color: var(--primary);
+  background: var(--background-hover);
+}
+
+/* Dropdown option styling */
+.aspect-ratio-dropdown option {
+  background: var(--background);
+  color: var(--text-primary);
+  padding: var(--space-2);
+}
+
+/* Dark mode support */
+html.dark-mode .aspect-ratio-dropdown {
+  background: var(--background-dark);
+  color: var(--text-primary-dark);
+  border-color: var(--border-color-dark);
+}
+
+html.dark-mode .aspect-ratio-dropdown option {
+  background: var(--background-dark);
+  color: var(--text-primary-dark);
+} 

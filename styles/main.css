@@ -32,7 +32,6 @@
 @import url('./sections/button-states-and-animations.css');
 @import url('./sections/toggle-preview-buttons.css');
 @import url('./sections/prompt-preview.css');
-@import url('./aspect-ratio-dropdown.css');
 
 /* Gallery */
 @import url('./sections/gallery.css');
@@ -51,6 +50,7 @@
 @import url('./sections/news-section.css');
 @import url('./sections/more-information-section.css');
 @import url('./sections/filter-divider.css');
+@import url('./sections/aspect-ratio-dropdown.css');
 @import url('./sections/accessibility.css');
 @import url('./sections/modal.css');
 @import url('./sections/existing-styles.css');
