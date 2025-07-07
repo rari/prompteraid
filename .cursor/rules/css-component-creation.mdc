@@ -1,0 +1,366 @@
+# CSS Component Creation Guidelines
+
+## 🎯 Creating New CSS Components
+
+When creating new CSS components for PrompterAid, follow these guidelines to maintain the modular architecture and ensure consistency.
+
+## 📋 Component Creation Checklist
+
+### Before Creating
+- [ ] **Check if similar component exists**
+- [ ] **Determine the appropriate location**
+- [ ] **Plan the component's scope and responsibility**
+- [ ] **Consider dependencies and imports**
+
+### During Creation
+- [ ] **Follow naming conventions**
+- [ ] **Use design tokens and variables**
+- [ ] **Include proper documentation**
+- [ ] **Add responsive design considerations**
+
+### After Creation
+- [ ] **Update main.css imports**
+- [ ] **Test across all pages**
+- [ ] **Verify theme compatibility**
+- [ ] **Update redundancy report**
+
+## 🏗️ Component Structure Template
+
+### File Naming
+```bash
+# Use kebab-case for file names
+component-name.css          # ✅ Good
+componentName.css           # ❌ Bad
+component_name.css          # ❌ Bad
+```
+
+### File Header Template
+```css
+/* ===== COMPONENT NAME ===== */
+/* 
+ * Brief description of what this component does
+ * 
+ * Features:
+ * - Feature 1: Description
+ * - Feature 2: Description
+ * 
+ * Usage:
+ * - Where this component is used
+ * - How to implement it
+ * 
+ * Dependencies:
+ * - Any other components this depends on
+ * - Required CSS custom properties
+ */
+```
+
+### Component Structure
+```css
+/* ===== COMPONENT NAME ===== */
+
+/* Base component styles */
+.component-name {
+  /* Core properties */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Use design tokens */
+  padding: var(--space-4);
+  border-radius: var(--border-radius-md);
+  background-color: var(--card-background);
+  
+  /* Transitions */
+  transition: all var(--transition-fast);
+}
+
+/* State variations */
+.component-name:hover {
+  /* Hover effects */
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.component-name:focus {
+  /* Focus states for accessibility */
+  outline: 2px solid var(--neon-teal);
+  outline-offset: 2px;
+}
+
+.component-name.active {
+  /* Active state */
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Size variations */
+.component-name.small {
+  padding: var(--space-2);
+  font-size: var(--font-size-sm);
+}
+
+.component-name.large {
+  padding: var(--space-6);
+  font-size: var(--font-size-lg);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .component-name {
+    /* Mobile adjustments */
+    padding: var(--space-3);
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Dark mode support */
+html.dark-mode .component-name {
+  /* Dark mode overrides if needed */
+  background-color: var(--card-background-dark);
+}
+```
+
+## 📁 Where to Place New Components
+
+### Component Categories
+
+#### UI Components
+- **Location**: `styles/sections/`
+- **Examples**: `buttons.css`, `modal.css`, `tooltip.css`
+- **Scope**: Reusable UI elements
+
+#### Layout Components
+- **Location**: `styles/sections/`
+- **Examples**: `layout.css`, `grid.css`, `sidebar.css`
+- **Scope**: Layout and positioning
+
+#### Feature Components
+- **Location**: `styles/sections/`
+- **Examples**: `gallery.css`, `search.css`, `favorites.css`
+- **Scope**: Specific feature functionality
+
+#### Utility Components
+- **Location**: `styles/sections/`
+- **Examples**: `animations.css`, `utilities.css`
+- **Scope**: Helper classes and utilities
+
+## 🎨 Design Token Usage
+
+### Required Tokens
+```css
+/* Always use these tokens for consistency */
+--space-*          /* Spacing scale */
+--font-size-*      /* Typography scale */
+--border-radius-*  /* Border radius scale */
+--transition-*     /* Transition timing */
+--shadow-*         /* Box shadow scale */
+--neon-*           /* Brand colors */
+```
+
+### Color Usage
+```css
+/* ✅ Use semantic color tokens */
+background-color: var(--card-background);
+color: var(--text-primary);
+border-color: var(--border-color);
+
+/* ❌ Don't use hardcoded colors */
+background-color: #ffffff;
+color: #333333;
+border-color: #cccccc;
+```
+
+## 🔧 Integration Steps
+
+### 1. Create the Component File
+```bash
+# Create new component file
+touch styles/sections/new-component.css
+```
+
+### 2. Add Component Content
+```css
+/* ===== NEW COMPONENT ===== */
+/* Component description and usage notes */
+
+.new-component {
+  /* Component styles */
+}
+```
+
+### 3. Update main.css
+```css
+/* Add import to main.css in appropriate section */
+@import url('./sections/new-component.css');
+```
+
+### 4. Test Integration
+```bash
+# Test on all pages
+# Check responsive design
+# Verify theme compatibility
+```
+
+## 📝 Documentation Standards
+
+### Component Documentation
+```css
+/* ===== COMPONENT NAME ===== */
+/*
+ * Component: Component Name
+ * Purpose: What this component does
+ * 
+ * Usage:
+ * <div class="component-name">Content</div>
+ * 
+ * Variations:
+ * - .component-name.small
+ * - .component-name.large
+ * - .component-name.active
+ * 
+ * Dependencies:
+ * - Requires design tokens from tokens.css
+ * - May conflict with existing-styles.css
+ */
+```
+
+### Inline Comments
+```css
+/* Base component */
+.component-name {
+  /* Core layout */
+  display: flex;
+  align-items: center;
+  
+  /* Visual styling */
+  background-color: var(--card-background);
+  border-radius: var(--border-radius-md);
+  
+  /* Interactions */
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+/* State: Hover effect */
+.component-name:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* State: Focus for accessibility */
+.component-name:focus {
+  outline: 2px solid var(--neon-teal);
+  outline-offset: 2px;
+}
+```
+
+## 🚫 Common Mistakes
+
+### Don't Do This
+```css
+/* ❌ Hardcoded values */
+.component {
+  padding: 16px;
+  color: #333;
+  border-radius: 8px;
+}
+
+/* ❌ Missing documentation */
+.component {
+  /* No header or comments */
+}
+
+/* ❌ Mixed concerns */
+.component {
+  /* Layout, styling, and animations all mixed */
+}
+```
+
+### Do This Instead
+```css
+/* ✅ Use design tokens */
+.component {
+  padding: var(--space-4);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-md);
+}
+
+/* ✅ Proper documentation */
+/* ===== COMPONENT ===== */
+/* Component description and usage */
+
+/* ✅ Single responsibility */
+.component {
+  /* Only layout properties */
+}
+
+.component:hover {
+  /* Only interaction properties */
+}
+```
+
+## 🧪 Testing New Components
+
+### Cross-Page Testing
+```bash
+# Test on all HTML pages
+- index.html
+- docs.html
+- terms.html
+- privacy.html
+```
+
+### Responsive Testing
+```bash
+# Test breakpoints
+- Mobile: 320px - 768px
+- Tablet: 768px - 1024px
+- Desktop: 1024px+
+```
+
+### Theme Testing
+```bash
+# Test both themes
+- Light mode (default)
+- Dark mode (toggle)
+```
+
+## 🔄 Component Evolution
+
+### When to Split Components
+- **File size** > 200 lines
+- **Mixed concerns** in single file
+- **Multiple responsibilities**
+- **Reusability** across different contexts
+
+### Refactoring Process
+1. **Identify** what needs to be split
+2. **Create** new component files
+3. **Move** related styles
+4. **Update** imports in main.css
+5. **Test** thoroughly
+6. **Document** changes
+
+## 📊 Performance Guidelines
+
+### File Size Limits
+- **Individual components**: < 5KB
+- **Total CSS**: < 100KB (gzipped)
+- **Critical path**: < 20KB
+
+### Optimization Tips
+- **Use CSS custom properties** for theming
+- **Minimize specificity** conflicts
+- **Group related styles** together
+- **Remove unused styles** regularly
+
+## 🔗 Related Resources
+
+- [CSS Maintenance Guidelines](./css-maintenance.mdc)
+- [Design Tokens](./styles/tokens.css)
+- [Theme System](./styles/themes.css)
+- [Redundancy Report](./styles/redundancy-report.md)
+description:
+globs:
+alwaysApply: false
+---

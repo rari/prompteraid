@@ -11,6 +11,7 @@ import os
 # Paths
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 INDEX_HTML = PROJECT_ROOT / 'index.html'
+DOCS_HTML = PROJECT_ROOT / 'docs.html'
 IMAGES_JSON = PROJECT_ROOT / 'api/images.json'
 
 # Friendly model names mapping and identifiers
@@ -197,5 +198,66 @@ def update_schema_in_index():
     print(f"✅ Updated schema.org JSON-LD with all best-practice tweaks. Total: {total}")
     return True
 
+def update_schema_in_docs():
+    """Update the schema.org JSON-LD in docs.html with fresh dates."""
+    if not DOCS_HTML.exists():
+        print("⚠️  docs.html not found, skipping docs schema update")
+        return True
+        
+    try:
+        with open(DOCS_HTML, encoding='utf-8') as f:
+            html = f.read()
+    except UnicodeDecodeError:
+        # Try with utf-8-sig to handle BOM
+        try:
+            with open(DOCS_HTML, encoding='utf-8-sig') as f:
+                html = f.read()
+        except UnicodeDecodeError:
+            # Try with latin-1 as fallback
+            with open(DOCS_HTML, encoding='latin-1') as f:
+                html = f.read()
+
+    # Find the <script type="application/ld+json"> ... </script> block
+    pattern = re.compile(r'(<script type="application/ld\+json">)(.*?)(</script>)', re.DOTALL)
+    match = pattern.search(html)
+    if not match:
+        print(f"❌ Could not find schema.org JSON-LD block in docs.html!")
+        print(f"   File content preview: {html[:200]}...")
+        return False
+
+    prefix, json_text, suffix = match.groups()
+
+    # Parse existing JSON
+    try:
+        schema_data = json.loads(json_text.strip())
+    except json.JSONDecodeError as e:
+        print(f"❌ Error parsing JSON in docs.html: {e}")
+        return False
+
+    # Get current date
+    current_date = datetime.now().strftime('%Y-%m-%d')
+
+    # Update dateModified in all nodes that have it
+    if '@graph' in schema_data:
+        for node in schema_data['@graph']:
+            if 'dateModified' in node:
+                node['dateModified'] = current_date
+                print(f"🔄 Updated dateModified to {current_date} for {node.get('@type', 'Unknown')}")
+
+    # Convert back to JSON and update the file
+    new_json_text = json.dumps(schema_data, indent=2, ensure_ascii=False)
+    new_block = f'{prefix}\n{new_json_text}\n{suffix}'
+    new_html = pattern.sub(new_block, html)
+
+    with open(DOCS_HTML, 'w', encoding='utf-8') as f:
+        f.write(new_html)
+    print(f"✅ Updated docs.html schema.org JSON-LD with fresh dates")
+    return True
+
 if __name__ == '__main__':
-    update_schema_in_index() 
+    success1 = update_schema_in_index()
+    success2 = update_schema_in_docs()
+    if success1 and success2:
+        print("🎉 All schema updates completed successfully!")
+    else:
+        print("⚠️  Some schema updates failed") 
