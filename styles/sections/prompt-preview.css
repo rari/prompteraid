@@ -1,0 +1,43 @@
+/* ===== PROMPT PREVIEW ===== */
+.prompt-preview {
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  background-color: var(--background);
+  border-radius: var(--border-radius-md);
+  font-family: monospace;
+  color: var(--text-primary);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  height: auto;
+  line-height: 1.5;
+  overflow-wrap: break-word; /* Allow long words to break and wrap */
+  word-wrap: break-word; /* Legacy support */
+  word-break: break-all; /* More aggressive breaking for long strings */
+}
+
+.prompt-preview.hidden {
+  display: none;
+}
+
+#final-prompt,
+#sticky-final-prompt {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  white-space: normal; /* Allow text to wrap */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+#final-prompt.glow-copied {
+  animation: glow-copied-icon 0.6s ease-in-out;
+}
+
+#copy-button i.glow-copied {
+  animation: glow-copied-icon 0.6s ease-in-out;
+}
+

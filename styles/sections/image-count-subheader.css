@@ -1,0 +1,53 @@
+/* ===== IMAGE COUNT SUBHEADER ===== */
+/* Displays current image count and selection status */
+.image-count-subheader {
+  display: flex;
+  align-items: baseline; /* Align to baseline */
+  justify-content: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  color: var(--gray-600);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-align: center;
+  margin-top: 1.2rem;
+  letter-spacing: 0.02em;
+  flex-wrap: nowrap; /* Prevent wrapping on mobile */
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.image-count-subheader .subheader-text {
+  vertical-align: baseline; /* Ensure baseline alignment */
+}
+
+/* Highlighted number display with gradient text */
+.image-count-number {
+  color: var(--neon-teal);
+  font-weight: 600;
+  background: linear-gradient(90deg, var(--neon-teal), var(--neon-teal));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Selected count with pink-to-purple gradient */
+.image-count-subheader .selected-count {
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: 600;
+}
+
+/* Decorative lines on either side of the subheader */
+.image-count-subheader::before,
+.image-count-subheader::after {
+  content: "";
+  display: inline-block;
+  height: 2px; /* was 1px */
+  width: 30px;
+  background: linear-gradient(90deg, transparent, rgba(0, 180, 216, 0.3), transparent);
+  margin: 0 10px;
+  align-self: center; /* ensure vertical centering in flex */
+}
+

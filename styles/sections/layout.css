@@ -1,0 +1,9 @@
+/* ===== LAYOUT ===== */
+/* Main container with responsive max-width */
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+

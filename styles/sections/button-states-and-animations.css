@@ -1,0 +1,54 @@
+/* ===== BUTTON STATES AND ANIMATIONS ===== */
+/* Trash button state animations */
+.input-group .button-trash.shake i {
+  animation: shake 0.5s ease-in-out;
+}
+
+.input-group .button-trash.filled i {
+  font-weight: 900; /* Switch to filled */
+  color: var(--neon-pink) !important;
+  animation: pop 0.3s ease-in-out;
+}
+
+/* Clear button active state for two-click behavior */
+.input-group .button-trash.clear-button-active i {
+  font-weight: 900; /* Switch to filled */
+  color: var(--neon-pink) !important;
+}
+
+/* Refresh button spin animation */
+.input-group .button-refresh.spinning i {
+  animation: spin-once 0.6s ease-in-out;
+}
+
+/* Star button animations */
+.input-group .button-star.active i {
+  animation: pop 0.3s ease-in-out;
+}
+
+.input-group .button-star.bounce i {
+  animation: bounce 0.6s ease-in-out;
+}
+
+/* Eye button animations */
+.input-group .button-eye.active i {
+  animation: pop 0.3s ease-in-out;
+}
+
+/* Randomize button animations */
+.input-group .button-randomize.active i {
+  animation: pop 0.3s ease-in-out;
+}
+
+/* Clipboard button state animations */
+.input-group .button-clipboard.active i {
+  font-weight: 900; /* Switch to filled */
+  color: var(--neon-purple) !important;
+  animation: pop 0.3s ease-in-out;
+}
+
+/* Search button animations */
+.input-group .button-search.active i {
+  animation: pop 0.3s ease-in-out;
+}
+

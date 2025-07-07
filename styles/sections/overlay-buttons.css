@@ -1,0 +1,129 @@
+/* ===== OVERLAY BUTTONS ===== */
+/* Favorite/star button positioned in top-right corner */
+.favorite-button,
+.star-button {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: var(--border-radius-full);
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  color: var(--neon-yellow);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
+  border: none;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  outline: none;
+  padding: 0;
+}
+
+/* Show favorite button on gallery item hover */
+.gallery-item:hover .favorite-button,
+.gallery-item:hover .star-button {
+  opacity: 1;
+}
+
+/* Favorite button icon styling */
+.favorite-button i,
+.star-button i {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--neon-yellow);
+  transition: color var(--transition-fast);
+}
+
+/* Favorite button hover effects */
+.favorite-button:hover,
+.star-button:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  transform: scale(1.1);
+}
+
+/* Section-specific color overrides */
+.new-styles-container .favorite-button i,
+.more-info-container .favorite-button i,
+.new-styles-container .star-button i,
+.more-info-container .star-button i {
+  color: var(--neon-yellow) !important;
+}
+
+/* Quadrant flip button for cycling through 4-quadrant views */
+.quadrant-flip-button {
+  position: absolute;
+  top: 3.2rem;
+  right: var(--space-2);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: var(--border-radius-full);
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  color: var(--neon-orange);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
+  border: none;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  outline: none;
+  padding: 0;
+}
+
+.gallery-item:hover .quadrant-flip-button {
+  opacity: 1;
+}
+
+.quadrant-flip-button:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  transform: scale(1.1);
+}
+
+.quadrant-flip-button i {
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--neon-orange);
+  transition: color var(--transition-fast);
+}
+
+/* Section-specific color overrides */
+.new-styles-container .quadrant-flip-button i,
+.more-info-container .quadrant-flip-button i {
+  color: var(--neon-orange) !important;
+}
+
+/* Spinning animation for quadrant flip and other buttons */
+.quadrant-flip-button i.spinning,
+.spinning {
+  animation: spin 0.3s linear;
+}
+
+/* No favorites message */
+#no-favorites {
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--gray-500);
+  font-style: italic;
+  background: var(--card-background);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+}
+

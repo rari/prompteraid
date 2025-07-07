@@ -1,0 +1,95 @@
+/* ===== BUTTONS ===== */
+/* Base button styles - Core styling shared across all buttons
+ * Uses CSS Grid for perfect centering and consistent sizing
+ */
+.input-group button, .sticky-action-bar .input-group button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-lg);
+  color: var(--gray-600);
+  position: relative;
+}
+
+/* Action and star buttons - Specific sizing for icon-based buttons
+ * Slightly larger font size for better visibility
+ */
+.input-group .action-button,
+.input-group .star-button {
+  font-size: 1.5rem;
+}
+
+/* Button colors - Semantic color coding based on action type
+ * Each button type has a specific neon color for visual consistency
+ */
+.input-group .button-trash i { 
+  color: var(--neon-pink);
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 400; /* Start with outline */
+  transition: color var(--transition-normal);
+}
+
+.input-group .button-refresh i { 
+  color: var(--neon-orange);
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900; /* Always filled for better spin visibility */
+  transition: color var(--transition-normal);
+}
+
+.input-group .button-star i { 
+  color: var(--neon-yellow);
+  transition: color var(--transition-normal);
+}
+
+.input-group .button-eye i { 
+  color: var(--neon-green);
+  transition: color var(--transition-normal);
+}
+
+.input-group .button-randomize i { 
+  color: var(--neon-blue);
+  transition: color var(--transition-normal);
+}
+
+.input-group .button-clipboard i { 
+  color: var(--neon-purple);
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 400; /* Start with outline */
+  transition: color var(--transition-normal);
+}
+
+.input-group .button-search i { 
+  color: var(--neon-teal);
+  transition: color var(--transition-normal);
+}
+
+/* Ensure transitions are smooth for all button icons */
+.input-group button i {
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Button hover transform for interactive feedback */
+.input-group button:hover {
+  transform: scale(1.1);
+}
+
+/* Theme toggle override - ensure it's not affected by general button colors */
+.input-group .theme-toggle,
+.sticky-action-bar .theme-toggle {
+  color: transparent !important; /* Remove the gray color from the button itself */
+}
+
+.input-group .theme-toggle i,
+.sticky-action-bar .theme-toggle i {
+  color: inherit; /* Let the icon inherit from the specific theme toggle rules */
+}
+

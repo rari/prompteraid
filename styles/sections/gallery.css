@@ -1,0 +1,118 @@
+/* ===== GALLERY ===== */
+/* Responsive image grid using CSS Grid with auto-fill */
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+/* Individual gallery item with 4:5 aspect ratio and hover effects */
+.gallery-item {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  background: var(--card-background);
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color var(--transition-normal);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Hover effect: lift up and enhance shadow */
+.gallery-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Overlay pseudo-element for hover effects */
+.gallery-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  opacity: 0;
+  transition: opacity var(--transition-fast), background var(--transition-fast);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Hover overlay: transparent white, only if not selected */
+.gallery-item:hover::before {
+  background: rgba(255,255,255,0.22);
+  opacity: 1;
+  pointer-events: none;
+}
+.gallery-item.selected:hover::before {
+  /* Keep neon overlay when selected, even on hover */
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* Gallery image with cover fit and smooth transitions */
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+
+/* Selection state with animated neon border */
+.gallery-item.selected::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-width: 3px;
+  border-style: solid;
+  border-radius: var(--border-radius-lg);
+  z-index: 2;
+  pointer-events: none;
+  animation: tropical-gradient-rotate 3s ease infinite;
+  opacity: 1;
+  background: transparent;
+}
+
+/* Rotating selection colors - each color represents a different weight/priority */
+.gallery-item.selected.selected-color-0::before { border-color: var(--neon-pink); }
+.gallery-item.selected.selected-color-1::before { border-color: var(--neon-orange); }
+.gallery-item.selected.selected-color-2::before { border-color: var(--neon-yellow); }
+.gallery-item.selected.selected-color-3::before { border-color: var(--neon-teal); }
+.gallery-item.selected.selected-color-4::before { border-color: var(--neon-blue); }
+
+/* Quadrant image positioning for 4-quadrant view */
+.gallery-item img.quadrant {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  transition: transform 0.3s ease;
+}
+
+/* Individual quadrant positions within the 4-quadrant layout */
+.gallery-item img.quadrant-0 { top: 0; left: 0; }
+.gallery-item img.quadrant-1 { top: 0; left: -100%; }
+.gallery-item img.quadrant-2 { top: -100%; left: 0; }
+.gallery-item img.quadrant-3 { top: -100%; left: -100%; }
+
+/* Hover scale effect for images */
+.gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+/* Disable transitions for immediate state changes */
+.gallery-item img.no-transition {
+  transition: none;
+}
+

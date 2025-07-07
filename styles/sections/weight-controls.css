@@ -1,0 +1,168 @@
+/* ===== WEIGHT CONTROLS ===== */
+/* Weight controls container */
+.weight-controls {
+  position: absolute;
+  bottom: var(--space-6);
+  right: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 30;
+  transition: opacity var(--transition-fast);
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.gallery-item.selected .weight-controls {
+  opacity: 1;
+  visibility: visible;
+  display: flex;
+}
+
+/* Fix for weight display visibility when clicking buttons */
+.weight-controls:hover .weight-display,
+.weight-control-button:focus ~ .weight-display,
+.weight-control-button:active ~ .weight-display,
+.weight-display:focus,
+.weight-display:active {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Ensure the weight display stays visible when interacting with the controls */
+.gallery-item.selected .weight-controls .weight-display {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: flex !important;
+}
+
+/* Weight control buttons */
+.weight-control-button {
+  width: 2rem;
+  height: 2rem;
+  margin: 0.2rem 0;
+  border: none;
+  border-radius: var(--border-radius-full);
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 1;
+  transition: all 0.2s ease;
+  z-index: 3;
+  box-shadow: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  pointer-events: auto !important;
+  color: var(--neon-blue);
+  text-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.weight-plus,
+.weight-minus {
+  color: var(--neon-blue);
+  pointer-events: auto !important;
+}
+
+.weight-control-button:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+}
+
+.weight-plus:hover,
+.weight-minus:hover {
+  color: var(--neon-blue);
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+}
+
+.weight-plus:active,
+.weight-minus:active {
+  transform: scale(0.95);
+}
+
+/* Weight display */
+.weight-display {
+  width: 2rem;
+  height: 2rem;
+  border-radius: calc(var(--border-radius-full) - 2px);
+  background-color: rgba(30, 30, 30, 0.7);
+  font-size: 1.1rem;
+  font-weight: bold;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+  pointer-events: none;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 35;
+  color: var(--neon-teal) !important;
+  text-shadow: 0 0 5px rgba(0, 229, 255, 0.5) !important;
+}
+
+/* Weight display color classes */
+.weight-color-0,
+.weight-color-1,
+.weight-color-2,
+.weight-color-3,
+.weight-color-4,
+.weight-color-5,
+.weight-color-6 {
+  color: var(--neon-teal) !important;
+  text-shadow: 0 0 5px rgba(0, 229, 255, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  background-color: rgba(30, 30, 30, 0.7) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.1) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Pop animation for weight display */
+@keyframes pop-animation {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.weight-display.pop-animation {
+  animation: pop-animation 0.3s ease-out;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .weight-controls {
+    opacity: 1;
+  }
+  
+  .weight-control-button, 
+  .weight-display {
+    width: 1.7rem;
+    height: 1.7rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Gallery item weight control visibility */
+.gallery-item .weight-controls,
+.gallery-item .weight-display,
+.gallery-item.selected .weight-controls,
+.gallery-item.selected .weight-display,
+.gallery-item:hover .weight-controls,
+.gallery-item:hover .weight-display,
+.gallery-item:active .weight-controls,
+.gallery-item:active .weight-display,
+.gallery-item:focus .weight-controls,
+.gallery-item:focus .weight-display {
+  opacity: 1 !important;
+  visibility: visible !important;
+} 

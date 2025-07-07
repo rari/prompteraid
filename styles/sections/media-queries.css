@@ -1,0 +1,156 @@
+/* ===== MEDIA QUERIES ===== */
+@media (max-width: 768px) {
+  h1 {
+    font-size: var(--font-size-3xl);
+  }
+
+  .prompt-container {
+    padding: var(--space-4);
+  }
+
+  .image-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-3);
+  }
+
+  /* First row layout */
+  #prompt-input {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .input-group {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  /* Mode toggle and theme toggle stay on first row */
+  .mode-toggle-container {
+    flex: 0 0 auto;
+    margin-right: 0.5rem;
+  }
+  
+  .theme-toggle-container {
+    flex: 0 0 auto;
+    margin-left: 0.5rem;
+  }
+  
+  /* Action buttons on second row */
+  .action-buttons-row {
+    width: 100%;
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    margin-top: var(--space-3);
+    order: 2;
+    gap: var(--space-2);
+    margin-left: 0 !important;
+  }
+  
+  /* Remove the fixed theme toggle from body since we have it in the input group */
+  body > .theme-toggle {
+    display: none;
+  }
+  
+  .shortcuts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .shortcut-item {
+    padding: var(--space-2);
+  }
+  
+  .keyboard-shortcuts summary {
+    padding: var(--space-3);
+  }
+  
+  .site-footer 
+
+  /* Make in-image buttons always visible on mobile */
+  .gallery-item .favorite-button,
+  .gallery-item .quadrant-flip-button,
+  .gallery-item .link-button {
+    opacity: 0.9;
+  }
+  
+  /* Critical fix: Ensure favorite button is ALWAYS visible and interactive on mobile */
+  .gallery-item .favorite-button {
+    display: flex !important;
+    opacity: 0.9 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    z-index: 30 !important; /* Ensure it's above other elements */
+  }
+
+  .emoji-prefix, .emoji-suffix {
+    display: none;
+  }
+
+  .keyboard-shortcuts {
+    display: none;
+  }
+
+  /* Hide shortcuts section on mobile */
+  .shortcuts-section {
+    display: none;
+  }
+
+  #back-to-top-btn {
+    bottom: var(--space-4);
+    right: var(--space-4);
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .sticky-action-bar {
+    padding: var(--space-3);
+  }
+  
+  /* Sticky header should match main layout */
+  .sticky-action-bar .input-group {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .sticky-action-bar #sticky-prompt-input {
+    flex: 1 0 auto;
+    min-width: 0;
+    margin-bottom: 0;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-md);
+    color: var(--text-primary);
+    background-color: var(--background);
+    transition: all var(--transition-fast), var(--transition-theme);
+  }
+  
+  .sticky-action-bar .action-buttons-row {
+    width: 100%;
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    margin-top: var(--space-3);
+    order: 2;
+    gap: var(--space-2);
+    margin-left: 0 !important;
+  }
+
+  .image-count-subheader {
+    text-align: center;
+  }
+  
+  .subheader-inline, .model-selector-inline {
+    display: block;
+    margin-top: 0.5rem;
+  }
+  
+  /* Make model selector drop to next line on mobile */
+  .model-selector-inline {
+    display: block;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+}
+

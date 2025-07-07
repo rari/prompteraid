@@ -1,0 +1,68 @@
+/* ===== HEADER ===== */
+/* Interactive title container with hover effects */
+.cute-title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: var(--space-6) 0 var(--space-4);
+  position: relative;
+  cursor: pointer;
+}
+
+/* Title link with smooth scale animation on interaction */
+.title-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: transform 0.2s ease;
+}
+
+.title-link:hover {
+  transform: scale(1.03);
+}
+
+.title-link:active {
+  transform: scale(0.98);
+}
+
+/* Animated gradient title text */
+.cute-title {
+  font-family: 'Baloo 2', 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-weight: bold;
+  font-size: 2.8rem;
+  color: var(--neon-teal);
+  text-shadow:
+    0 0 2px #fff,
+    0 1px 0 #0051b8,
+    0 -1px 0 #0051b8,
+    1px 0 0 #0051b8,
+    -1px 0 0 #0051b8,
+    1px 1px 0 #0051b8,
+    -1px -1px 0 #0051b8,
+    1px -1px 0 #0051b8,
+    -1px 1px 0 #0051b8,
+    0 3px 0 var(--neon-pink),
+    0 -3px 0 var(--neon-pink),
+    3px 0 0 var(--neon-pink),
+    -3px 0 0 var(--neon-pink),
+    3px 3px 0 var(--neon-pink),
+    -3px -3px 0 var(--neon-pink),
+    3px -3px 0 var(--neon-pink),
+    -3px 3px 0 var(--neon-pink),
+    0 0 15px var(--neon-pink);
+  border-radius: 0.2em;
+  padding: 0.1em 0.4em;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  display: inline-block;
+}
+
+/* Emoji decorations for the title */
+.emoji-prefix, .emoji-suffix {
+  display: inline-block;
+  font-size: 0.8em;
+}
+
