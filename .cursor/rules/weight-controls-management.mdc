@@ -1,0 +1,251 @@
+# Weight Controls Management
+
+## 🎯 Overview
+
+Weight controls allow users to adjust the influence of individual style references in generated prompts using the `::weight` syntax. However, not all AI models support multiprompt functionality, so weight controls must be conditionally enabled/disabled based on the selected model.
+
+## 🔧 Current Implementation
+
+### Models with Weight Support
+- **NijiJourney 6**: ✅ Full weight control support
+- **Midjourney 7**: ❌ No multiprompt support (weights disabled)
+
+### Key Files to Modify
+
+#### 1. Gallery View (`js/views/galleryView.js`)
+**Location**: `createGalleryItem()` method (around line 1107)
+
+```javascript
+// Add weight controls for selected images (disabled for Midjourney 7)
+if (isSelected && currentModel !== 'midjourney-7') {
+  // Weight controls creation code
+}
+```
+
+**Location**: `bindWeightControls()` method (around line 2315)
+
+```javascript
+// Check if we're in Midjourney 7 mode - if so, ignore weight control clicks
+const currentModel = window.galleryController?.model?.currentModel || 'niji-6';
+if (currentModel === 'midjourney-7') {
+  console.log(`Weight control clicked but disabled for Midjourney 7: ${action} for image ${imageId}`);
+  return;
+}
+```
+
+**Location**: `handleNewStylesWeightClick()` method (around line 2892)
+
+```javascript
+// Check if we're in Midjourney 7 mode - if so, ignore weight control clicks
+const currentModel = window.galleryController?.model?.currentModel || 'niji-6';
+if (currentModel === 'midjourney-7') {
+  console.log(`Weight control clicked but disabled for Midjourney 7: ${action} for image ${imageId}`);
+  return;
+}
+```
+
+#### 2. Image Model (`js/models/imageModel.js`)
+**Location**: `getSelectedSrefs()` method (around line 347)
+
+```javascript
+// Don't include weights for Midjourney 7 since multiprompt is not available
+if (this.currentModel === 'midjourney-7') {
+  return srefCode;
+} else {
+  return `${srefCode}::${weight}`;
+}
+```
+
+## 🚀 Adding Support for New Models
+
+### Step 1: Determine Model Capabilities
+Research the new model's documentation to understand:
+- Does it support multiprompt syntax?
+- What is the weight syntax format?
+- Are there any limitations or differences?
+
+### Step 2: Update Model Configuration
+Add the new model to the appropriate arrays/objects:
+
+```javascript
+// In js/controllers/appController.js or similar
+const modelsWithWeightSupport = ['niji-6', 'new-model-id'];
+const modelsWithoutWeightSupport = ['midjourney-7', 'another-model-id'];
+```
+
+### Step 3: Update Conditional Logic
+
+#### Option A: Add to Exclusion List (Recommended)
+```javascript
+// In createGalleryItem()
+if (isSelected && !modelsWithoutWeightSupport.includes(currentModel)) {
+  // Show weight controls
+}
+
+// In getSelectedSrefs()
+if (modelsWithoutWeightSupport.includes(this.currentModel)) {
+  return srefCode; // No weights
+} else {
+  return `${srefCode}::${weight}`; // Include weights
+}
+```
+
+#### Option B: Add to Inclusion List
+```javascript
+// In createGalleryItem()
+if (isSelected && modelsWithWeightSupport.includes(currentModel)) {
+  // Show weight controls
+}
+
+// In getSelectedSrefs()
+if (modelsWithWeightSupport.includes(this.currentModel)) {
+  return `${srefCode}::${weight}`; // Include weights
+} else {
+  return srefCode; // No weights
+}
+```
+
+### Step 4: Update Event Handlers
+Add the same conditional checks to weight control event handlers:
+
+```javascript
+// In bindWeightControls() and handleNewStylesWeightClick()
+const currentModel = window.galleryController?.model?.currentModel || 'niji-6';
+if (modelsWithoutWeightSupport.includes(currentModel)) {
+  console.log(`Weight control clicked but disabled for ${currentModel}: ${action} for image ${imageId}`);
+  return;
+}
+```
+
+## 📋 Checklist for New Models
+
+### Before Adding Weight Support
+- [ ] **Research model capabilities** - Does it support multiprompt?
+- [ ] **Check syntax format** - Is it `::weight` or different?
+- [ ] **Test weight ranges** - What weight values are supported?
+- [ ] **Verify documentation** - Are there any limitations?
+
+### Implementation Steps
+- [ ] **Update model arrays** - Add to appropriate support list
+- [ ] **Modify conditional logic** - Update all weight-related checks
+- [ ] **Test weight controls** - Verify they show/hide correctly
+- [ ] **Test prompt generation** - Ensure weights are included/excluded
+- [ ] **Test event handlers** - Verify clicks are handled properly
+- [ ] **Update documentation** - Document the new model's capabilities
+
+### Testing Checklist
+- [ ] **Switch to new model** - Weight controls should show/hide appropriately
+- [ ] **Select images** - Weight controls should appear/disappear
+- [ ] **Click weight buttons** - Should work/be ignored based on model
+- [ ] **Generate prompts** - Weights should be included/excluded correctly
+- [ ] **Switch between models** - Behavior should change appropriately
+
+## 🔍 Troubleshooting
+
+### Weight Controls Not Showing
+```javascript
+// Check if model is in the correct array
+console.log('Current model:', currentModel);
+console.log('Models with weight support:', modelsWithWeightSupport);
+console.log('Models without weight support:', modelsWithoutWeightSupport);
+```
+
+### Weights Not Included in Prompts
+```javascript
+// Check getSelectedSrefs() logic
+console.log('Model:', this.currentModel);
+console.log('Should include weights:', !modelsWithoutWeightSupport.includes(this.currentModel));
+```
+
+### Weight Controls Still Clickable
+```javascript
+// Verify event handler checks
+console.log('Weight control clicked for model:', currentModel);
+console.log('Should ignore:', modelsWithoutWeightSupport.includes(currentModel));
+```
+
+## 📝 Best Practices
+
+### 1. Use Arrays for Model Lists
+```javascript
+// ✅ Good - Easy to maintain
+const modelsWithoutWeightSupport = ['midjourney-7', 'new-model'];
+
+// ❌ Bad - Hard to maintain
+if (currentModel === 'midjourney-7' || currentModel === 'new-model') {
+```
+
+### 2. Consistent Naming
+```javascript
+// ✅ Good - Clear and consistent
+const modelsWithWeightSupport = ['niji-6'];
+const modelsWithoutWeightSupport = ['midjourney-7'];
+
+// ❌ Bad - Inconsistent naming
+const weightEnabledModels = ['niji-6'];
+const noWeightModels = ['midjourney-7'];
+```
+
+### 3. Add Logging for Debugging
+```javascript
+// ✅ Good - Helpful for debugging
+console.log(`Weight control ${action} for ${currentModel}: ${modelsWithoutWeightSupport.includes(currentModel) ? 'disabled' : 'enabled'}`);
+
+// ❌ Bad - No debugging info
+if (modelsWithoutWeightSupport.includes(currentModel)) return;
+```
+
+### 4. Update All Related Files
+Always check these files when adding new models:
+- `js/views/galleryView.js` - UI display logic
+- `js/models/imageModel.js` - Prompt generation logic
+- `js/controllers/galleryController.js` - Event handling logic
+
+## 🔄 Future Considerations
+
+### Model-Specific Weight Syntax
+Some models might use different weight syntax:
+```javascript
+// Current: NijiJourney 6 style
+return `${srefCode}::${weight}`;
+
+// Future: Different model syntax
+if (this.currentModel === 'new-model') {
+  return `${srefCode}::${weight * 0.5}`; // Different weight scaling
+}
+```
+
+### Dynamic Weight Ranges
+Different models might support different weight ranges:
+```javascript
+// Current: 1-9 range
+weight = weight >= 9 ? 1 : weight + 1;
+
+// Future: Model-specific ranges
+const weightRanges = {
+  'niji-6': { min: 1, max: 9 },
+  'new-model': { min: 0.1, max: 2.0 }
+};
+```
+
+### Weight Display Differences
+Some models might display weights differently:
+```javascript
+// Current: Numeric display
+weightDisplay.textContent = weight;
+
+// Future: Model-specific display
+if (currentModel === 'new-model') {
+  weightDisplay.textContent = `${weight}x`; // Show as multiplier
+}
+```
+
+## 🔗 Related Resources
+
+- [CSS Weight Controls](./css-component-creation.mdc)
+- [Model Management](./git-management.mdc)
+- [JavaScript Standards](./rule-creation.mdc)
+description:
+globs:
+alwaysApply: false
+---

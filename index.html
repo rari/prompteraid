@@ -275,29 +275,12 @@
           <div id="prompt-settings-panel" class="prompt-settings-panel hidden">
             <h3>Prompt Options</h3>
             <div class="setting-row">
-              <label for="aspect-ratio-select">Aspect Ratio:</label>
-              <select id="aspect-ratio-select" class="aspect-ratio-dropdown">
-                <option value="1:1">1:1 (Default)</option>
-                <option value="4:5">4:5 (Instagram Post)</option>
-                <option value="2:3">2:3 (Pinterest Pin)</option>
-                <option value="3:2">3:2 (Older Photo Format)</option>
-                <option value="5:4">5:4 (Facebook Group Cover Photo)</option>
-                <option value="4:3">4:3 (Legacy Video)</option>
-                <option value="1.91:1">1.91:1 (Facebook Ad)</option>
-                <option value="2:1">2:1 (Account Header)</option>
-                <option value="16:9">16:9 (YouTube Thumbnail)</option>
-                <option value="9:16">9:16 (Reels)</option>
-              </select>
-            </div>
-            <div class="setting-row">
-              <label class="checkbox-label">
-                <input type="checkbox" id="randomize-categories" checked>
-                <span>🎲 Randomize Prompts</span>
-              </label>
-            </div>
-            <div class="setting-row">
               <label>Categories:</label>
               <div class="category-checkboxes">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="randomize-categories" checked>
+                  <span>🎲 Randomize Prompts</span>
+                </label>
                 <label class="checkbox-label">
                   <input type="checkbox" id="cat-presentation" checked>
                   <span>Presentation</span>
@@ -343,8 +326,28 @@
             <div class="setting-row">
               <label for="prompt-suffix">Suffix</label>
               <input type="text" id="prompt-suffix" placeholder="e.g. --ar 16:9 --s 750">
-              </div>
             </div>
+            <div class="setting-row">
+              <label for="aspect-ratio-select">Aspect Ratio:</label>
+              <select id="aspect-ratio-select" class="aspect-ratio-dropdown">
+                <option value="1:1">1:1 (Default)</option>
+                <option value="4:5">4:5 (Instagram Post)</option>
+                <option value="2:3">2:3 (Pinterest Pin)</option>
+                <option value="3:2">3:2 (Older Photo Format)</option>
+                <option value="5:4">5:4 (Facebook Group Cover Photo)</option>
+                <option value="4:3">4:3 (Legacy Video)</option>
+                <option value="1.91:1">1.91:1 (Facebook Ad)</option>
+                <option value="2:1">2:1 (Account Header)</option>
+                <option value="16:9">16:9 (YouTube Thumbnail)</option>
+                <option value="9:16">9:16 (Reels)</option>
+                <option value="custom">Custom Aspect Ratio</option>
+              </select>
+            </div>
+            <div class="setting-row custom-aspect-ratio-row hidden">
+              <label for="custom-aspect-ratio-input">Custom Ratio:</label>
+              <input type="text" id="custom-aspect-ratio-input" class="custom-aspect-ratio-input" placeholder="e.g. 3:4, 5:7, 1.5:1" pattern="[0-9]+(\.[0-9]+)?:[0-9]+(\.[0-9]+)?">
+            </div>
+          </div>
           </div>
         </div>
 

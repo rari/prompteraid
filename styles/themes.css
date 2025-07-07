@@ -193,6 +193,39 @@ body.dark-mode {
     color: white;
   }
 
+  /* Aspect Ratio Dropdown */
+  html:not(.dark-mode):not(.light-mode) .aspect-ratio-dropdown {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .aspect-ratio-dropdown option {
+    background-color: var(--card-background);
+    color: var(--text-primary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .aspect-ratio-dropdown:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+  }
+
+  /* Custom Aspect Ratio Input */
+  html:not(.dark-mode):not(.light-mode) .custom-aspect-ratio-input {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .custom-aspect-ratio-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+  }
+
+  html:not(.dark-mode):not(.light-mode) .custom-aspect-ratio-input:hover {
+    background-color: var(--gray-300);
+  }
+
   /* Favorites tools with dark styling */
   html:not(.dark-mode):not(.light-mode) .favorites-tools-buttons {
     background-color: var(--card-background);
@@ -556,23 +589,56 @@ html.dark-mode .gallery-item.highlight-item {
   border-color: var(--neon-pink);
 }
 
-/* Model Selector */
-html.dark-mode .model-dropdown {
-  background-color: var(--card-background);
-  border-color: var(--border-color);
-}
+  /* Model Selector */
+  html.dark-mode .model-dropdown {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
 
-html.dark-mode .model-option {
-  background-color: var(--card-background);
-}
+  html.dark-mode .model-option {
+    background-color: var(--card-background);
+  }
 
-html.dark-mode .model-option:hover {
-  background-color: var(--gray-300);
-}
+  html.dark-mode .model-option:hover {
+    background-color: var(--gray-300);
+  }
 
-html.dark-mode .model-option.active {
-  background-color: rgba(var(--neon-pink-rgb), 0.2);
-}
+  html.dark-mode .model-option.active {
+    background-color: rgba(var(--neon-pink-rgb), 0.2);
+  }
+
+  /* Aspect Ratio Dropdown */
+  html.dark-mode .aspect-ratio-dropdown {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+  }
+
+  html.dark-mode .aspect-ratio-dropdown option {
+    background-color: var(--card-background);
+    color: var(--text-primary);
+  }
+
+  html.dark-mode .aspect-ratio-dropdown:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+  }
+
+  /* Custom Aspect Ratio Input */
+  html.dark-mode .custom-aspect-ratio-input {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+  }
+
+  html.dark-mode .custom-aspect-ratio-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+  }
+
+  html.dark-mode .custom-aspect-ratio-input:hover {
+    background-color: var(--gray-300);
+  }
 
 /* Favorites Tools */
 html.dark-mode .favorites-tools-buttons {
@@ -860,7 +926,7 @@ html:not(.dark-mode):not(.light-mode) .footer-glass-demo {
   background: none;
   border-radius: 8px;
   transition: filter 0.2s;
-}
+}c
 
 .footer-link {
   color: inherit;

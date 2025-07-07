@@ -59,6 +59,14 @@ export default class GalleryView {
           suffixInput.dispatchEvent(new Event('input', { bubbles: true }));
         }
       }
+      // Restore aspect ratio
+      if (state.aspectRatio !== undefined) {
+        const aspectRatioSelect = document.getElementById('aspect-ratio-select');
+        if (aspectRatioSelect) {
+          aspectRatioSelect.value = state.aspectRatio;
+          aspectRatioSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
       // Restore checkboxes
       if (state.checkboxes) {
         Object.entries(state.checkboxes).forEach(([id, checked]) => {
@@ -652,6 +660,12 @@ export default class GalleryView {
           stickyAspectRatioLabel.setAttribute('for', 'sticky-aspect-ratio-select');
         }
       }
+
+      // Update the custom aspect ratio input ID in the sticky panel
+      const stickyCustomAspectRatioInput = stickySettingsPanel.querySelector('#custom-aspect-ratio-input');
+      if (stickyCustomAspectRatioInput) {
+        stickyCustomAspectRatioInput.id = 'sticky-custom-aspect-ratio-input';
+      }
       
       // Add the settings panel to the preview row (not the outer container)
       stickyPreviewRow.appendChild(stickySettingsPanel);
@@ -742,6 +756,9 @@ export default class GalleryView {
 
     // Sync suffix input between main and sticky panels
     // Note: This is now handled by bindSuffixInput method in the controller
+
+    // Sync aspect ratio dropdown between main and sticky panels
+    // Note: This is now handled by bindAspectRatioDropdown method in the controller
 
     // Sync prompt input value
     const mainInput = document.getElementById('prompt-input');
@@ -1089,8 +1106,8 @@ export default class GalleryView {
     });
     item.appendChild(flipButton);
 
-    // Add weight controls for selected images
-    if (isSelected) {
+    // Add weight controls for selected images (disabled for Midjourney 7)
+    if (isSelected && currentModel !== 'midjourney-7') {
       const weightControls = document.createElement('div');
       weightControls.className = 'weight-controls';
       weightControls.dataset.id = image.id;
@@ -1395,6 +1412,76 @@ export default class GalleryView {
         input.addEventListener('blur', unifiedHandler);
       }
       });
+  }
+
+  bindAspectRatioDropdown(handler) {
+    const mainAspectRatioSelect = document.getElementById('aspect-ratio-select');
+    const stickyAspectRatioSelect = document.getElementById('sticky-aspect-ratio-select');
+    const mainCustomRow = document.querySelector('.custom-aspect-ratio-row');
+    const stickyCustomRow = document.querySelector('.sticky-prompt-settings-panel .custom-aspect-ratio-row');
+    const mainCustomInput = document.getElementById('custom-aspect-ratio-input');
+    const stickyCustomInput = document.getElementById('sticky-custom-aspect-ratio-input');
+    
+    // Sync initial values
+    if (mainAspectRatioSelect && stickyAspectRatioSelect) {
+      stickyAspectRatioSelect.value = mainAspectRatioSelect.value;
+    }
+    
+    // Function to handle custom aspect ratio visibility
+    const handleCustomVisibility = (select, customRow, customInput) => {
+      if (select && customRow && customInput) {
+        if (select.value === 'custom') {
+          customRow.classList.remove('hidden');
+          customInput.focus();
+        } else {
+          customRow.classList.add('hidden');
+        }
+      }
+    };
+    
+    // Create a unified handler that syncs both dropdowns and calls the provided handler
+    const unifiedHandler = (e) => {
+      const newValue = e.target.value;
+      
+      // Sync both dropdowns
+      if (mainAspectRatioSelect && stickyAspectRatioSelect) {
+        mainAspectRatioSelect.value = stickyAspectRatioSelect.value = newValue;
+      }
+      
+      // Handle custom input visibility
+      handleCustomVisibility(mainAspectRatioSelect, mainCustomRow, mainCustomInput);
+      handleCustomVisibility(stickyAspectRatioSelect, stickyCustomRow, stickyCustomInput);
+      
+      // Call the provided handler with the new value
+      handler(newValue);
+    };
+    
+    // Create a unified handler for custom input changes
+    const customInputHandler = (e) => {
+      const customValue = e.target.value.trim();
+      if (customValue && /^[0-9]+(\.[0-9]+)?:[0-9]+(\.[0-9]+)?$/.test(customValue)) {
+        handler(customValue);
+      }
+    };
+    
+    // Bind to both dropdowns
+    [mainAspectRatioSelect, stickyAspectRatioSelect].forEach(select => {
+      if (select) {
+        select.addEventListener('change', unifiedHandler);
+      }
+    });
+    
+    // Bind to both custom inputs
+    [mainCustomInput, stickyCustomInput].forEach(input => {
+      if (input) {
+        input.addEventListener('input', customInputHandler);
+        input.addEventListener('blur', customInputHandler);
+      }
+    });
+    
+    // Initialize custom input visibility
+    handleCustomVisibility(mainAspectRatioSelect, mainCustomRow, mainCustomInput);
+    handleCustomVisibility(stickyAspectRatioSelect, stickyCustomRow, stickyCustomInput);
   }
 
   bindCopyButton(handler) {
@@ -1849,9 +1936,23 @@ export default class GalleryView {
               const cb = document.getElementById(id);
               if (cb) checkboxes[id] = cb.checked;
             });
+            const aspectRatioSelect = document.getElementById('aspect-ratio-select');
+            const customAspectRatioInput = document.getElementById('custom-aspect-ratio-input');
+            
+            // Get the actual aspect ratio value (custom input if custom is selected)
+            let aspectRatioValue = '1:1';
+            if (aspectRatioSelect) {
+              if (aspectRatioSelect.value === 'custom' && customAspectRatioInput) {
+                aspectRatioValue = customAspectRatioInput.value.trim() || '1:1';
+              } else {
+                aspectRatioValue = aspectRatioSelect.value;
+              }
+            }
+            
             const state = {
               prompt: promptInput ? promptInput.value : '',
               suffix: suffixInput ? suffixInput.value : '',
+              aspectRatio: aspectRatioValue,
               checkboxes
             };
             sessionStorage.setItem('prompteraid-menu-state', JSON.stringify(state));
@@ -2226,6 +2327,14 @@ export default class GalleryView {
         
         const imageId = weightButton.dataset.id;
         const action = weightButton.dataset.action;
+        
+        // Check if we're in Midjourney 7 mode - if so, ignore weight control clicks
+        const currentModel = window.galleryController?.model?.currentModel || 'niji-6';
+        if (currentModel === 'midjourney-7') {
+          console.log(`Weight control clicked but disabled for Midjourney 7: ${action} for image ${imageId}`);
+          return;
+        }
+        
         let newWeight;
         
         console.log(`Weight button clicked: ${action} for image ${imageId}`);
@@ -2802,6 +2911,13 @@ export default class GalleryView {
       const imageId = weightButton.dataset.id;
       const action = weightButton.dataset.action;
       
+      // Check if we're in Midjourney 7 mode - if so, ignore weight control clicks
+      const currentModel = window.galleryController?.model?.currentModel || 'niji-6';
+      if (currentModel === 'midjourney-7') {
+        console.log(`Weight control clicked but disabled for Midjourney 7: ${action} for image ${imageId}`);
+        return;
+      }
+      
       console.log(`New Styles weight button clicked: ${action} for image ${imageId}`);
       
       // Dispatch a custom event that the controller can listen for
@@ -3058,6 +3174,8 @@ export default class GalleryView {
   syncModelWithDOM(model) {
     const promptInput = document.getElementById('prompt-input');
     const suffixInput = document.getElementById('prompt-suffix');
+    const aspectRatioSelect = document.getElementById('aspect-ratio-select');
+    const customAspectRatioInput = document.getElementById('custom-aspect-ratio-input');
     
     if (promptInput && promptInput.value !== undefined) {
       model.setBasePrompt(promptInput.value);
@@ -3065,6 +3183,65 @@ export default class GalleryView {
     
     if (suffixInput && suffixInput.value !== undefined) {
       model.setSuffix(suffixInput.value);
+    }
+
+    if (aspectRatioSelect && aspectRatioSelect.value !== undefined) {
+      // Get the actual aspect ratio value (custom input if custom is selected)
+      let aspectRatioValue = aspectRatioSelect.value;
+      if (aspectRatioSelect.value === 'custom' && customAspectRatioInput) {
+        aspectRatioValue = customAspectRatioInput.value.trim() || '1:1';
+      }
+      model.setAspectRatio(aspectRatioValue);
+    }
+  }
+
+  // Method to initialize DOM with model values
+  initDOMWithModel(model) {
+    const promptInput = document.getElementById('prompt-input');
+    const suffixInput = document.getElementById('prompt-suffix');
+    const aspectRatioSelect = document.getElementById('aspect-ratio-select');
+    const stickyAspectRatioSelect = document.getElementById('sticky-aspect-ratio-select');
+    const mainCustomRow = document.querySelector('.custom-aspect-ratio-row');
+    const stickyCustomRow = document.querySelector('.sticky-prompt-settings-panel .custom-aspect-ratio-row');
+    const customAspectRatioInput = document.getElementById('custom-aspect-ratio-input');
+    const stickyCustomAspectRatioInput = document.getElementById('sticky-custom-aspect-ratio-input');
+    
+    if (promptInput && model.basePrompt !== undefined) {
+      promptInput.value = model.basePrompt;
+    }
+    
+    if (suffixInput && model.suffix !== undefined) {
+      suffixInput.value = model.suffix;
+    }
+
+    if (aspectRatioSelect && model.aspectRatio !== undefined) {
+      // Check if the aspect ratio is a custom value (not in the predefined options)
+      const predefinedOptions = ['1:1', '4:5', '2:3', '3:2', '5:4', '4:3', '1.91:1', '2:1', '16:9', '9:16'];
+      if (predefinedOptions.includes(model.aspectRatio)) {
+        aspectRatioSelect.value = model.aspectRatio;
+        if (mainCustomRow) mainCustomRow.classList.add('hidden');
+      } else {
+        aspectRatioSelect.value = 'custom';
+        if (mainCustomRow) {
+          mainCustomRow.classList.remove('hidden');
+          if (customAspectRatioInput) customAspectRatioInput.value = model.aspectRatio;
+        }
+      }
+    }
+
+    if (stickyAspectRatioSelect && model.aspectRatio !== undefined) {
+      // Check if the aspect ratio is a custom value (not in the predefined options)
+      const predefinedOptions = ['1:1', '4:5', '2:3', '3:2', '5:4', '4:3', '1.91:1', '2:1', '16:9', '9:16'];
+      if (predefinedOptions.includes(model.aspectRatio)) {
+        stickyAspectRatioSelect.value = model.aspectRatio;
+        if (stickyCustomRow) stickyCustomRow.classList.add('hidden');
+      } else {
+        stickyAspectRatioSelect.value = 'custom';
+        if (stickyCustomRow) {
+          stickyCustomRow.classList.remove('hidden');
+          if (stickyCustomAspectRatioInput) stickyCustomAspectRatioInput.value = model.aspectRatio;
+        }
+      }
     }
   }
 } 
