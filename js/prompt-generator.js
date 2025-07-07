@@ -503,9 +503,15 @@ class PromptGenerator {
     }
     return '';
   }
+
+  // Public method to re-initialize aspect ratio dropdown after sticky panel is created
+  reinitAspectRatioDropdown() {
+    console.log('Re-initializing aspect ratio dropdown for sticky panel');
+    this.initAspectRatioDropdownForPanel('sticky-prompt-settings-panel');
+  }
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  new PromptGenerator();
+  window.promptGenerator = new PromptGenerator();
 }); 
