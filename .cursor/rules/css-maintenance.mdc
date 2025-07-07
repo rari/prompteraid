@@ -1,0 +1,193 @@
+# CSS Maintenance Guidelines
+
+## 🎯 Modular CSS Architecture
+
+PrompterAid uses a modular CSS architecture with components split into logical files in `styles/sections/`. This rule covers maintenance and best practices.
+
+## 📁 File Organization
+
+### Current Structure
+```
+styles/
+├── main.css                    # Main entry point (imports all sections)
+├── tokens.css                  # Design tokens and variables
+├── themes.css                  # Theme definitions
+├── overrides.css              # Theme overrides
+└── sections/                  # Modular components
+    ├── animations.css         # All @keyframes animations
+    ├── base-styles.css        # Reset and base styles
+    ├── buttons.css            # Button components
+    ├── gallery.css            # Image gallery styles
+    ├── header.css             # Header and title styles
+    ├── layout.css             # Layout and container styles
+    ├── link-button.css        # Link button overlay styles
+    ├── weight-controls.css    # Weight control components
+    └── ... (35+ component files)
+```
+
+## 🔧 Maintenance Workflow
+
+### 1. Adding New Styles
+```bash
+# Determine the appropriate section file
+# Add styles to existing component file
+# Update main.css import if new file created
+```
+
+### 2. Modifying Existing Styles
+```bash
+# Locate the component file containing the styles
+# Make changes in the appropriate section
+# Test changes across different pages
+```
+
+### 3. Removing Styles
+```bash
+# Remove from the specific component file
+# Check for dependencies in other files
+# Update main.css if entire file is removed
+```
+
+## 📋 Maintenance Checklist
+
+### Before Making Changes
+- [ ] **Identify the correct component file**
+- [ ] **Check for existing similar styles**
+- [ ] **Review the redundancy report** (`styles/redundancy-report.md`)
+- [ ] **Test on multiple pages** (index, docs, terms, privacy)
+
+### After Making Changes
+- [ ] **Test responsive design** (mobile, tablet, desktop)
+- [ ] **Verify theme compatibility** (light/dark mode)
+- [ ] **Check accessibility** (focus states, contrast)
+- [ ] **Update redundancy report** if needed
+
+### Monthly Maintenance
+- [ ] **Review redundancy report**
+- [ ] **Check for unused styles**
+- [ ] **Update component documentation**
+- [ ] **Verify import order in main.css**
+
+## 🚫 Common Mistakes
+
+### Don't Do This
+```css
+/* ❌ Adding styles to main.css directly */
+/* ❌ Creating duplicate animations */
+/* ❌ Mixing concerns in single file */
+/* ❌ Ignoring the modular structure */
+```
+
+### Do This Instead
+```css
+/* ✅ Add to appropriate component file */
+/* ✅ Use existing animations from animations.css */
+/* ✅ Keep single responsibility per file */
+/* ✅ Follow the established structure */
+```
+
+## 🔍 Finding Styles
+
+### By Component
+- **Buttons**: `styles/sections/buttons.css`
+- **Gallery**: `styles/sections/gallery.css`
+- **Animations**: `styles/sections/animations.css`
+- **Layout**: `styles/sections/layout.css`
+
+### By Selector
+```bash
+# Search for specific selectors
+grep -r ".gallery-item" styles/sections/
+grep -r "@keyframes" styles/sections/
+```
+
+### By Functionality
+- **Interactive elements**: `buttons.css`, `overlay-buttons.css`
+- **Layout components**: `layout.css`, `sticky-action-bar.css`
+- **Visual effects**: `animations.css`, `bubble-animation.css`
+
+## 📝 Documentation Standards
+
+### Component File Header
+```css
+/* ===== COMPONENT NAME ===== */
+/* Brief description of what this component does */
+/* Key features and usage notes */
+```
+
+### Style Comments
+```css
+/* Base component styles */
+.component {
+  /* Core styling */
+}
+
+/* State variations */
+.component:hover {
+  /* Hover effects */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .component {
+    /* Mobile styles */
+  }
+}
+```
+
+## 🔄 Refactoring Guidelines
+
+### When to Refactor
+- **Duplicate styles** found in multiple files
+- **Large component files** (>200 lines)
+- **Mixed concerns** in single file
+- **Unused styles** identified
+
+### Refactoring Process
+1. **Identify the scope** of changes needed
+2. **Create new component file** if needed
+3. **Move styles** to appropriate location
+4. **Update imports** in main.css
+5. **Test thoroughly** across all pages
+6. **Update redundancy report**
+
+## 🧪 Testing Guidelines
+
+### Cross-Page Testing
+- **index.html** - Main application
+- **docs.html** - Documentation pages
+- **terms.html** - Legal pages
+- **privacy.html** - Legal pages
+
+### Responsive Testing
+- **Mobile**: 320px - 768px
+- **Tablet**: 768px - 1024px
+- **Desktop**: 1024px+
+
+### Theme Testing
+- **Light mode** - Default theme
+- **Dark mode** - Dark theme toggle
+
+## 📊 Performance Considerations
+
+### File Size Guidelines
+- **Individual components**: < 5KB
+- **Total CSS**: < 100KB (gzipped)
+- **Critical CSS**: < 20KB
+
+### Optimization Tips
+- **Use CSS custom properties** for theming
+- **Minimize specificity** conflicts
+- **Group related styles** together
+- **Remove unused styles** regularly
+
+## 🔗 Related Resources
+
+- [Redundancy Report](./styles/redundancy-report.md)
+- [CSS Architecture Documentation](./styles/sections/)
+- [Design Tokens](./styles/tokens.css)
+- [Theme System](./styles/themes.css)
+description:
+globs:
+alwaysApply: false
+---
