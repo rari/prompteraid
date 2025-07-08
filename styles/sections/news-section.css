@@ -578,3 +578,51 @@ html.dark-mode .model-option {
   color: var(--neon-yellow);
 }
 
+/* Shepherd.js custom glass theme for guided tour */
+.shepherd-theme-glass .shepherd-content {
+  background: rgba(120, 80, 220, 0.82);
+  color: #fff;
+  border-radius: 1.2em;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+  backdrop-filter: blur(8px) saturate(1.2);
+  border: 1.5px solid rgba(180, 120, 255, 0.25);
+  padding: 1.2em 1.5em;
+  font-size: 1.08em;
+}
+.shepherd-theme-glass .shepherd-title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.18em;
+  margin-bottom: 0.5em;
+  letter-spacing: 0.01em;
+}
+.shepherd-theme-glass .shepherd-button {
+  background: var(--accent, #a78bfa);
+  color: #fff;
+  border-radius: 0.7em;
+  border: none;
+  font-weight: 600;
+  font-size: 1em;
+  padding: 0.4em 1.1em;
+  margin: 0 0.2em;
+  box-shadow: 0 2px 8px 0 rgba(120, 80, 220, 0.12);
+  transition: background 0.15s, color 0.15s;
+  cursor: pointer;
+}
+.shepherd-theme-glass .shepherd-button:hover, .shepherd-theme-glass .shepherd-button:focus {
+  background: #fff;
+  color: var(--accent, #a78bfa);
+}
+.shepherd-theme-glass .shepherd-cancel-icon {
+  color: #fff;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+.shepherd-theme-glass .shepherd-cancel-icon:hover {
+  opacity: 1;
+}
+.shepherd-theme-glass .shepherd-arrow:before {
+  background: rgba(120, 80, 220, 0.82);
+  border: 1.5px solid rgba(180, 120, 255, 0.25);
+}
+
