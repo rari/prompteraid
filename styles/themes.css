@@ -668,8 +668,8 @@ html.dark-mode .favorites-tools .action-button:hover i {
 
 /* Notifications */
 html.dark-mode .info-notification {
-  background: linear-gradient(135deg, rgba(0,0,0,0.82) 0%, rgba(0,229,255,0.18) 60%, rgba(0,123,255,0.10) 100%);
-  color: var(--text-primary, #fff);
+  background: linear-gradient(135deg, rgba(0,0,0,0.90) 0%, rgba(0,229,255,0.18) 60%, rgba(0,123,255,0.10) 100%);
+  color: var(--text-primary, #ccd6e6);
   border: 1.5px solid var(--neon-teal, #00e5ff);
   box-shadow: 0 2px 12px 0 rgba(0, 229, 255, 0.10), 0 1.5px 8px 0 rgba(0,255,255,0.08);
   backdrop-filter: blur(8px) saturate(1.2);
@@ -1112,4 +1112,275 @@ html.light-mode .header-glass-bar {
   color: var(--text-primary);
   box-shadow: 0 2px 16px 0 rgba(80,180,255,0.10);
   backdrop-filter: blur(12px) saturate(1.2);
+} 
+
+/* === SHEPHERD GLASS THEME (DARK MODE) === */
+html.dark-mode .shepherd-theme-glass .shepherd-content {
+  background: linear-gradient(120deg, rgba(20,20,30,0.90) 60%, rgba(147,51,234,0.22) 100%);
+  color: #ccd6e6;
+  border-radius: 0.9rem;
+  box-shadow: 0 2px 16px 0 rgba(147, 51, 234, 0.18), 0 1.5px 8px 0 rgba(0,0,0,0.18);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  border: 1.5px solid var(--neon-purple, #9333ea);
+  padding: 0.5rem 2rem;
+  font-size: 1.08em;
+  font-weight: 600;
+  transition: background 0.18s, border 0.18s, box-shadow 0.18s;
+  max-width: 90vw;
+  opacity: 0.9;
+}
+
+/* Shepherd text color for dark mode */
+html.dark-mode .shepherd-text {
+  color: #fff !important;
+}
+
+html.dark-mode .shepherd-theme-glass .shepherd-header {
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0.7em 0 0.2em 0;
+  border-radius: 0.9rem 0.9rem 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+html.dark-mode .shepherd-theme-glass .shepherd-title {
+  color: #ccd6e6;
+  font-weight: 700;
+  font-size: 1.18em;
+  margin-bottom: 0;
+  letter-spacing: 0.01em;
+  padding-left: 0.1em;
+}
+html.dark-mode .shepherd-theme-glass .shepherd-button {
+  background: #1a102a;
+  color: #c084fc;
+  border-radius: 0.7em;
+  border: 1.5px solid #c084fc;
+  font-weight: 700;
+  font-size: 1em;
+  padding: 0.4em 1.1em;
+  margin: 0 0.2em;
+  box-shadow: 0 2px 8px 0 rgba(147, 51, 234, 0.12);
+  transition: background 0.15s, color 0.15s, border 0.15s;
+  cursor: pointer;
+}
+html.dark-mode .shepherd-theme-glass .shepherd-button:hover, html.dark-mode .shepherd-theme-glass .shepherd-button:focus {
+  background: #c084fc;
+  color: #1a102a;
+  border-color: #fff;
+}
+html.dark-mode .shepherd-theme-glass .shepherd-cancel-icon {
+  color: #c084fc;
+  font-size: 1.5em;
+  font-weight: bold;
+  opacity: 0.9;
+  margin-left: 1.2rem;
+  cursor: pointer;
+  border-radius: 0.3rem;
+  transition: color 0.2s, opacity 0.2s, background 0.2s;
+  background: none;
+  border: none;
+  padding: 0.1em 0.3em;
+  outline: none;
+}
+html.dark-mode .shepherd-theme-glass .shepherd-cancel-icon:hover {
+  color: #fff;
+  opacity: 1;
+  background: rgba(147,51,234,0.12);
+}
+html.dark-mode .shepherd-theme-glass .shepherd-arrow, html.dark-mode .shepherd-theme-glass .shepherd-arrow:before {
+  opacity: 0.9;
+}
+html.dark-mode .shepherd-theme-glass .shepherd-arrow:before {
+  background: linear-gradient(120deg, rgba(20,20,30,0.90) 60%, rgba(147,51,234,0.22) 100%);
+  border: 1.5px solid var(--neon-purple, #9333ea);
+}
+html.dark-mode .shepherd-element.shepherd-theme-glass,
+html.dark-mode .shepherd-theme-glass {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* === SHEPHERD GLASS THEME (LIGHT MODE) === */
+html.light-mode .shepherd-theme-glass .shepherd-content,
+html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-content {
+  background: linear-gradient(120deg, rgba(255,255,255,0.90) 60%, rgba(180,220,255,0.22) 100%);
+  color: #1e293b;
+  border-radius: 0.9rem;
+  box-shadow: 0 2px 16px 0 rgba(80,180,255,0.10), 0 1.5px 8px 0 rgba(0,0,0,0.08);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  border: 1.5px solid var(--primary, #2563eb);
+  padding: 0.5rem 2rem;
+  font-size: 1.08em;
+  font-weight: 600;
+  transition: background 0.18s, border 0.18s, box-shadow 0.18s;
+  max-width: 90vw;
+  opacity: 0.9;
+}
+html.light-mode .shepherd-theme-glass .shepherd-header,
+html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-header {
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0.7em 0 0.2em 0;
+  border-radius: 0.9rem 0.9rem 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+html.light-mode .shepherd-theme-glass .shepherd-title,
+html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-title {
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 1.18em;
+  margin-bottom: 0;
+  letter-spacing: 0.01em;
+  padding-left: 0.1em;
+}
+html.light-mode .shepherd-theme-glass .shepherd-button,
+html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-button {
+  background: #e0e7ff;
+  color: #2563eb;
+  border-radius: 0.7em;
+  border: 1.5px solid #2563eb;
+  font-weight: 700;
+  font-size: 1em;
+  padding: 0.4em 1.1em;
+  margin: 0 0.2em;
+  box-shadow: 0 2px 8px 0 rgba(80,180,255,0.08);
+  transition: background 0.15s, color 0.15s, border 0.15s;
+  cursor: pointer;
+}
+html.light-mode .shepherd-theme-glass .shepherd-button:hover, html.light-mode .shepherd-theme-glass .shepherd-button:focus,
+html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-button:hover, html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-button:focus {
+  background: #2563eb;
+  color: #fff;
+  border-color: #fff;
+}
+html.light-mode .shepherd-theme-glass .shepherd-cancel-icon,
+html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-cancel-icon {
+  color: #2563eb;
+  font-size: 1.5em;
+  font-weight: bold;
+  opacity: 0.9;
+  margin-left: 1.2rem;
+  cursor: pointer;
+  border-radius: 0.3rem;
+  transition: color 0.2s, opacity 0.2s, background 0.2s;
+  background: none;
+  border: none;
+  padding: 0.1em 0.3em;
+  outline: none;
+}
+html.light-mode .shepherd-theme-glass .shepherd-cancel-icon:hover,
+html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-cancel-icon:hover {
+  color: #fff;
+  opacity: 1;
+  background: rgba(80,180,255,0.12);
+}
+html.light-mode .shepherd-theme-glass .shepherd-arrow, html.light-mode .shepherd-theme-glass .shepherd-arrow:before,
+html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-arrow, html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-arrow:before {
+  opacity: 0.9;
+}
+html.light-mode .shepherd-theme-glass .shepherd-arrow:before,
+html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-arrow:before {
+  background: linear-gradient(120deg, rgba(255,255,255,0.90) 60%, rgba(180,220,255,0.22) 100%);
+  border: 1.5px solid var(--primary, #2563eb);
+}
+html.light-mode .shepherd-element.shepherd-theme-glass,
+html.light-mode .shepherd-theme-glass,
+html:not(.dark-mode):not(.light-mode) .shepherd-element.shepherd-theme-glass,
+html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* === DOC NOTIFICATION THEME CONTROL === */
+html.dark-mode .info-notification {
+  background: linear-gradient(135deg, rgba(0,0,0,0.90) 0%, rgba(0,229,255,0.18) 60%, rgba(0,123,255,0.10) 100%);
+  color: var(--text-primary, #ccd6e6);
+  border: 1.5px solid var(--neon-teal, #00e5ff);
+  box-shadow: 0 2px 12px 0 rgba(0, 229, 255, 0.10), 0 1.5px 8px 0 rgba(0,255,255,0.08);
+  backdrop-filter: blur(8px) saturate(1.2);
+}
+html.light-mode .info-notification,
+html:not(.dark-mode):not(.light-mode) .info-notification {
+  background: linear-gradient(135deg, rgba(255,255,255,0.90) 0%, rgba(180,220,255,0.18) 60%, rgba(80,180,255,0.10) 100%);
+  color: #1e293b;
+  border: 1.5px solid var(--primary, #2563eb);
+  box-shadow: 0 2px 12px 0 rgba(80,180,255,0.10), 0 1.5px 8px 0 rgba(0,255,255,0.08);
+  backdrop-filter: blur(8px) saturate(1.2);
+}
+
+/* === DOCS NOTIFICATION THEME CONTROL === */
+/* Dark mode docs notification */
+html.dark-mode .docs-notification {
+  background: linear-gradient(120deg, rgba(20,20,30,0.90) 60%, rgba(147,51,234,0.22) 100%);
+  color: #ccd6e6;
+  border: 1.5px solid var(--neon-purple, #9333ea);
+  box-shadow: 0 2px 16px 0 rgba(147, 51, 234, 0.18), 0 1.5px 8px 0 rgba(0,0,0,0.18);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+}
+
+html.dark-mode .docs-notification-content i {
+  color: #c084fc;
+}
+
+html.dark-mode .docs-notification-content a {
+  color: #c084fc;
+}
+
+html.dark-mode .docs-notification-content a:hover {
+  color: #fff;
+}
+
+html.dark-mode .docs-notification-dismiss {
+  color: #c084fc;
+}
+
+html.dark-mode .docs-notification-dismiss:hover {
+  color: #fff;
+  background: rgba(147,51,234,0.12);
+}
+
+/* Light mode docs notification */
+html.light-mode .docs-notification,
+html:not(.dark-mode):not(.light-mode) .docs-notification {
+  background: linear-gradient(120deg, rgba(255,255,255,0.90) 60%, rgba(180,220,255,0.22) 100%);
+  color: #1e293b;
+  border: 1.5px solid var(--primary, #2563eb);
+  box-shadow: 0 2px 16px 0 rgba(80,180,255,0.10), 0 1.5px 8px 0 rgba(0,0,0,0.08);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+}
+
+html.light-mode .docs-notification-content i,
+html:not(.dark-mode):not(.light-mode) .docs-notification-content i {
+  color: #2563eb;
+}
+
+html.light-mode .docs-notification-content a,
+html:not(.dark-mode):not(.light-mode) .docs-notification-content a {
+  color: #2563eb;
+}
+
+html.light-mode .docs-notification-content a:hover,
+html:not(.dark-mode):not(.light-mode) .docs-notification-content a:hover {
+  color: #1e293b;
+}
+
+html.light-mode .docs-notification-dismiss,
+html:not(.dark-mode):not(.light-mode) .docs-notification-dismiss {
+  color: #2563eb;
+}
+
+html.light-mode .docs-notification-dismiss:hover,
+html:not(.dark-mode):not(.light-mode) .docs-notification-dismiss:hover {
+  color: #1e293b;
+  background: rgba(80,180,255,0.12);
 } 
