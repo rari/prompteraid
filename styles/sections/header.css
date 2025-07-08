@@ -66,3 +66,60 @@
   font-size: 0.8em;
 }
 
+/* Desktop: position header-glass-bar in upper right */
+.header-glass-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.5rem 1.5rem;
+  z-index: 10;
+  border-radius: 1.2em;
+}
+
+/* On mobile, center it at the top */
+@media (max-width: 768px) {
+  .header-glass-bar {
+    position: static;
+    justify-content: center;
+    padding: 0.5rem 0;
+  }
+}
+
+.header-signin-label {
+  font-weight: 600;
+  font-size: 1.05em;
+  margin-right: 0.7em;
+  color: var(--text-primary, #fff);
+  letter-spacing: 0.01em;
+}
+
+.header-signin-icon {
+  background: none;
+  border: none;
+  color: var(--text-primary, #fff);
+  font-size: 1.3em;
+  margin-right: 0.2em;
+  margin-left: 0.1em;
+  cursor: pointer;
+  padding: 0.2em 0.4em;
+  border-radius: 0.7em;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-signin-icon:last-child {
+  margin-right: 0;
+}
+
+.header-signin-icon:hover, .header-signin-icon:focus {
+  background: var(--accent, #a78bfa);
+  color: #fff;
+  box-shadow: 0 0 0 2px var(--accent, #a78bfa);
+}
+

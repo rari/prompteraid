@@ -80,7 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
   window.appController = appController;
   window.galleryController = galleryController;
 
-  const headerSignInBtn = document.getElementById('open-auth-modal');
+  const discordLoginBtn = document.getElementById('discord-login-btn');
+  const emailLoginBtn = document.getElementById('email-login-btn');
+  const signInLabel = document.querySelector('.header-signin-label');
   const userInfo = document.getElementById('user-info');
   const userEmail = document.getElementById('user-email');
   const signOutBtn = document.getElementById('sign-out-btn');
@@ -88,15 +90,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // Listen for auth state changes
   supabase.auth.onAuthStateChange((event, session) => {
     if (session && session.user) {
-      // User is signed in
-      if (headerSignInBtn) headerSignInBtn.style.display = 'none';
+      if (discordLoginBtn) discordLoginBtn.style.display = 'none';
+      if (emailLoginBtn) emailLoginBtn.style.display = 'none';
+      if (signInLabel) signInLabel.style.display = 'none';
       if (userInfo && userEmail) {
         userEmail.textContent = `Hi ${session.user.email}`;
         userInfo.style.display = 'flex';
       }
     } else {
-      // User is signed out
-      if (headerSignInBtn) headerSignInBtn.style.display = '';
+      if (discordLoginBtn) discordLoginBtn.style.display = '';
+      if (emailLoginBtn) emailLoginBtn.style.display = '';
+      if (signInLabel) signInLabel.style.display = '';
       if (userInfo) userInfo.style.display = 'none';
     }
   });
@@ -108,49 +112,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Header sign-in button logic
-  if (headerSignInBtn) {
-    const discordIcon = headerSignInBtn.querySelector('.fa-brands.fa-discord');
-    const emailIcon = headerSignInBtn.querySelector('.fa-envelope');
-    if (discordIcon) {
-      discordIcon.style.cursor = 'pointer';
-      discordIcon.setAttribute('tabindex', '0');
-      discordIcon.setAttribute('title', 'Sign in with Discord');
-      discordIcon.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        // Supabase Discord OAuth
-        await supabase.auth.signInWithOAuth({ provider: 'discord' });
-      });
-      discordIcon.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          discordIcon.click();
+  // Discord login button logic
+  if (discordLoginBtn) {
+    discordLoginBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      await supabase.auth.signInWithOAuth({ provider: 'discord' });
+    });
+    discordLoginBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        discordLoginBtn.click();
+      }
+    });
+  }
+
+  // Email login button logic
+  if (emailLoginBtn) {
+    emailLoginBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const email = prompt('Enter your email to sign in:');
+      if (email) {
+        const { error } = await supabase.auth.signInWithOtp({ email });
+        if (error) {
+          alert('Error sending sign-in email: ' + error.message);
+        } else {
+          alert('Check your email for a sign-in link!');
         }
-      });
-    }
-    if (emailIcon) {
-      emailIcon.style.cursor = 'pointer';
-      emailIcon.setAttribute('tabindex', '0');
-      emailIcon.setAttribute('title', 'Sign in with Email');
-      emailIcon.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        // Prompt for email
-        const email = prompt('Enter your email to sign in:');
-        if (email) {
-          const { error } = await supabase.auth.signInWithOtp({ email });
-          if (error) {
-            alert('Error sending sign-in email: ' + error.message);
-          } else {
-            alert('Check your email for a sign-in link!');
-          }
-        }
-      });
-      emailIcon.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          emailIcon.click();
-        }
-      });
-    }
+      }
+    });
+    emailLoginBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        emailLoginBtn.click();
+      }
+    });
   }
 });
