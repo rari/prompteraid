@@ -592,6 +592,7 @@ html.dark-mode .model-option {
   font-weight: 600;
   transition: background 0.18s, border 0.18s, box-shadow 0.18s;
   max-width: 90vw;
+  opacity: 0.8;
 }
 .shepherd-theme-glass .shepherd-header {
   background: none !important;
@@ -647,6 +648,9 @@ html.dark-mode .model-option {
   color: #fff;
   opacity: 1;
   background: rgba(147,51,234,0.12);
+}
+.shepherd-theme-glass .shepherd-arrow, .shepherd-theme-glass .shepherd-arrow:before {
+  opacity: 0.8;
 }
 .shepherd-theme-glass .shepherd-arrow:before {
   background: linear-gradient(120deg, rgba(20,20,30,0.92) 60%, rgba(147,51,234,0.22) 100%);
