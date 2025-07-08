@@ -38,6 +38,15 @@ document.addEventListener('DOMContentLoaded', function() {
     title: 'Browse & Select Styles',
     text: 'Scroll through the style library and click on images to select them for your prompt.',
     attachTo: { element: '#image-gallery', on: 'top' },
+    scrollTo: false,
+    scrollToHandler: () => {
+      // Scroll the gallery container into view, but keep header/prompt visible
+      const gallery = document.getElementById('gallery-top');
+      if (gallery) {
+        const y = gallery.getBoundingClientRect().top + window.scrollY - 80; // offset for header
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    },
     buttons: [
       { text: 'Back', action: tour.back },
       { text: 'Next', action: tour.next }
@@ -48,6 +57,15 @@ document.addEventListener('DOMContentLoaded', function() {
     title: 'Generate Prompt',
     text: 'Use the prompt generator or create your own.',
     attachTo: { element: '#generate-prompt-btn', on: 'top' },
+    scrollTo: false,
+    scrollToHandler: () => {
+      // Scroll the prompt area into view
+      const prompt = document.querySelector('.prompt-container');
+      if (prompt) {
+        const y = prompt.getBoundingClientRect().top + window.scrollY - 40;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    },
     buttons: [
       { text: 'Back', action: tour.back },
       { text: 'Next', action: tour.next }
