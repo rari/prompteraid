@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   tour.addStep({
     title: 'Browse & Select Styles',
-    text: 'Scroll through the style library and click on images to select them for your prompt.',
+    text: 'Scroll through the style library and pick images to select style codes that will give you the right vibes for your prompt.',
     attachTo: { element: '#image-gallery', on: 'top' },
     scrollTo: false,
     scrollToHandler: () => {
