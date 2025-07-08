@@ -1918,9 +1918,9 @@ export default class GalleryView {
       <span class=\"image-count-number\">${totalCount}</span>
       <span class=\"subheader-inline\">pregenerated sref references for
         <span class=\"model-selector-inline model-selector\">
-          <span class=\"current-model\">${modelDisplayName}</span>
-          <span class=\"model-dropdown\">
-            ${otherModels.map(model => `<span class=\"model-option\" data-model=\"${model.id}\">${model.icon}<span>${model.name}</span></span>`).join('')}
+          <span class=\"current-model\" tabindex=\"0\" role=\"button\" aria-label=\"Current model: ${modelDisplayName}. Click or press Enter to change model.\" aria-haspopup=\"listbox\" aria-expanded=\"false\">${modelDisplayName}</span>
+          <span class=\"model-dropdown\" role=\"listbox\" aria-label=\"Select AI model\">
+            ${otherModels.map(model => `<span class=\"model-option\" data-model=\"${model.id}\" tabindex=\"0\" role=\"option\" aria-label=\"Switch to ${model.name}\">${model.icon}<span>${model.name}</span></span>`).join('')}
           </span>
         </span>
       </span>
@@ -1935,53 +1935,131 @@ export default class GalleryView {
   setupModelSelectorEvents() {
     const modelSelector = this.imageCountSubheader.querySelector('.model-selector');
     if (modelSelector) {
+      const currentModel = modelSelector.querySelector('.current-model');
+      const modelDropdown = modelSelector.querySelector('.model-dropdown');
       const modelOptions = modelSelector.querySelectorAll('.model-option');
+      
+      // Handle current model button
+      if (currentModel) {
+        currentModel.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.toggleModelDropdown(currentModel, modelDropdown);
+        });
+        
+        currentModel.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.toggleModelDropdown(currentModel, modelDropdown);
+          }
+        });
+        
+        currentModel.addEventListener('focus', () => {
+          currentModel.setAttribute('aria-expanded', 'false');
+        });
+      }
+      
+      // Handle model options
       modelOptions.forEach(option => {
         option.addEventListener('click', (e) => {
-          e.stopPropagation(); // Prevent click from bubbling
+          e.stopPropagation();
           const selectedModel = option.dataset.model;
-          
-          if (selectedModel !== this.currentModel) {
-            // Save menu state to sessionStorage
-            const promptInput = document.getElementById('prompt-input');
-            const suffixInput = document.getElementById('prompt-suffix');
-            const categoryIds = ['cat-presentation', 'cat-subject', 'cat-appearance', 'cat-clothing', 'cat-pose', 'cat-emotion', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
-            const checkboxes = {};
-            categoryIds.forEach(id => {
-              const cb = document.getElementById(id);
-              if (cb) checkboxes[id] = cb.checked;
-            });
-            const aspectRatioSelect = document.getElementById('aspect-ratio-select');
-            const customAspectRatioInput = document.getElementById('custom-aspect-ratio-input');
-            
-            // Get the actual aspect ratio value (custom input if custom is selected)
-            let aspectRatioValue = '1:1';
-            if (aspectRatioSelect) {
-              if (aspectRatioSelect.value === 'custom' && customAspectRatioInput) {
-                aspectRatioValue = customAspectRatioInput.value.trim() || '1:1';
-              } else {
-                aspectRatioValue = aspectRatioSelect.value;
-              }
-            }
-            
-            const state = {
-              prompt: promptInput ? promptInput.value : '',
-              suffix: suffixInput ? suffixInput.value : '',
-              aspectRatio: aspectRatioValue,
-              checkboxes
-            };
-            sessionStorage.setItem('prompteraid-menu-state', JSON.stringify(state));
-            sessionStorage.setItem('prompteraid-model-switch', '1');
-
-            this.currentModel = selectedModel;
-            // Dispatch custom event for model change
-            const event = new CustomEvent('modelChange', { 
-              detail: { model: selectedModel } 
-            });
-            document.dispatchEvent(event);
+          this.handleModelSelection(selectedModel);
+          this.closeModelDropdown(currentModel, modelDropdown);
+        });
+        
+        option.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const selectedModel = option.dataset.model;
+            this.handleModelSelection(selectedModel);
+            this.closeModelDropdown(currentModel, modelDropdown);
+          } else if (e.key === 'Escape') {
+            e.preventDefault();
+            this.closeModelDropdown(currentModel, modelDropdown);
+            currentModel?.focus();
           }
         });
       });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!modelSelector.contains(e.target)) {
+          this.closeModelDropdown(currentModel, modelDropdown);
+        }
+      });
+    }
+  }
+
+  toggleModelDropdown(currentModel, modelDropdown) {
+    const isExpanded = currentModel.getAttribute('aria-expanded') === 'true';
+    if (isExpanded) {
+      this.closeModelDropdown(currentModel, modelDropdown);
+    } else {
+      this.openModelDropdown(currentModel, modelDropdown);
+    }
+  }
+
+  openModelDropdown(currentModel, modelDropdown) {
+    currentModel.setAttribute('aria-expanded', 'true');
+    modelDropdown.style.opacity = '1';
+    modelDropdown.style.visibility = 'visible';
+    modelDropdown.style.pointerEvents = 'auto';
+    modelDropdown.style.transform = 'translateY(0) translateX(-50%)';
+    
+    // Focus first option
+    const firstOption = modelDropdown.querySelector('.model-option');
+    if (firstOption) {
+      firstOption.focus();
+    }
+  }
+
+  closeModelDropdown(currentModel, modelDropdown) {
+    currentModel.setAttribute('aria-expanded', 'false');
+    modelDropdown.style.opacity = '0';
+    modelDropdown.style.visibility = 'hidden';
+    modelDropdown.style.pointerEvents = 'none';
+    modelDropdown.style.transform = 'translateY(5px) translateX(-50%)';
+  }
+
+  handleModelSelection(selectedModel) {
+    if (selectedModel !== this.currentModel) {
+      // Save menu state to sessionStorage
+      const promptInput = document.getElementById('prompt-input');
+      const suffixInput = document.getElementById('prompt-suffix');
+      const categoryIds = ['cat-presentation', 'cat-subject', 'cat-appearance', 'cat-clothing', 'cat-pose', 'cat-emotion', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
+      const checkboxes = {};
+      categoryIds.forEach(id => {
+        const cb = document.getElementById(id);
+        if (cb) checkboxes[id] = cb.checked;
+      });
+      const aspectRatioSelect = document.getElementById('aspect-ratio-select');
+      const customAspectRatioInput = document.getElementById('custom-aspect-ratio-input');
+      
+      // Get the actual aspect ratio value (custom input if custom is selected)
+      let aspectRatioValue = '1:1';
+      if (aspectRatioSelect) {
+        if (aspectRatioSelect.value === 'custom' && customAspectRatioInput) {
+          aspectRatioValue = customAspectRatioInput.value.trim() || '1:1';
+        } else {
+          aspectRatioValue = aspectRatioSelect.value;
+        }
+      }
+      
+      const state = {
+        prompt: promptInput ? promptInput.value : '',
+        suffix: suffixInput ? suffixInput.value : '',
+        aspectRatio: aspectRatioValue,
+        checkboxes
+      };
+      sessionStorage.setItem('prompteraid-menu-state', JSON.stringify(state));
+      sessionStorage.setItem('prompteraid-model-switch', '1');
+
+      this.currentModel = selectedModel;
+      // Dispatch custom event for model change
+      const event = new CustomEvent('modelChange', { 
+        detail: { model: selectedModel } 
+      });
+      document.dispatchEvent(event);
     }
   }
 
