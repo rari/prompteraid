@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
   tour.addStep({
     title: 'Generate Prompt',
     text: 'Use the prompt generator or create your own.',
-    attachTo: { element: '#generate-prompt-btn', on: 'top' },
+    attachTo: { element: '#prompt-input', on: 'top' },
     scrollTo: false,
     scrollToHandler: () => {
       // Scroll the prompt area into view
