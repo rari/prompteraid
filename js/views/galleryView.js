@@ -1918,9 +1918,9 @@ export default class GalleryView {
       <span class=\"image-count-number\">${totalCount}</span>
       <span class=\"subheader-inline\">pregenerated sref references for
         <span class=\"model-selector-inline model-selector\">
-          <span class=\"current-model\" tabindex=\"0\" role=\"button\" aria-label=\"Current model: ${modelDisplayName}. Click or press Enter to change model.\" aria-haspopup=\"listbox\" aria-expanded=\"false\">${modelDisplayName}</span>
-          <span class=\"model-dropdown\" role=\"listbox\" aria-label=\"Select AI model\">
-            ${otherModels.map(model => `<span class=\"model-option\" data-model=\"${model.id}\" tabindex=\"0\" role=\"option\" aria-label=\"Switch to ${model.name}\">${model.icon}<span>${model.name}</span></span>`).join('')}
+          <span class=\"current-model\" tabindex=\"0\" role=\"button\">${modelDisplayName}</span>
+          <span class=\"model-dropdown\" role=\"listbox\">
+            ${otherModels.map(model => `<span class=\"model-option\" data-model=\"${model.id}\" tabindex=\"0\" role=\"option\">${model.icon}<span>${model.name}</span></span>`).join('')}
           </span>
         </span>
       </span>
