@@ -199,9 +199,11 @@
   <div class="container">
     <header>
       <div class="header-glass-bar">
-        <button class="header-signin-btn" id="open-auth-modal" aria-haspopup="dialog" aria-controls="auth-modal" title="Sign in">
-          Sign In
+        <span class="header-signin-label">Sign In</span>
+        <button id="discord-login-btn" class="header-signin-icon" title="Sign in with Discord" aria-label="Sign in with Discord">
           <i class="fa-brands fa-discord"></i>
+        </button>
+        <button id="email-login-btn" class="header-signin-icon" title="Sign in with Email" aria-label="Sign in with Email">
           <i class="fa-solid fa-envelope"></i>
         </button>
         <div id="user-info" style="display:none; align-items:center; gap:0.5em;">
