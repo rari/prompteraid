@@ -448,9 +448,10 @@
 }
 
 .model-option:focus {
-  outline: 2px solid var(--neon-pink);
-  outline-offset: -2px;
-  background-color: var(--gray-100);
+  color: var(--neon-pink);
+  outline: none;
+  background: none;
+  box-shadow: none;
 }
 
 .model-option:hover {
