@@ -155,6 +155,11 @@ export default class GalleryView {
     
     // Add toggle preview functionality
     this.addTogglePreviewFunctionality();
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      this.stopBubbleAnimation();
+    });
 
     // Initialize buttons
     this.initializeButtons();
@@ -2146,15 +2151,24 @@ export default class GalleryView {
     const titleText = titleContainer.querySelector('.cute-title');
     if (!titleText) return;
     
+    // Performance guard: Disable bubble effects on low-end devices
+    if (this.shouldDisableBubbleEffects()) {
+      console.log('Bubble effects disabled for performance');
+      return;
+    }
+    
+    // Performance optimization: Use requestAnimationFrame instead of setInterval
+    this.bubbleAnimationId = null;
+    this.hoverBubbleAnimationId = null;
+    this.isBubbleAnimationActive = true;
+    
     // Create bubbles on click
     titleContainer.addEventListener('click', (e) => {
       this.createBubbles(e, titleContainer, titleText, 10, 15);
     });
     
-    // Create bubbles continuously always - more frequently now (500ms instead of 800ms)
-    setInterval(() => {
-      this.createBubbles(null, titleContainer, titleText, 1, 2);
-    }, 500);
+    // Create bubbles continuously using requestAnimationFrame
+    this.startBubbleAnimation(titleContainer, titleText);
     
     // Track mouse position for hover effect
     let mouseX = null;
@@ -2170,38 +2184,90 @@ export default class GalleryView {
       mouseY = null;
     });
     
-    // Create bubbles that follow the cursor when hovering - more frequently (200ms instead of 300ms)
-    setInterval(() => {
-      if (mouseX !== null && mouseY !== null) {
-        const e = { clientX: mouseX, clientY: mouseY };
-        this.createBubbles(e, titleContainer, titleText, 1, 2);
+    // Create bubbles that follow the cursor when hovering using requestAnimationFrame
+    this.startHoverBubbleAnimation(titleContainer, titleText, () => ({ clientX: mouseX, clientY: mouseY }));
+  }
+
+  startBubbleAnimation(container, titleText) {
+    const animate = () => {
+      if (!this.isBubbleAnimationActive) return;
+      
+      this.createBubbles(null, container, titleText, 1, 2);
+      this.bubbleAnimationId = requestAnimationFrame(animate);
+    };
+    
+    this.bubbleAnimationId = requestAnimationFrame(animate);
+  }
+
+  startHoverBubbleAnimation(container, titleText, getMousePosition) {
+    const animate = () => {
+      if (!this.isBubbleAnimationActive) return;
+      
+      const mousePos = getMousePosition();
+      if (mousePos.clientX !== null && mousePos.clientY !== null) {
+        this.createBubbles(mousePos, container, titleText, 1, 2);
       }
-    }, 200);
+      
+      this.hoverBubbleAnimationId = requestAnimationFrame(animate);
+    };
+    
+    this.hoverBubbleAnimationId = requestAnimationFrame(animate);
+  }
+
+  stopBubbleAnimation() {
+    this.isBubbleAnimationActive = false;
+    
+    if (this.bubbleAnimationId) {
+      cancelAnimationFrame(this.bubbleAnimationId);
+      this.bubbleAnimationId = null;
+    }
+    
+    if (this.hoverBubbleAnimationId) {
+      cancelAnimationFrame(this.hoverBubbleAnimationId);
+      this.hoverBubbleAnimationId = null;
+    }
+  }
+
+  shouldDisableBubbleEffects() {
+    // Check for low-end devices or performance issues
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isLowMemory = navigator.deviceMemory && navigator.deviceMemory < 4; // Less than 4GB
+    const isSlowConnection = navigator.connection && navigator.connection.effectiveType === 'slow-2g';
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    // Disable if any performance concern is detected
+    return isMobile || isLowMemory || isSlowConnection || prefersReducedMotion;
   }
   
   createBubbles(e, container, titleText, minBubbles, maxBubbles) {
-    // Create minBubbles-maxBubbles bubbles
+    // Performance optimization: Batch DOM operations
     const bubbleCount = Math.floor(Math.random() * (maxBubbles - minBubbles + 1)) + minBubbles;
-      
-    // Get the neon colors from CSS variables
-    const neonColors = [
-      getComputedStyle(document.documentElement).getPropertyValue('--neon-pink').trim(),
-      getComputedStyle(document.documentElement).getPropertyValue('--neon-purple').trim(),
-      getComputedStyle(document.documentElement).getPropertyValue('--neon-yellow').trim(),
-      getComputedStyle(document.documentElement).getPropertyValue('--neon-orange').trim(),
-      getComputedStyle(document.documentElement).getPropertyValue('--neon-teal').trim(),
-      getComputedStyle(document.documentElement).getPropertyValue('--neon-blue').trim()
-    ];
+    
+    // Get the neon colors from CSS variables (cache this)
+    if (!this.neonColors) {
+      this.neonColors = [
+        getComputedStyle(document.documentElement).getPropertyValue('--neon-pink').trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--neon-purple').trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--neon-yellow').trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--neon-orange').trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--neon-teal').trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--neon-blue').trim()
+      ];
+    }
     
     const containerRect = container.getBoundingClientRect();
     const titleRect = titleText.getBoundingClientRect();
+    
+    // Create document fragment for batching
+    const fragment = document.createDocumentFragment();
+    const bubbles = [];
+    
+    for (let i = 0; i < bubbleCount; i++) {
+      // Create a bubble
+      const bubble = document.createElement('div');
+      bubble.classList.add('bubble');
       
-      for (let i = 0; i < bubbleCount; i++) {
-        // Create a bubble
-        const bubble = document.createElement('div');
-        bubble.classList.add('bubble');
-        
-      // Position bubbles only above the title text:
+      // Position bubbles only above the title text
       let x, y;
       
       if (e && e.clientX) {
@@ -2226,31 +2292,37 @@ export default class GalleryView {
       
       // Random size - slightly smaller for more delicate effect
       const size = Math.floor(Math.random() * 25) + 6; // 6-30px
-        
+      
       // Random color from neon palette
-      const color = neonColors[Math.floor(Math.random() * neonColors.length)];
-        
+      const color = this.neonColors[Math.floor(Math.random() * this.neonColors.length)];
+      
       // Random animation duration - faster now
       const duration = Math.random() * 2 + 1; // 1-3s instead of 2-5s
-        
-        // Set bubble styles
-        bubble.style.width = `${size}px`;
-        bubble.style.height = `${size}px`;
-        bubble.style.left = `${x}px`;
-        bubble.style.top = `${y}px`;
-        bubble.style.background = `radial-gradient(circle at 30% 30%, ${color}80, ${color}20)`;
-        bubble.style.animation = `float-up ${duration}s ease-in forwards`;
-        
-        // Add to DOM
-      container.appendChild(bubble);
-        
-        // Remove after animation completes
-        setTimeout(() => {
-          if (bubble.parentNode) {
-            bubble.parentNode.removeChild(bubble);
-          }
-        }, duration * 1000);
-      }
+      
+      // Set bubble styles
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      bubble.style.left = `${x}px`;
+      bubble.style.top = `${y}px`;
+      bubble.style.background = `radial-gradient(circle at 30% 30%, ${color}80, ${color}20)`;
+      bubble.style.animation = `float-up ${duration}s ease-in forwards`;
+      
+      // Add to fragment for batching
+      fragment.appendChild(bubble);
+      bubbles.push({ bubble, duration });
+    }
+    
+    // Batch add all bubbles to DOM
+    container.appendChild(fragment);
+    
+    // Batch remove bubbles after animation completes
+    bubbles.forEach(({ bubble, duration }) => {
+      setTimeout(() => {
+        if (bubble.parentNode) {
+          bubble.parentNode.removeChild(bubble);
+        }
+      }, duration * 1000);
+    });
   }
 
   addTogglePreviewFunctionality() {
