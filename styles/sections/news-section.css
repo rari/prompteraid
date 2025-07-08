@@ -657,3 +657,9 @@ html.dark-mode .model-option {
   border: 1.5px solid var(--neon-purple, #9333ea);
 }
 
+.shepherd-element.shepherd-theme-glass,
+.shepherd-theme-glass {
+  background: none !important;
+  box-shadow: none !important;
+}
+
