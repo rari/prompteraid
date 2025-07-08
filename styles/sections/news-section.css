@@ -395,6 +395,13 @@
   box-shadow: 0 0 8px 0 rgba(0,229,255,0.12);
   border-bottom: none;
   text-decoration: none;
+  outline: none;
+}
+
+.model-selector .current-model:focus {
+  outline: 2px solid var(--neon-pink);
+  outline-offset: 2px;
+  box-shadow: 0 0 8px 0 rgba(0,229,255,0.12), 0 0 0 2px var(--neon-pink);
 }
 @keyframes model-pill-gradient {
   0% { background-position: 0% 50%; }
@@ -437,6 +444,13 @@
   text-align: center;
   color: var(--text-primary);
   cursor: pointer;
+  outline: none;
+}
+
+.model-option:focus {
+  outline: 2px solid var(--neon-pink);
+  outline-offset: -2px;
+  background-color: var(--gray-100);
 }
 
 .model-option:hover {
