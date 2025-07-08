@@ -1,0 +1,121 @@
+/**
+ * Shared prompt building utilities for PrompterAid
+ * 
+ * This module contains common logic for building AI art prompts
+ * that is shared between different prompt generation components.
+ */
+
+/**
+ * Build a logical, readable prompt structure from word parts
+ * @param {Object} parts - Object containing category words (Presentation, Emotion, Subject, etc.)
+ * @returns {string} Formatted prompt string
+ */
+export function buildLogicalPrompt(parts) {
+  // Build a logical, readable prompt structure
+  let prompt = '';
+  
+  // <presentation>
+  if (parts.Presentation) {
+    prompt += parts.Presentation + ' of ';
+  }
+  
+  // <emotion> <subject>
+  if (parts.Emotion) {
+    prompt += parts.Emotion + ' ';
+  }
+  if (parts.Subject) {
+    prompt += parts.Subject;
+  }
+  
+  // wearing <clothing>
+  if (parts.Clothing) {
+    prompt += ' wearing ' + parts.Clothing;
+  }
+  
+  // with <appearance>
+  if (parts.Appearance) {
+    prompt += ' with ' + parts.Appearance;
+  }
+  
+  // is <pose>
+  if (parts.Pose) {
+    prompt += ' is ' + parts.Pose;
+  }
+  
+  // at <setting>
+  if (parts.Setting) {
+    prompt += ' at ' + parts.Setting;
+  }
+  
+  // , <lighting>
+  if (parts.Lighting) {
+    prompt += ', ' + parts.Lighting;
+  }
+  
+  // , <style>
+  if (parts.Style) {
+    prompt += ', ' + parts.Style;
+  }
+  
+  // , <details>
+  if (parts.Details) {
+    prompt += ', ' + parts.Details;
+  }
+  
+  // Clean up: remove extra spaces and commas
+  prompt = prompt.replace(/\s+/g, ' ').replace(/,\s*,/g, ',').replace(/^,\s*/, '').replace(/,\s*$/, '');
+  
+  return prompt;
+}
+
+/**
+ * Standard category configuration for prompt generation
+ */
+export const PROMPT_CATEGORIES = {
+  ids: ['cat-presentation', 'cat-subject', 'cat-appearance', 'cat-clothing', 'cat-pose', 'cat-emotion', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'],
+  names: ['Presentation', 'Subject', 'Appearance', 'Clothing', 'Pose', 'Emotion', 'Setting', 'Lighting', 'Style', 'Details']
+};
+
+/**
+ * Get selected categories from checkboxes or randomize
+ * @param {boolean} isRandomizeMode - Whether to randomize category selection
+ * @returns {Array} Array of selected category names
+ */
+export function getSelectedCategories(isRandomizeMode = false) {
+  const selectedCategories = [];
+  
+  if (isRandomizeMode) {
+    // Randomly select categories (Subject always included)
+    const available = PROMPT_CATEGORIES.names.filter(n => n !== 'Subject');
+    // choose 2-5 categories total including Subject
+    const numToSelect = Math.floor(Math.random() * 4) + 2;
+    selectedCategories.push('Subject');
+    const shuffled = shuffle([...available]);
+    for (let i = 0; i < Math.min(numToSelect - 1, shuffled.length); i++) {
+      selectedCategories.push(shuffled[i]);
+    }
+  } else {
+    // Get selected categories from checkboxes
+    PROMPT_CATEGORIES.ids.forEach((id, index) => {
+      const checkbox = document.getElementById(id);
+      if (checkbox && checkbox.checked) {
+        selectedCategories.push(PROMPT_CATEGORIES.names[index]);
+      }
+    });
+  }
+  
+  return selectedCategories;
+}
+
+/**
+ * Shuffle array using Fisher-Yates algorithm
+ * @param {Array} array - Array to shuffle
+ * @returns {Array} Shuffled array
+ */
+export function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+} 

@@ -537,6 +537,8 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   background: var(--background);
   color: var(--text-primary);
   font-size: var(--font-size-sm);
+  height: calc(2.5rem + 2px); /* Match checkbox label height */
+  box-sizing: border-box;
 }
 
 .setting-row input[type="text"]:focus {
@@ -564,6 +566,8 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   font-size: var(--font-size-sm);
   flex: 0 0 auto;
   min-width: 100px;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .checkbox-label:hover {
@@ -729,6 +733,8 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
   font-size: var(--font-size-sm);
   flex: 0 0 auto;
   min-width: 100px;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .sticky-prompt-settings-panel .checkbox-label:hover {
@@ -989,4 +995,15 @@ html.dark-mode .model-option i {
       transform: translateY(0);
     }
   }
+}
+
+/* Quadrant flip button animation */
+.flip-animate {
+  transform: scale(1.18);
+  color: var(--neon-pink, #ff1493) !important;
+  transition: transform 0.18s cubic-bezier(0.4,0,0.2,1), color 0.18s cubic-bezier(0.4,0,0.2,1);
+}
+
+.quadrant-flip-button i {
+  transition: transform 0.18s cubic-bezier(0.4,0,0.2,1), color 0.18s cubic-bezier(0.4,0,0.2,1);
 }

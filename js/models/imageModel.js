@@ -31,6 +31,10 @@
  * - Coordinates prompt generation with selected styles
  * - Provides fallback mechanisms for data loading
  */
+import { supabase } from '../utils/supabaseClient.js';
+import { createItem, deleteItem, readItems, deleteItems } from '../utils/supabaseCrud.js';
+import { getCurrentUser } from '../utils/auth.js';
+
 export default class ImageModel {
   constructor() {
     this.images = [];
@@ -65,31 +69,24 @@ export default class ImageModel {
     try {
       const favsKey = `prompteraid_favoriteImages_${this.currentModel}`;
       const favs = JSON.parse(localStorage.getItem(favsKey));
+      console.log(`[DEBUG] loadFromStorage: Loading favorites for model ${this.currentModel}:`, favs);
       if (Array.isArray(favs)) {
         this.favoriteImages = new Set(favs);
+        console.log(`[DEBUG] loadFromStorage: Set favoriteImages to:`, Array.from(this.favoriteImages));
       }
+      // Always clear localStorage for this model after loading
+      localStorage.removeItem(favsKey);
+      console.log(`[DEBUG] loadFromStorage: Cleared localStorage key: ${favsKey}`);
       
       // Load Discord/Website mode preference (which is global)
       const isDiscordMode = localStorage.getItem('prompteraid_isDiscordMode');
       if (isDiscordMode !== null) {
         this.isDiscordMode = isDiscordMode === 'true';
       }
-      
-      // Load aspect ratio preference
       const aspectRatio = localStorage.getItem('prompteraid_aspectRatio');
       if (aspectRatio !== null) {
         this.aspectRatio = aspectRatio;
       }
-      
-      // Do NOT load basePrompt or suffix from storage anymore
-      // const basePrompt = localStorage.getItem('prompteraid_basePrompt');
-      // if (basePrompt !== null) {
-      //   this.basePrompt = basePrompt;
-      // }
-      // const suffix = localStorage.getItem('prompteraid_suffix');
-      // if (suffix !== null) {
-      //   this.suffix = suffix;
-      // }
     } catch (e) {
       // Show a friendly error notification
       console.warn('Error loading preferences from local storage:', e);
@@ -102,25 +99,28 @@ export default class ImageModel {
     }
   }
 
-  saveToStorage() {
+  async saveToStorage(user = null) {
     try {
-      // Save model-specific favorites
-      const favsKey = `prompteraid_favoriteImages_${this.currentModel}`;
-      localStorage.setItem(favsKey, JSON.stringify(Array.from(this.favoriteImages)));
+      // If no user provided, check if user is logged in
+      if (!user) {
+        user = await getCurrentUser();
+      }
+
+      // Only save favorites to localStorage if user is NOT logged in
+      if (!user) {
+        const favsKey = `prompteraid_favoriteImages_${this.currentModel}`;
+        console.log(`[DEBUG] saveToStorage: Saving favorites for model ${this.currentModel}:`, Array.from(this.favoriteImages));
+        localStorage.setItem(favsKey, JSON.stringify(Array.from(this.favoriteImages)));
+        console.log(`[DEBUG] saveToStorage: Saved to localStorage key: ${favsKey}`);
+      } else {
+        console.log(`[DEBUG] saveToStorage: User is logged in, skipping favorites save to localStorage`);
+      }
       
-      // Save global preferences
-      localStorage.setItem('prompteraid_isDiscordMode', this.isDiscordMode);
+      // Save Discord/Website mode preference (which is global)
+      localStorage.setItem('prompteraid_isDiscordMode', this.isDiscordMode.toString());
       localStorage.setItem('prompteraid_aspectRatio', this.aspectRatio);
-      // Do NOT save basePrompt or suffix anymore
-      // localStorage.setItem('prompteraid_basePrompt', this.basePrompt);
-      // localStorage.setItem('prompteraid_suffix', this.suffix);
     } catch (e) {
-      // Show a friendly error notification
       console.warn('Error saving preferences to local storage:', e);
-      const event = new CustomEvent('storage-error', { 
-        detail: { message: 'Unable to save your preferences. Your favorites might not be remembered.' } 
-      });
-      document.dispatchEvent(event);
     }
   }
 
@@ -312,13 +312,65 @@ export default class ImageModel {
     return this.selectedImages.has(imageId);
   }
 
-  toggleImageFavorite(imageId) {
-    if (this.favoriteImages.has(imageId)) {
-      this.favoriteImages.delete(imageId);
+  async toggleImageFavorite(imageId, user = null, currentModel = null) {
+    const isFavorite = this.favoriteImages.has(imageId);
+    console.log(`[DEBUG] toggleImageFavorite: Toggling image ${imageId}, currently favorite: ${isFavorite}, user: ${user ? user.id : 'null'}, model: ${currentModel}`);
+    
+    if (user && currentModel) {
+      // User is logged in, use Supabase only
+      if (isFavorite) {
+        console.log(`[DEBUG] toggleImageFavorite: Removing from Supabase`);
+        try {
+          const { data, error } = await deleteItem(supabase, 'user_favorites', {
+            user_id: user.id,
+            image_id: imageId,
+            model: currentModel
+          });
+          
+          if (error) {
+            console.error(`[DEBUG] toggleImageFavorite: Error deleting from Supabase:`, error);
+            return this.favoriteImages.has(imageId); // Return current state on error
+          }
+          
+          console.log(`[DEBUG] toggleImageFavorite: Successfully deleted from Supabase:`, data);
+          this.favoriteImages.delete(imageId);
+        } catch (error) {
+          console.error(`[DEBUG] toggleImageFavorite: Exception deleting from Supabase:`, error);
+          return this.favoriteImages.has(imageId); // Return current state on error
+        }
+      } else {
+        console.log(`[DEBUG] toggleImageFavorite: Adding to Supabase`);
+        try {
+          const { data, error } = await createItem(supabase, 'user_favorites', {
+            user_id: user.id,
+            image_id: imageId,
+            model: currentModel
+          });
+          
+          if (error) {
+            console.error(`[DEBUG] toggleImageFavorite: Error adding to Supabase:`, error);
+            return this.favoriteImages.has(imageId); // Return current state on error
+          }
+          
+          console.log(`[DEBUG] toggleImageFavorite: Successfully added to Supabase:`, data);
+          this.favoriteImages.add(imageId);
+        } catch (error) {
+          console.error(`[DEBUG] toggleImageFavorite: Exception adding to Supabase:`, error);
+          return this.favoriteImages.has(imageId); // Return current state on error
+        }
+      }
+      // Do NOT save to localStorage when logged in
+      console.log(`[DEBUG] toggleImageFavorite: After Supabase operation, favoriteImages:`, Array.from(this.favoriteImages));
     } else {
-      this.favoriteImages.add(imageId);
+      // Not logged in, use localStorage
+      if (isFavorite) {
+        this.favoriteImages.delete(imageId);
+      } else {
+        this.favoriteImages.add(imageId);
+      }
+      this.saveToStorage();
+      console.log(`[DEBUG] toggleImageFavorite: After localStorage operation, favoriteImages:`, Array.from(this.favoriteImages));
     }
-    this.saveToStorage();
     return this.favoriteImages.has(imageId);
   }
 
@@ -404,7 +456,9 @@ export default class ImageModel {
     }
 
     const srefsString = srefs.length > 0 ? `--sref ${srefs.join(' ')}` : '';
-    const aspectRatioString = `--ar ${this.aspectRatio}`;
+    // Only include aspect ratio if enabled
+    const aspectRatioEnabled = localStorage.getItem('prompteraid_enable_aspect_ratio') === 'true';
+    const aspectRatioString = aspectRatioEnabled ? `--ar ${this.aspectRatio}` : '';
     const prefix = this.isDiscordMode ? '/imagine prompt: ' : '';
     
     // Combine all parts, ensuring there are spaces where needed
@@ -595,6 +649,117 @@ export default class ImageModel {
       console.error('Error importing favorites:', e);
       throw new Error('Could not parse the imported file. Please make sure it is a valid favorites file.');
     }
+  }
+
+  async loadFavoritesFromSupabase(user, currentModel) {
+    try {
+      console.log(`[DEBUG] loadFavoritesFromSupabase: Loading favorites for user ${user.id}, model ${currentModel}`);
+      const { data, error } = await readItems(supabase, 'user_favorites', {
+        user_id: user.id,
+        model: currentModel
+      });
+      
+      if (error) {
+        console.error('Error loading favorites from Supabase:', error);
+        return;
+      }
+      
+      console.log(`[DEBUG] loadFavoritesFromSupabase: Received data from Supabase:`, data);
+      this.favoriteImages = new Set(data.map(row => row.image_id));
+      console.log(`[DEBUG] loadFavoritesFromSupabase: Set favoriteImages to:`, Array.from(this.favoriteImages));
+    } catch (error) {
+      console.error('Error loading favorites from Supabase:', error);
+    }
+  }
+
+  async syncFavoritesToSupabase(user, currentModel) {
+    try {
+      // Get localStorage favorites
+      const favsKey = `prompteraid_favoriteImages_${currentModel}`;
+      const localFavorites = JSON.parse(localStorage.getItem(favsKey) || '[]');
+      console.log(`[DEBUG] syncFavoritesToSupabase: Found ${localFavorites.length} favorites in localStorage for model ${currentModel}:`, localFavorites);
+      
+      if (localFavorites.length === 0) {
+        console.log(`[DEBUG] syncFavoritesToSupabase: No localStorage favorites to sync`);
+        return;
+      }
+
+      // Get existing Supabase favorites
+      const { data: existingFavorites, error: readError } = await readItems(supabase, 'user_favorites', {
+        user_id: user.id,
+        model: currentModel
+      });
+      
+      if (readError) {
+        console.error('Error reading existing favorites from Supabase:', readError);
+        return;
+      }
+      
+      console.log(`[DEBUG] syncFavoritesToSupabase: Found ${existingFavorites.length} existing favorites in Supabase:`, existingFavorites.map(f => f.image_id));
+      
+      const existingIds = new Set(existingFavorites.map(f => f.image_id));
+      const newFavorites = localFavorites.filter(id => !existingIds.has(id));
+      
+      console.log(`[DEBUG] syncFavoritesToSupabase: ${newFavorites.length} new favorites to add:`, newFavorites);
+      
+      // Add new favorites to Supabase
+      for (const imageId of newFavorites) {
+        await createItem(supabase, 'user_favorites', {
+          user_id: user.id,
+          image_id: imageId,
+          model: currentModel
+        });
+      }
+      
+      // Clear localStorage after successful sync
+      localStorage.removeItem(favsKey);
+      console.log(`[DEBUG] syncFavoritesToSupabase: Cleared localStorage key: ${favsKey}`);
+      
+      // Update in-memory favorites
+      this.favoriteImages = new Set([...existingIds, ...newFavorites]);
+      console.log(`[DEBUG] syncFavoritesToSupabase: Updated in-memory favorites:`, Array.from(this.favoriteImages));
+      
+    } catch (error) {
+      console.error('Error syncing favorites to Supabase:', error);
+    }
+  }
+
+  async clearAllFavorites(user = null, currentModel = null) {
+    console.log(`[DEBUG] clearAllFavorites: Clearing all favorites, user: ${user ? user.id : 'null'}, model: ${currentModel}`);
+    
+    const modelToUse = currentModel || this.currentModel;
+    let success = true;
+    
+    // Always clear from localStorage regardless of login status
+    const favsKey = `prompteraid_favoriteImages_${modelToUse}`;
+    localStorage.removeItem(favsKey);
+    console.log(`[DEBUG] clearAllFavorites: Cleared favorites from localStorage key: ${favsKey}`);
+    
+    // If user is logged in, also clear from Supabase
+    if (user && modelToUse) {
+      try {
+        const { error } = await deleteItems(supabase, 'user_favorites', {
+          user_id: user.id,
+          model: modelToUse
+        });
+        
+        if (error) {
+          console.error('Error clearing favorites from Supabase:', error);
+          success = false;
+        } else {
+          console.log(`[DEBUG] clearAllFavorites: Cleared favorites from Supabase`);
+        }
+      } catch (error) {
+        console.error('Error clearing favorites from Supabase:', error);
+        success = false;
+      }
+    }
+    
+    // Always clear in-memory favorites
+    this.favoriteImages.clear();
+    console.log(`[DEBUG] clearAllFavorites: Cleared in-memory favorites`);
+    
+    return success;
   }
 
   getNewImages() {

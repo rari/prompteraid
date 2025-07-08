@@ -159,6 +159,8 @@ class PromptInjector{
     }
   }
   
+
+
   buildLogicalPrompt(parts) {
     // Build a logical, readable prompt structure
     let prompt = '';

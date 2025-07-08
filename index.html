@@ -198,6 +198,19 @@
   <a href="#gallery-top" class="skip-link">Skip to main content</a>
   <div class="container">
     <header>
+      <div class="header-glass-bar">
+        <button class="header-signin-btn" id="open-auth-modal" aria-haspopup="dialog" aria-controls="auth-modal" title="Sign in">
+          Sign In
+          <i class="fa-brands fa-discord"></i>
+          <i class="fa-solid fa-envelope"></i>
+        </button>
+        <div id="user-info" style="display:none; align-items:center; gap:0.5em;">
+          <span id="user-email" style="font-weight:600;"></span>
+          <button id="sign-out-btn" title="Sign out" style="background:none; border:none; cursor:pointer; color:var(--neon-pink); font-size:1.2em;">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
       <h1 class="cute-title-container">
         <span class="emoji-prefix">✨🎨</span>
         <span class="cute-title">PrompterAid</span>
@@ -269,10 +282,10 @@
                 <i class="fa-solid fa-wand-magic wand-magic-icon"></i>
                 <i class="fa-solid fa-wand-magic-sparkles sparkle-wand-icon"></i>
               </button>
-              <button id="prompt-settings-btn" class="action-button prompt-settings" title="Prompt generator settings"><i class="fas fa-cog"></i></button>
+              <button id="prompt-settings-btn" class="action-button prompt-settings" title="Prompt generator settings" aria-controls="prompt-settings-panel" aria-expanded="false"><i class="fas fa-cog"></i></button>
             </div>
           </div>
-          <div id="prompt-settings-panel" class="prompt-settings-panel hidden">
+          <div id="prompt-settings-panel" class="prompt-settings-panel hidden" aria-hidden="true">
             <h3>Prompt Options</h3>
             <div class="setting-row">
               <label>Categories:</label>
@@ -328,20 +341,26 @@
               <input type="text" id="prompt-suffix" placeholder="e.g. --ar 16:9 --s 750">
             </div>
             <div class="setting-row">
-              <label for="aspect-ratio-select">Aspect Ratio:</label>
-              <select id="aspect-ratio-select" class="aspect-ratio-dropdown">
-                <option value="1:1">1:1 (Default)</option>
-                <option value="4:5">4:5 (Instagram Post)</option>
-                <option value="2:3">2:3 (Pinterest Pin)</option>
-                <option value="3:2">3:2 (Older Photo Format)</option>
-                <option value="5:4">5:4 (Facebook Group Cover Photo)</option>
-                <option value="4:3">4:3 (Legacy Video)</option>
-                <option value="1.91:1">1.91:1 (Facebook Ad)</option>
-                <option value="2:1">2:1 (Account Header)</option>
-                <option value="16:9">16:9 (YouTube Thumbnail)</option>
-                <option value="9:16">9:16 (Reels)</option>
-                <option value="custom">Custom Aspect Ratio</option>
-              </select>
+              <label for="aspect-ratio-select" style="margin-right: 0.75em;">Aspect Ratio:</label>
+              <div class="aspect-ratio-controls">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="enable-aspect-ratio" aria-label="Enable aspect ratio">
+                  <span>Enable Parameter</span>
+                </label>
+                <select id="aspect-ratio-select" class="aspect-ratio-dropdown">
+                  <option value="1:1">1:1 (Default)</option>
+                  <option value="4:5">4:5 (Instagram Post)</option>
+                  <option value="2:3">2:3 (Pinterest Pin)</option>
+                  <option value="3:2">3:2 (Older Photo Format)</option>
+                  <option value="5:4">5:4 (Facebook Group Cover Photo)</option>
+                  <option value="4:3">4:3 (Legacy Video)</option>
+                  <option value="1.91:1">1.91:1 (Facebook Ad)</option>
+                  <option value="2:1">2:1 (Account Header)</option>
+                  <option value="16:9">16:9 (YouTube Thumbnail)</option>
+                  <option value="9:16">9:16 (Reels)</option>
+                  <option value="custom">Custom Aspect Ratio</option>
+                </select>
+              </div>
             </div>
             <div class="setting-row custom-aspect-ratio-row hidden">
               <label for="custom-aspect-ratio-input">Custom Ratio:</label>
@@ -448,6 +467,10 @@
               <i class="fas fa-upload"></i>
               <span>Import</span>
             </button>
+            <button id="clear-favorites-button" class="action-button" title="Clear all favorites" aria-label="Clear all favorites">
+              <i class="fas fa-trash"></i>
+              <span>Clear</span>
+            </button>
             <input type="file" id="import-favorites-input" accept=".json" style="display: none;" aria-label="Select favorites file to import">
           </div>
         </div>
@@ -507,9 +530,11 @@
         <a href="https://hub.prompteraid.com/" class="footer-glass-link" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-users"></i> <span>Community Hub</span></a>
       </div>
       <div class="footer-glass-legal">
+        <a href="index.html">Home</a>
         <a href="docs.html">Documentation</a>
-        <a href="terms.html">Terms</a>
         <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="about.html">About</a>
       </div>
       <div class="footer-glass-credit">
         <span>Created with <span style="color:#f472b6">&#10084;&#65039;</span> by <a href="http://jennajuffuffles.carrd.co/" target="_blank" rel="noopener noreferrer" class="footer-author-link">JennaJuffuffles</a></span>
