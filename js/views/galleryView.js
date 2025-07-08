@@ -2157,61 +2157,30 @@ export default class GalleryView {
       return;
     }
     
-    // Performance optimization: Use requestAnimationFrame instead of setInterval
     this.bubbleAnimationId = null;
-    this.hoverBubbleAnimationId = null;
     this.isBubbleAnimationActive = true;
     
-    // Create bubbles on click
+    // Create bubbles on click (burst)
     titleContainer.addEventListener('click', (e) => {
       this.createBubbles(e, titleContainer, titleText, 10, 15);
     });
     
-    // Create bubbles continuously using requestAnimationFrame
+    // Throttled bubble animation (every 250ms)
     this.startBubbleAnimation(titleContainer, titleText);
-    
-    // Track mouse position for hover effect
-    let mouseX = null;
-    let mouseY = null;
-    
-    titleContainer.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    
-    titleContainer.addEventListener('mouseleave', () => {
-      mouseX = null;
-      mouseY = null;
-    });
-    
-    // Create bubbles that follow the cursor when hovering using requestAnimationFrame
-    this.startHoverBubbleAnimation(titleContainer, titleText, () => ({ clientX: mouseX, clientY: mouseY }));
   }
 
   startBubbleAnimation(container, titleText) {
-    const animate = () => {
+    let lastBubbleTime = 0;
+    const throttleMs = 250;
+    const animate = (now) => {
       if (!this.isBubbleAnimationActive) return;
-      
-      this.createBubbles(null, container, titleText, 1, 2);
+      if (!lastBubbleTime || now - lastBubbleTime >= throttleMs) {
+        this.createBubbles(null, container, titleText, 1, 2);
+        lastBubbleTime = now;
+      }
       this.bubbleAnimationId = requestAnimationFrame(animate);
     };
-    
     this.bubbleAnimationId = requestAnimationFrame(animate);
-  }
-
-  startHoverBubbleAnimation(container, titleText, getMousePosition) {
-    const animate = () => {
-      if (!this.isBubbleAnimationActive) return;
-      
-      const mousePos = getMousePosition();
-      if (mousePos.clientX !== null && mousePos.clientY !== null) {
-        this.createBubbles(mousePos, container, titleText, 1, 2);
-      }
-      
-      this.hoverBubbleAnimationId = requestAnimationFrame(animate);
-    };
-    
-    this.hoverBubbleAnimationId = requestAnimationFrame(animate);
   }
 
   stopBubbleAnimation() {
@@ -2220,11 +2189,6 @@ export default class GalleryView {
     if (this.bubbleAnimationId) {
       cancelAnimationFrame(this.bubbleAnimationId);
       this.bubbleAnimationId = null;
-    }
-    
-    if (this.hoverBubbleAnimationId) {
-      cancelAnimationFrame(this.hoverBubbleAnimationId);
-      this.hoverBubbleAnimationId = null;
     }
   }
 
