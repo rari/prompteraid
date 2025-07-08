@@ -752,7 +752,7 @@ export default class GalleryController {
       (imageId) => this.model.getWeight(imageId),
       (imageId) => this.model.getWeightColorIndex(imageId)
     );
-    
+
     // Keyboard shortcuts
     this.bindKeyboardShortcuts();
   }
