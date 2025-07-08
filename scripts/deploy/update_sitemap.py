@@ -27,11 +27,11 @@ def update_sitemap():
     
     # Define the pages in the sitemap and their corresponding file paths
     sitemap_pages = {
-        'https://rari.github.io/prompteraid/': 'index.html',
-        'https://rari.github.io/prompteraid/privacy.html': 'privacy.html',
-        'https://rari.github.io/prompteraid/terms.html': 'terms.html',
-        'https://rari.github.io/prompteraid/404.html': '404.html',
-        'https://rari.github.io/prompteraid/docs.html': 'docs.html'
+        'https://www.prompteraid.com/': 'index.html',
+        'https://www.prompteraid.com/privacy.html': 'privacy.html',
+        'https://www.prompteraid.com/terms.html': 'terms.html',
+        'https://www.prompteraid.com/docs.html': 'docs.html',
+        'https://www.prompteraid.com/about.html': 'about.html',
     }
     
     sitemap_path = Path('sitemap.xml')

@@ -1071,3 +1071,45 @@ html:not(.dark-mode):not(.light-mode) .footer-link:focus {
     gap: 0.7rem;
   }
 } 
+
+/* === HEADER GLASS BAR THEME STYLES === */
+
+/* System preference: dark */
+@media (prefers-color-scheme: dark) {
+  html:not(.dark-mode):not(.light-mode) .header-glass-bar {
+    background: rgba(30, 41, 59, 0.85);
+    border-bottom: 1.5px solid var(--border-color);
+    color: var(--text-primary);
+    box-shadow: 0 2px 16px 0 rgba(80,0,120,0.10);
+    backdrop-filter: blur(12px) saturate(1.2);
+  }
+}
+
+/* System preference: light */
+@media (prefers-color-scheme: light) {
+  html:not(.dark-mode):not(.light-mode) .header-glass-bar {
+    background: rgba(255, 255, 255, 0.85);
+    border-bottom: 1.5px solid var(--border-color);
+    color: var(--text-primary);
+    box-shadow: 0 2px 16px 0 rgba(80,180,255,0.10);
+    backdrop-filter: blur(12px) saturate(1.2);
+  }
+}
+
+/* Manual dark mode override */
+html.dark-mode .header-glass-bar {
+  background: rgba(30, 41, 59, 0.85);
+  border-bottom: 1.5px solid var(--border-color);
+  color: var(--text-primary);
+  box-shadow: 0 2px 16px 0 rgba(80,0,120,0.10);
+  backdrop-filter: blur(12px) saturate(1.2);
+}
+
+/* Manual light mode override */
+html.light-mode .header-glass-bar {
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom: 1.5px solid var(--border-color);
+  color: var(--text-primary);
+  box-shadow: 0 2px 16px 0 rgba(80,180,255,0.10);
+  backdrop-filter: blur(12px) saturate(1.2);
+} 

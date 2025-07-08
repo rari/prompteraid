@@ -1,5 +1,7 @@
 import AppController from './controllers/appController.js';
 import GalleryController from './controllers/galleryController.js';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { supabase } from './utils/supabaseClient.js';
 
 /**
  * PrompterAid Application Entry Point
@@ -77,4 +79,78 @@ document.addEventListener('DOMContentLoaded', () => {
   // Make controllers accessible globally for URL parameter handling and debugging
   window.appController = appController;
   window.galleryController = galleryController;
+
+  const headerSignInBtn = document.getElementById('open-auth-modal');
+  const userInfo = document.getElementById('user-info');
+  const userEmail = document.getElementById('user-email');
+  const signOutBtn = document.getElementById('sign-out-btn');
+
+  // Listen for auth state changes
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (session && session.user) {
+      // User is signed in
+      if (headerSignInBtn) headerSignInBtn.style.display = 'none';
+      if (userInfo && userEmail) {
+        userEmail.textContent = `Hi ${session.user.email}`;
+        userInfo.style.display = 'flex';
+      }
+    } else {
+      // User is signed out
+      if (headerSignInBtn) headerSignInBtn.style.display = '';
+      if (userInfo) userInfo.style.display = 'none';
+    }
+  });
+
+  // Sign out logic
+  if (signOutBtn) {
+    signOutBtn.addEventListener('click', async () => {
+      await supabase.auth.signOut();
+    });
+  }
+
+  // Header sign-in button logic
+  if (headerSignInBtn) {
+    const discordIcon = headerSignInBtn.querySelector('.fa-brands.fa-discord');
+    const emailIcon = headerSignInBtn.querySelector('.fa-envelope');
+    if (discordIcon) {
+      discordIcon.style.cursor = 'pointer';
+      discordIcon.setAttribute('tabindex', '0');
+      discordIcon.setAttribute('title', 'Sign in with Discord');
+      discordIcon.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        // Supabase Discord OAuth
+        await supabase.auth.signInWithOAuth({ provider: 'discord' });
+      });
+      discordIcon.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          discordIcon.click();
+        }
+      });
+    }
+    if (emailIcon) {
+      emailIcon.style.cursor = 'pointer';
+      emailIcon.setAttribute('tabindex', '0');
+      emailIcon.setAttribute('title', 'Sign in with Email');
+      emailIcon.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        // Prompt for email
+        const email = prompt('Enter your email to sign in:');
+        if (email) {
+          const { error } = await supabase.auth.signInWithOtp({ email });
+          if (error) {
+            alert('Error sending sign-in email: ' + error.message);
+          } else {
+            alert('Check your email for a sign-in link!');
+          }
+        }
+      });
+      emailIcon.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          emailIcon.click();
+        }
+      });
+    }
+  }
 });

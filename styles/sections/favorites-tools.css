@@ -1,0 +1,82 @@
+/* === Favorites Tools Bar ============================================== */
+.favorites-tools {
+  background-color: transparent;
+  border: none;
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 0;
+  box-shadow: none;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+
+.favorites-tools.hidden {
+  display: none;
+}
+
+.favorites-tools-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 1.2rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--neon-yellow) !important;
+  backdrop-filter: blur(12px) saturate(1.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 1.5px 8px rgba(255,255,0,0.08);
+}
+
+.favorites-tools-header i.fa-star {
+  color: var(--neon-yellow) !important;
+  font-size: 1.3em;
+  margin-right: 0.3em;
+}
+
+.favorites-tools-header h4 {
+  margin: 0;
+  color: var(--neon-yellow) !important;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.favorites-tools-buttons {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.favorites-tools .action-button {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.favorites-tools .action-button:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(10px) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  transform: scale(1.08) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+}
+
+.favorites-tools .action-button i {
+  color: var(--neon-yellow);
+  transition: color var(--transition-normal);
+}
+
+.favorites-tools .action-button:hover i {
+  color: white;
+}
+
+/* single-rule icon override further down in the file */
+#export-favorites i {
+  color: var(--neon-yellow);
+} 

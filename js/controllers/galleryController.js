@@ -1,5 +1,7 @@
 import ImageModel from '../models/imageModel.js';
 import GalleryView from '../views/galleryView.js';
+import FavoritesController from './favoritesController.js';
+import { supabase } from '../utils/supabaseClient.js';
 
 /**
  * PrompterAid Gallery Controller
@@ -42,6 +44,9 @@ export default class GalleryController {
     this.isRandomizing = false;
     this.randomizeTimeout = null;
     
+    // Create favorites controller
+    this.favoritesController = new FavoritesController(this.model, this.view);
+    
     this.init();
   }
 
@@ -49,9 +54,9 @@ export default class GalleryController {
     try {
       console.log(`🎯 Gallery Controller init - Current model: ${this.model.currentModel}`);
       
-      // Load model-specific favorites
-      this.model.loadFromStorage();
-      
+      // Initialize favorites controller
+      await this.favoritesController.init();
+      this.favoritesController.setRenderGalleryCallback(() => this.renderGallery());
       // Load images with error boundary if available, otherwise direct call
       if (window.errorBoundary && window.errorBoundary.wrapAsyncWithRetry) {
         await window.errorBoundary.wrapAsyncWithRetry(
@@ -109,8 +114,7 @@ export default class GalleryController {
       // Bind event handlers
       this.bindEvents();
         
-      // Add direct document-level handler for favorite button clicks
-      this.addDirectFavoriteHandler();
+
     
       // Initialize DOM with model values
       this.view.initDOMWithModel(this.model);
@@ -561,25 +565,7 @@ export default class GalleryController {
       );
     });
     
-    // Favorite toggling
-    this.view.bindFavoriteClick(imageId => {
-      const isFavorite = this.model.toggleImageFavorite(imageId);
-      
-      // Update all favorite buttons with the same ID
-      document.querySelectorAll(`.favorite-button[data-id="${imageId}"]`).forEach(button => {
-        button.innerHTML = isFavorite 
-          ? '<i class="fas fa-star"></i>' 
-          : '<i class="far fa-star"></i>';
-        button.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
-      });
-      
-      // If we're in favorites-only mode and unfavorited an image, re-render the gallery
-      if (this.model.showOnlyFavorites) {
-        this.renderGallery();
-      }
-      
-      return isFavorite; // Return the new favorite state
-    });
+
     
     // Prompt input
     this.view.bindPromptInput(prompt => {
@@ -767,34 +753,11 @@ export default class GalleryController {
       (imageId) => this.model.getWeightColorIndex(imageId)
     );
     
-    // Export favorites
-    this.view.bindExportFavoritesButton(() => {
-      this.model.exportFavorites();
-    });
-    
-    // Import favorites
-    this.view.bindImportFavoritesButton((file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const result = this.model.importFavorites(e.target.result);
-          if (result) {
-            this.view.showInfoNotification('Favorites imported successfully.');
-            this.renderGallery();
-          }
-        } catch (error) {
-          this.view.showErrorNotification(error.message);
-        }
-      };
-      reader.onerror = () => {
-        this.view.showErrorNotification('Failed to read the file.');
-      };
-      reader.readAsText(file);
-    });
-
     // Keyboard shortcuts
     this.bindKeyboardShortcuts();
   }
+
+
 
   bindKeyboardShortcuts() {
     document.addEventListener('keydown', (e) => {
@@ -1198,34 +1161,7 @@ export default class GalleryController {
     this.view.showInfoNotification(`Found ${matchingImages.length} image(s) matching ${searchDisplay}`);
   }
 
-  /**
-   * Add a direct document-level handler for favorite button clicks
-   */
-  addDirectFavoriteHandler() {
-    document.addEventListener('click', (event) => {
-      // Check if the click was directly on a favorite button or its icon
-      const favoriteButton = event.target.closest('.favorite-button');
-      if (favoriteButton) {
-        // Get the image ID from the button's data attribute
-        const imageId = favoriteButton.dataset.id;
-        if (imageId) {
-          // Toggle the favorite state
-          const isFavorite = this.model.toggleImageFavorite(imageId);
-          // Update all buttons with this ID
-          document.querySelectorAll(`.favorite-button[data-id="${imageId}"]`).forEach(button => {
-            button.innerHTML = isFavorite 
-              ? '<i class="fas fa-star"></i>' 
-              : '<i class="far fa-star"></i>';
-            button.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
-          });
-          // If we're in favorites-only mode, re-render the gallery
-          if (this.model.showOnlyFavorites) {
-            this.renderGallery();
-          }
-        }
-      }
-    });
-  }
+
 
   /**
    * Selects a random unselected image and adds it to the selection

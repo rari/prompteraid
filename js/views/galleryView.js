@@ -110,6 +110,7 @@ export default class GalleryView {
     this.favoritesTools = document.getElementById('favorites-tools');
     this.exportFavoritesButton = document.getElementById('export-favorites-button');
     this.importFavoritesButton = document.getElementById('import-favorites-button');
+    this.clearFavoritesButton = document.getElementById('clear-favorites-button');
     this.importFavoritesInput = document.getElementById('import-favorites-input');
     
     // Store quadrants for each image
@@ -178,6 +179,9 @@ export default class GalleryView {
     
     // Initialize tutorial section icon click handler
     this.initTutorialIconClick();
+
+    // Aspect Ratio Enable/Disable Logic
+    this.setupAspectRatioEnable();
   }
 
   initTutorialIconClick() {
@@ -1077,31 +1081,30 @@ export default class GalleryView {
     // Add quadrant flip button directly below the star
     const flipButton = document.createElement('button');
     flipButton.className = 'quadrant-flip-button';
-    flipButton.innerHTML = '<i class="fas fa-sync-alt"></i>';
+    // Use fa-border-all by default
+    flipButton.innerHTML = '<i class="fa-solid fa-border-all"></i>';
     flipButton.title = 'Flip quadrant';
     flipButton.dataset.id = image.id;
     flipButton.tabIndex = isSelected ? 0 : -1;
     flipButton.addEventListener('click', (e) => {
       e.stopPropagation();
-      
-      // Add spinning animation to the button icon
+      // Animate like link-button: scale and color
       const icon = flipButton.querySelector('i');
-      icon.classList.add('spinning');
-      
-      // Remove the class after animation completes
+      icon.className = 'fa-solid fa-border-none';
+      icon.classList.add('flip-animate');
       setTimeout(() => {
-        icon.classList.remove('spinning');
+        icon.classList.remove('flip-animate');
       }, 300);
-      
+      // Switch back to border-all after 0.3s (match link-button animation)
+      setTimeout(() => {
+        icon.className = 'fa-solid fa-border-all';
+      }, 300);
       let current = this.imageQuadrants.get(image.id) ?? 0;
       let next = (current + 1) % 4;
       this.imageQuadrants.set(image.id, next);
-      
       // Suppress animation
       img.classList.add('no-transition');
       img.className = `quadrant quadrant-${next} no-transition`;
-      
-      // Remove the class after a short delay
       setTimeout(() => img.classList.remove('no-transition'), 50);
     });
     item.appendChild(flipButton);
@@ -1115,16 +1118,15 @@ export default class GalleryView {
       weightControls.style.visibility = 'visible';
       weightControls.style.display = 'flex';
       
-      // Plus button
-      const plusButton = document.createElement('button');
-      plusButton.className = 'weight-control-button weight-plus';
-      plusButton.innerHTML = '+';
-      plusButton.title = 'Increase weight';
-      plusButton.dataset.id = image.id;
-      plusButton.dataset.action = 'increase';
-      plusButton.setAttribute('aria-label', `Increase weight for style reference ${image.sref}`);
-      plusButton.tabIndex = 0;
-      weightControls.appendChild(plusButton);
+      // Minus button (negative - left side)
+      const minusButton = document.createElement('button');
+      minusButton.className = 'weight-control-button weight-minus';
+      minusButton.innerHTML = '−'; // Using minus sign (not hyphen)
+      minusButton.title = 'Decrease weight';
+      minusButton.dataset.id = image.id;
+      minusButton.dataset.action = 'decrease';
+      minusButton.setAttribute('aria-label', `Decrease weight for style reference ${image.sref}`);
+      weightControls.appendChild(minusButton);
       
       // Weight display
       const weightDisplay = document.createElement('div');
@@ -1140,15 +1142,16 @@ export default class GalleryView {
       weightDisplay.style.display = 'flex';
       weightControls.appendChild(weightDisplay);
       
-      // Minus button
-      const minusButton = document.createElement('button');
-      minusButton.className = 'weight-control-button weight-minus';
-      minusButton.innerHTML = '−'; // Using minus sign (not hyphen)
-      minusButton.title = 'Decrease weight';
-      minusButton.dataset.id = image.id;
-      minusButton.dataset.action = 'decrease';
-      minusButton.setAttribute('aria-label', `Decrease weight for style reference ${image.sref}`);
-      weightControls.appendChild(minusButton);
+      // Plus button (positive - right side)
+      const plusButton = document.createElement('button');
+      plusButton.className = 'weight-control-button weight-plus';
+      plusButton.innerHTML = '+';
+      plusButton.title = 'Increase weight';
+      plusButton.dataset.id = image.id;
+      plusButton.dataset.action = 'increase';
+      plusButton.setAttribute('aria-label', `Increase weight for style reference ${image.sref}`);
+      plusButton.tabIndex = 0;
+      weightControls.appendChild(plusButton);
       
       item.appendChild(weightControls);
     }
@@ -1296,6 +1299,18 @@ export default class GalleryView {
           // Reset the input so the same file can be selected again
           event.target.value = '';
         }
+      });
+    }
+  }
+
+  /**
+   * Bind event handlers for clear favorites button
+   * @param {Function} handler - Function to call when clear button is clicked
+   */
+  bindClearFavoritesButton(handler) {
+    if (this.clearFavoritesButton) {
+      this.clearFavoritesButton.addEventListener('click', () => {
+        handler();
       });
     }
   }
@@ -3243,5 +3258,37 @@ export default class GalleryView {
         }
       }
     }
+  }
+
+  // Aspect Ratio Enable/Disable Logic
+  setupAspectRatioEnable() {
+    const enableCheckbox = document.getElementById('enable-aspect-ratio');
+    const aspectDropdown = document.getElementById('aspect-ratio-select');
+
+    // Load saved state
+    const saved = localStorage.getItem('prompteraid_enable_aspect_ratio');
+    if (saved === null) {
+      enableCheckbox.checked = false;
+    } else {
+      enableCheckbox.checked = saved === 'true';
+    }
+
+    function updateDropdownState() {
+      if (enableCheckbox.checked) {
+        aspectDropdown.disabled = false;
+        aspectDropdown.classList.remove('disabled');
+      } else {
+        aspectDropdown.disabled = true;
+        aspectDropdown.classList.add('disabled');
+      }
+      localStorage.setItem('prompteraid_enable_aspect_ratio', enableCheckbox.checked);
+      // Update the prompt when the aspect ratio enable state changes
+      if (window.galleryController && typeof window.galleryController.updatePrompt === 'function') {
+        window.galleryController.updatePrompt();
+      }
+    }
+
+    enableCheckbox.addEventListener('change', updateDropdownState);
+    updateDropdownState();
   }
 } 

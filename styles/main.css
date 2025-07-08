@@ -6,6 +6,8 @@
    (roughly) the same order they appeared in main.css.
    ========================================================= */
 
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap');
+
 /* Design tokens & theme infrastructure */
 @import url('./tokens.css');
 @import url('./themes.css');
@@ -54,6 +56,7 @@
 @import url('./sections/accessibility.css');
 @import url('./sections/modal.css');
 @import url('./sections/existing-styles.css');
+@import url('./sections/favorites-tools.css');
 
 /* Decorative / misc */
 @import url('./sections/bubble-animation.css');

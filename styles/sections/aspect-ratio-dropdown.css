@@ -2,15 +2,17 @@
 /* Aspect ratio dropdown styling - Base styles that work with theme system */
 .aspect-ratio-dropdown {
   width: 100%;
-  padding: 0.5rem;
+  padding: var(--space-2);
   border: 1px solid var(--border-color, #e2e8f0);
-  border-radius: 0.375rem;
+  border-radius: var(--border-radius-md);
   background: var(--background, #ffffff);
   color: var(--text-primary, #1e293b);
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   font-family: inherit;
   cursor: pointer;
   transition: all 0.2s ease;
+  height: calc(2.5rem + 2px); /* Match checkbox label height visually */
+  box-sizing: border-box;
 }
 
 .aspect-ratio-dropdown:focus {
@@ -24,6 +26,14 @@
   background: var(--background-hover, #f8fafc);
 }
 
+.aspect-ratio-dropdown:disabled,
+.aspect-ratio-dropdown.disabled {
+  color: var(--text-secondary, #aaa) !important;
+  border-color: var(--input-disabled-border, #444) !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
 /* Dropdown option styling */
 .aspect-ratio-dropdown option {
   background: var(--background, #ffffff);
@@ -34,14 +44,16 @@
 /* Custom aspect ratio input */
 .custom-aspect-ratio-input {
   width: 100%;
-  padding: 0.5rem;
+  padding: var(--space-2);
   border: 1px solid var(--border-color, #e2e8f0);
-  border-radius: 0.375rem;
+  border-radius: var(--border-radius-md);
   background: var(--background, #ffffff);
   color: var(--text-primary, #1e293b);
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   font-family: inherit;
   transition: all 0.2s ease;
+  height: calc(2.5rem + 2px); /* Match checkbox label height */
+  box-sizing: border-box;
 }
 
 .custom-aspect-ratio-row.hidden {
@@ -61,6 +73,36 @@
 
 .custom-aspect-ratio-input.hidden {
   display: none;
+}
+
+.custom-aspect-ratio-input:disabled {
+  color: var(--text-secondary, #aaa) !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
+/* Aspect ratio controls container - matches category-checkboxes styling */
+.aspect-ratio-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: nowrap;
+}
+
+.aspect-ratio-controls .checkbox-label {
+  flex-shrink: 0;
+  white-space: nowrap;
+  box-sizing: border-box;
+  margin-bottom: 0 !important;
+  /* Remove height, line-height, align-items */
+}
+
+.aspect-ratio-controls .checkbox-label input[type='checkbox'] {
+  margin-top: 2px; /* tweak as needed for perfect centering */
+}
+
+label[for="aspect-ratio-select"] {
+  margin-right: 0 !important;
 }
 
 /* Note: Theme-specific overrides are handled in themes.css */ 
