@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     defaultStepOptions: {
       scrollTo: { behavior: 'smooth', block: 'center' },
       cancelIcon: { enabled: true },
-      classes: 'shepherd-theme-arrows',
+      classes: 'shepherd-theme-glass',
       modalOverlayOpeningPadding: 6,
       modalOverlayOpeningRadius: 8
     }
