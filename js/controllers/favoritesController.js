@@ -192,6 +192,13 @@ export default class FavoritesController {
   }
 
   /**
+   * Get current user (delegates to auth utility)
+   */
+  async getCurrentUser() {
+    return await getCurrentUser();
+  }
+
+  /**
    * Re-render the gallery (delegates to gallery controller)
    */
   renderGallery() {

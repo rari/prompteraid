@@ -160,11 +160,26 @@ export default class AppController {
         const switchModel = async () => {
           await window.galleryController.model.reloadImagesForModel(modelId);
           
-          // Clear selections and favorites when switching models
+          // Clear selections when switching models
           window.galleryController.model.selectedImages.clear();
-          window.galleryController.model.favoriteImages.clear();
           window.galleryController.model.imageWeights.clear();
           window.galleryController.model.weightColorIndices.clear();
+          
+          // Load favorites for the new model from appropriate location
+          try {
+            const user = await window.galleryController.favoritesController.getCurrentUser();
+            if (user) {
+              // User is logged in, load from Supabase
+              await window.galleryController.favoritesController.loadFavoritesFromSupabase(user, modelId);
+            } else {
+              // Not logged in, load from localStorage
+              window.galleryController.model.loadFromStorage();
+            }
+          } catch (error) {
+            console.error('Failed to load favorites after model switch:', error);
+            // Fallback to localStorage if Supabase fails
+            window.galleryController.model.loadFromStorage();
+          }
           
           // Re-render the gallery
           window.galleryController.renderGallery();
