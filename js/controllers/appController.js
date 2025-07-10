@@ -686,6 +686,13 @@ export default class AppController {
     if (notificationDismissed !== 'true' && docsNotification) {
       // Add a delay to ensure the page is fully loaded
       setTimeout(() => {
+        // Explicitly re-apply the theme class to the notification
+        docsNotification.classList.remove('dark-mode', 'light-mode');
+        if (document.documentElement.classList.contains('dark-mode')) {
+          docsNotification.classList.add('dark-mode');
+        } else if (document.documentElement.classList.contains('light-mode')) {
+          docsNotification.classList.add('light-mode');
+        }
         docsNotification.classList.remove('hidden');
       }, 1500);
     }
