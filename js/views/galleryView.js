@@ -3345,7 +3345,7 @@ export default class GalleryView {
 
     if (aspectRatioSelect && model.aspectRatio !== undefined) {
       // Check if the aspect ratio is a custom value (not in the predefined options)
-      const predefinedOptions = ['1:1', '4:5', '2:3', '3:2', '5:4', '4:3', '1.91:1', '2:1', '16:9', '9:16'];
+      const predefinedOptions = ['1:1', '4:5', '2:3', '3:4', '3:2', '5:4', '4:3', '1.91:1', '2:1', '16:9', '9:16'];
       if (predefinedOptions.includes(model.aspectRatio)) {
         aspectRatioSelect.value = model.aspectRatio;
         if (mainCustomRow) mainCustomRow.classList.add('hidden');
@@ -3360,7 +3360,7 @@ export default class GalleryView {
 
     if (stickyAspectRatioSelect && model.aspectRatio !== undefined) {
       // Check if the aspect ratio is a custom value (not in the predefined options)
-      const predefinedOptions = ['1:1', '4:5', '2:3', '3:2', '5:4', '4:3', '1.91:1', '2:1', '16:9', '9:16'];
+      const predefinedOptions = ['1:1', '4:5', '2:3', '3:4', '3:2', '5:4', '4:3', '1.91:1', '2:1', '16:9', '9:16'];
       if (predefinedOptions.includes(model.aspectRatio)) {
         stickyAspectRatioSelect.value = model.aspectRatio;
         if (stickyCustomRow) stickyCustomRow.classList.add('hidden');
