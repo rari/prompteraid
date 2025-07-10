@@ -67,3 +67,9 @@
 
 /* Responsive tweaks last */
 @import url('./sections/media-queries.css');
+
+@media (max-width: 600px) {
+  .mobile-hide {
+    display: none !important;
+  }
+}
