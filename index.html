@@ -199,6 +199,20 @@
       }
     }(window.location));
   </script>
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('prompteraid_theme');
+        if (savedTheme) {
+          document.documentElement.classList.add(savedTheme + '-mode');
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.documentElement.classList.add('dark-mode');
+        } else {
+          document.documentElement.classList.add('light-mode');
+        }
+      } catch(e) {}
+    })();
+  </script>
 </head>
 <body>
   <a href="#gallery-top" class="skip-link">Skip to main content</a>
@@ -353,7 +367,7 @@
               <div class="aspect-ratio-controls">
                 <label class="checkbox-label">
                   <input type="checkbox" id="enable-aspect-ratio" aria-label="Enable aspect ratio">
-                  <span>Enable Parameter</span>
+                  <span>Enable <span class="mobile-hide">Parameter</span></span>
                 </label>
                 <select id="aspect-ratio-select" class="aspect-ratio-dropdown">
                   <option value="1:1">1:1 (Default)</option>
