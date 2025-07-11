@@ -316,3 +316,38 @@ html.light-mode .site-footer a:active {
 
 /* Tutorial section code color override */
 .more-info-container code { color: var(--neon-pink) !important; background: none !important; } 
+
+/* Custom fieldset and legend styles for accessibility without layout change */
+.category-fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-inline-size: unset;
+}
+.category-legend {
+  font-weight: 600;
+  font-size: 1em;
+  margin-bottom: 0.5em;
+  padding: 0;
+  /* Add any other label styles as needed */
+} 
+
+.setting-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2em;
+}
+
+.category-label {
+  font-weight: 600;
+  font-size: 1em;
+  margin-top: 0.35em;
+  min-width: 7em;
+  flex-shrink: 0;
+}
+
+.category-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em 0.8em;
+} 
