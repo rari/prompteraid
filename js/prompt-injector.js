@@ -32,11 +32,14 @@ class PromptInjector{
     document.addEventListener('keydown',e=>{
       if(['INPUT','TEXTAREA'].includes(e.target.tagName))return;
       const k=e.key.toLowerCase();
+      
+      // Only handle 'g' and 'p' keys, let other keys pass through to main controller
       if(k==='g')this.generate();
       if(k==='p'){
         this.ensurePromptMenuVisible();
         this.togglePanel();
       }
+      // Note: 'a' key for randomize is handled by the main gallery controller
     });
 
     // Randomize checkbox logic
