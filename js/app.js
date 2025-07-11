@@ -72,6 +72,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // Setup GitHub Pages compatibility
   setupGitHubPagesCompat();
   
+  // Initialize keyboard shortcut manager
+  const keyboardManager = new KeyboardShortcutManager();
+  window.keyboardManager = keyboardManager;
+  
+  // Debug: Log keyboard shortcuts info
+  setTimeout(() => {
+    if (window.keyboardManager) {
+      window.keyboardManager.debug();
+    }
+  }, 1000);
+  
   // Initialize controllers in dependency order
   const appController = new AppController();  // Global app features (theme, settings)
   const galleryController = new GalleryController(appController); // Main application functionality

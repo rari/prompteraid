@@ -27,15 +27,7 @@ class PromptInjector{
       settingsBtn.addEventListener('click',()=>this.togglePanel());
     }
     
-    document.addEventListener('keydown',e=>{
-      if(['INPUT','TEXTAREA'].includes(e.target.tagName))return;
-      const k=e.key.toLowerCase();
-      if(k==='g')this.generate();
-      if(k==='p'){
-        this.ensurePromptMenuVisible();
-        this.togglePanel();
-      }
-    });
+    // Keyboard shortcuts are now handled by the centralized KeyboardShortcutManager
 
     // Randomize checkbox logic
     const randomizeCheckbox = document.getElementById('randomize-categories');
@@ -238,4 +230,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   const promptInjector = new PromptInjector();
   // Bind after DOM is ready
   promptInjector.bind();
+  // Make available globally for keyboard shortcuts
+  window.promptInjector = promptInjector;
 }); 
