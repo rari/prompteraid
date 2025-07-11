@@ -2,7 +2,7 @@
 /* Weight controls container */
 .weight-controls {
   position: absolute;
-  bottom: var(--space-6);
+  bottom: var(--space-8);
   right: var(--space-2);
   display: flex;
   flex-direction: column;
@@ -38,12 +38,12 @@
 
 /* Weight control buttons */
 .weight-control-button {
-  width: 2rem;
-  height: 2rem;
-  margin: 0.2rem 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  margin: 0.25rem 0;
   border: none;
   border-radius: var(--border-radius-full);
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: bold;
   cursor: pointer;
   display: flex;
@@ -88,11 +88,11 @@
 
 /* Weight display */
 .weight-display {
-  width: 2rem;
-  height: 2rem;
+  width: 2.2rem;
+  height: 2.2rem;
   border-radius: calc(var(--border-radius-full) - 2px);
   background-color: rgba(30, 30, 30, 0.7);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: bold;
   display: flex !important;
   align-items: center;
@@ -146,9 +146,9 @@
   
   .weight-control-button, 
   .weight-display {
-    width: 1.7rem;
-    height: 1.7rem;
-    font-size: 0.9rem;
+    width: 1.9rem;
+    height: 1.9rem;
+    font-size: 1rem;
   }
 }
 

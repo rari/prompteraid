@@ -693,7 +693,7 @@ export default class AppController {
         
         docsNotification.classList.add('fading-out');
         setTimeout(() => {
-          docsNotification.classList.add('hidden');
+        docsNotification.classList.add('hidden');
           docsNotification.classList.remove('fading-out');
         }, 350); // match the CSS transition duration
         localStorage.setItem('prompteraid_docsNotificationDismissed', 'true');

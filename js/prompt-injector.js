@@ -47,12 +47,12 @@ class PromptInjector{
     
     const randomizeCheckbox = document.getElementById('randomize-categories');
     const isRandomizeMode = randomizeCheckbox && randomizeCheckbox.checked;
-    
+
     // Get selected categories from checkboxes
     const selectedCategories = [];
     const categoryIds = ['cat-presentation', 'cat-emotion', 'cat-subject', 'cat-clothing', 'cat-appearance', 'cat-pose', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
     const categoryNames = ['Presentation', 'Emotion', 'Subject', 'Clothing', 'Appearance', 'Pose', 'Setting', 'Lighting', 'Style', 'Details'];
-    
+
     if (isRandomizeMode) {
       // Randomly select categories (Subject always included)
       const available = categoryNames.filter(n => n !== 'Subject');
