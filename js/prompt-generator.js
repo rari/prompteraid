@@ -60,8 +60,26 @@ class PromptGenerator {
       this.toggleRandomize(randomizeCheckbox.checked);
     }
 
-    // Keyboard shortcuts are now handled by the main GalleryController
-    // to avoid conflicts and ensure consistent behavior
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Only trigger shortcuts if not typing in an input field
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      switch (e.key.toLowerCase()) {
+        case 'g':
+          this.generatePrompt();
+          break;
+        case 'c':
+          this.copyPrompt();
+          break;
+        case 'p':
+          this.ensurePromptMenuVisible();
+          this.toggleSettings();
+          break;
+      }
+    });
   }
 
   toggleSettings() {
