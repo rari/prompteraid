@@ -78,6 +78,7 @@ class PromptGenerator {
           this.ensurePromptMenuVisible();
           this.toggleSettings();
           break;
+        // Note: 'a' key for randomize is handled by the main gallery controller
       }
     });
   }

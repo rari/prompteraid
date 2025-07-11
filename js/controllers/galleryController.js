@@ -760,6 +760,13 @@ export default class GalleryController {
 
 
   bindKeyboardShortcuts() {
+    // Prevent duplicate listeners by checking if already bound
+    if (window.keyboardShortcutsBound) {
+      console.log('[GalleryController] Keyboard shortcuts already bound, skipping');
+      return;
+    }
+    window.keyboardShortcutsBound = true;
+    
     document.addEventListener('keydown', (e) => {
       // Only trigger shortcuts if not typing in an input field or contentEditable element
       if (e.target.tagName === 'INPUT' || 
@@ -913,6 +920,7 @@ export default class GalleryController {
           
         case 'a':
           // Randomize selection - call the same handler as the button
+          console.log('[GalleryController] A key pressed for randomize');
           this.randomizeSelection();
           break;
       }
@@ -1168,11 +1176,18 @@ export default class GalleryController {
    * Debounced/throttled and guarded to prevent double selection
    */
   randomizeSelection() {
-    if (this.isRandomizing) return;
+    console.log('[GalleryController] randomizeSelection called');
+    
+    if (this.isRandomizing) {
+      console.log('[GalleryController] Already randomizing, ignoring call');
+      return;
+    }
+    
     this.isRandomizing = true;
     clearTimeout(this.randomizeTimeout);
     this.randomizeTimeout = setTimeout(() => {
       this.isRandomizing = false;
+      console.log('[GalleryController] Randomize throttle reset');
     }, 400); // 400ms throttle
 
     // Get all images that are not currently selected
@@ -1181,9 +1196,13 @@ export default class GalleryController {
       this.view.showWarningNotification('All images are already selected!');
       return;
     }
+    
     // Pick a random image
     const randomIndex = Math.floor(Math.random() * unselectedImages.length);
     const randomImage = unselectedImages[randomIndex];
+    
+    console.log('[GalleryController] Selected random image:', randomImage.sref);
+    
     // Add to selection
     this.model.selectedImages.set(randomImage.id, 0); // 0 = default color index/weight
     this.renderGallery();
