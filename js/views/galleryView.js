@@ -2924,12 +2924,8 @@ export default class GalleryView {
       // If we have 5 or fewer new images, show all of them
       imagesToShow = newImages;
     } else {
-      // Randomly select 5 unique images from all new images
-      const shuffled = [...newImages];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
+      // Randomly select 5 images from all new images
+      const shuffled = [...newImages].sort(() => Math.random() - 0.5);
       imagesToShow = shuffled.slice(0, maxToShow);
     }
 

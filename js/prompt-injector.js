@@ -1,8 +1,6 @@
 class PromptInjector{
   constructor(){
     this.words=null;
-    this.lastGenerateTs=0;
-    this.DEBOUNCE_MS=250;
     this.load();
   }
   
@@ -53,9 +51,6 @@ class PromptInjector{
   randomFrom(cat){const arr=this.words[cat];if(!arr||!arr.length)return '';return arr[Math.floor(Math.random()*arr.length)];}
   
   generate() {
-    const now=Date.now();
-    if(now-this.lastGenerateTs<this.DEBOUNCE_MS){console.log('[PromptInjector] Ignoring rapid generate');return;}
-    this.lastGenerateTs=now;
     console.log('Prompt injector generate() called');
     
     const randomizeCheckbox = document.getElementById('randomize-categories');
