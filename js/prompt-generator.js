@@ -16,6 +16,12 @@ class PromptGenerator {
       const response = await fetch('data/prompt-words.json');
       this.promptWords = await response.json();
       console.log('Prompt words loaded successfully');
+      
+      // Set up promptBuilder with the loaded data
+      if (window.promptBuilder && window.promptBuilder.setPromptWordsData) {
+        window.promptBuilder.setPromptWordsData(this.promptWords);
+        console.log('PromptBuilder initialized with data');
+      }
     } catch (error) {
       console.error('Failed to load prompt words:', error);
       this.showError('Failed to load prompt words. Please refresh the page.');
