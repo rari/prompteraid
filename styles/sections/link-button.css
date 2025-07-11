@@ -24,6 +24,57 @@
   padding: 0;
 }
 
+/* Button positioning down the left side */
+.copy-link-button {
+  top: var(--space-2) !important;
+  left: var(--space-2) !important;
+  color: var(--neon-pink) !important;
+}
+
+.flip-quadrant-button {
+  top: calc(var(--space-2) + 3rem + var(--space-2)) !important;
+  left: var(--space-2) !important;
+  color: var(--neon-orange) !important;
+}
+
+.favorite-button {
+  top: calc(var(--space-2) + 6rem + var(--space-3)) !important;
+  left: var(--space-2) !important;
+  color: var(--neon-yellow) !important;
+}
+
+.copy-prompt-button {
+  top: calc(var(--space-2) + 9rem + var(--space-4)) !important;
+  left: var(--space-2) !important;
+  color: var(--neon-green) !important;
+}
+
+/* Icon styling for each button type */
+.copy-link-button i {
+  color: var(--neon-pink) !important;
+}
+
+.flip-quadrant-button i {
+  color: var(--neon-orange) !important;
+}
+
+.favorite-button i {
+  color: var(--neon-yellow) !important;
+}
+
+.copy-prompt-button i {
+  color: var(--neon-green) !important;
+}
+
+/* Hover effects for all buttons */
+.copy-link-button:hover,
+.flip-quadrant-button:hover,
+.favorite-button:hover,
+.copy-prompt-button:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  transform: scale(1.1);
+}
+
 /* Show link button on gallery item hover */
 .gallery-item:hover .link-button {
   opacity: 1;

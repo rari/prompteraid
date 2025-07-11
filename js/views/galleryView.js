@@ -996,9 +996,9 @@ export default class GalleryView {
     img.loading = 'lazy'; // Enable lazy loading
     item.appendChild(img);
 
-    // Add link button at the top left
+    // 1. Copy link button (top)
     const linkButton = document.createElement('button');
-    linkButton.className = 'link-button';
+    linkButton.className = 'link-button copy-link-button';
     linkButton.innerHTML = '<i class="fas fa-link"></i>';
     linkButton.dataset.id = image.id;
     linkButton.dataset.sref = image.sref;
@@ -1046,40 +1046,39 @@ export default class GalleryView {
     
     item.appendChild(linkButton);
 
-    // Duplicate link button below the first one
-    const linkButton2 = linkButton.cloneNode(true);
-    // Remove any previous event listeners and re-attach the handler
-    linkButton2.addEventListener('click', (e) => {
+    // 2. Flip quadrant button
+    const flipButton = document.createElement('button');
+    flipButton.className = 'link-button flip-quadrant-button';
+    flipButton.innerHTML = '<i class="fa-solid fa-border-all"></i>';
+    flipButton.title = 'Flip quadrant';
+    flipButton.dataset.id = image.id;
+    flipButton.tabIndex = isSelected ? 0 : -1;
+    flipButton.addEventListener('click', (e) => {
       e.stopPropagation();
-      const currentQuadrant = this.imageQuadrants.get(image.id) ?? 0;
-      const url = new URL(window.location.href);
-      url.searchParams.set('sref', image.sref);
-      url.searchParams.set('quadrant', currentQuadrant);
-      if (currentModel) {
-        url.searchParams.set('model', currentModel);
-      }
-      navigator.clipboard.writeText(url.toString())
-        .then(() => {
-          const icon = linkButton2.querySelector('i');
-          icon.className = 'fas fa-check';
-          linkButton2.classList.add('copied');
-          this.showInfoNotification(`Link to style ${image.sref} copied to clipboard`);
-          setTimeout(() => {
-            icon.className = 'fas fa-link';
-            linkButton2.classList.remove('copied');
-          }, 2000);
-        })
-        .catch(err => {
-          console.error('Could not copy URL: ', err);
-          this.showErrorNotification('Failed to copy link. Please try again.');
-        });
+      // Animate like link-button: scale and color
+      const icon = flipButton.querySelector('i');
+      icon.className = 'fa-solid fa-border-none';
+      icon.classList.add('flip-animate');
+      setTimeout(() => {
+        icon.classList.remove('flip-animate');
+      }, 300);
+      // Switch back to border-all after 0.3s (match link-button animation)
+      setTimeout(() => {
+        icon.className = 'fa-solid fa-border-all';
+      }, 300);
+      let current = this.imageQuadrants.get(image.id) ?? 0;
+      let next = (current + 1) % 4;
+      this.imageQuadrants.set(image.id, next);
+      // Suppress animation
+      img.classList.add('no-transition');
+      img.className = `quadrant quadrant-${next} no-transition`;
+      setTimeout(() => img.classList.remove('no-transition'), 50);
     });
-    // Insert the second link button after the favorite button and before the quadrant flip button
-    item.appendChild(linkButton2);
+    item.appendChild(flipButton);
 
-    // Add favorite button
+    // 3. Add favorite button
     const favButton = document.createElement('button');
-    favButton.className = 'favorite-button';
+    favButton.className = 'link-button favorite-button';
     favButton.innerHTML = isFavorite 
       ? '<i class="fas fa-star"></i>' 
       : '<i class="far fa-star"></i>';
@@ -1114,36 +1113,51 @@ export default class GalleryView {
     
     item.appendChild(favButton);
 
-    // Add quadrant flip button directly below the star
-    const flipButton = document.createElement('button');
-    flipButton.className = 'quadrant-flip-button';
-    // Use fa-border-all by default
-    flipButton.innerHTML = '<i class="fa-solid fa-border-all"></i>';
-    flipButton.title = 'Flip quadrant';
-    flipButton.dataset.id = image.id;
-    flipButton.tabIndex = isSelected ? 0 : -1;
-    flipButton.addEventListener('click', (e) => {
+    // 4. Copy prompt code button (bottom)
+    const copyPromptButton = document.createElement('button');
+    copyPromptButton.className = 'link-button copy-prompt-button';
+    copyPromptButton.innerHTML = '<i class="fas fa-copy"></i>';
+    copyPromptButton.dataset.id = image.id;
+    copyPromptButton.dataset.sref = image.sref;
+    copyPromptButton.title = `Copy prompt code for style ${image.sref}`;
+    copyPromptButton.setAttribute('aria-label', `Copy prompt code for style reference ${image.sref}`);
+    copyPromptButton.tabIndex = isSelected ? 0 : -1;
+    
+    copyPromptButton.addEventListener('click', (e) => {
       e.stopPropagation();
-      // Animate like link-button: scale and color
-      const icon = flipButton.querySelector('i');
-      icon.className = 'fa-solid fa-border-none';
-      icon.classList.add('flip-animate');
-      setTimeout(() => {
-        icon.classList.remove('flip-animate');
-      }, 300);
-      // Switch back to border-all after 0.3s (match link-button animation)
-      setTimeout(() => {
-        icon.className = 'fa-solid fa-border-all';
-      }, 300);
-      let current = this.imageQuadrants.get(image.id) ?? 0;
-      let next = (current + 1) % 4;
-      this.imageQuadrants.set(image.id, next);
-      // Suppress animation
-      img.classList.add('no-transition');
-      img.className = `quadrant quadrant-${next} no-transition`;
-      setTimeout(() => img.classList.remove('no-transition'), 50);
+      
+      // Copy just the style reference number
+      const styleRef = image.sref;
+      
+      if (!styleRef) {
+        this.showErrorNotification('No style reference available to copy.');
+        return;
+      }
+      
+      // Copy to clipboard
+      navigator.clipboard.writeText(styleRef)
+        .then(() => {
+          // Show feedback animation
+          const icon = copyPromptButton.querySelector('i');
+          icon.className = 'fas fa-check';
+          copyPromptButton.classList.add('copied');
+          
+          // Show notification
+          this.showInfoNotification(`Style reference ${styleRef} copied to clipboard`);
+          
+          // Reset after animation
+          setTimeout(() => {
+            icon.className = 'fas fa-copy';
+            copyPromptButton.classList.remove('copied');
+          }, 2000);
+        })
+        .catch(err => {
+          console.error('Could not copy style reference: ', err);
+          this.showErrorNotification('Failed to copy style reference. Please try again.');
+        });
     });
-    item.appendChild(flipButton);
+    
+    item.appendChild(copyPromptButton);
 
     // Add weight controls for selected images (disabled for Midjourney 7)
     if (isSelected && currentModel !== 'midjourney-7') {
