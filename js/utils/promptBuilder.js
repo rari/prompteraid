@@ -59,9 +59,9 @@ export function buildLogicalPrompt(parts) {
     }
   }
 
-  // <presentation>
+  // Start with presentation as an adjective/descriptor
   if (parts.Presentation) {
-    prompt += parts.Presentation + ' of ';
+    prompt += parts.Presentation + ' view of ';
   }
 
   // <emotion> <subject>
