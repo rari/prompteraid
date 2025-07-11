@@ -1046,6 +1046,37 @@ export default class GalleryView {
     
     item.appendChild(linkButton);
 
+    // Duplicate link button below the first one
+    const linkButton2 = linkButton.cloneNode(true);
+    // Remove any previous event listeners and re-attach the handler
+    linkButton2.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const currentQuadrant = this.imageQuadrants.get(image.id) ?? 0;
+      const url = new URL(window.location.href);
+      url.searchParams.set('sref', image.sref);
+      url.searchParams.set('quadrant', currentQuadrant);
+      if (currentModel) {
+        url.searchParams.set('model', currentModel);
+      }
+      navigator.clipboard.writeText(url.toString())
+        .then(() => {
+          const icon = linkButton2.querySelector('i');
+          icon.className = 'fas fa-check';
+          linkButton2.classList.add('copied');
+          this.showInfoNotification(`Link to style ${image.sref} copied to clipboard`);
+          setTimeout(() => {
+            icon.className = 'fas fa-link';
+            linkButton2.classList.remove('copied');
+          }, 2000);
+        })
+        .catch(err => {
+          console.error('Could not copy URL: ', err);
+          this.showErrorNotification('Failed to copy link. Please try again.');
+        });
+    });
+    // Insert the second link button after the favorite button and before the quadrant flip button
+    item.appendChild(linkButton2);
+
     // Add favorite button
     const favButton = document.createElement('button');
     favButton.className = 'favorite-button';
@@ -2893,8 +2924,12 @@ export default class GalleryView {
       // If we have 5 or fewer new images, show all of them
       imagesToShow = newImages;
     } else {
-      // Randomly select 5 images from all new images
-      const shuffled = [...newImages].sort(() => Math.random() - 0.5);
+      // Randomly select 5 unique images from all new images
+      const shuffled = [...newImages];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
       imagesToShow = shuffled.slice(0, maxToShow);
     }
 

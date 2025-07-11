@@ -199,20 +199,6 @@
       }
     }(window.location));
   </script>
-  <script>
-    (function() {
-      try {
-        var savedTheme = localStorage.getItem('prompteraid_theme');
-        if (savedTheme) {
-          document.documentElement.classList.add(savedTheme + '-mode');
-        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          document.documentElement.classList.add('dark-mode');
-        } else {
-          document.documentElement.classList.add('light-mode');
-        }
-      } catch(e) {}
-    })();
-  </script>
 </head>
 <body>
   <a href="#gallery-top" class="skip-link">Skip to main content</a>
@@ -367,13 +353,12 @@
               <div class="aspect-ratio-controls">
                 <label class="checkbox-label">
                   <input type="checkbox" id="enable-aspect-ratio" aria-label="Enable aspect ratio">
-                  <span>Enable <span class="mobile-hide">Parameter</span></span>
+                  <span>Enable Parameter</span>
                 </label>
                 <select id="aspect-ratio-select" class="aspect-ratio-dropdown">
                   <option value="1:1">1:1 (Default)</option>
                   <option value="4:5">4:5 (Instagram Post)</option>
                   <option value="2:3">2:3 (Pinterest Pin)</option>
-                  <option value="3:4">3:4 (Phone Photo)</option>
                   <option value="3:2">3:2 (Older Photo Format)</option>
                   <option value="5:4">5:4 (Facebook Group Cover Photo)</option>
                   <option value="4:3">4:3 (Legacy Video)</option>
@@ -580,6 +565,7 @@
   <div id="prompt-updates" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
   <script src="js/app.js" type="module"></script>
+  <script type="module" src="js/utils/promptBuilder.js"></script>
   <script src="js/prompt-injector.js"></script>
   <script src="js/guided-tour.js"></script>
 </body>

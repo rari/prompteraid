@@ -5,66 +5,110 @@
  * that is shared between different prompt generation components.
  */
 
+// Global variable to store loaded prompt words data
+let promptWordsData = null;
+
+/**
+ * Set the prompt words data (called when data is loaded)
+ * @param {Object} data - The loaded prompt words data
+ */
+export function setPromptWordsData(data) {
+  promptWordsData = data;
+}
+
+/**
+ * Get subject type from loaded data
+ * @param {string} subject - The subject name to check
+ * @returns {string} The subject type ('humanoid', 'animal', 'object', 'place', or 'unknown')
+ */
+function getSubjectType(subject) {
+  if (!subject || !promptWordsData) return 'unknown';
+  
+  const normalized = subject.toLowerCase();
+  
+  // Check all subjects in the Subject array
+  if (promptWordsData.Subject && promptWordsData.Subject.some(s => s.name.toLowerCase() === normalized)) {
+    const subjectObj = promptWordsData.Subject.find(s => s.name.toLowerCase() === normalized);
+    return subjectObj ? subjectObj.type : 'object';
+  }
+  
+  return 'object';
+}
+
 /**
  * Build a logical, readable prompt structure from word parts
  * @param {Object} parts - Object containing category words (Presentation, Emotion, Subject, etc.)
  * @returns {string} Formatted prompt string
  */
 export function buildLogicalPrompt(parts) {
-  // Build a logical, readable prompt structure
   let prompt = '';
   
+  // Extract subject name and type
+  let subjectName = '';
+  let subjectType = 'object';
+  
+  if (parts.Subject) {
+    if (typeof parts.Subject === 'object' && parts.Subject.name) {
+      // Subject is an object with name and type
+      subjectName = parts.Subject.name;
+      subjectType = parts.Subject.type;
+    } else if (typeof parts.Subject === 'string') {
+      // Subject is a string, get type from data
+      subjectName = parts.Subject;
+      subjectType = getSubjectType(parts.Subject);
+    }
+  }
+
   // <presentation>
   if (parts.Presentation) {
     prompt += parts.Presentation + ' of ';
   }
-  
+
   // <emotion> <subject>
   if (parts.Emotion) {
     prompt += parts.Emotion + ' ';
   }
-  if (parts.Subject) {
-    prompt += parts.Subject;
+  if (subjectName) {
+    prompt += subjectName;
   }
-  
-  // wearing <clothing>
-  if (parts.Clothing) {
-    prompt += ' wearing ' + parts.Clothing;
+
+  if (subjectType === 'humanoid') {
+    if (parts.Clothing) {
+      prompt += ' wearing ' + parts.Clothing;
+    }
+    if (parts.Appearance) {
+      prompt += ' with ' + parts.Appearance;
+    }
+    if (parts.Pose) {
+      prompt += ' is ' + parts.Pose;
+    }
+  } else if (subjectType === 'animal') {
+    if (parts.Appearance) {
+      prompt += ' with ' + parts.Appearance;
+    }
+    if (parts.Pose) {
+      prompt += ' is ' + parts.Pose;
+    }
   }
-  
-  // with <appearance>
-  if (parts.Appearance) {
-    prompt += ' with ' + parts.Appearance;
-  }
-  
-  // is <pose>
-  if (parts.Pose) {
-    prompt += ' is ' + parts.Pose;
-  }
-  
+
   // at <setting>
   if (parts.Setting) {
     prompt += ' at ' + parts.Setting;
   }
-  
+
   // , <lighting>
   if (parts.Lighting) {
     prompt += ', ' + parts.Lighting;
   }
-  
-  // , <style>
-  if (parts.Style) {
-    prompt += ', ' + parts.Style;
-  }
-  
+
   // , <details>
   if (parts.Details) {
     prompt += ', ' + parts.Details;
   }
-  
+
   // Clean up: remove extra spaces and commas
   prompt = prompt.replace(/\s+/g, ' ').replace(/,\s*,/g, ',').replace(/^,\s*/, '').replace(/,\s*$/, '');
-  
+
   return prompt;
 }
 
@@ -118,4 +162,10 @@ export function shuffle(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
+} 
+
+// Expose globally for non-module scripts
+if (typeof window !== 'undefined') {
+  window.promptBuilder = window.promptBuilder || {};
+  window.promptBuilder.buildLogicalPrompt = buildLogicalPrompt;
 } 

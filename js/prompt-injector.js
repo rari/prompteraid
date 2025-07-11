@@ -1,6 +1,8 @@
 class PromptInjector{
   constructor(){
     this.words=null;
+    this.lastGenerateTs=0;
+    this.DEBOUNCE_MS=250;
     this.load();
   }
   
@@ -50,19 +52,20 @@ class PromptInjector{
   
   randomFrom(cat){const arr=this.words[cat];if(!arr||!arr.length)return '';return arr[Math.floor(Math.random()*arr.length)];}
   
-  generate(){
-    if(!this.words)return;
-    
+  generate() {
+    const now=Date.now();
+    if(now-this.lastGenerateTs<this.DEBOUNCE_MS){console.log('[PromptInjector] Ignoring rapid generate');return;}
+    this.lastGenerateTs=now;
     console.log('Prompt injector generate() called');
     
     const randomizeCheckbox = document.getElementById('randomize-categories');
     const isRandomizeMode = randomizeCheckbox && randomizeCheckbox.checked;
-
-    // Get selected categories from checkboxes or randomize
+    
+    // Get selected categories from checkboxes
     const selectedCategories = [];
-    const categoryIds = ['cat-presentation', 'cat-subject', 'cat-appearance', 'cat-clothing', 'cat-pose', 'cat-emotion', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
-    const categoryNames = ['Presentation', 'Subject', 'Appearance', 'Clothing', 'Pose', 'Emotion', 'Setting', 'Lighting', 'Style', 'Details'];
-
+    const categoryIds = ['cat-presentation', 'cat-emotion', 'cat-subject', 'cat-clothing', 'cat-appearance', 'cat-pose', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'];
+    const categoryNames = ['Presentation', 'Emotion', 'Subject', 'Clothing', 'Appearance', 'Pose', 'Setting', 'Lighting', 'Style', 'Details'];
+    
     if (isRandomizeMode) {
       // Randomly select categories (Subject always included)
       const available = categoryNames.filter(n => n !== 'Subject');
@@ -97,8 +100,14 @@ class PromptInjector{
 
     console.log('Selected words:', selectedWords);
 
+    // Filter categories based on subject type
+    const filteredWords = this.filterCategoriesBySubjectType(selectedWords);
+    
+    console.log('Filtered words:', filteredWords);
+
     // Build a logical prompt structure
-    const finalPrompt = this.buildLogicalPrompt(selectedWords);
+    // Use shared promptBuilder
+    const finalPrompt = window.promptBuilder.buildLogicalPrompt(filteredWords);
     
     console.log('Final prompt:', finalPrompt);
     
@@ -161,64 +170,6 @@ class PromptInjector{
   
 
 
-  buildLogicalPrompt(parts) {
-    // Build a logical, readable prompt structure
-    let prompt = '';
-    
-    // <presentation>
-    if (parts.Presentation) {
-      prompt += parts.Presentation + ' of ';
-    }
-    
-    // <emotion> <subject>
-    if (parts.Emotion) {
-      prompt += parts.Emotion + ' ';
-    }
-    if (parts.Subject) {
-      prompt += parts.Subject;
-    }
-    
-    // wearing <clothing>
-    if (parts.Clothing) {
-      prompt += ' wearing ' + parts.Clothing;
-    }
-    
-    // with <appearance>
-    if (parts.Appearance) {
-      prompt += ' with ' + parts.Appearance;
-    }
-    
-    // is <pose>
-    if (parts.Pose) {
-      prompt += ' is ' + parts.Pose;
-    }
-    
-    // at <setting>
-    if (parts.Setting) {
-      prompt += ' at ' + parts.Setting;
-    }
-    
-    // , <lighting>
-    if (parts.Lighting) {
-      prompt += ', ' + parts.Lighting;
-    }
-    
-    // , <style>
-    if (parts.Style) {
-      prompt += ', ' + parts.Style;
-    }
-    
-    // , <details>
-    if (parts.Details) {
-      prompt += ', ' + parts.Details;
-    }
-    
-    // Clean up: remove extra spaces and commas
-    prompt = prompt.replace(/\s+/g, ' ').replace(/,\s*,/g, ',').replace(/^,\s*/, '').replace(/,\s*$/, '');
-    
-    return prompt;
-  }
-
   toggleRandomizeVisual(enabled){
     const containers=document.querySelectorAll('.category-checkboxes');
     const ids=['cat-presentation','cat-emotion','cat-subject','cat-clothing','cat-appearance','cat-pose','cat-setting','cat-lighting','cat-style','cat-details'];
@@ -253,6 +204,37 @@ class PromptInjector{
     if(previewRow&&previewRow.classList.contains('hidden')&&toggleBtn){
       toggleBtn.click();
     }
+  }
+
+  filterCategoriesBySubjectType(selectedWords) {
+    const filtered = { ...selectedWords };
+    
+    // Get subject type
+    let subjectType = 'object';
+    if (filtered.Subject) {
+      if (typeof filtered.Subject === 'object' && filtered.Subject.type) {
+        subjectType = filtered.Subject.type;
+      }
+    }
+    
+    console.log('Subject type for filtering:', subjectType);
+    
+    // Filter based on subject type
+    if (subjectType === 'object' || subjectType === 'place') {
+      // Remove clothing, appearance, pose, and emotion for objects/places
+      delete filtered.Clothing;
+      delete filtered.Appearance;
+      delete filtered.Pose;
+      delete filtered.Emotion;
+      console.log('Filtered out Clothing, Appearance, Pose, Emotion for object/place');
+    } else if (subjectType === 'animal') {
+      // Remove clothing for animals
+      delete filtered.Clothing;
+      console.log('Filtered out Clothing for animal');
+    }
+    // humanoid subjects keep all categories
+    
+    return filtered;
   }
 }
 
