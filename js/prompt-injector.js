@@ -10,6 +10,13 @@ class PromptInjector{
     try{
       const r=await fetch('data/prompt-words.json');
       this.words=await r.json();
+      console.log('PromptInjector: Prompt words loaded successfully');
+      
+      // Set up promptBuilder with the loaded data
+      if (window.promptBuilder && window.promptBuilder.setPromptWordsData) {
+        window.promptBuilder.setPromptWordsData(this.words);
+        console.log('PromptInjector: PromptBuilder initialized with data');
+      }
       // Don't bind here - wait for DOM to be ready
     }catch(e){
       console.error('Failed to load prompt words:', e);
