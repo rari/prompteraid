@@ -402,10 +402,6 @@ a:hover {
   color: var(--neon-orange) !important;
 }
 
-.current-model span, .model-option span {
-  color: var(--neon-blue) !important;
-}
-
 .current-model i, .model-option i {
   color: var(--neon-blue) !important;
 }
@@ -846,8 +842,6 @@ body, p, li, .site-footer, .footer-subtitle, .footer-credit, .footer-legal {
 }
 
 /* Force model name and icon to white in dark mode, override all !important */
-html.dark-mode .current-model span,
-html.dark-mode .model-option span,
 html.dark-mode .current-model i,
 html.dark-mode .model-option i {
   color: white !important;
