@@ -29,8 +29,15 @@ class PromptInjector{
       settingsBtn.addEventListener('click',()=>this.togglePanel());
     }
     
-    // Keyboard shortcuts are now handled by the main GalleryController
-    // to avoid conflicts and ensure consistent behavior
+    document.addEventListener('keydown',e=>{
+      if(['INPUT','TEXTAREA'].includes(e.target.tagName))return;
+      const k=e.key.toLowerCase();
+      if(k==='g')this.generate();
+      if(k==='p'){
+        this.ensurePromptMenuVisible();
+        this.togglePanel();
+      }
+    });
 
     // Randomize checkbox logic
     const randomizeCheckbox = document.getElementById('randomize-categories');
