@@ -5,9 +5,11 @@
  * using the user_components table in Supabase.
  */
 
+import { supabase } from './supabaseClient.js';
+
 class UserComponentsManager {
   constructor() {
-    this.supabase = window.supabase;
+    this.supabase = supabase;
     this.maxComponents = 7;
     this.currentUser = null;
     this.init();
@@ -290,5 +292,5 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = UserComponentsManager;
 }
 
-// Make available globally
+// Make the class available globally for the UI manager
 window.UserComponentsManager = UserComponentsManager; 
