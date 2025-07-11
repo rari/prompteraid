@@ -1,6 +1,8 @@
 class PromptGenerator {
   constructor() {
     this.promptWords = null;
+    this.lastGenerateTs = 0;
+    this.DEBOUNCE_MS = 250;
     this.init();
   }
 
@@ -154,6 +156,13 @@ class PromptGenerator {
   }
 
   generatePrompt() {
+    const now = Date.now();
+    if (now - this.lastGenerateTs < this.DEBOUNCE_MS) {
+      console.log('[PromptGen] Ignoring rapid generate call');
+      return;
+    }
+    this.lastGenerateTs = now;
+
     if (!this.promptWords) {
       this.showError('Prompt words not loaded yet. Please wait...');
       return;
@@ -211,12 +220,29 @@ class PromptGenerator {
     selectedCategories.forEach(category => {
       const words = this.promptWords[category];
       if (words && words.length > 0) {
-        selectedWords[category] = words[Math.floor(Math.random() * words.length)];
+        const selectedWord = words[Math.floor(Math.random() * words.length)];
+        
+        console.log(`Selected for ${category}:`, selectedWord);
+        
+        // For Subject category, preserve the object structure
+        if (category === 'Subject') {
+          selectedWords[category] = selectedWord; // Keep the full object {name, type}
+        } else {
+          // For other categories, use the string value
+          selectedWords[category] = selectedWord;
+        }
       }
     });
+    
+    console.log('Final selectedWords:', selectedWords);
+
+    // Filter categories based on subject type
+    const filteredWords = this.filterCategoriesBySubjectType(selectedWords);
+    
+    console.log('Filtered words:', filteredWords);
 
     // Build a logical prompt structure
-    const finalPrompt = this.buildLogicalPrompt(selectedWords);
+    const finalPrompt = window.promptBuilder.buildLogicalPrompt(filteredWords);
     
     // Add suffix if provided
     const fullPrompt = suffix ? `${finalPrompt} ${suffix}` : finalPrompt;
@@ -230,62 +256,35 @@ class PromptGenerator {
     this.lastFullPrompt = fullPrompt;
   }
 
-  buildLogicalPrompt(parts) {
-    // Build a logical, readable prompt structure
-    let prompt = '';
+  filterCategoriesBySubjectType(selectedWords) {
+    const filtered = { ...selectedWords };
     
-    // <presentation>
-    if (parts.Presentation) {
-      prompt += parts.Presentation + ' of ';
+    // Get subject type
+    let subjectType = 'object';
+    if (filtered.Subject) {
+      if (typeof filtered.Subject === 'object' && filtered.Subject.type) {
+        subjectType = filtered.Subject.type;
+      }
     }
     
-    // <emotion> <subject>
-    if (parts.Emotion) {
-      prompt += parts.Emotion + ' ';
-    }
-    if (parts.Subject) {
-      prompt += parts.Subject;
-    }
+    console.log('Subject type for filtering:', subjectType);
     
-    // wearing <clothing>
-    if (parts.Clothing) {
-      prompt += ' wearing ' + parts.Clothing;
+    // Filter based on subject type
+    if (subjectType === 'object' || subjectType === 'place') {
+      // Remove clothing, appearance, pose, and emotion for objects/places
+      delete filtered.Clothing;
+      delete filtered.Appearance;
+      delete filtered.Pose;
+      delete filtered.Emotion;
+      console.log('Filtered out Clothing, Appearance, Pose, Emotion for object/place');
+    } else if (subjectType === 'animal') {
+      // Remove clothing for animals
+      delete filtered.Clothing;
+      console.log('Filtered out Clothing for animal');
     }
+    // humanoid subjects keep all categories
     
-    // with <appearance>
-    if (parts.Appearance) {
-      prompt += ' with ' + parts.Appearance;
-    }
-    
-    // is <pose>
-    if (parts.Pose) {
-      prompt += ' is ' + parts.Pose;
-    }
-    
-    // at <setting>
-    if (parts.Setting) {
-      prompt += ' at ' + parts.Setting;
-    }
-    
-    // , <lighting>
-    if (parts.Lighting) {
-      prompt += ', ' + parts.Lighting;
-    }
-    
-    // , <style>
-    if (parts.Style) {
-      prompt += ', ' + parts.Style;
-    }
-    
-    // , <details>
-    if (parts.Details) {
-      prompt += ', ' + parts.Details;
-    }
-    
-    // Clean up: remove extra spaces and commas
-    prompt = prompt.replace(/\s+/g, ' ').replace(/,\s*,/g, ',').replace(/^,\s*/, '').replace(/,\s*$/, '');
-    
-    return prompt;
+    return filtered;
   }
 
   async copyPrompt() {
