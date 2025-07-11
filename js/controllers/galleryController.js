@@ -777,6 +777,15 @@ export default class GalleryController {
       }
 
       switch (e.key.toLowerCase()) {
+        case 'g':
+          // Generate prompt - delegate to prompt injector if available
+          if (window.promptInjector && typeof window.promptInjector.generate === 'function') {
+            console.log('[GalleryController] Delegating G key to prompt injector');
+            window.promptInjector.generate();
+          } else {
+            console.log('[GalleryController] Prompt injector not available for G key');
+          }
+          break;
         case 'c':
           // Copy current prompt to clipboard
           const finalPrompt = this.model.generateFinalPrompt();

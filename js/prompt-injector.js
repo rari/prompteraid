@@ -33,13 +33,12 @@ class PromptInjector{
       if(['INPUT','TEXTAREA'].includes(e.target.tagName))return;
       const k=e.key.toLowerCase();
       
-      // Only handle 'g' and 'p' keys, let other keys pass through to main controller
-      if(k==='g')this.generate();
+      // Only handle 'p' key, let other keys pass through to main controller
       if(k==='p'){
         this.ensurePromptMenuVisible();
         this.togglePanel();
       }
-      // Note: 'a' key for randomize is handled by the main gallery controller
+      // Note: 'g' key for generate and 'a' key for randomize are handled by the main gallery controller
     });
 
     // Randomize checkbox logic
@@ -244,6 +243,8 @@ class PromptInjector{
 // Wait for DOM to be loaded, then initialize
 document.addEventListener('DOMContentLoaded',()=>{
   const promptInjector = new PromptInjector();
+  // Make it globally accessible for the gallery controller
+  window.promptInjector = promptInjector;
   // Bind after DOM is ready
   promptInjector.bind();
 }); 
