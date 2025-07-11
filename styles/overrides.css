@@ -216,6 +216,21 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   color: #fff;
 }
 
+/* Model selector: blue in light mode, white in dark mode */
+html.light-mode .current-model span,
+html.light-mode .model-option span,
+html.light-mode .current-model i,
+html.light-mode .model-option i {
+  color: var(--neon-blue);
+}
+
+html.dark-mode .current-model span,
+html.dark-mode .model-option span,
+html.dark-mode .current-model i,
+html.dark-mode .model-option i {
+  color: #fff;
+}
+
 /* ===== FOOTER LINK OVERRIDES ===== */
 /* Footer link decoration overrides - ensure consistent white color */
 .footer-links-section .social-link,
