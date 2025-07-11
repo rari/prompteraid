@@ -76,12 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const keyboardManager = new KeyboardShortcutManager();
   window.keyboardManager = keyboardManager;
   
-  // Initialize component system
-  const componentManager = new ComponentManager();
-  const componentUI = new ComponentUI(componentManager);
-  window.componentManager = componentManager;
-  window.componentUI = componentUI;
-  
   // Debug: Log keyboard shortcuts info
   setTimeout(() => {
     if (window.keyboardManager) {
