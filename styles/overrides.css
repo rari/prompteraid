@@ -207,12 +207,13 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
 
 /* ===== MODEL SELECTOR OVERRIDES ===== */
 /* Model selector color overrides for consistent blue theming */
-.current-model span, .model-option span {
+.current-model i, .model-option i {
   color: var(--neon-blue) !important;
 }
 
-.current-model i, .model-option i {
-  color: var(--neon-blue) !important;
+/* Force model selector link text to white */
+.current-model span, .model-option span {
+  color: #fff;
 }
 
 /* ===== FOOTER LINK OVERRIDES ===== */
