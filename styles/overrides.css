@@ -211,11 +211,6 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   color: var(--neon-blue) !important;
 }
 
-/* Force model selector link text to white */
-.current-model span, .model-option span {
-  color: #fff;
-}
-
 /* Model selector: blue in light mode, white in dark mode */
 html.light-mode .current-model span,
 html.light-mode .model-option span,
@@ -299,11 +294,11 @@ html.dark-mode .site-footer a:visited,
 html.dark-mode .site-footer a:hover,
 html.dark-mode .site-footer a:focus,
 html.dark-mode .site-footer a:active,
-html:not(.dark-mode):not(.light-mode) .site-footer a,
-html:not(.dark-mode):not(.light-mode) .site-footer a:visited,
-html:not(.dark-mode):not(.light-mode) .site-footer a:hover,
-html:not(.dark-mode):not(.light-mode) .site-footer a:focus,
-html:not(.dark-mode):not(.light-mode) .site-footer a:active {
+html.light-mode .site-footer a,
+html.light-mode .site-footer a:visited,
+html.light-mode .site-footer a:hover,
+html.light-mode .site-footer a:focus,
+html.light-mode .site-footer a:active {
   color: white !important;
 }
 
