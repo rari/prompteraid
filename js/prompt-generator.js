@@ -58,26 +58,7 @@ class PromptGenerator {
       this.toggleRandomize(randomizeCheckbox.checked);
     }
 
-    // Add keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      // Only trigger shortcuts if not typing in an input field
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-        return;
-      }
-
-      switch (e.key.toLowerCase()) {
-        case 'g':
-          this.generatePrompt();
-          break;
-        case 'c':
-          this.copyPrompt();
-          break;
-        case 'p':
-          this.ensurePromptMenuVisible();
-          this.toggleSettings();
-          break;
-      }
-    });
+    // Keyboard shortcuts are now handled by the centralized KeyboardShortcutManager
   }
 
   toggleSettings() {
@@ -355,5 +336,6 @@ class PromptGenerator {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  new PromptGenerator();
+  const promptGenerator = new PromptGenerator();
+  window.promptGenerator = promptGenerator;
 }); 
