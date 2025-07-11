@@ -1,8 +1,6 @@
 class PromptGenerator {
   constructor() {
     this.promptWords = null;
-    this.lastGenerateTs = 0;
-    this.DEBOUNCE_MS = 250;
     this.init();
   }
 
@@ -156,13 +154,6 @@ class PromptGenerator {
   }
 
   generatePrompt() {
-    const now = Date.now();
-    if (now - this.lastGenerateTs < this.DEBOUNCE_MS) {
-      console.log('[PromptGen] Ignoring rapid generate call');
-      return;
-    }
-    this.lastGenerateTs = now;
-
     if (!this.promptWords) {
       this.showError('Prompt words not loaded yet. Please wait...');
       return;
