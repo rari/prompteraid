@@ -49,7 +49,6 @@
 
 /* Feature panels & site sections */
 @import url('./sections/keyboard-shortcuts.css');
-@import url('./sections/user-components.css');
 @import url('./sections/news-section.css');
 @import url('./sections/more-information-section.css');
 @import url('./sections/filter-divider.css');
