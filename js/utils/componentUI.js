@@ -12,16 +12,19 @@ class ComponentUI {
   }
 
   init() {
+    console.log('ComponentUI init called');
     // Create the component container in the favorites bar
     this.createComponentContainer();
     
     // Listen for component changes
     this.componentManager.onComponentsChange = () => {
+      console.log('Components changed, updating display');
       this.updateComponentDisplay();
     };
     
     // Listen for favorites tools visibility changes
     this.observeFavoritesToolsVisibility();
+    console.log('ComponentUI init completed');
   }
 
   observeFavoritesToolsVisibility() {
@@ -54,9 +57,11 @@ class ComponentUI {
   }
 
   createComponentContainer() {
+    console.log('createComponentContainer called');
     // Check if component section already exists
     let componentSection = document.getElementById('component-section');
     if (!componentSection) {
+      console.log('Creating new component section');
       // Create component section
       componentSection = document.createElement('div');
       componentSection.id = 'component-section';
@@ -84,28 +89,42 @@ class ComponentUI {
       
       // Try to insert in favorites tools first, fallback to main content
       const favoritesTools = document.getElementById('favorites-tools');
+      console.log('Favorites tools found:', !!favoritesTools);
       if (favoritesTools) {
         const favoritesHeader = favoritesTools.querySelector('.favorites-tools-header');
+        console.log('Favorites header found:', !!favoritesHeader);
         if (favoritesHeader) {
+          console.log('Inserting component section after favorites header');
           favoritesHeader.parentNode.insertBefore(componentSection, favoritesHeader.nextSibling);
         } else {
+          console.log('Inserting component section at end of favorites tools');
           favoritesTools.appendChild(componentSection);
         }
       } else {
+        console.log('Favorites tools not found, inserting in main content');
         // Fallback: insert in main content area
         const mainContent = document.querySelector('main');
         if (mainContent) {
           mainContent.appendChild(componentSection);
         }
       }
+    } else {
+      console.log('Component section already exists');
     }
     
     this.container = componentSection;
     
     // Bind save button
     const saveBtn = document.getElementById('save-component-btn');
+    console.log('Save button found:', !!saveBtn);
     if (saveBtn) {
-      saveBtn.addEventListener('click', () => this.showSaveDialog());
+      console.log('Adding click listener to save button');
+      saveBtn.addEventListener('click', () => {
+        console.log('Save button clicked - event listener triggered');
+        this.showSaveDialog();
+      });
+    } else {
+      console.error('Save button not found in DOM');
     }
     
     // Initial update
@@ -233,8 +252,13 @@ class ComponentUI {
   }
 
   showSaveDialog() {
+    console.log('Save button clicked - showSaveDialog called');
+    console.log('ComponentManager available:', !!this.componentManager);
+    console.log('Current user:', this.componentManager?.currentUser);
+    
     this.componentManager.saveComponent()
       .then(() => {
+        console.log('Component saved successfully');
         this.updateComponentDisplay();
         this.showNotification('Component saved successfully', 'success');
       })
