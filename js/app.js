@@ -76,9 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const keyboardManager = new KeyboardShortcutManager();
   window.keyboardManager = keyboardManager;
   
-  // Initialize user components UI
-  const userComponentsUI = new UserComponentsUI();
-  window.userComponentsUI = userComponentsUI;
+  // Delay user components UI initialization to ensure dependencies are loaded
+  setTimeout(() => {
+    console.log('app.js: Initializing UserComponentsUI...');
+    const userComponentsUI = new UserComponentsUI();
+    window.userComponentsUI = userComponentsUI;
+  }, 200);
   
   // Debug: Log keyboard shortcuts info
   setTimeout(() => {

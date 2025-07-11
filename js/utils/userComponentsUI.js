@@ -6,19 +6,32 @@
 
 class UserComponentsUI {
   constructor() {
+    console.log('UserComponentsUI: Constructor called');
     this.componentsManager = null;
     this.saveModal = null;
     this.loadModal = null;
-    this.init();
+    // Delay initialization to ensure everything is loaded
+    setTimeout(() => this.init(), 100);
   }
 
   async init() {
+    console.log('UserComponentsUI: Initializing...');
+    
     // Wait for UserComponentsManager to be available
     if (window.UserComponentsManager) {
-      this.componentsManager = new window.UserComponentsManager();
-      this.createUI();
-      this.setupAuthListener();
+      console.log('UserComponentsUI: UserComponentsManager found, creating instance...');
+      try {
+        this.componentsManager = new window.UserComponentsManager();
+        console.log('UserComponentsUI: UserComponentsManager created successfully');
+        this.createUI();
+        this.setupAuthListener();
+      } catch (error) {
+        console.error('UserComponentsUI: Error creating UserComponentsManager:', error);
+        // Retry after a delay
+        setTimeout(() => this.init(), 500);
+      }
     } else {
+      console.log('UserComponentsUI: UserComponentsManager not found, retrying...');
       // Wait for it to load
       setTimeout(() => this.init(), 100);
     }

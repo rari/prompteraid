@@ -57,7 +57,7 @@ class UserComponentsManager {
         basePrompt: galleryController.model.basePrompt || '',
         suffix: galleryController.model.suffix || '',
         aspectRatio: galleryController.model.aspectRatio || '1:1',
-        selectedImages: Array.from(galleryController.model.selectedImages || []),
+        selectedImages: Array.from(galleryController.model.selectedImages.keys() || []),
         model: galleryController.model.currentModel || 'niji-6',
         timestamp: new Date().toISOString()
       };
@@ -225,7 +225,7 @@ class UserComponentsManager {
       if (configuration.selectedImages && Array.isArray(configuration.selectedImages)) {
         galleryController.model.selectedImages.clear();
         configuration.selectedImages.forEach(imageId => {
-          galleryController.model.selectedImages.add(imageId);
+          galleryController.model.selectedImages.set(imageId, 0); // 0 = default color index
         });
       }
 
