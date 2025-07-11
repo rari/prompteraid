@@ -4,7 +4,7 @@
  * 
  * 1. System Preference (prefers-color-scheme)
  *    - Automatically applies based on user's OS preference
- *    - Uses :not(.dark-mode):not(.light-mode) selectors
+ *    - Uses .light-mode and .dark-mode classes on <html> element
  * 
  * 2. Manual Override Classes
  *    - .dark-mode: Forces dark theme regardless of system preference
@@ -25,7 +25,7 @@
 /* Light mode (default for prefers-color-scheme: light) */
 @media (prefers-color-scheme: light) {
   /* Weight display styling for light mode system preference */
-  html:not(.dark-mode):not(.light-mode) .weight-display {
+  html.light-mode .weight-display {
     background-color: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.5);
@@ -43,13 +43,13 @@ body.dark-mode {
 }
 
   /* Light mode weight color classes - all weights use same light styling */
-  html:not(.dark-mode):not(.light-mode) .weight-color-0,
-  html:not(.dark-mode):not(.light-mode) .weight-color-1,
-  html:not(.dark-mode):not(.light-mode) .weight-color-2,
-  html:not(.dark-mode):not(.light-mode) .weight-color-3,
-  html:not(.dark-mode):not(.light-mode) .weight-color-4,
-  html:not(.dark-mode):not(.light-mode) .weight-color-5,
-  html:not(.dark-mode):not(.light-mode) .weight-color-6 {
+  html.light-mode .weight-color-0,
+  html.light-mode .weight-color-1,
+  html.light-mode .weight-color-2,
+  html.light-mode .weight-color-3,
+  html.light-mode .weight-color-4,
+  html.light-mode .weight-color-5,
+  html.light-mode .weight-color-6 {
     background-color: rgba(255, 255, 255, 0.8) !important;
     border-color: rgba(255, 255, 255, 0.3) !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
@@ -61,7 +61,7 @@ body.dark-mode {
 /* Dark mode (default for prefers-color-scheme: dark) */
 @media (prefers-color-scheme: dark) {
   /* Dark mode color palette - applied when no manual override is set */
-  html:not(.dark-mode):not(.light-mode) {
+  html.light-mode {
     /* Neutral palette - Dark mode */
     --background: hsl(210, 30%, 8%);
     --card-background: hsl(210, 30%, 12%);
@@ -100,215 +100,215 @@ body.dark-mode {
 
   /* ===== DARK MODE COMPONENT OVERRIDES ===== */
   /* Sticky action bar with dark background and blur */
-  html:not(.dark-mode):not(.light-mode) .sticky-action-bar {
+  html.light-mode .sticky-action-bar {
     background-color: rgba(30, 41, 59, 0.95);
   }
 
   /* Info containers with dark borders */
-  html:not(.dark-mode):not(.light-mode) .more-info-container {
+  html.light-mode .more-info-container {
     border-color: var(--border-color);
   }
 
-  html:not(.dark-mode):not(.light-mode) .more-info-container summary {
+  html.light-mode .more-info-container summary {
     color: var(--text-primary);
   }
 
   /* Weight control buttons with dark styling */
-  html:not(.dark-mode):not(.light-mode) .weight-control-button {
+  html.light-mode .weight-control-button {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html:not(.dark-mode):not(.light-mode) .weight-plus,
-  html:not(.dark-mode):not(.light-mode) .weight-minus {
+  html.light-mode .weight-plus,
+  html.light-mode .weight-minus {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html:not(.dark-mode):not(.light-mode) .weight-plus:hover,
-  html:not(.dark-mode):not(.light-mode) .weight-minus:hover {
+  html.light-mode .weight-plus:hover,
+  html.light-mode .weight-minus:hover {
     background-color: var(--gray-300);
   }
 
   /* Weight display with dark background */
-  html:not(.dark-mode):not(.light-mode) .weight-display {
+  html.light-mode .weight-display {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
   /* All weight color classes with dark background */
-  html:not(.dark-mode):not(.light-mode) .weight-color-0,
-  html:not(.dark-mode):not(.light-mode) .weight-color-1,
-  html:not(.dark-mode):not(.light-mode) .weight-color-2,
-  html:not(.dark-mode):not(.light-mode) .weight-color-3,
-  html:not(.dark-mode):not(.light-mode) .weight-color-4,
-  html:not(.dark-mode):not(.light-mode) .weight-color-5,
-  html:not(.dark-mode):not(.light-mode) .weight-color-6 {
+  html.light-mode .weight-color-0,
+  html.light-mode .weight-color-1,
+  html.light-mode .weight-color-2,
+  html.light-mode .weight-color-3,
+  html.light-mode .weight-color-4,
+  html.light-mode .weight-color-5,
+  html.light-mode .weight-color-6 {
     background-color: var(--card-background);
   }
 
   /* Gallery overlay buttons with dark styling */
-  html:not(.dark-mode):not(.light-mode) .favorite-button,
-  html:not(.dark-mode):not(.light-mode) .quadrant-flip-button {
+  html.light-mode .favorite-button,
+  html.light-mode .quadrant-flip-button {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html:not(.dark-mode):not(.light-mode) .favorite-button i,
-  html:not(.dark-mode):not(.light-mode) .quadrant-flip-button i {
+  html.light-mode .favorite-button i,
+  html.light-mode .quadrant-flip-button i {
     color: var(--text-secondary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .favorite-button:hover,
-  html:not(.dark-mode):not(.light-mode) .quadrant-flip-button:hover {
+  html.light-mode .favorite-button:hover,
+  html.light-mode .quadrant-flip-button:hover {
     background-color: var(--gray-300);
   }
 
   /* Link buttons with dark styling */
-  html:not(.dark-mode):not(.light-mode) .link-button {
+  html.light-mode .link-button {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html:not(.dark-mode):not(.light-mode) .link-button:hover {
+  html.light-mode .link-button:hover {
     background-color: var(--gray-300);
   }
 
   /* Model selector dropdown with dark styling */
-  html:not(.dark-mode):not(.light-mode) .model-dropdown {
+  html.light-mode .model-dropdown {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html:not(.dark-mode):not(.light-mode) .model-option {
+  html.light-mode .model-option {
     color: var(--text-primary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .model-option:hover {
+  html.light-mode .model-option:hover {
     background-color: var(--gray-300);
   }
 
-  html:not(.dark-mode):not(.light-mode) .model-option.active {
+  html.light-mode .model-option.active {
     background-color: var(--primary);
     color: white;
   }
 
   /* Aspect Ratio Dropdown */
-  html:not(.dark-mode):not(.light-mode) .aspect-ratio-dropdown {
+  html.light-mode .aspect-ratio-dropdown {
     background-color: var(--card-background);
     border-color: var(--border-color);
     color: var(--text-primary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .aspect-ratio-dropdown option {
+  html.light-mode .aspect-ratio-dropdown option {
     background-color: var(--card-background);
     color: var(--text-primary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .aspect-ratio-dropdown:focus {
+  html.light-mode .aspect-ratio-dropdown:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
   }
 
   /* Custom Aspect Ratio Input */
-  html:not(.dark-mode):not(.light-mode) .custom-aspect-ratio-input {
+  html.light-mode .custom-aspect-ratio-input {
     background-color: var(--card-background);
     border-color: var(--border-color);
     color: var(--text-primary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .custom-aspect-ratio-input:focus {
+  html.light-mode .custom-aspect-ratio-input:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
   }
 
-  html:not(.dark-mode):not(.light-mode) .custom-aspect-ratio-input:hover {
+  html.light-mode .custom-aspect-ratio-input:hover {
     background-color: var(--gray-300);
   }
 
   /* Favorites tools with dark styling */
-  html:not(.dark-mode):not(.light-mode) .favorites-tools-buttons {
+  html.light-mode .favorites-tools-buttons {
     background-color: var(--card-background);
   }
 
-  html:not(.dark-mode):not(.light-mode) .favorites-tools .action-button {
+  html.light-mode .favorites-tools .action-button {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html:not(.dark-mode):not(.light-mode) .favorites-tools .action-button:hover {
+  html.light-mode .favorites-tools .action-button:hover {
     background-color: var(--gray-300);
   }
 
-  html:not(.dark-mode):not(.light-mode) .favorites-tools .action-button i {
+  html.light-mode .favorites-tools .action-button i {
     color: var(--text-secondary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .favorites-tools .action-button:hover i {
+  html.light-mode .favorites-tools .action-button:hover i {
     color: var(--text-primary);
   }
 
   /* Notification styling for dark mode */
-  html:not(.dark-mode):not(.light-mode) .info-notification {
+  html.light-mode .info-notification {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html:not(.dark-mode):not(.light-mode) .warning-notification {
+  html.light-mode .warning-notification {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html:not(.dark-mode):not(.light-mode) .error-notification {
+  html.light-mode .error-notification {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html:not(.dark-mode):not(.light-mode) .menu-icon-style {
+  html.light-mode .menu-icon-style {
     color: var(--text-secondary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .menu-icon-style:hover {
+  html.light-mode .menu-icon-style:hover {
     color: var(--text-primary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .action-button:hover:not(.prompt-gen):not(.prompt-settings) {
+  html.light-mode .action-button:hover:not(.prompt-gen):not(.prompt-settings) {
     background-color: var(--gray-300);
   }
 
-  html:not(.dark-mode):not(.light-mode) .current-model span, 
-  html:not(.dark-mode):not(.light-mode) .model-option span {
+  html.light-mode .current-model span, 
+  html.light-mode .model-option span {
     color: var(--text-primary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .current-model i, 
-  html:not(.dark-mode):not(.light-mode) .model-option i {
+  html.light-mode .current-model i, 
+  html.light-mode .model-option i {
     color: var(--text-primary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .favorites-tools-header {
+  html.light-mode .favorites-tools-header {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html:not(.dark-mode):not(.light-mode) .favorites-tools-header i.fa-star {
+  html.light-mode .favorites-tools-header i.fa-star {
     color: var(--neon-yellow);
   }
 
-  html:not(.dark-mode):not(.light-mode) .favorites-tools-header h4 {
+  html.light-mode .favorites-tools-header h4 {
     color: var(--text-primary);
   }
 
-  html:not(.dark-mode):not(.light-mode) .new-styles-container,
-  html:not(.dark-mode):not(.light-mode) .more-info-container {
+  html.light-mode .new-styles-container,
+  html.light-mode .more-info-container {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html:not(.dark-mode):not(.light-mode) .new-styles-container,
-  html:not(.dark-mode):not(.light-mode) .more-info-container,
-  html:not(.dark-mode):not(.light-mode) .new-styles-container *,
-  html:not(.dark-mode):not(.light-mode) .more-info-container * {
+  html.light-mode .new-styles-container,
+  html.light-mode .more-info-container,
+  html.light-mode .new-styles-container *,
+  html.light-mode .more-info-container * {
     color: var(--text-primary);
   }
 }
@@ -762,7 +762,7 @@ html.dark-mode .favorites-tools-header h4 {
 }
 
 .light-mode .footer-glass-demo,
-html:not(.dark-mode):not(.light-mode) .footer-glass-demo {
+html.light-mode .footer-glass-demo {
   background: linear-gradient(to top, rgba(80,180,255,0.93) 0%, rgba(180,220,255,0.65) 60%, rgba(255,255,255,0.0) 100%);
   color: #1e293b;
 }
@@ -990,23 +990,23 @@ html:not(.dark-mode):not(.light-mode) .footer-glass-demo {
 
 /* LIGHT MODE */
 .light-mode .footer-glass-demo,
-html:not(.dark-mode):not(.light-mode) .footer-glass-demo,
+html.light-mode .footer-glass-demo,
 .light-mode .footer-glass-content,
 .light-mode .footer-glass-brand-text p,
 .light-mode .footer-glass-credit,
-html:not(.dark-mode):not(.light-mode) .footer-glass-content,
-html:not(.dark-mode):not(.light-mode) .footer-glass-brand-text p,
-html:not(.dark-mode):not(.light-mode) .footer-glass-credit {
+html.light-mode .footer-glass-content,
+html.light-mode .footer-glass-brand-text p,
+html.light-mode .footer-glass-credit {
   color: #1e293b;
 }
 .light-mode .footer-glass-link,
 .light-mode .footer-glass-legal a,
 .light-mode .footer-author-link,
 .light-mode .footer-link,
-html:not(.dark-mode):not(.light-mode) .footer-glass-link,
-html:not(.dark-mode):not(.light-mode) .footer-glass-legal a,
-html:not(.dark-mode):not(.light-mode) .footer-author-link,
-html:not(.dark-mode):not(.light-mode) .footer-link {
+html.light-mode .footer-glass-link,
+html.light-mode .footer-glass-legal a,
+html.light-mode .footer-author-link,
+html.light-mode .footer-link {
   color: #2563eb;
 }
 .light-mode .footer-glass-link:hover,
@@ -1014,11 +1014,11 @@ html:not(.dark-mode):not(.light-mode) .footer-link {
 .light-mode .footer-author-link:hover,
 .light-mode .footer-link:hover,
 .light-mode .footer-link:focus,
-html:not(.dark-mode):not(.light-mode) .footer-glass-link:hover,
-html:not(.dark-mode):not(.light-mode) .footer-glass-legal a:hover,
-html:not(.dark-mode):not(.light-mode) .footer-author-link:hover,
-html:not(.dark-mode):not(.light-mode) .footer-link:hover,
-html:not(.dark-mode):not(.light-mode) .footer-link:focus {
+html.light-mode .footer-glass-link:hover,
+html.light-mode .footer-glass-legal a:hover,
+html.light-mode .footer-author-link:hover,
+html.light-mode .footer-link:hover,
+html.light-mode .footer-link:focus {
   color: #0ea5e9;
   text-shadow: 0 0 8px #bae6fd, 0 0 16px #38bdf8;
   border-bottom: 1px solid #38bdf8;
@@ -1076,7 +1076,7 @@ html:not(.dark-mode):not(.light-mode) .footer-link:focus {
 
 /* System preference: dark */
 @media (prefers-color-scheme: dark) {
-  html:not(.dark-mode):not(.light-mode) .header-glass-bar {
+  html.light-mode .header-glass-bar {
     background: rgba(30, 41, 59, 0.85);
     border-bottom: 1.5px solid var(--border-color);
     color: var(--text-primary);
@@ -1087,7 +1087,7 @@ html:not(.dark-mode):not(.light-mode) .footer-link:focus {
 
 /* System preference: light */
 @media (prefers-color-scheme: light) {
-  html:not(.dark-mode):not(.light-mode) .header-glass-bar {
+  html.light-mode .header-glass-bar {
     background: rgba(255, 255, 255, 0.85);
     border-bottom: 1.5px solid var(--border-color);
     color: var(--text-primary);
@@ -1206,7 +1206,7 @@ html.dark-mode .shepherd-theme-glass {
 
 /* === SHEPHERD GLASS THEME (LIGHT MODE) === */
 html.light-mode .shepherd-theme-glass .shepherd-content,
-html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-content {
+html.light-mode .shepherd-theme-glass .shepherd-content {
   background: linear-gradient(120deg, rgba(255,255,255,0.90) 60%, rgba(180,220,255,0.22) 100%);
   color: #1e293b;
   border-radius: 0.9rem;
@@ -1222,7 +1222,7 @@ html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-content {
   opacity: 0.9;
 }
 html.light-mode .shepherd-theme-glass .shepherd-header,
-html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-header {
+html.light-mode .shepherd-theme-glass .shepherd-header {
   background: none !important;
   box-shadow: none !important;
   border: none !important;
@@ -1233,7 +1233,7 @@ html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-header {
   justify-content: space-between;
 }
 html.light-mode .shepherd-theme-glass .shepherd-title,
-html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-title {
+html.light-mode .shepherd-theme-glass .shepherd-title {
   color: #2563eb;
   font-weight: 700;
   font-size: 1.18em;
@@ -1242,7 +1242,7 @@ html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-title {
   padding-left: 0.1em;
 }
 html.light-mode .shepherd-theme-glass .shepherd-button,
-html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-button {
+html.light-mode .shepherd-theme-glass .shepherd-button {
   background: #e0e7ff;
   color: #2563eb;
   border-radius: 0.7em;
@@ -1256,13 +1256,13 @@ html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-button {
   cursor: pointer;
 }
 html.light-mode .shepherd-theme-glass .shepherd-button:hover, html.light-mode .shepherd-theme-glass .shepherd-button:focus,
-html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-button:hover, html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-button:focus {
+html.light-mode .shepherd-theme-glass .shepherd-button:hover, html.light-mode .shepherd-theme-glass .shepherd-button:focus {
   background: #2563eb;
   color: #fff;
   border-color: #fff;
 }
 html.light-mode .shepherd-theme-glass .shepherd-cancel-icon,
-html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-cancel-icon {
+html.light-mode .shepherd-theme-glass .shepherd-cancel-icon {
   color: #2563eb;
   font-size: 1.5em;
   font-weight: bold;
@@ -1277,24 +1277,24 @@ html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-cancel-ico
   outline: none;
 }
 html.light-mode .shepherd-theme-glass .shepherd-cancel-icon:hover,
-html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-cancel-icon:hover {
+html.light-mode .shepherd-theme-glass .shepherd-cancel-icon:hover {
   color: #fff;
   opacity: 1;
   background: rgba(80,180,255,0.12);
 }
 html.light-mode .shepherd-theme-glass .shepherd-arrow, html.light-mode .shepherd-theme-glass .shepherd-arrow:before,
-html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-arrow, html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-arrow:before {
+html.light-mode .shepherd-theme-glass .shepherd-arrow, html.light-mode .shepherd-theme-glass .shepherd-arrow:before {
   opacity: 0.9;
 }
 html.light-mode .shepherd-theme-glass .shepherd-arrow:before,
-html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass .shepherd-arrow:before {
+html.light-mode .shepherd-theme-glass .shepherd-arrow:before {
   background: linear-gradient(120deg, rgba(255,255,255,0.90) 60%, rgba(180,220,255,0.22) 100%);
   border: 1.5px solid var(--primary, #2563eb);
 }
 html.light-mode .shepherd-element.shepherd-theme-glass,
 html.light-mode .shepherd-theme-glass,
-html:not(.dark-mode):not(.light-mode) .shepherd-element.shepherd-theme-glass,
-html:not(.dark-mode):not(.light-mode) .shepherd-theme-glass {
+html.light-mode .shepherd-element.shepherd-theme-glass,
+html.light-mode .shepherd-theme-glass {
   background: none !important;
   box-shadow: none !important;
 }
@@ -1308,7 +1308,7 @@ html.dark-mode .info-notification {
   backdrop-filter: blur(8px) saturate(1.2);
 }
 html.light-mode .info-notification,
-html:not(.dark-mode):not(.light-mode) .info-notification {
+html.light-mode .info-notification {
   background: linear-gradient(135deg, rgba(255,255,255,0.90) 0%, rgba(180,220,255,0.18) 60%, rgba(80,180,255,0.10) 100%);
   color: #1e293b;
   border: 1.5px solid var(--primary, #2563eb);
@@ -1350,7 +1350,7 @@ html.dark-mode .docs-notification-dismiss:hover {
 
 /* Light mode docs notification */
 html.light-mode .docs-notification,
-html:not(.dark-mode):not(.light-mode) .docs-notification {
+html.light-mode .docs-notification {
   background: linear-gradient(120deg, rgba(255,255,255,0.90) 60%, rgba(180,220,255,0.22) 100%);
   color: #1e293b;
   border: 1.5px solid var(--primary, #2563eb);
@@ -1360,27 +1360,27 @@ html:not(.dark-mode):not(.light-mode) .docs-notification {
 }
 
 html.light-mode .docs-notification-content i,
-html:not(.dark-mode):not(.light-mode) .docs-notification-content i {
+html.light-mode .docs-notification-content i {
   color: #2563eb;
 }
 
 html.light-mode .docs-notification-content a,
-html:not(.dark-mode):not(.light-mode) .docs-notification-content a {
+html.light-mode .docs-notification-content a {
   color: #2563eb;
 }
 
 html.light-mode .docs-notification-content a:hover,
-html:not(.dark-mode):not(.light-mode) .docs-notification-content a:hover {
+html.light-mode .docs-notification-content a:hover {
   color: #1e293b;
 }
 
 html.light-mode .docs-notification-dismiss,
-html:not(.dark-mode):not(.light-mode) .docs-notification-dismiss {
+html.light-mode .docs-notification-dismiss {
   color: #2563eb;
 }
 
 html.light-mode .docs-notification-dismiss:hover,
-html:not(.dark-mode):not(.light-mode) .docs-notification-dismiss:hover {
+html.light-mode .docs-notification-dismiss:hover {
   color: #1e293b;
   background: rgba(80,180,255,0.12);
 } 

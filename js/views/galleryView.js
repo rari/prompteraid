@@ -1146,7 +1146,7 @@ export default class GalleryView {
           this.showInfoNotification(`Style reference ${styleRef} copied to clipboard`);
           
           // Reset after animation
-          setTimeout(() => {
+      setTimeout(() => {
             icon.className = 'fas fa-copy';
             copyPromptButton.classList.remove('copied');
           }, 2000);
@@ -1168,15 +1168,16 @@ export default class GalleryView {
       weightControls.style.visibility = 'visible';
       weightControls.style.display = 'flex';
       
-      // Minus button (negative - left side)
-      const minusButton = document.createElement('button');
-      minusButton.className = 'weight-control-button weight-minus';
-      minusButton.innerHTML = '−'; // Using minus sign (not hyphen)
-      minusButton.title = 'Decrease weight';
-      minusButton.dataset.id = image.id;
-      minusButton.dataset.action = 'decrease';
-      minusButton.setAttribute('aria-label', `Decrease weight for style reference ${image.sref}`);
-      weightControls.appendChild(minusButton);
+      // Plus button (positive - top side)
+      const plusButton = document.createElement('button');
+      plusButton.className = 'weight-control-button weight-plus';
+      plusButton.innerHTML = '+';
+      plusButton.title = 'Increase weight';
+      plusButton.dataset.id = image.id;
+      plusButton.dataset.action = 'increase';
+      plusButton.setAttribute('aria-label', `Increase weight for style reference ${image.sref}`);
+      plusButton.tabIndex = 0;
+      weightControls.appendChild(plusButton);
       
       // Weight display
       const weightDisplay = document.createElement('div');
@@ -1192,16 +1193,15 @@ export default class GalleryView {
       weightDisplay.style.display = 'flex';
       weightControls.appendChild(weightDisplay);
       
-      // Plus button (positive - right side)
-      const plusButton = document.createElement('button');
-      plusButton.className = 'weight-control-button weight-plus';
-      plusButton.innerHTML = '+';
-      plusButton.title = 'Increase weight';
-      plusButton.dataset.id = image.id;
-      plusButton.dataset.action = 'increase';
-      plusButton.setAttribute('aria-label', `Increase weight for style reference ${image.sref}`);
-      plusButton.tabIndex = 0;
-      weightControls.appendChild(plusButton);
+      // Minus button (negative - bottom side)
+      const minusButton = document.createElement('button');
+      minusButton.className = 'weight-control-button weight-minus';
+      minusButton.innerHTML = '−'; // Using minus sign (not hyphen)
+      minusButton.title = 'Decrease weight';
+      minusButton.dataset.id = image.id;
+      minusButton.dataset.action = 'decrease';
+      minusButton.setAttribute('aria-label', `Decrease weight for style reference ${image.sref}`);
+      weightControls.appendChild(minusButton);
       
       item.appendChild(weightControls);
     }

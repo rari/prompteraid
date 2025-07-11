@@ -236,7 +236,7 @@ class PromptGenerator {
     if (filtered.Subject) {
       if (typeof filtered.Subject === 'object' && filtered.Subject.type) {
         subjectType = filtered.Subject.type;
-      }
+    }
     }
     
     console.log('Subject type for filtering:', subjectType);
