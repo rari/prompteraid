@@ -168,6 +168,65 @@ class UserComponentsManager {
   }
 
   /**
+   * Update an existing component
+   */
+  async updateComponent(componentId, name = null) {
+    if (!this.currentUser) {
+      throw new Error('User must be authenticated to update components');
+    }
+
+    try {
+      // Get current configuration from the gallery controller
+      const galleryController = window.galleryController;
+      if (!galleryController || !galleryController.model) {
+        throw new Error('Gallery controller not available');
+      }
+
+      const configuration = {
+        basePrompt: galleryController.model.basePrompt || '',
+        suffix: galleryController.model.suffix || '',
+        aspectRatio: galleryController.model.aspectRatio || '1:1',
+        selectedImages: Array.from(galleryController.model.selectedImages.keys() || []),
+        model: galleryController.model.currentModel || 'niji-6',
+        timestamp: new Date().toISOString()
+      };
+
+      // Generate name if not provided
+      if (!name) {
+        name = configuration.basePrompt || `Unknown ${Date.now()}`;
+        // Truncate if too long
+        if (name.length > 50) {
+          name = name.substring(0, 47) + '...';
+        }
+      }
+
+      // Update the component
+      const { data, error } = await this.supabase
+        .from('user_components')
+        .update({
+          name: name,
+          configuration: configuration
+        })
+        .eq('id', componentId)
+        .eq('user_id', this.currentUser.id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error updating component:', error);
+        throw new Error(`Failed to update component: ${error.message}`);
+      }
+
+      console.log('Component updated successfully:', data);
+      return data;
+
+    } catch (error) {
+      console.error('Error in updateComponent:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Delete a component
    */
   async deleteComponent(componentId) {
