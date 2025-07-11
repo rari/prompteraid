@@ -686,13 +686,21 @@ export default class AppController {
     if (notificationDismissed !== 'true' && docsNotification) {
       // Add a delay to ensure the page is fully loaded
       setTimeout(() => {
-        // Explicitly re-apply the theme class to the notification
+        // Explicitly re-apply the theme class to the notification BEFORE showing it
         docsNotification.classList.remove('dark-mode', 'light-mode');
         if (document.documentElement.classList.contains('dark-mode')) {
           docsNotification.classList.add('dark-mode');
         } else if (document.documentElement.classList.contains('light-mode')) {
           docsNotification.classList.add('light-mode');
+        } else {
+          // Fallback: check system preference if no theme class is set
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            docsNotification.classList.add('dark-mode');
+          } else {
+            docsNotification.classList.add('light-mode');
+          }
         }
+        // Only remove hidden class after theme is applied
         docsNotification.classList.remove('hidden');
       }, 1500);
     }
