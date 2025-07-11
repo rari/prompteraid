@@ -553,28 +553,8 @@ export default class AppController {
 
   toggleTheme() {
     const hasDarkMode = document.documentElement.classList.contains('dark-mode');
-    const hasLightMode = document.documentElement.classList.contains('light-mode');
-    
-    let newTheme;
-    
-    if (hasDarkMode) {
-      // Currently in dark mode, switch to light mode
-      newTheme = 'light';
-    } else if (hasLightMode) {
-      // Currently in light mode, switch to system preference
-      newTheme = 'system';
-    } else {
-      // Currently using system preference, switch to dark mode
-      newTheme = 'dark';
-    }
-    
-    if (newTheme === 'system') {
-      // Remove manual preference and use system
-      localStorage.removeItem('prompteraid_theme');
-      this.setSystemTheme();
-    } else {
+    const newTheme = hasDarkMode ? 'light' : 'dark';
     this.setTheme(newTheme);
-    }
   }
 
   disableImageSaving() {
