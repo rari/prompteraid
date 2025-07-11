@@ -6,32 +6,19 @@
 
 class UserComponentsUI {
   constructor() {
-    console.log('UserComponentsUI: Constructor called');
     this.componentsManager = null;
-    this.saveModal = null;
-    this.loadModal = null;
-    // Delay initialization to ensure everything is loaded
-    setTimeout(() => this.init(), 100);
+    this.saveButton = null;
+    this.loadDropdown = null;
+    this.init();
   }
 
   async init() {
-    console.log('UserComponentsUI: Initializing...');
-    
     // Wait for UserComponentsManager to be available
     if (window.UserComponentsManager) {
-      console.log('UserComponentsUI: UserComponentsManager found, creating instance...');
-      try {
-        this.componentsManager = new window.UserComponentsManager();
-        console.log('UserComponentsUI: UserComponentsManager created successfully');
-        this.createUI();
-        this.setupAuthListener();
-      } catch (error) {
-        console.error('UserComponentsUI: Error creating UserComponentsManager:', error);
-        // Retry after a delay
-        setTimeout(() => this.init(), 500);
-      }
+      this.componentsManager = new window.UserComponentsManager();
+      this.createUI();
+      this.setupAuthListener();
     } else {
-      console.log('UserComponentsUI: UserComponentsManager not found, retrying...');
       // Wait for it to load
       setTimeout(() => this.init(), 100);
     }
@@ -45,12 +32,11 @@ class UserComponentsUI {
   }
 
   createUI() {
-    this.createSaveLoadButtons();
-    this.createModals();
+    this.createSaveLoadInterface();
   }
 
-  createSaveLoadButtons() {
-    // Add save/load buttons to the favorites tools section
+  createSaveLoadInterface() {
+    // Add save/load interface to the favorites tools section
     const favoritesTools = document.getElementById('favorites-tools');
     if (favoritesTools) {
       const favoritesButtons = favoritesTools.querySelector('.favorites-tools-buttons');
@@ -61,365 +47,210 @@ class UserComponentsUI {
         separator.innerHTML = '<hr>';
         favoritesButtons.appendChild(separator);
 
+        // Create container for save/load interface
+        const saveLoadContainer = document.createElement('div');
+        saveLoadContainer.className = 'save-load-container';
+        saveLoadContainer.style.cssText = `
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          width: 100%;
+        `;
+
         // Add save button
         const saveButton = document.createElement('button');
         saveButton.id = 'save-component-btn';
         saveButton.className = 'action-button';
-        saveButton.innerHTML = '<i class="fas fa-save"></i><span>Save Config</span>';
+        saveButton.innerHTML = '<i class="fas fa-save"></i><span>Save</span>';
         saveButton.title = 'Save current prompt configuration';
         saveButton.setAttribute('aria-label', 'Save current prompt configuration');
         
         saveButton.addEventListener('click', () => {
-          this.showSaveModal();
+          this.saveCurrentConfiguration();
         });
 
-        favoritesButtons.appendChild(saveButton);
+        saveLoadContainer.appendChild(saveButton);
 
-        // Add load button
-        const loadButton = document.createElement('button');
-        loadButton.id = 'load-component-btn';
-        loadButton.className = 'action-button';
-        loadButton.innerHTML = '<i class="fas fa-folder-open"></i><span>Load Config</span>';
-        loadButton.title = 'Load saved prompt configuration';
-        loadButton.setAttribute('aria-label', 'Load saved prompt configuration');
+        // Add load dropdown
+        const loadDropdown = document.createElement('select');
+        loadDropdown.id = 'load-component-dropdown';
+        loadDropdown.className = 'load-dropdown';
+        loadDropdown.style.cssText = `
+          flex: 1;
+          padding: 8px 12px;
+          border: 1px solid var(--border-color);
+          border-radius: 6px;
+          background: var(--bg-color);
+          color: var(--text-color);
+          font-size: 14px;
+          cursor: pointer;
+        `;
         
-        loadButton.addEventListener('click', () => {
-          this.showLoadModal();
+        // Add default option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Load saved config...';
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        loadDropdown.appendChild(defaultOption);
+
+        loadDropdown.addEventListener('change', (e) => {
+          if (e.target.value) {
+            this.loadConfiguration(e.target.value);
+            // Reset dropdown
+            e.target.value = '';
+          }
         });
 
-        favoritesButtons.appendChild(loadButton);
+        saveLoadContainer.appendChild(loadDropdown);
 
-        // Initially hide the buttons if not authenticated
+        favoritesButtons.appendChild(saveLoadContainer);
+
+        // Store references
+        this.saveButton = saveButton;
+        this.loadDropdown = loadDropdown;
+
+        // Initially hide the interface if not authenticated
         this.updateButtonVisibility();
+        
+        // Load saved configurations into dropdown
+        this.loadSavedConfigurations();
       }
     }
   }
 
   updateButtonVisibility() {
-    const saveButton = document.getElementById('save-component-btn');
-    const loadButton = document.getElementById('load-component-btn');
+    const saveLoadContainer = document.querySelector('.save-load-container');
     const separator = document.querySelector('.favorites-separator');
 
     if (this.componentsManager && this.componentsManager.isAuthenticated()) {
-      // Show buttons when authenticated
-      if (saveButton) saveButton.style.display = 'flex';
-      if (loadButton) loadButton.style.display = 'flex';
+      // Show interface when authenticated
+      if (saveLoadContainer) saveLoadContainer.style.display = 'flex';
       if (separator) separator.style.display = 'block';
     } else {
-      // Hide buttons when not authenticated
-      if (saveButton) saveButton.style.display = 'none';
-      if (loadButton) loadButton.style.display = 'none';
+      // Hide interface when not authenticated
+      if (saveLoadContainer) saveLoadContainer.style.display = 'none';
       if (separator) separator.style.display = 'none';
     }
   }
 
-  createModals() {
-    this.createSaveModal();
-    this.createLoadModal();
-  }
+  async loadSavedConfigurations() {
+    if (!this.componentsManager || !this.componentsManager.isAuthenticated()) {
+      return;
+    }
 
-  createSaveModal() {
-    // Create save modal
-    const modal = document.createElement('div');
-    modal.id = 'save-component-modal';
-    modal.className = 'modal hidden';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Save Prompt Configuration</h3>
-          <button class="modal-close" aria-label="Close modal">×</button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="component-name">Name:</label>
-            <input type="text" id="component-name" placeholder="Enter a name for this configuration">
-          </div>
-          <div class="form-group">
-            <label>Current Configuration:</label>
-            <div id="current-config-preview" class="config-preview"></div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button id="save-component-confirm" class="btn btn-primary">Save</button>
-          <button id="save-component-cancel" class="btn btn-secondary">Cancel</button>
-        </div>
-      </div>
-    `;
-
-    document.body.appendChild(modal);
-    this.saveModal = modal;
-
-    // Add event listeners
-    this.saveModal.querySelector('.modal-close').addEventListener('click', () => {
-      this.hideSaveModal();
-    });
-
-    this.saveModal.querySelector('#save-component-cancel').addEventListener('click', () => {
-      this.hideSaveModal();
-    });
-
-    this.saveModal.querySelector('#save-component-confirm').addEventListener('click', () => {
-      this.saveComponent();
-    });
-
-    // Close on backdrop click
-    this.saveModal.addEventListener('click', (e) => {
-      if (e.target === this.saveModal) {
-        this.hideSaveModal();
+    try {
+      const components = await this.componentsManager.getComponents();
+      
+      // Clear existing options except the first one
+      while (this.loadDropdown.children.length > 1) {
+        this.loadDropdown.removeChild(this.loadDropdown.lastChild);
       }
-    });
+
+      // Add saved configurations
+      components.forEach(component => {
+        const option = document.createElement('option');
+        option.value = component.id;
+        
+        // Create a descriptive name from the configuration
+        let displayName = component.name;
+        if (!displayName || displayName === 'Unknown') {
+          const config = component.configuration;
+          if (config.basePrompt) {
+            displayName = config.basePrompt.substring(0, 30);
+            if (config.basePrompt.length > 30) displayName += '...';
+          } else {
+            displayName = `Config ${component.id}`;
+          }
+        }
+        
+        // Add selection count if available
+        if (component.configuration.selectedImages && component.configuration.selectedImages.length > 0) {
+          displayName += ` (${component.configuration.selectedImages.length} selected)`;
+        }
+        
+        option.textContent = displayName;
+        this.loadDropdown.appendChild(option);
+      });
+
+    } catch (error) {
+      console.error('Error loading saved configurations:', error);
+    }
   }
 
-  createLoadModal() {
-    // Create load modal
-    const modal = document.createElement('div');
-    modal.id = 'load-component-modal';
-    modal.className = 'modal hidden';
-    modal.innerHTML = `
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Load Prompt Configuration</h3>
-          <button class="modal-close" aria-label="Close modal">×</button>
-        </div>
-        <div class="modal-body">
-          <div id="saved-components-list" class="components-list">
-            <div class="loading">Loading saved configurations...</div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button id="load-component-cancel" class="btn btn-secondary">Cancel</button>
-        </div>
-      </div>
-    `;
-
-    document.body.appendChild(modal);
-    this.loadModal = modal;
-
-    // Add event listeners
-    this.loadModal.querySelector('.modal-close').addEventListener('click', () => {
-      this.hideLoadModal();
-    });
-
-    this.loadModal.querySelector('#load-component-cancel').addEventListener('click', () => {
-      this.hideLoadModal();
-    });
-
-    // Close on backdrop click
-    this.loadModal.addEventListener('click', (e) => {
-      if (e.target === this.loadModal) {
-        this.hideLoadModal();
-      }
-    });
-  }
-
-  async showSaveModal() {
-    if (!this.componentsManager.isAuthenticated()) {
+  async saveCurrentConfiguration() {
+    if (!this.componentsManager || !this.componentsManager.isAuthenticated()) {
       this.showNotification('Please sign in to save configurations', 'error');
       return;
     }
 
-    // Update preview
-    this.updateSavePreview();
-    
-    // Show modal
-    this.saveModal.classList.remove('hidden');
-    
-    // Focus on name input
-    setTimeout(() => {
-      const nameInput = this.saveModal.querySelector('#component-name');
-      if (nameInput) {
-        nameInput.focus();
+    try {
+      // Generate a name based on current configuration
+      const galleryController = window.galleryController;
+      if (!galleryController || !galleryController.model) {
+        this.showNotification('Gallery controller not available', 'error');
+        return;
       }
-    }, 100);
-  }
 
-  hideSaveModal() {
-    this.saveModal.classList.add('hidden');
-    // Clear name input
-    const nameInput = this.saveModal.querySelector('#component-name');
-    if (nameInput) {
-      nameInput.value = '';
+      let configName = '';
+      if (galleryController.model.basePrompt) {
+        configName = galleryController.model.basePrompt.substring(0, 30);
+        if (galleryController.model.basePrompt.length > 30) {
+          configName += '...';
+        }
+      } else {
+        configName = `Config ${Date.now()}`;
+      }
+
+      // Add selection count to name
+      if (galleryController.model.selectedImages.size > 0) {
+        configName += ` (${galleryController.model.selectedImages.size} selected)`;
+      }
+
+      // Save the configuration
+      await this.componentsManager.saveComponent(configName);
+      
+      // Reload the dropdown
+      await this.loadSavedConfigurations();
+      
+      this.showNotification('Configuration saved successfully!', 'success');
+      
+    } catch (error) {
+      console.error('Error saving configuration:', error);
+      this.showNotification(`Error saving configuration: ${error.message}`, 'error');
     }
   }
 
-  async showLoadModal() {
-    if (!this.componentsManager.isAuthenticated()) {
+  async loadConfiguration(componentId) {
+    if (!this.componentsManager || !this.componentsManager.isAuthenticated()) {
       this.showNotification('Please sign in to load configurations', 'error');
       return;
     }
 
-    // Load and display components
-    await this.loadComponentsList();
-    
-    // Show modal
-    this.loadModal.classList.remove('hidden');
-  }
-
-  hideLoadModal() {
-    this.loadModal.classList.add('hidden');
-  }
-
-  updateSavePreview() {
-    const preview = this.saveModal.querySelector('#current-config-preview');
-    if (!preview) return;
-
-    const galleryController = window.galleryController;
-    if (!galleryController || !galleryController.model) {
-      preview.innerHTML = '<div class="error">Gallery controller not available</div>';
-      return;
-    }
-
-    const config = {
-      basePrompt: galleryController.model.basePrompt || '',
-      suffix: galleryController.model.suffix || '',
-      aspectRatio: galleryController.model.aspectRatio || '1:1',
-      selectedImages: galleryController.model.selectedImages.size,
-      model: galleryController.model.currentModel || 'niji-6'
-    };
-
-    preview.innerHTML = `
-      <div class="config-item">
-        <strong>Base Prompt:</strong> ${config.basePrompt || 'None'}
-      </div>
-      <div class="config-item">
-        <strong>Suffix:</strong> ${config.suffix || 'None'}
-      </div>
-      <div class="config-item">
-        <strong>Aspect Ratio:</strong> ${config.aspectRatio}
-      </div>
-      <div class="config-item">
-        <strong>Selected Images:</strong> ${config.selectedImages}
-      </div>
-      <div class="config-item">
-        <strong>Model:</strong> ${config.model}
-      </div>
-    `;
-  }
-
-  async loadComponentsList() {
-    const listContainer = this.loadModal.querySelector('#saved-components-list');
-    if (!listContainer) return;
-
-    try {
-      listContainer.innerHTML = '<div class="loading">Loading...</div>';
-      
-      const components = await this.componentsManager.getComponents();
-      
-      if (components.length === 0) {
-        listContainer.innerHTML = '<div class="no-components">No saved configurations found</div>';
-        return;
-      }
-
-      listContainer.innerHTML = components.map(component => `
-        <div class="component-item" data-id="${component.id}">
-          <div class="component-info">
-            <div class="component-name">${component.name}</div>
-            <div class="component-date">${new Date(component.created_at).toLocaleDateString()}</div>
-            <div class="component-preview">
-              <strong>Prompt:</strong> ${component.configuration.basePrompt || 'None'} |
-              <strong>Images:</strong> ${component.configuration.selectedImages?.length || 0}
-            </div>
-          </div>
-          <div class="component-actions">
-            <button class="btn btn-small btn-primary load-component-btn" data-id="${component.id}">
-              <i class="fas fa-folder-open"></i> Load
-            </button>
-            <button class="btn btn-small btn-danger delete-component-btn" data-id="${component.id}">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-      `).join('');
-
-      // Add event listeners
-      listContainer.querySelectorAll('.load-component-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const componentId = e.target.dataset.id;
-          this.loadComponent(componentId);
-        });
-      });
-
-      listContainer.querySelectorAll('.delete-component-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const componentId = e.target.dataset.id;
-          this.deleteComponent(componentId);
-        });
-      });
-
-    } catch (error) {
-      console.error('Error loading components:', error);
-      listContainer.innerHTML = '<div class="error">Error loading configurations</div>';
-    }
-  }
-
-  async saveComponent() {
-    try {
-      const nameInput = this.saveModal.querySelector('#component-name');
-      const name = nameInput.value.trim();
-
-      await this.componentsManager.saveComponent(name);
-      
-      this.hideSaveModal();
-      this.showNotification('Configuration saved successfully!', 'success');
-      
-    } catch (error) {
-      console.error('Error saving component:', error);
-      this.showNotification(error.message, 'error');
-    }
-  }
-
-  async loadComponent(componentId) {
     try {
       await this.componentsManager.loadComponent(componentId);
-      
-      this.hideLoadModal();
       this.showNotification('Configuration loaded successfully!', 'success');
-      
     } catch (error) {
-      console.error('Error loading component:', error);
-      this.showNotification(error.message, 'error');
-    }
-  }
-
-  async deleteComponent(componentId) {
-    if (!confirm('Are you sure you want to delete this configuration?')) {
-      return;
-    }
-
-    try {
-      await this.componentsManager.deleteComponent(componentId);
-      
-      // Refresh the list
-      await this.loadComponentsList();
-      this.showNotification('Configuration deleted successfully!', 'success');
-      
-    } catch (error) {
-      console.error('Error deleting component:', error);
-      this.showNotification(error.message, 'error');
+      console.error('Error loading configuration:', error);
+      this.showNotification(`Error loading configuration: ${error.message}`, 'error');
     }
   }
 
   showNotification(message, type = 'info') {
-    // Use existing notification system if available
     if (window.galleryController && window.galleryController.view) {
-      if (type === 'success') {
-        window.galleryController.view.showInfoNotification(message);
-      } else if (type === 'error') {
+      if (type === 'error') {
         window.galleryController.view.showErrorNotification(message);
+      } else if (type === 'success') {
+        window.galleryController.view.showInfoNotification(message);
       } else {
         window.galleryController.view.showInfoNotification(message);
       }
     } else {
-      // Fallback to alert
+      // Fallback to alert if view not available
       alert(message);
     }
   }
 }
 
-// Export for module usage
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = UserComponentsUI;
-}
-
-// Make available globally
+// Make the class available globally
 window.UserComponentsUI = UserComponentsUI; 
