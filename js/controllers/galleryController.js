@@ -783,7 +783,31 @@ export default class GalleryController {
             console.log('[GalleryController] Delegating G key to prompt injector');
             window.promptInjector.generate();
           } else {
-            console.log('[GalleryController] Prompt injector not available for G key');
+            console.log('[GalleryController] Prompt injector not available, trying fallback');
+            // Fallback: try to find and click the generate button
+            const generateBtn = document.getElementById('generate-prompt-btn');
+            if (generateBtn) {
+              console.log('[GalleryController] Using fallback: clicking generate button');
+              generateBtn.click();
+            } else {
+              console.log('[GalleryController] No generate button found for G key');
+              // Try polling for prompt injector (in case it loads after gallery controller)
+              let attempts = 0;
+              const maxAttempts = 10;
+              const pollForPromptInjector = () => {
+                attempts++;
+                if (window.promptInjector && typeof window.promptInjector.generate === 'function') {
+                  console.log('[GalleryController] Found prompt injector after polling, calling generate');
+                  window.promptInjector.generate();
+                } else if (attempts < maxAttempts) {
+                  console.log(`[GalleryController] Prompt injector not ready, attempt ${attempts}/${maxAttempts}`);
+                  setTimeout(pollForPromptInjector, 100);
+                } else {
+                  console.log('[GalleryController] Prompt injector not available after polling');
+                }
+              };
+              pollForPromptInjector();
+            }
           }
           break;
         case 'c':
