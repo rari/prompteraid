@@ -771,16 +771,8 @@ export default class GalleryController {
 
       switch (e.key.toLowerCase()) {
         case 'c':
-          // Copy current prompt to clipboard
-          const finalPrompt = this.model.generateFinalPrompt();
-          navigator.clipboard.writeText(finalPrompt)
-            .then(() => {
-              this.view.showInfoNotification('Prompt copied to clipboard.');
-            })
-            .catch(err => {
-              console.error('Failed to copy text: ', err);
-              this.view.showInfoNotification('Failed to copy to clipboard.');
-            });
+          // Copy current prompt to clipboard with fallback to prompt systems
+          this.copyPromptToClipboard();
           break;
           
         case 'r':
@@ -911,9 +903,19 @@ export default class GalleryController {
           e.stopPropagation();
           break;
           
+        case 'p':
+          // Toggle prompt settings panel
+          this.togglePromptSettings();
+          break;
+          
         case 'a':
           // Randomize selection - call the same handler as the button
           this.randomizeSelection();
+          break;
+          
+        case 'g':
+          // Generate random prompt with robust fallback system
+          this.generateRandomPrompt();
           break;
       }
     });
@@ -1162,6 +1164,172 @@ export default class GalleryController {
   }
 
 
+
+  /**
+   * Generates a random prompt using the most appropriate available system
+   * with robust fallback and polling mechanisms
+   */
+  generateRandomPrompt() {
+    console.log('[GalleryController] G key pressed - generating random prompt');
+    
+    // Try promptBuilder first (most robust)
+    if (window.promptBuilder && typeof window.promptBuilder.generatePrompt === 'function') {
+      console.log('[GalleryController] Using promptBuilder.generatePrompt()');
+      window.promptBuilder.generatePrompt();
+      return;
+    }
+    
+    // Fallback to promptGenerator
+    if (window.promptGenerator && typeof window.promptGenerator.generatePrompt === 'function') {
+      console.log('[GalleryController] Using promptGenerator.generatePrompt()');
+      window.promptGenerator.generatePrompt();
+      return;
+    }
+    
+    // Fallback to promptInjector
+    if (window.promptInjector && typeof window.promptInjector.generate === 'function') {
+      console.log('[GalleryController] Using promptInjector.generate()');
+      window.promptInjector.generate();
+      return;
+    }
+    
+    // Final fallback - direct DOM manipulation
+    console.log('[GalleryController] Using direct DOM fallback');
+    const generateBtn = document.getElementById('generate-prompt-btn');
+    if (generateBtn) {
+      generateBtn.click();
+      return;
+    }
+    
+    // If nothing is available, poll for up to 2 seconds
+    console.log('[GalleryController] No prompt systems available, polling...');
+    let attempts = 0;
+    const maxAttempts = 20; // 2 seconds at 100ms intervals
+    
+    const pollForPromptSystem = () => {
+      attempts++;
+      
+      if (window.promptBuilder && typeof window.promptBuilder.generatePrompt === 'function') {
+        console.log('[GalleryController] Found promptBuilder after polling');
+        window.promptBuilder.generatePrompt();
+        return;
+      }
+      
+      if (window.promptGenerator && typeof window.promptGenerator.generatePrompt === 'function') {
+        console.log('[GalleryController] Found promptGenerator after polling');
+        window.promptGenerator.generatePrompt();
+        return;
+      }
+      
+      if (window.promptInjector && typeof window.promptInjector.generate === 'function') {
+        console.log('[GalleryController] Found promptInjector after polling');
+        window.promptInjector.generate();
+        return;
+      }
+      
+      if (attempts < maxAttempts) {
+        setTimeout(pollForPromptSystem, 100);
+      } else {
+        console.warn('[GalleryController] No prompt system found after polling');
+        this.view.showErrorNotification('Prompt generation not available. Please try again.');
+      }
+    };
+    
+    pollForPromptSystem();
+  }
+
+  /**
+   * Copies the current prompt to clipboard with fallback to prompt systems
+   */
+  copyPromptToClipboard() {
+    console.log('[GalleryController] C key pressed - copying prompt to clipboard');
+    
+    // Try to get prompt from the main model first
+    if (this.model && typeof this.model.generateFinalPrompt === 'function') {
+      const finalPrompt = this.model.generateFinalPrompt();
+      if (finalPrompt && finalPrompt.trim()) {
+        navigator.clipboard.writeText(finalPrompt)
+          .then(() => {
+            this.view.showInfoNotification('Prompt copied to clipboard.');
+          })
+          .catch(err => {
+            console.error('Failed to copy text: ', err);
+            this.view.showErrorNotification('Failed to copy to clipboard.');
+          });
+        return;
+      }
+    }
+    
+    // Fallback to prompt systems
+    if (window.promptGenerator && typeof window.promptGenerator.copyPrompt === 'function') {
+      window.promptGenerator.copyPrompt();
+      return;
+    }
+    
+    // Final fallback - try to copy from DOM
+    const finalPromptElement = document.getElementById('final-prompt');
+    if (finalPromptElement && finalPromptElement.textContent.trim()) {
+      navigator.clipboard.writeText(finalPromptElement.textContent.trim())
+        .then(() => {
+          this.view.showInfoNotification('Prompt copied to clipboard.');
+        })
+        .catch(err => {
+          console.error('Failed to copy text: ', err);
+          this.view.showErrorNotification('Failed to copy to clipboard.');
+        });
+      return;
+    }
+    
+    this.view.showErrorNotification('No prompt available to copy.');
+  }
+
+  /**
+   * Toggles the prompt settings panel
+   */
+  togglePromptSettings() {
+    console.log('[GalleryController] P key pressed - toggling prompt settings');
+    
+    // Try promptGenerator first
+    if (window.promptGenerator && typeof window.promptGenerator.toggleSettings === 'function') {
+      window.promptGenerator.ensurePromptMenuVisible();
+      window.promptGenerator.toggleSettings();
+      return;
+    }
+    
+    // Fallback to promptInjector
+    if (window.promptInjector && typeof window.promptInjector.togglePanel === 'function') {
+      window.promptInjector.ensurePromptMenuVisible();
+      window.promptInjector.togglePanel();
+      return;
+    }
+    
+    // Final fallback - direct DOM manipulation
+    const settingsPanel = document.getElementById('prompt-settings-panel');
+    const settingsBtn = document.getElementById('prompt-settings-btn');
+    const stickyPanel = document.getElementById('sticky-prompt-settings-panel');
+    const stickyActionBar = document.getElementById('sticky-action-bar');
+    
+    if (settingsPanel) {
+      settingsPanel.classList.toggle('hidden');
+    }
+    
+    if (stickyPanel) {
+      stickyPanel.classList.toggle('hidden');
+    }
+    
+    if (stickyActionBar) {
+      stickyActionBar.classList.toggle('settings-open');
+    }
+    
+    if (settingsBtn) {
+      settingsBtn.classList.toggle('active');
+    }
+    
+    const stickySettingsBtn = document.getElementById('sticky-prompt-settings-btn');
+    if (stickySettingsBtn) {
+      stickySettingsBtn.classList.toggle('active');
+    }
+  }
 
   /**
    * Selects a random unselected image and adds it to the selection
