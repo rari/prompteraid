@@ -503,6 +503,21 @@ class SelectionManager {
   generateSlotName(config) {
     const stats = [];
     
+    // Add first 3 words of base prompt (limited by characters)
+    if (config.basePrompt && config.basePrompt.trim()) {
+      const words = config.basePrompt.trim().split(/\s+/);
+      let firstThreeWords = words.slice(0, 3).join(' ');
+      
+      // Limit to 30 characters for the preview
+      if (firstThreeWords.length > 30) {
+        firstThreeWords = firstThreeWords.substring(0, 27) + '...';
+      } else if (words.length > 3) {
+        firstThreeWords += '...';
+      }
+      
+      stats.push(`"${firstThreeWords}"`);
+    }
+    
     // Add selected images count with model info if different
     if (config.selectedImages && config.selectedImages.length > 0) {
       const currentModel = window.galleryController?.model?.currentModel || 'niji-6';
