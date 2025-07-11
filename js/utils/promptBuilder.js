@@ -12,7 +12,7 @@ let promptWordsData = null;
  * Set the prompt words data (called when data is loaded)
  * @param {Object} data - The loaded prompt words data
  */
-function setPromptWordsData(data) {
+export function setPromptWordsData(data) {
   promptWordsData = data;
 }
 
@@ -40,7 +40,7 @@ function getSubjectType(subject) {
  * @param {Object} parts - Object containing category words (Presentation, Emotion, Subject, etc.)
  * @returns {string} Formatted prompt string
  */
-function buildLogicalPrompt(parts) {
+export function buildLogicalPrompt(parts) {
   let prompt = '';
   
   // Extract subject name and type
@@ -115,7 +115,7 @@ function buildLogicalPrompt(parts) {
 /**
  * Standard category configuration for prompt generation
  */
-const PROMPT_CATEGORIES = {
+export const PROMPT_CATEGORIES = {
   ids: ['cat-presentation', 'cat-subject', 'cat-appearance', 'cat-clothing', 'cat-pose', 'cat-emotion', 'cat-setting', 'cat-lighting', 'cat-style', 'cat-details'],
   names: ['Presentation', 'Subject', 'Appearance', 'Clothing', 'Pose', 'Emotion', 'Setting', 'Lighting', 'Style', 'Details']
 };
@@ -125,7 +125,7 @@ const PROMPT_CATEGORIES = {
  * @param {boolean} isRandomizeMode - Whether to randomize category selection
  * @returns {Array} Array of selected category names
  */
-function getSelectedCategories(isRandomizeMode = false) {
+export function getSelectedCategories(isRandomizeMode = false) {
   const selectedCategories = [];
   
   if (isRandomizeMode) {
@@ -156,7 +156,7 @@ function getSelectedCategories(isRandomizeMode = false) {
  * @param {Array} array - Array to shuffle
  * @returns {Array} Shuffled array
  */
-function shuffle(array) {
+export function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
@@ -168,8 +168,4 @@ function shuffle(array) {
 if (typeof window !== 'undefined') {
   window.promptBuilder = window.promptBuilder || {};
   window.promptBuilder.buildLogicalPrompt = buildLogicalPrompt;
-  window.promptBuilder.setPromptWordsData = setPromptWordsData;
-  window.promptBuilder.getSelectedCategories = getSelectedCategories;
-  window.promptBuilder.shuffle = shuffle;
-  window.promptBuilder.PROMPT_CATEGORIES = PROMPT_CATEGORIES;
 } 
