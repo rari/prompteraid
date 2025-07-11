@@ -1796,6 +1796,24 @@ export default class GalleryView {
         console.log('All sticky buttons for eye:', Array.from(allStickyButtons).map(btn => btn.id));
       }
     }
+    
+    // Update selection tools visibility
+    this.updateSelectionToolsVisibility(isActive);
+  }
+
+  /**
+   * Updates the selection tools bar visibility based on selected view state
+   * @param {boolean} showOnlySelected - Whether the selected view is active
+   */
+  updateSelectionToolsVisibility(showOnlySelected) {
+    const selectionTools = document.getElementById('selection-tools');
+    if (selectionTools) {
+      if (showOnlySelected) {
+        selectionTools.classList.remove('hidden');
+      } else {
+        selectionTools.classList.add('hidden');
+      }
+    }
   }
 
   bindShowSelectedToggle(handler) {
