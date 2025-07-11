@@ -287,10 +287,8 @@ class UserComponentsManager {
   }
 }
 
-// Export for module usage
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = UserComponentsManager;
-}
+// Export for ES module usage
+export { UserComponentsManager };
 
 // Make the class available globally for the UI manager
 window.UserComponentsManager = UserComponentsManager; 
