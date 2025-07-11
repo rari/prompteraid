@@ -1,0 +1,197 @@
+/* === Selection Tools Bar ============================================== */
+.selection-tools {
+  background-color: transparent;
+  border: none;
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 0;
+  box-shadow: none;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+
+.selection-tools.hidden {
+  display: none;
+}
+
+.selection-tools-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 1.2rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--neon-green) !important;
+  backdrop-filter: blur(12px) saturate(1.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 1.5px 8px rgba(0,255,0,0.08);
+}
+
+.selection-tools-header i.fa-save {
+  color: var(--neon-green) !important;
+  font-size: 1.3em;
+  margin-right: 0.3em;
+}
+
+.selection-tools-header h4 {
+  margin: 0;
+  color: var(--neon-green) !important;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.selection-slots {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.selection-slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  transition: var(--transition-normal);
+  cursor: pointer;
+}
+
+.selection-slot:hover {
+  background: rgba(0, 255, 0, 0.08) !important;
+  backdrop-filter: blur(10px) !important;
+  border-color: rgba(0, 255, 0, 0.3) !important;
+  transform: scale(1.02) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+}
+
+.selection-slot.filled {
+  border-color: var(--neon-green);
+  background-color: rgba(0, 255, 0, 0.05);
+}
+
+.selection-slot.empty {
+  opacity: 0.8;
+}
+
+.slot-content {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  flex: 1;
+}
+
+.slot-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--neon-green);
+  color: #000 !important; /* Dark text for better readability */
+  border-radius: var(--border-radius-full);
+  font-weight: bold;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.slot-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.slot-name {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.slot-stats {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  line-height: 1.1;
+  opacity: 0.8;
+}
+
+.slot-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.slot-edit-btn,
+.slot-clear-btn {
+  width: 2.2rem;
+  height: 2.2rem;
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-normal);
+  font-size: 0.9rem;
+}
+
+.slot-edit-btn {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: var(--neon-blue);
+}
+
+.slot-edit-btn:hover {
+  background-color: var(--neon-blue);
+  color: var(--background-primary);
+  transform: scale(1.1);
+}
+
+.slot-clear-btn {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: var(--error-color);
+}
+
+.slot-clear-btn:hover {
+  background-color: var(--error-color);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Editable slot name styling */
+.slot-name[contenteditable="true"] {
+  background-color: rgba(0, 255, 0, 0.1);
+  border: 1px solid var(--neon-green);
+  border-radius: var(--border-radius-sm);
+  padding: 0.2rem 0.5rem;
+  outline: none;
+  min-width: 100px;
+  cursor: text;
+}
+
+.slot-name[contenteditable="true"]:focus {
+  background-color: rgba(0, 255, 0, 0.2);
+  border-color: var(--neon-green);
+  box-shadow: 0 0 0 2px rgba(0, 255, 0, 0.2);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .selection-slots {
+    padding: var(--space-3);
+  }
+  
+  .selection-slot {
+    padding: var(--space-2);
+  }
+  
+  .slot-actions {
+    gap: var(--space-1);
+  }
+  
+  .slot-clear-btn {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.8rem;
+  }
+} 
