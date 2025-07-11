@@ -68,9 +68,6 @@ class PromptGenerator {
       }
 
       switch (e.key.toLowerCase()) {
-        case 'g':
-          this.generatePrompt();
-          break;
         case 'c':
           this.copyPrompt();
           break;
@@ -78,7 +75,7 @@ class PromptGenerator {
           this.ensurePromptMenuVisible();
           this.toggleSettings();
           break;
-        // Note: 'a' key for randomize is handled by the main gallery controller
+        // Note: 'g' key for generate and 'a' key for randomize are handled by the main gallery controller
       }
     });
   }
