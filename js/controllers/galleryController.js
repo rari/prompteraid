@@ -328,6 +328,7 @@ export default class GalleryController {
         const searchTerms = this.searchNumber.split(' ').map(term => term.trim()).filter(term => term.length > 0);
         const searchDisplay = searchTerms.length > 1 ? `"${searchTerms.join('", "')}"` : `"${this.searchNumber}"`;
         this.view.showErrorNotification(`No images found matching ${searchDisplay}`);
+        this.view.clearGallery(); // Ensure gallery is cleared when no results
         // Return early to prevent further filtering
         return;
       }
@@ -923,6 +924,7 @@ export default class GalleryController {
       const searchDisplay = searchTerms.length > 1 ? `"${searchTerms.join('", "')}"` : `"${filteredInput}"`;
       this.view.showErrorNotification(`No images found matching ${searchDisplay}`);
       this.view.hideFilterDivider('search');
+      this.view.clearGallery(); // Ensure gallery is cleared when no results
       this.renderGallery();
       // Add search-active class even when no matches found
       const searchInputElement = document.getElementById('search-input');
