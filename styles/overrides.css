@@ -179,6 +179,12 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   display: none !important;
 }
 
+/* Extra specificity to override any theme margin */
+html.dark-mode .more-info-container.hidden,
+html.light-mode .more-info-container.hidden {
+  margin: 0 !important;
+}
+
 /* ===== GALLERY BUTTON OVERRIDES ===== */
 /* Gallery button icon overrides for New Styles and Tutorial sections */
 .new-styles-container .favorite-button i,
