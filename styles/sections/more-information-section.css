@@ -20,6 +20,18 @@
   backdrop-filter: none !important;
 }
 
+.more-info-container.hidden {
+  margin: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  display: none !important;
+}
+
 .more-info-container details {
   border: none;
 }
