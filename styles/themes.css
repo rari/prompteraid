@@ -24,7 +24,40 @@
 
 /* Light mode (default for prefers-color-scheme: light) */
 @media (prefers-color-scheme: light) {
+  /* Weight control buttons for light mode system preference */
+  .weight-control-button {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: var(--neon-blue) !important;
+  }
+
+  .weight-control-button:hover {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+  }
+
   /* Weight display styling for light mode system preference */
+  .weight-display {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: var(--neon-teal) !important;
+  }
+
+  /* Light mode weight color classes - all weights use same light styling */
+  .weight-color-0,
+  .weight-color-1,
+  .weight-color-2,
+  .weight-color-3,
+  .weight-color-4,
+  .weight-color-5,
+  .weight-color-6 {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+    color: #a742f5 !important; /* Neon Purple */
+    text-shadow: 0 0 5px rgba(167, 66, 245, 0.5) !important;
+  }
+
+  /* Manual light mode overrides */
   html.light-mode .weight-display {
     background-color: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -33,7 +66,6 @@
     text-shadow: 0 0 5px rgba(167, 66, 245, 0.5) !important;
   }
 
-  /* Light mode weight color classes - all weights use same light styling */
   html.light-mode .weight-color-0,
   html.light-mode .weight-color-1,
   html.light-mode .weight-color-2,
@@ -326,6 +358,17 @@ html.light-mode .weight-display {
   text-shadow: 0 0 5px rgba(167, 66, 245, 0.5) !important;
 }
 
+/* Light mode weight control buttons */
+html.light-mode .weight-control-button {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: var(--neon-blue) !important;
+}
+
+html.light-mode .weight-control-button:hover {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
 /* Light mode weight color classes */
 html.light-mode .weight-color-0,
 html.light-mode .weight-color-1,
@@ -339,6 +382,13 @@ html.light-mode .weight-color-6 {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
   color: #a742f5 !important; /* Neon Purple */
   text-shadow: 0 0 5px rgba(167, 66, 245, 0.5) !important;
+}
+
+/* Light mode weight display */
+html.light-mode .weight-display {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: var(--neon-teal) !important;
 }
 
 /* ===== DARK MODE STYLES (Manual Override) ===== */
