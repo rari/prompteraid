@@ -98,11 +98,33 @@ class SelectionManager {
           console.error('Error handling auth sign-in event:', err);
         }
       } else if (event === 'SIGNED_OUT') {
-        // User signed out – fall back to localStorage selections
+        // User signed out – purge any stored data for privacy/sync hygiene
+        this.purgeLocalStorageData();
+
+        // Reload (now-empty) selections from storage and update UI
         this.loadSelectionsFromStorage();
         this.updateSlotDisplay();
       }
     });
+  }
+
+  /**
+   * Remove all localStorage keys that belong to PrompterAid (prefixed with "prompteraid-").
+   * Called when the user signs out to ensure personal data isn’t left on shared devices.
+   */
+  purgeLocalStorageData() {
+    try {
+      const prefix = 'prompteraid-';
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(prefix)) {
+          localStorage.removeItem(key);
+        }
+      }
+      console.log('[DEBUG] purgeLocalStorageData: Cleared all PrompterAid data from localStorage');
+    } catch (err) {
+      console.error('Error purging PrompterAid localStorage data:', err);
+    }
   }
 
   /**
