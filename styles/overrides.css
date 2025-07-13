@@ -166,6 +166,19 @@ html.dark-mode .new-styles-container .link-button i { color: var(--neon-pink) !i
   color: var(--neon-yellow) !important;
 }
 
+/* Remove all layout space when more-info-container is hidden */
+.more-info-container.hidden {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  display: none !important;
+}
+
 /* ===== GALLERY BUTTON OVERRIDES ===== */
 /* Gallery button icon overrides for New Styles and Tutorial sections */
 .new-styles-container .favorite-button i,
