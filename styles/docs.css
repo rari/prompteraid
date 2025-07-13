@@ -928,9 +928,3 @@ code {
 .faq-item h3 {
   font-family: 'Baloo 2', 'Arial Rounded MT Bold', Arial, sans-serif !important;
 } 
-
-.selection-features {
-  display: grid;
-  gap: 1.5rem;
-  margin: 2rem 0;
-} 
