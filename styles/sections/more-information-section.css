@@ -10,6 +10,10 @@ html body .more-info-container:not(.hidden) {
   overflow: hidden;
 }
 
+.more-info-container.hidden {
+  margin-bottom: 0 !important;
+}
+
 .more-info-container:has(#favorites-tools.hidden) {
   border-color: transparent !important;
 }
