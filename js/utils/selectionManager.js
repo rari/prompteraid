@@ -228,6 +228,7 @@ class SelectionManager {
     
     if (slotNumber < 1 || slotNumber > this.maxSlots) {
       console.error(`Invalid slot number: ${slotNumber}`);
+      this.showNotification(`Invalid slot number: ${slotNumber}`, 'error');
       return;
     }
 
@@ -238,7 +239,7 @@ class SelectionManager {
     // Check if configuration is valid (not null due to validation errors)
     if (!currentConfig) {
       console.error(`[DEBUG] saveToSlot: Configuration is null, aborting save`);
-      // Error notification already shown in getCurrentConfiguration()
+      this.showNotification('Failed to save slot: configuration is invalid or missing required fields. Please check your prompt and selections.', 'error');
       return;
     }
     
@@ -281,12 +282,26 @@ class SelectionManager {
       }
     } else {
       // Not logged in, save to localStorage
-      console.log(`[DEBUG] saveToSlot: Saving to localStorage`);
-      await this.saveSelections();
+      try {
+        console.log(`[DEBUG] saveToSlot: Saving to localStorage`);
+        await this.saveSelections();
+        console.log(`[DEBUG] saveToSlot: Saved to localStorage`);
+      } catch (error) {
+        console.error('Error saving selection to localStorage:', error);
+        this.showNotification('Failed to save configuration to local storage.', 'error');
+        return;
+      }
     }
     
     // Update the slot display
-    this.updateSlotDisplay();
+    try {
+      this.updateSlotDisplay();
+      console.log(`[DEBUG] saveToSlot: Slot display updated`);
+    } catch (error) {
+      console.error('Error updating slot display:', error);
+      this.showNotification('Failed to update slot display after saving.', 'error');
+      return;
+    }
     
     // Show notification
     this.showNotification(`Configuration saved to slot ${slotNumber}`);
