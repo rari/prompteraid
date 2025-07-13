@@ -497,9 +497,10 @@ export default class AppController {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const theme = prefersDark ? 'dark' : 'light';
     
-    // Remove any manual theme classes
+    // ALWAYS ensure a corresponding class is present so CSS theme overrides work
     document.documentElement.classList.remove('dark-mode', 'light-mode');
-    
+    document.documentElement.classList.add(prefersDark ? 'dark-mode' : 'light-mode');
+
     // Update theme toggle icons to reflect system preference
     this.updateThemeToggleIcons(theme);
   }

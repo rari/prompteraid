@@ -167,3 +167,44 @@
   opacity: 1 !important;
   visibility: visible !important;
 } 
+
+/* Theme-specific overrides for weight controls */
+html.dark-mode .weight-control-button,
+html.dark-mode .weight-plus,
+html.dark-mode .weight-minus {
+  background-color: var(--card-background) !important;
+  border-color: var(--border-color) !important;
+  color: var(--neon-blue) !important;
+}
+
+html.dark-mode .weight-control-button:hover,
+html.dark-mode .weight-plus:hover,
+html.dark-mode .weight-minus:hover {
+  background-color: var(--gray-300) !important;
+}
+
+html.dark-mode .weight-display {
+  background-color: var(--card-background) !important;
+  border-color: var(--border-color) !important;
+  color: var(--neon-teal) !important;
+}
+
+html.light-mode .weight-control-button,
+html.light-mode .weight-plus,
+html.light-mode .weight-minus {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: var(--neon-blue) !important;
+}
+
+html.light-mode .weight-control-button:hover,
+html.light-mode .weight-plus:hover,
+html.light-mode .weight-minus:hover {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+html.light-mode .weight-display {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: var(--neon-teal) !important;
+} 
