@@ -1,5 +1,5 @@
 /* ===== MORE INFORMATION SECTION ===== */
-html body .more-info-container:not(.hidden) {
+html body .more-info-container {
   margin-bottom: var(--space-6);
   border-radius: 1.2rem;
   /* background: rgba(30, 30, 60, 0.55); */
@@ -8,10 +8,6 @@ html body .more-info-container:not(.hidden) {
   border: 1.5px solid var(--neon-yellow);
   transition: box-shadow 0.2s, border 0.2s;
   overflow: hidden;
-}
-
-.more-info-container.hidden {
-  margin-bottom: 0 !important;
 }
 
 .more-info-container:has(#favorites-tools.hidden) {
