@@ -46,6 +46,8 @@ class SelectionManager {
       
       // Listen for model changes
       this.bindModelChangeEvents();
+      // Listen for Supabase auth changes to keep selections in sync
+      this.bindAuthChangeEvents();
     } catch (error) {
       console.error('Failed to initialize selections:', error);
       // Fallback to localStorage
@@ -73,6 +75,32 @@ class SelectionManager {
       const newModel = e.detail.model;
       if (newModel && newModel !== this.currentModel) {
         await this.updateModel(newModel);
+      }
+    });
+  }
+
+  /**
+   * Bind Supabase authentication state changes.
+   * Ensures that after the user signs in we move any local slots to the cloud
+   * and refresh the in-memory/DOM display. On sign-out we revert to localStorage.
+   */
+  bindAuthChangeEvents() {
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      const user = session?.user || null;
+
+      if (user) {
+        // User is authenticated (INITIAL_SESSION, SIGNED_IN, TOKEN_REFRESHED)
+        try {
+          await this.syncSelectionsToSupabase(user, this.currentModel);
+          await this.loadSelectionsFromSupabase(user, this.currentModel);
+          this.updateSlotDisplay();
+        } catch (err) {
+          console.error('Error handling auth sign-in event:', err);
+        }
+      } else if (event === 'SIGNED_OUT') {
+        // User signed out – fall back to localStorage selections
+        this.loadSelectionsFromStorage();
+        this.updateSlotDisplay();
       }
     });
   }
@@ -487,14 +515,14 @@ class SelectionManager {
         // Apply weights if available (for backward compatibility)
         if (config.imageWeights) {
           Object.entries(config.imageWeights).forEach(([imageId, weight]) => {
-            window.galleryController.model.imageWeights.set(parseInt(imageId), weight);
+            window.galleryController.model.imageWeights.set(imageId, weight);
           });
         }
         
         // Apply weight color indices if available (for backward compatibility)
         if (config.weightColorIndices) {
           Object.entries(config.weightColorIndices).forEach(([imageId, colorIndex]) => {
-            window.galleryController.model.weightColorIndices.set(parseInt(imageId), colorIndex);
+            window.galleryController.model.weightColorIndices.set(imageId, colorIndex);
           });
         }
         
