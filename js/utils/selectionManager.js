@@ -642,6 +642,11 @@ class SelectionManager {
         slotStats.textContent = nameData.stats;
         slot.classList.add('filled');
         slot.classList.remove('empty');
+        // Hide edit button if slot is empty
+        const editBtn = slot.querySelector('.slot-edit-btn');
+        if (editBtn) {
+          editBtn.style.display = (slotName.textContent === 'Empty') ? 'none' : '';
+        }
       } else if (slotName && slotStats) {
         // Check if there's a custom name saved even for empty slots
         const customName = this.selections[i]?.customName;
@@ -649,6 +654,11 @@ class SelectionManager {
         slotStats.textContent = ''; // Clear stats for empty slots
         slot.classList.add('empty');
         slot.classList.remove('filled');
+        // Hide edit button for empty slot
+        const editBtn = slot.querySelector('.slot-edit-btn');
+        if (editBtn) {
+          editBtn.style.display = 'none';
+        }
       }
     }
   }
