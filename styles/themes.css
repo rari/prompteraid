@@ -91,6 +91,34 @@ body.dark-mode {
   --footer-wave-fill: #b6aaff; /* Example for dark mode, adjust as needed */
 }
 
+html.light-mode, body.light-mode {
+  --background: #f5f6fa;
+  --card-background: #fff;
+  --text-primary: #222;
+  --text-secondary: #555;
+  --border-color: #e0e0e0;
+  background: var(--background) !important;
+  color: var(--text-primary) !important;
+}
+
+html.light-mode .more-info-container,
+html.light-mode .new-styles-container {
+  background: var(--card-background) !important;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08) !important;
+  border: 1.5px solid var(--neon-yellow) !important;
+}
+
+html.light-mode .gallery-item {
+  background: none !important;
+  border: none !important;
+}
+
+html.light-mode .action-button {
+  background: none !important;
+  color: #222 !important;
+  border: none !important;
+}
+
 /* Dark mode (default for prefers-color-scheme: dark) */
 @media (prefers-color-scheme: dark) {
   /* Dark mode color palette - applied when no manual override is set */

@@ -26,31 +26,42 @@ class SelectionManager {
    * Initialize the selection manager
    */
   async init() {
+    console.log(`[DEBUG] init: Starting selection manager initialization`);
     try {
       // Get current user
       const user = await getCurrentUser();
+      console.log(`[DEBUG] init: User status:`, user ? 'logged in' : 'not logged in');
 
       if (user) {
         // Sync any localStorage selections to Supabase
+        console.log(`[DEBUG] init: Syncing localStorage selections to Supabase`);
         await this.syncSelectionsToSupabase(user, this.currentModel);
         // Load selections from Supabase
+        console.log(`[DEBUG] init: Loading selections from Supabase`);
         await this.loadSelectionsFromSupabase(user, this.currentModel);
       } else {
         // Not logged in, load from localStorage
+        console.log(`[DEBUG] init: Loading selections from localStorage`);
         this.loadSelectionsFromStorage();
       }
 
       // Set up event handlers
+      console.log(`[DEBUG] init: Setting up event handlers`);
       this.bindEvents();
       this.updateSlotDisplay();
       
       // Listen for model changes
+      console.log(`[DEBUG] init: Setting up model change events`);
       this.bindModelChangeEvents();
       // Listen for Supabase auth changes to keep selections in sync
+      console.log(`[DEBUG] init: Setting up auth change events`);
       this.bindAuthChangeEvents();
+      
+      console.log(`[DEBUG] init: Selection manager initialization completed successfully`);
     } catch (error) {
       console.error('Failed to initialize selections:', error);
       // Fallback to localStorage
+      console.log(`[DEBUG] init: Falling back to localStorage due to error`);
       this.loadSelectionsFromStorage();
       this.bindEvents();
       this.updateSlotDisplay();
@@ -131,21 +142,26 @@ class SelectionManager {
    * Bind events for individual slot buttons
    */
   bindSlotEvents() {
+    console.log(`[DEBUG] bindSlotEvents: Setting up event delegation for slot clicks`);
+    
     // Use event delegation for slot clicks and trash buttons
     document.addEventListener('click', (e) => {
       const slot = e.target.closest('.selection-slot');
       if (!slot) return;
 
       const slotNumber = parseInt(slot.dataset.slot);
+      console.log(`[DEBUG] bindSlotEvents: Slot ${slotNumber} clicked`);
       
       // Handle edit button clicks
       if (e.target.closest('.slot-edit-btn')) {
+        console.log(`[DEBUG] bindSlotEvents: Edit button clicked for slot ${slotNumber}`);
         this.startEditingSlot(slotNumber);
         return;
       }
       
       // Handle trash button clicks
       if (e.target.closest('.slot-clear-btn')) {
+        console.log(`[DEBUG] bindSlotEvents: Clear button clicked for slot ${slotNumber}`);
         this.clearSlot(slotNumber);
         return;
       }
@@ -155,9 +171,11 @@ class SelectionManager {
         const config = this.selections[slotNumber];
         if (config) {
           // Slot has data - load it
+          console.log(`[DEBUG] bindSlotEvents: Loading from slot ${slotNumber}`);
           this.loadFromSlot(slotNumber);
         } else {
           // Slot is empty - save current configuration
+          console.log(`[DEBUG] bindSlotEvents: Saving to slot ${slotNumber}`);
           this.saveToSlot(slotNumber);
         }
       }
@@ -167,12 +185,14 @@ class SelectionManager {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && e.target.classList.contains('slot-name')) {
         e.preventDefault();
+        console.log(`[DEBUG] bindSlotEvents: Enter key pressed for slot name editing`);
         this.finishEditingSlot(e.target);
       }
     });
 
     document.addEventListener('blur', (e) => {
       if (e.target.classList.contains('slot-name') && e.target.getAttribute('contenteditable') === 'true') {
+        console.log(`[DEBUG] bindSlotEvents: Blur event for slot name editing`);
         this.finishEditingSlot(e.target);
       }
     }, true);
@@ -203,6 +223,8 @@ class SelectionManager {
    * @param {number} slotNumber - The slot number (1-5)
    */
   async saveToSlot(slotNumber) {
+    console.log(`[DEBUG] saveToSlot: Starting save for slot ${slotNumber}`);
+    
     if (slotNumber < 1 || slotNumber > this.maxSlots) {
       console.error(`Invalid slot number: ${slotNumber}`);
       return;
@@ -210,49 +232,55 @@ class SelectionManager {
 
     // Get current configuration
     const currentConfig = this.getCurrentConfiguration();
+    console.log(`[DEBUG] saveToSlot: Current config:`, currentConfig);
     
     // Check if configuration is valid (not null due to validation errors)
     if (!currentConfig) {
+      console.error(`[DEBUG] saveToSlot: Configuration is null, aborting save`);
       // Error notification already shown in getCurrentConfiguration()
       return;
     }
     
     // Save to selections
     this.selections[slotNumber] = currentConfig;
+    console.log(`[DEBUG] saveToSlot: Saved to in-memory selections:`, this.selections);
     
     // Save to appropriate storage based on authentication status
     const user = await getCurrentUser();
+    console.log(`[DEBUG] saveToSlot: User status:`, user ? 'logged in' : 'not logged in');
     
-          if (user) {
-        // User is logged in, save to Supabase
-        try {
-          // Use upsert to handle both create and update
-          const { data, error } = await supabase
-            .from('user_selections')
-            .upsert({
-              user_id: user.id,
-              slot_number: slotNumber,
-              model: this.currentModel,
-              configuration: JSON.stringify(currentConfig)
-            }, {
-              onConflict: 'user_id,slot_number,model'
-            })
-            .select();
-          
-          if (error) {
-            console.error('Error saving selection to Supabase:', error);
-            this.showNotification('Failed to save configuration to cloud storage.', 'error');
-            return;
-          }
-          
-          console.log(`[DEBUG] saveToSlot: Successfully saved to Supabase:`, data);
-        } catch (error) {
+    if (user) {
+      // User is logged in, save to Supabase
+      try {
+        console.log(`[DEBUG] saveToSlot: Attempting to save to Supabase for user ${user.id}`);
+        // Use upsert to handle both create and update
+        const { data, error } = await supabase
+          .from('user_selections')
+          .upsert({
+            user_id: user.id,
+            slot_number: slotNumber,
+            model: this.currentModel,
+            configuration: JSON.stringify(currentConfig)
+          }, {
+            onConflict: 'user_id,slot_number,model'
+          })
+          .select();
+        
+        if (error) {
           console.error('Error saving selection to Supabase:', error);
           this.showNotification('Failed to save configuration to cloud storage.', 'error');
           return;
         }
+        
+        console.log(`[DEBUG] saveToSlot: Successfully saved to Supabase:`, data);
+      } catch (error) {
+        console.error('Error saving selection to Supabase:', error);
+        this.showNotification('Failed to save configuration to cloud storage.', 'error');
+        return;
+      }
     } else {
       // Not logged in, save to localStorage
+      console.log(`[DEBUG] saveToSlot: Saving to localStorage`);
       await this.saveSelections();
     }
     
@@ -261,6 +289,7 @@ class SelectionManager {
     
     // Show notification
     this.showNotification(`Configuration saved to slot ${slotNumber}`);
+    console.log(`[DEBUG] saveToSlot: Save completed successfully for slot ${slotNumber}`);
   }
 
   /**
@@ -405,12 +434,16 @@ class SelectionManager {
    */
   getCurrentConfiguration() {
     try {
+      console.log(`[DEBUG] getCurrentConfiguration: Starting configuration gathering`);
+      
       // Get base prompt
       const promptInput = document.getElementById('prompt-input');
       const basePrompt = promptInput ? promptInput.value : '';
+      console.log(`[DEBUG] getCurrentConfiguration: Base prompt: "${basePrompt}"`);
 
       // Check base prompt length limit (300 characters)
       if (basePrompt.length > 300) {
+        console.error(`[DEBUG] getCurrentConfiguration: Base prompt too long (${basePrompt.length} chars)`);
         this.showNotification('Base prompt is too long. Please keep it under 300 characters.', 'error');
         return null;
       }
@@ -421,6 +454,7 @@ class SelectionManager {
       const weightColorIndices = {};
       
       if (window.galleryController?.model?.selectedImages) {
+        console.log(`[DEBUG] getCurrentConfiguration: Found ${window.galleryController.model.selectedImages.size} selected images`);
         window.galleryController.model.selectedImages.forEach((colorIndex, imageId) => {
           selectedImages.push([imageId, colorIndex]);
           
@@ -432,6 +466,8 @@ class SelectionManager {
           const weightColorIndex = window.galleryController.model.weightColorIndices.get(imageId) || 0;
           weightColorIndices[imageId] = weightColorIndex;
         });
+      } else {
+        console.log(`[DEBUG] getCurrentConfiguration: No galleryController or selectedImages found`);
       }
 
       // Get aspect ratio
@@ -445,19 +481,23 @@ class SelectionManager {
           aspectRatio = aspectRatioSelect.value;
         }
       }
+      console.log(`[DEBUG] getCurrentConfiguration: Aspect ratio: ${aspectRatio}`);
 
       // Get suffix
       const promptSuffix = document.getElementById('prompt-suffix');
       const suffix = promptSuffix ? promptSuffix.value : '';
+      console.log(`[DEBUG] getCurrentConfiguration: Suffix: "${suffix}"`);
 
       // Get current model
       const currentModel = window.galleryController?.model?.currentModel || 'niji-6';
+      console.log(`[DEBUG] getCurrentConfiguration: Current model: ${currentModel}`);
 
       // Get aspect ratio enable state
       const enableAspectRatio = document.getElementById('enable-aspect-ratio');
       const aspectRatioEnabled = enableAspectRatio ? enableAspectRatio.checked : false;
+      console.log(`[DEBUG] getCurrentConfiguration: Aspect ratio enabled: ${aspectRatioEnabled}`);
 
-      return {
+      const config = {
         basePrompt,
         selectedImages,
         imageWeights,
@@ -468,6 +508,9 @@ class SelectionManager {
         model: currentModel,
         timestamp: Date.now()
       };
+      
+      console.log(`[DEBUG] getCurrentConfiguration: Final config:`, config);
+      return config;
     } catch (error) {
       console.error('Error getting current configuration:', error);
       return null;
