@@ -2762,7 +2762,7 @@ export default class GalleryView {
         // Build the link - only include model and sref, no q parameter
         const params = new URLSearchParams();
         if (model) params.set('model', model);
-        if (srefs.length > 0) params.set('sref', srefs.join(','));
+        if (srefs.length > 0) params.set('sref', srefs.join(' '));
         const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
         
         // Copy to clipboard
@@ -2811,7 +2811,7 @@ export default class GalleryView {
         // Build the link - only include model and sref, no q parameter
         const params = new URLSearchParams();
         if (model) params.set('model', model);
-        if (srefs.length > 0) params.set('sref', srefs.join(','));
+        if (srefs.length > 0) params.set('sref', srefs.join(' '));
         const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
         
         // Copy to clipboard
@@ -2860,7 +2860,7 @@ export default class GalleryView {
         // Build the link
         const params = new URLSearchParams();
         params.set('model', model);
-        if (srefs.length > 0) params.set('sref', srefs.join(','));
+        if (srefs.length > 0) params.set('sref', srefs.join(' '));
         const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
         // Copy to clipboard
         navigator.clipboard.writeText(url).then(() => {
