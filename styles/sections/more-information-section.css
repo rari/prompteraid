@@ -1,6 +1,6 @@
 /* ===== MORE INFORMATION SECTION ===== */
-html body .more-info-container {
-  margin-bottom: var(--space-6);
+.more-info-container {
+  margin-bottom: 0 !important;
   border-radius: 1.2rem;
   /* background: rgba(30, 30, 60, 0.55); */
   box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12), 0 1.5px 8px 0 rgba(0,255,255,0.08);
@@ -8,6 +8,11 @@ html body .more-info-container {
   border: 1.5px solid var(--neon-yellow);
   transition: box-shadow 0.2s, border 0.2s;
   overflow: hidden;
+}
+
+/* Only add margin if at least one direct child is visible */
+.more-info-container:has(> *:not(.hidden)) {
+  margin-bottom: var(--space-6) !important;
 }
 
 .more-info-container:has(#favorites-tools.hidden) {
