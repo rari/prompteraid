@@ -365,11 +365,22 @@ class SelectionManager {
         return null;
       }
 
-      // Get selected images from the model
+      // Get selected images from the model with weights
       const selectedImages = [];
+      const imageWeights = {};
+      const weightColorIndices = {};
+      
       if (window.galleryController?.model?.selectedImages) {
         window.galleryController.model.selectedImages.forEach((colorIndex, imageId) => {
           selectedImages.push([imageId, colorIndex]);
+          
+          // Get weight for this image
+          const weight = window.galleryController.model.imageWeights.get(imageId) || 1;
+          imageWeights[imageId] = weight;
+          
+          // Get weight color index for this image
+          const weightColorIndex = window.galleryController.model.weightColorIndices.get(imageId) || 0;
+          weightColorIndices[imageId] = weightColorIndex;
         });
       }
 
@@ -399,6 +410,8 @@ class SelectionManager {
       return {
         basePrompt,
         selectedImages,
+        imageWeights,
+        weightColorIndices,
         aspectRatio,
         aspectRatioEnabled,
         suffix,
@@ -461,13 +474,29 @@ class SelectionManager {
 
       // Apply selected images only if there's no model mismatch
       if (!modelMismatch && config.selectedImages && window.galleryController?.model) {
-        // Clear current selections
+        // Clear current selections and weights
         window.galleryController.model.selectedImages.clear();
+        window.galleryController.model.imageWeights.clear();
+        window.galleryController.model.weightColorIndices.clear();
         
         // Add new selections
         config.selectedImages.forEach(([imageId, colorIndex]) => {
           window.galleryController.model.selectedImages.set(imageId, colorIndex);
         });
+        
+        // Apply weights if available (for backward compatibility)
+        if (config.imageWeights) {
+          Object.entries(config.imageWeights).forEach(([imageId, weight]) => {
+            window.galleryController.model.imageWeights.set(parseInt(imageId), weight);
+          });
+        }
+        
+        // Apply weight color indices if available (for backward compatibility)
+        if (config.weightColorIndices) {
+          Object.entries(config.weightColorIndices).forEach(([imageId, colorIndex]) => {
+            window.galleryController.model.weightColorIndices.set(parseInt(imageId), colorIndex);
+          });
+        }
         
         // Re-render the gallery to show the selections
         if (window.galleryController.renderGallery) {
