@@ -33,15 +33,6 @@
     text-shadow: 0 0 5px rgba(167, 66, 245, 0.5) !important;
   }
 
-/* Ensure the entire viewport is covered with theme colors */
-:root {
-  background-color: var(--background);
-  --footer-wave-fill: #fff; /* Light theme default */
-}
-body.dark-mode {
-  --footer-wave-fill: #b6aaff; /* Example for dark mode, adjust as needed */
-}
-
   /* Light mode weight color classes - all weights use same light styling */
   html.light-mode .weight-color-0,
   html.light-mode .weight-color-1,
@@ -58,10 +49,20 @@ body.dark-mode {
   }
 }
 
+/* Ensure the entire viewport is covered with theme colors */
+:root {
+  background-color: var(--background);
+  --footer-wave-fill: #fff; /* Light theme default */
+}
+
+body.dark-mode {
+  --footer-wave-fill: #b6aaff; /* Example for dark mode, adjust as needed */
+}
+
 /* Dark mode (default for prefers-color-scheme: dark) */
 @media (prefers-color-scheme: dark) {
   /* Dark mode color palette - applied when no manual override is set */
-  html.light-mode {
+  html.dark-mode {
     /* Neutral palette - Dark mode */
     --background: hsl(210, 30%, 8%);
     --card-background: hsl(210, 30%, 12%);
@@ -100,215 +101,215 @@ body.dark-mode {
 
   /* ===== DARK MODE COMPONENT OVERRIDES ===== */
   /* Sticky action bar with dark background and blur */
-  html.light-mode .sticky-action-bar {
+  html.dark-mode .sticky-action-bar {
     background-color: rgba(30, 41, 59, 0.95);
   }
 
   /* Info containers with dark borders */
-  html.light-mode .more-info-container {
+  html.dark-mode .more-info-container {
     border-color: var(--border-color);
   }
 
-  html.light-mode .more-info-container summary {
+  html.dark-mode .more-info-container summary {
     color: var(--text-primary);
   }
 
   /* Weight control buttons with dark styling */
-  html.light-mode .weight-control-button {
+  html.dark-mode .weight-control-button {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html.light-mode .weight-plus,
-  html.light-mode .weight-minus {
+  html.dark-mode .weight-plus,
+  html.dark-mode .weight-minus {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html.light-mode .weight-plus:hover,
-  html.light-mode .weight-minus:hover {
+  html.dark-mode .weight-plus:hover,
+  html.dark-mode .weight-minus:hover {
     background-color: var(--gray-300);
   }
 
   /* Weight display with dark background */
-  html.light-mode .weight-display {
+  html.dark-mode .weight-display {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
   /* All weight color classes with dark background */
-  html.light-mode .weight-color-0,
-  html.light-mode .weight-color-1,
-  html.light-mode .weight-color-2,
-  html.light-mode .weight-color-3,
-  html.light-mode .weight-color-4,
-  html.light-mode .weight-color-5,
-  html.light-mode .weight-color-6 {
+  html.dark-mode .weight-color-0,
+  html.dark-mode .weight-color-1,
+  html.dark-mode .weight-color-2,
+  html.dark-mode .weight-color-3,
+  html.dark-mode .weight-color-4,
+  html.dark-mode .weight-color-5,
+  html.dark-mode .weight-color-6 {
     background-color: var(--card-background);
   }
 
   /* Gallery overlay buttons with dark styling */
-  html.light-mode .favorite-button,
-  html.light-mode .quadrant-flip-button {
+  html.dark-mode .favorite-button,
+  html.dark-mode .quadrant-flip-button {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html.light-mode .favorite-button i,
-  html.light-mode .quadrant-flip-button i {
+  html.dark-mode .favorite-button i,
+  html.dark-mode .quadrant-flip-button i {
     color: var(--text-secondary);
   }
 
-  html.light-mode .favorite-button:hover,
-  html.light-mode .quadrant-flip-button:hover {
+  html.dark-mode .favorite-button:hover,
+  html.dark-mode .quadrant-flip-button:hover {
     background-color: var(--gray-300);
   }
 
   /* Link buttons with dark styling */
-  html.light-mode .link-button {
+  html.dark-mode .link-button {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html.light-mode .link-button:hover {
+  html.dark-mode .link-button:hover {
     background-color: var(--gray-300);
   }
 
   /* Model selector dropdown with dark styling */
-  html.light-mode .model-dropdown {
+  html.dark-mode .model-dropdown {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html.light-mode .model-option {
+  html.dark-mode .model-option {
     color: var(--text-primary);
   }
 
-  html.light-mode .model-option:hover {
+  html.dark-mode .model-option:hover {
     background-color: var(--gray-300);
   }
 
-  html.light-mode .model-option.active {
+  html.dark-mode .model-option.active {
     background-color: var(--primary);
     color: white;
   }
 
   /* Aspect Ratio Dropdown */
-  html.light-mode .aspect-ratio-dropdown {
+  html.dark-mode .aspect-ratio-dropdown {
     background-color: var(--card-background);
     border-color: var(--border-color);
     color: var(--text-primary);
   }
 
-  html.light-mode .aspect-ratio-dropdown option {
+  html.dark-mode .aspect-ratio-dropdown option {
     background-color: var(--card-background);
     color: var(--text-primary);
   }
 
-  html.light-mode .aspect-ratio-dropdown:focus {
+  html.dark-mode .aspect-ratio-dropdown:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
   }
 
   /* Custom Aspect Ratio Input */
-  html.light-mode .custom-aspect-ratio-input {
+  html.dark-mode .custom-aspect-ratio-input {
     background-color: var(--card-background);
     border-color: var(--border-color);
     color: var(--text-primary);
   }
 
-  html.light-mode .custom-aspect-ratio-input:focus {
+  html.dark-mode .custom-aspect-ratio-input:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
   }
 
-  html.light-mode .custom-aspect-ratio-input:hover {
+  html.dark-mode .custom-aspect-ratio-input:hover {
     background-color: var(--gray-300);
   }
 
   /* Favorites tools with dark styling */
-  html.light-mode .favorites-tools-buttons {
+  html.dark-mode .favorites-tools-buttons {
     background-color: var(--card-background);
   }
 
-  html.light-mode .favorites-tools .action-button {
+  html.dark-mode .favorites-tools .action-button {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html.light-mode .favorites-tools .action-button:hover {
+  html.dark-mode .favorites-tools .action-button:hover {
     background-color: var(--gray-300);
   }
 
-  html.light-mode .favorites-tools .action-button i {
+  html.dark-mode .favorites-tools .action-button i {
     color: var(--text-secondary);
   }
 
-  html.light-mode .favorites-tools .action-button:hover i {
+  html.dark-mode .favorites-tools .action-button:hover i {
     color: var(--text-primary);
   }
 
   /* Notification styling for dark mode */
-  html.light-mode .info-notification {
+  html.dark-mode .info-notification {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html.light-mode .warning-notification {
+  html.dark-mode .warning-notification {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html.light-mode .error-notification {
+  html.dark-mode .error-notification {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html.light-mode .menu-icon-style {
+  html.dark-mode .menu-icon-style {
     color: var(--text-secondary);
   }
 
-  html.light-mode .menu-icon-style:hover {
+  html.dark-mode .menu-icon-style:hover {
     color: var(--text-primary);
   }
 
-  html.light-mode .action-button:hover:not(.prompt-gen):not(.prompt-settings) {
+  html.dark-mode .action-button:hover:not(.prompt-gen):not(.prompt-settings) {
     background-color: var(--gray-300);
   }
 
-  html.light-mode .current-model span, 
-  html.light-mode .model-option span {
+  html.dark-mode .current-model span, 
+  html.dark-mode .model-option span {
     color: var(--text-primary);
   }
 
-  html.light-mode .current-model i, 
-  html.light-mode .model-option i {
+  html.dark-mode .current-model i, 
+  html.dark-mode .model-option i {
     color: var(--text-primary);
   }
 
-  html.light-mode .favorites-tools-header {
+  html.dark-mode .favorites-tools-header {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html.light-mode .favorites-tools-header i.fa-star {
+  html.dark-mode .favorites-tools-header i.fa-star {
     color: var(--neon-yellow);
   }
 
-  html.light-mode .favorites-tools-header h4 {
+  html.dark-mode .favorites-tools-header h4 {
     color: var(--text-primary);
   }
 
-  html.light-mode .new-styles-container,
-  html.light-mode .more-info-container {
+  html.dark-mode .new-styles-container,
+  html.dark-mode .more-info-container {
     background-color: var(--card-background);
     border-color: var(--border-color);
   }
 
-  html.light-mode .new-styles-container,
-  html.light-mode .more-info-container,
-  html.light-mode .new-styles-container *,
-  html.light-mode .more-info-container * {
+  html.dark-mode .new-styles-container,
+  html.dark-mode .more-info-container,
+  html.dark-mode .new-styles-container *,
+  html.dark-mode .more-info-container * {
     color: var(--text-primary);
   }
 }
