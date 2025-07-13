@@ -145,7 +145,7 @@ class SelectionManager {
     console.log(`[DEBUG] bindSlotEvents: Setting up event delegation for slot clicks`);
     
     // Use event delegation for slot clicks and trash buttons
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', async (e) => {
       const slot = e.target.closest('.selection-slot');
       if (!slot) return;
 
@@ -162,7 +162,8 @@ class SelectionManager {
       // Handle trash button clicks
       if (e.target.closest('.slot-clear-btn')) {
         console.log(`[DEBUG] bindSlotEvents: Clear button clicked for slot ${slotNumber}`);
-        this.clearSlot(slotNumber);
+        await this.clearSlot(slotNumber);
+        console.log(`[DEBUG] bindSlotEvents: clearSlot completed for slot ${slotNumber}`);
         return;
       }
       
