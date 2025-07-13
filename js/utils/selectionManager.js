@@ -438,7 +438,7 @@ class SelectionManager {
       
       // Get base prompt
       const promptInput = document.getElementById('prompt-input');
-      const basePrompt = promptInput ? promptInput.value : '';
+      const basePrompt = promptInput ? this.sanitizePrompt(promptInput.value) : '';
       console.log(`[DEBUG] getCurrentConfiguration: Base prompt: "${basePrompt}"`);
 
       // Check base prompt length limit (300 characters)
@@ -470,6 +470,9 @@ class SelectionManager {
         console.log(`[DEBUG] getCurrentConfiguration: No galleryController or selectedImages found`);
       }
 
+      // Sanitize image data
+      const sanitizedImageData = this.sanitizeImageData(selectedImages, imageWeights, weightColorIndices);
+
       // Get aspect ratio
       const aspectRatioSelect = document.getElementById('aspect-ratio-select');
       const customAspectRatioInput = document.getElementById('custom-aspect-ratio-input');
@@ -481,15 +484,17 @@ class SelectionManager {
           aspectRatio = aspectRatioSelect.value;
         }
       }
+      // Sanitize aspect ratio
+      aspectRatio = this.sanitizeAspectRatio(aspectRatio);
       console.log(`[DEBUG] getCurrentConfiguration: Aspect ratio: ${aspectRatio}`);
 
       // Get suffix
       const promptSuffix = document.getElementById('prompt-suffix');
-      const suffix = promptSuffix ? promptSuffix.value : '';
+      const suffix = promptSuffix ? this.sanitizeSuffix(promptSuffix.value) : '';
       console.log(`[DEBUG] getCurrentConfiguration: Suffix: "${suffix}"`);
 
       // Get current model
-      const currentModel = window.galleryController?.model?.currentModel || 'niji-6';
+      const currentModel = this.sanitizeModel(window.galleryController?.model?.currentModel || 'niji-6');
       console.log(`[DEBUG] getCurrentConfiguration: Current model: ${currentModel}`);
 
       // Get aspect ratio enable state
@@ -499,9 +504,9 @@ class SelectionManager {
 
       const config = {
         basePrompt,
-        selectedImages,
-        imageWeights,
-        weightColorIndices,
+        selectedImages: sanitizedImageData.selectedImages,
+        imageWeights: sanitizedImageData.imageWeights,
+        weightColorIndices: sanitizedImageData.weightColorIndices,
         aspectRatio,
         aspectRatioEnabled,
         suffix,
@@ -527,7 +532,7 @@ class SelectionManager {
       // Apply base prompt
       const promptInput = document.getElementById('prompt-input');
       if (promptInput && config.basePrompt !== undefined) {
-        promptInput.value = config.basePrompt;
+        promptInput.value = this.sanitizePrompt(config.basePrompt);
         promptInput.dispatchEvent(new Event('input', { bubbles: true }));
       }
 
@@ -542,17 +547,20 @@ class SelectionManager {
       const aspectRatioSelect = document.getElementById('aspect-ratio-select');
       const customAspectRatioInput = document.getElementById('custom-aspect-ratio-input');
       if (aspectRatioSelect && config.aspectRatio) {
+        // Sanitize the aspect ratio first
+        const sanitizedAspectRatio = this.sanitizeAspectRatio(config.aspectRatio);
+        
         // Check if it's a custom aspect ratio
         const predefinedOptions = ['1:1', '4:5', '2:3', '3:4', '3:2', '5:4', '4:3', '1.91:1', '2:1', '16:9', '9:16'];
-        if (predefinedOptions.includes(config.aspectRatio)) {
-          aspectRatioSelect.value = config.aspectRatio;
+        if (predefinedOptions.includes(sanitizedAspectRatio)) {
+          aspectRatioSelect.value = sanitizedAspectRatio;
           if (customAspectRatioInput) {
             customAspectRatioInput.value = '';
           }
         } else {
           aspectRatioSelect.value = 'custom';
           if (customAspectRatioInput) {
-            customAspectRatioInput.value = config.aspectRatio;
+            customAspectRatioInput.value = sanitizedAspectRatio;
           }
         }
         aspectRatioSelect.dispatchEvent(new Event('change', { bubbles: true }));
@@ -561,7 +569,7 @@ class SelectionManager {
       // Apply suffix
       const promptSuffix = document.getElementById('prompt-suffix');
       if (promptSuffix && config.suffix !== undefined) {
-        promptSuffix.value = config.suffix;
+        promptSuffix.value = this.sanitizeSuffix(config.suffix);
         promptSuffix.dispatchEvent(new Event('input', { bubbles: true }));
       }
 
@@ -1003,7 +1011,7 @@ class SelectionManager {
     if (!slot) return;
 
     const slotNumber = parseInt(slot.dataset.slot);
-    const newName = slotNameElement.textContent.trim();
+    const newName = this.sanitizeSlotName(slotNameElement.textContent.trim());
 
     // Check label length limit (30 characters)
     if (newName.length > 30) {
@@ -1063,6 +1071,158 @@ class SelectionManager {
       // If slot is empty, just update the display
       slotNameElement.textContent = newName || 'Empty';
     }
+  }
+
+  /**
+   * Sanitize text input to prevent XSS and ensure clean data
+   * @param {string} input - The input text to sanitize
+   * @param {number} maxLength - Maximum allowed length
+   * @returns {string} Sanitized text
+   */
+  sanitizeText(input, maxLength = 300) {
+    if (!input || typeof input !== 'string') {
+      return '';
+    }
+    
+    // Remove HTML tags and entities
+    let sanitized = input.replace(/<[^>]*>/g, '');
+    sanitized = sanitized.replace(/&[a-zA-Z0-9#]+;/g, '');
+    
+    // Remove potentially dangerous characters
+    sanitized = sanitized.replace(/[<>\"'&]/g, '');
+    
+    // Normalize whitespace
+    sanitized = sanitized.replace(/\s+/g, ' ').trim();
+    
+    // Truncate to max length
+    if (sanitized.length > maxLength) {
+      sanitized = sanitized.substring(0, maxLength);
+    }
+    
+    return sanitized;
+  }
+
+  /**
+   * Sanitize slot name/label for safe storage
+   * @param {string} name - The slot name to sanitize
+   * @returns {string} Sanitized slot name
+   */
+  sanitizeSlotName(name) {
+    return this.sanitizeText(name, 30); // 30 character limit for slot names
+  }
+
+  /**
+   * Sanitize prompt text for safe storage
+   * @param {string} prompt - The prompt text to sanitize
+   * @returns {string} Sanitized prompt text
+   */
+  sanitizePrompt(prompt) {
+    return this.sanitizeText(prompt, 300); // 300 character limit for prompts
+  }
+
+  /**
+   * Sanitize suffix text for safe storage
+   * @param {string} suffix - The suffix text to sanitize
+   * @returns {string} Sanitized suffix text
+   */
+  sanitizeSuffix(suffix) {
+    return this.sanitizeText(suffix, 200); // 200 character limit for suffixes
+  }
+
+  /**
+   * Validate and sanitize image data for safe storage
+   * @param {Array} selectedImages - Array of [imageId, colorIndex] pairs
+   * @param {Object} imageWeights - Object mapping imageId to weight
+   * @param {Object} weightColorIndices - Object mapping imageId to color index
+   * @returns {Object} Sanitized image data
+   */
+  sanitizeImageData(selectedImages, imageWeights, weightColorIndices) {
+    const sanitizedImages = [];
+    const sanitizedWeights = {};
+    const sanitizedColorIndices = {};
+    
+    if (Array.isArray(selectedImages)) {
+      selectedImages.forEach(([imageId, colorIndex]) => {
+        // Validate imageId is a string and contains only safe characters
+        if (typeof imageId === 'string' && /^[a-zA-Z0-9_-]+$/.test(imageId)) {
+          // Validate colorIndex is a number between 0 and 4
+          const validColorIndex = typeof colorIndex === 'number' && colorIndex >= 0 && colorIndex <= 4 ? colorIndex : 0;
+          sanitizedImages.push([imageId, validColorIndex]);
+        }
+      });
+    }
+    
+    // Sanitize weights
+    if (imageWeights && typeof imageWeights === 'object') {
+      Object.entries(imageWeights).forEach(([imageId, weight]) => {
+        if (typeof imageId === 'string' && /^[a-zA-Z0-9_-]+$/.test(imageId)) {
+          // Validate weight is a number between 1 and 6
+          const validWeight = typeof weight === 'number' && weight >= 1 && weight <= 6 ? weight : 1;
+          sanitizedWeights[imageId] = validWeight;
+        }
+      });
+    }
+    
+    // Sanitize color indices
+    if (weightColorIndices && typeof weightColorIndices === 'object') {
+      Object.entries(weightColorIndices).forEach(([imageId, colorIndex]) => {
+        if (typeof imageId === 'string' && /^[a-zA-Z0-9_-]+$/.test(imageId)) {
+          // Validate colorIndex is a number between 0 and 6
+          const validColorIndex = typeof colorIndex === 'number' && colorIndex >= 0 && colorIndex <= 6 ? colorIndex : 0;
+          sanitizedColorIndices[imageId] = validColorIndex;
+        }
+      });
+    }
+    
+    return {
+      selectedImages: sanitizedImages,
+      imageWeights: sanitizedWeights,
+      weightColorIndices: sanitizedColorIndices
+    };
+  }
+
+  /**
+   * Validate aspect ratio for safe storage
+   * @param {string} aspectRatio - The aspect ratio to validate
+   * @returns {string} Validated aspect ratio
+   */
+  sanitizeAspectRatio(aspectRatio) {
+    if (!aspectRatio || typeof aspectRatio !== 'string') {
+      return '1:1';
+    }
+    
+    // Allow predefined ratios and custom ratios with safe format
+    const predefinedOptions = ['1:1', '4:5', '2:3', '3:4', '3:2', '5:4', '4:3', '1.91:1', '2:1', '16:9', '9:16'];
+    
+    if (predefinedOptions.includes(aspectRatio)) {
+      return aspectRatio;
+    }
+    
+    // For custom ratios, validate format (e.g., "16:9", "1.5:1")
+    if (/^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio)) {
+      return aspectRatio;
+    }
+    
+    return '1:1'; // Default fallback
+  }
+
+  /**
+   * Validate model name for safe storage
+   * @param {string} model - The model name to validate
+   * @returns {string} Validated model name
+   */
+  sanitizeModel(model) {
+    if (!model || typeof model !== 'string') {
+      return 'niji-6';
+    }
+    
+    // Only allow known model names
+    const validModels = ['niji-6', 'midjourney-7'];
+    if (validModels.includes(model)) {
+      return model;
+    }
+    
+    return 'niji-6'; // Default fallback
   }
 }
 
