@@ -228,34 +228,29 @@ export default class AppController {
     
     // Handle sref (style reference) - this takes priority over search
     if (sref) {
-      // Check if this is a single image link (no spaces in sref) or multiple images
-      const srefParts = sref.split(' ').filter(part => part.trim().length > 0);
-      
-      if (srefParts.length === 1) {
-        // Single image link - can have optional quadrant
-        console.log(`Looking for single style reference: ${sref} with quadrant: ${quadrant || 'none'}`);
-      // Wait for the gallery to load and the controller to be initialized
-      const checkAndCreateLinkedView = () => {
-        // Check if gallery controller is available
+      // Check if this is a single image link or multiple images
+      // First, try to find a single image with the exact sref
+      const checkSingleImage = () => {
         if (!window.galleryController || !window.galleryController.view || !window.galleryController.model) {
           console.log("Gallery controller not yet available, waiting...");
-          setTimeout(checkAndCreateLinkedView, 500);
+          setTimeout(checkSingleImage, 500);
           return;
         }
-        // Find the image with the matching style reference
+        
+        // Try to find the image with the exact sref first
         const galleryItem = document.querySelector(`.gallery-item[data-sref="${sref}"]`);
         if (galleryItem) {
-          // Create a linked view with divider
+          // Single image found - create linked view
+          console.log(`Found single style reference: ${sref} with quadrant: ${quadrant || 'none'}`);
           this.createLinkedView(galleryItem, sref, quadrant);
-        } else {
-          console.warn(`Style reference ${sref} not found in gallery`);
+          return;
         }
-      };
-      // Start checking
-      setTimeout(checkAndCreateLinkedView, 1000);
-      } else {
-        // Multiple images link - treat as search query
+        
+        // If no single image found, treat as multiple style references
+        // Split by commas first, then by spaces for backward compatibility
+        const srefParts = sref.split(/[,\s]+/).filter(part => part.trim().length > 0);
         console.log(`Multiple style references detected, treating as search: ${srefParts.join(', ')}`);
+        
         const trySearch = () => {
           if (!window.galleryController || !window.galleryController.view) {
             setTimeout(trySearch, 300);
@@ -266,20 +261,23 @@ export default class AppController {
           if (searchContainer && searchContainer.classList.contains('hidden')) {
             searchContainer.classList.remove('hidden');
           }
-          // Set search input value to the space-separated style references
+          // Set search input value to the comma-separated style references
           const searchInput = document.getElementById('search-input');
           if (searchInput) {
-            searchInput.value = sref;
+            searchInput.value = srefParts.join(' ');
             // Add search-active class for neon-teal border
             searchInput.classList.add('search-active');
           }
           // Set searchNumber and trigger search (filter out weight syntax)
-          const filteredSref = this.filterSearchInput(sref);
+          const filteredSref = this.filterSearchInput(srefParts.join(' '));
           window.galleryController.searchNumber = filteredSref;
           window.galleryController.performSearch(filteredSref);
         };
         setTimeout(trySearch, 800);
-      }
+      };
+      
+      // Start checking
+      setTimeout(checkSingleImage, 1000);
       return; // Exit early, don't process as search
     }
     
