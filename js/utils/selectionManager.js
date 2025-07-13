@@ -1137,17 +1137,25 @@ class SelectionManager {
    * @returns {Object} Sanitized image data
    */
   sanitizeImageData(selectedImages, imageWeights, weightColorIndices) {
+    console.log(`[DEBUG] sanitizeImageData: Input selectedImages:`, selectedImages);
+    console.log(`[DEBUG] sanitizeImageData: Input imageWeights:`, imageWeights);
+    console.log(`[DEBUG] sanitizeImageData: Input weightColorIndices:`, weightColorIndices);
+    
     const sanitizedImages = [];
     const sanitizedWeights = {};
     const sanitizedColorIndices = {};
     
     if (Array.isArray(selectedImages)) {
       selectedImages.forEach(([imageId, colorIndex]) => {
-        // Validate imageId is a string and contains only safe characters
-        if (typeof imageId === 'string' && /^[a-zA-Z0-9_-]+$/.test(imageId)) {
+        console.log(`[DEBUG] sanitizeImageData: Processing imageId: "${imageId}", colorIndex: ${colorIndex}`);
+        // Validate imageId is a string and contains only safe characters for file paths
+        if (typeof imageId === 'string' && /^[a-zA-Z0-9\/\-_.]+$/.test(imageId)) {
           // Validate colorIndex is a number between 0 and 4
           const validColorIndex = typeof colorIndex === 'number' && colorIndex >= 0 && colorIndex <= 4 ? colorIndex : 0;
           sanitizedImages.push([imageId, validColorIndex]);
+          console.log(`[DEBUG] sanitizeImageData: Added valid image: ${imageId}`);
+        } else {
+          console.warn(`[DEBUG] sanitizeImageData: Invalid imageId: "${imageId}" (type: ${typeof imageId})`);
         }
       });
     }
@@ -1155,7 +1163,7 @@ class SelectionManager {
     // Sanitize weights
     if (imageWeights && typeof imageWeights === 'object') {
       Object.entries(imageWeights).forEach(([imageId, weight]) => {
-        if (typeof imageId === 'string' && /^[a-zA-Z0-9_-]+$/.test(imageId)) {
+        if (typeof imageId === 'string' && /^[a-zA-Z0-9\/\-_.]+$/.test(imageId)) {
           // Validate weight is a number between 1 and 6
           const validWeight = typeof weight === 'number' && weight >= 1 && weight <= 6 ? weight : 1;
           sanitizedWeights[imageId] = validWeight;
@@ -1166,7 +1174,7 @@ class SelectionManager {
     // Sanitize color indices
     if (weightColorIndices && typeof weightColorIndices === 'object') {
       Object.entries(weightColorIndices).forEach(([imageId, colorIndex]) => {
-        if (typeof imageId === 'string' && /^[a-zA-Z0-9_-]+$/.test(imageId)) {
+        if (typeof imageId === 'string' && /^[a-zA-Z0-9\/\-_.]+$/.test(imageId)) {
           // Validate colorIndex is a number between 0 and 6
           const validColorIndex = typeof colorIndex === 'number' && colorIndex >= 0 && colorIndex <= 6 ? colorIndex : 0;
           sanitizedColorIndices[imageId] = validColorIndex;
@@ -1174,11 +1182,14 @@ class SelectionManager {
       });
     }
     
-    return {
+    const result = {
       selectedImages: sanitizedImages,
       imageWeights: sanitizedWeights,
       weightColorIndices: sanitizedColorIndices
     };
+    
+    console.log(`[DEBUG] sanitizeImageData: Output:`, result);
+    return result;
   }
 
   /**
