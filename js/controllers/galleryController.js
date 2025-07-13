@@ -135,6 +135,45 @@ export default class GalleryController {
           this.view.showErrorNotification(event.detail.message);
         }
       });
+
+      // --- Handle sref and quadrant parameters after images are loaded ---
+      const urlParams = new URLSearchParams(window.location.search);
+      const sref = urlParams.get('sref');
+      const quadrant = urlParams.get('quadrant');
+      if (sref) {
+        const srefParts = sref.split(' ').filter(part => part.trim().length > 0);
+        if (srefParts.length === 1) {
+          // Single image link - can have optional quadrant
+          console.log(`Looking for single style reference: ${sref} with quadrant: ${quadrant || 'none'}`);
+          const galleryItem = document.querySelector(`.gallery-item[data-sref="${sref}"]`);
+          if (galleryItem && window.appController && typeof window.appController.createLinkedView === 'function') {
+            window.appController.createLinkedView(galleryItem, sref, quadrant);
+          } else {
+            console.warn(`Style reference ${sref} not found in gallery or createLinkedView not available`);
+          }
+        } else {
+          // Multiple images link - treat as search query
+          console.log(`Multiple style references detected, treating as search: ${srefParts.join(', ')}`);
+          const searchContainer = document.querySelector('.search-container');
+          if (searchContainer && searchContainer.classList.contains('hidden')) {
+            searchContainer.classList.remove('hidden');
+          }
+          const searchInput = document.getElementById('search-input');
+          if (searchInput) {
+            searchInput.value = sref;
+            searchInput.classList.add('search-active');
+          }
+          // Set searchNumber and trigger search (filter out weight syntax)
+          if (window.appController && typeof window.appController.filterSearchInput === 'function') {
+            const filteredSref = window.appController.filterSearchInput(sref);
+            this.searchNumber = filteredSref;
+            this.performSearch(filteredSref);
+          } else {
+            this.searchNumber = sref;
+            this.performSearch(sref);
+          }
+        }
+      }
     } catch (error) {
       console.error('Failed to initialize gallery:', error);
       this.view.showErrorNotification('Failed to load images. Please try refreshing the page.');
