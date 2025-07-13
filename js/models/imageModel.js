@@ -36,6 +36,9 @@ import { createItem, deleteItem, readItems, deleteItems } from '../utils/supabas
 import { getCurrentUser } from '../utils/auth.js';
 
 export default class ImageModel {
+  // In-memory cache shared across all instances. Structure: { modelKey: [images] }
+  static imagesCache = {};
+
   constructor() {
     this.images = [];
     this.selectedImages = new Map();
@@ -222,6 +225,12 @@ export default class ImageModel {
    */
   async getImageFiles() {
     try {
+      // Return from cache if available
+      const cacheKey = this.currentModel || 'niji-6';
+      if (ImageModel.imagesCache[cacheKey]) {
+        console.log(`🗄️  Returning ${ImageModel.imagesCache[cacheKey].length} cached images for model ${cacheKey}`);
+        return ImageModel.imagesCache[cacheKey];
+      }
       // Create an array of possible paths to try
       const pathsToTry = [
         'api/images.json', // Local development
@@ -266,6 +275,8 @@ export default class ImageModel {
               const modelSet = data.sets[jsonKey];
               if (modelSet && Array.isArray(modelSet.images)) {
                 console.log(`✅ Successfully loaded ${modelSet.images.length} images for model ${currentModel} (JSON key: ${jsonKey})`);
+                // Save to cache and return
+                ImageModel.imagesCache[cacheKey] = modelSet.images;
                 return modelSet.images;
               } else {
                 console.warn(`❌ No images found for model ${currentModel} (JSON key: ${jsonKey})`);
@@ -281,6 +292,7 @@ export default class ImageModel {
             
             if (Array.isArray(imageArray) && imageArray.length > 0) {
               console.log(`Successfully loaded ${imageArray.length} images from ${path}`);
+              ImageModel.imagesCache[cacheKey] = imageArray;
               return imageArray;
             }
           }
@@ -291,6 +303,8 @@ export default class ImageModel {
       
       // If all else fails, return an empty array
       console.error('Failed to load any image paths');
+      // cache negative result to avoid repeated attempts for this session
+      ImageModel.imagesCache[cacheKey] = [];
       return [];
     } catch (error) {
       console.error('Error fetching image files:', error);
