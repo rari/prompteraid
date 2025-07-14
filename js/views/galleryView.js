@@ -1160,7 +1160,8 @@ export default class GalleryView {
     item.appendChild(copyPromptButton);
 
     // Add weight controls for selected images (disabled for Midjourney 7)
-    if (isSelected && currentModel !== 'midjourney-7') {
+    if (isSelected && currentModel && currentModel !== 'midjourney-7') {
+      console.log(`Creating weight controls for image ${image.id} in model ${currentModel}`);
       const weightControls = document.createElement('div');
       weightControls.className = 'weight-controls';
       weightControls.dataset.id = image.id;
@@ -1204,6 +1205,8 @@ export default class GalleryView {
       weightControls.appendChild(minusButton);
       
       item.appendChild(weightControls);
+    } else if (isSelected && (!currentModel || currentModel === 'midjourney-7')) {
+      console.log(`Skipping weight controls for image ${image.id} in model ${currentModel} (disabled for Midjourney 7)`);
     }
 
     return item;
