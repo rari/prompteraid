@@ -2064,8 +2064,26 @@ export default class GalleryView {
       const modeClone = cloneAndWire(modeBtnOriginal, 'sub');
       const themeClone = cloneAndWire(themeBtnOriginal, 'sub');
 
-      if (modeClone) controlsContainer.appendChild(modeClone);
-      if (themeClone) controlsContainer.appendChild(themeClone);
+      if (modeClone) {
+        // Ensure the clone has the same classes as the original
+        if (modeBtnOriginal.classList.contains('website-mode')) {
+          modeClone.classList.add('website-mode');
+        } else {
+          modeClone.classList.remove('website-mode');
+        }
+        controlsContainer.appendChild(modeClone);
+      }
+      if (themeClone) {
+        // Ensure the clone has the same theme classes as the original
+        const themeClasses = ['theme-toggle-light', 'theme-toggle-dark'];
+        themeClasses.forEach(cls => themeClone.classList.remove(cls));
+        if (themeBtnOriginal.classList.contains('theme-toggle-light')) {
+          themeClone.classList.add('theme-toggle-light');
+        } else if (themeBtnOriginal.classList.contains('theme-toggle-dark')) {
+          themeClone.classList.add('theme-toggle-dark');
+        }
+        controlsContainer.appendChild(themeClone);
+      }
     } catch (err) {
       console.error('Error repositioning header controls:', err);
     }
@@ -2476,6 +2494,16 @@ export default class GalleryView {
         stickyToggle.classList.remove('website-mode');
       } else {
         stickyToggle.classList.add('website-mode');
+      }
+    }
+    
+    // Update subheader clone if present
+    const subheaderToggle = document.getElementById('mode-toggle-sub');
+    if (subheaderToggle) {
+      if (isDiscordMode) {
+        subheaderToggle.classList.remove('website-mode');
+      } else {
+        subheaderToggle.classList.add('website-mode');
       }
     }
     

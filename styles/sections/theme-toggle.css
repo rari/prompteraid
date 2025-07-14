@@ -51,8 +51,8 @@
 .image-count-subheader .theme-toggle {
   width: 2.25rem;
   height: 2rem;
-  margin-left: 0.1rem;
-  margin-right: 0.25rem; /* smaller gap */
+  margin-left: 0.75rem; /* Increased gap to match mode toggle */
+  margin-right: 0.25rem;
   padding: 0;
   box-shadow: none;
 }
