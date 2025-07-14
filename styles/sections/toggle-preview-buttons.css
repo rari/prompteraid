@@ -42,6 +42,27 @@
   animation: chevron-gradient-shift 3s ease infinite;
 }
 
+/* === Animated gradient for prompt settings cog === */
+#prompt-settings-btn i {
+  background: linear-gradient(
+    135deg,
+    var(--neon-pink) 0%,
+    var(--neon-pink) 15%,
+    var(--neon-purple) 25%,
+    var(--neon-yellow) 40%,
+    var(--neon-teal) 55%,
+    var(--neon-blue) 70%,
+    var(--neon-pink) 85%,
+    var(--neon-pink) 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: chevron-gradient-shift 3s ease infinite;
+  display: inline-block;
+}
+
 @keyframes rotate-to-down {
   from { transform: rotate(0deg); }
   to { transform: rotate(180deg); }
