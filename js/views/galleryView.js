@@ -2034,9 +2034,11 @@ export default class GalleryView {
       const themeBtn = document.getElementById('theme-toggle');
       if (modeBtn && !controlsContainer.contains(modeBtn)) {
         controlsContainer.appendChild(modeBtn);
+        modeBtn.style.display = ''; // ensure visible
       }
       if (themeBtn && !controlsContainer.contains(themeBtn)) {
         controlsContainer.appendChild(themeBtn);
+        themeBtn.style.display = ''; // ensure visible
       }
 
       // Swap prompt generator & options buttons into former toggle containers
