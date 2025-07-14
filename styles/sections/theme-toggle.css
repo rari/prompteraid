@@ -49,12 +49,14 @@
 
 /* === Subheader Placement Overrides === */
 .image-count-subheader .theme-toggle {
-  position: relative;
-  top: auto;
-  right: auto;
-  width: 2.5rem;
-  height: 2.25rem;
-  margin: 0 0 0 0.5rem; /* match spacing of other controls */
-  box-shadow: none;
+  width: 2.25rem;
+  height: 2rem;
+  margin-left: 0.1rem;
+  margin-right: 0.5rem;
+  padding: 0;
+}
+
+.image-count-subheader .theme-toggle i {
+  font-size: 1.05rem;
 }
 

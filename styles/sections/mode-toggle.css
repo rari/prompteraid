@@ -105,3 +105,16 @@
   margin: 0 0.5rem 0 0;
 }
 
+/* === Subheader Placement Overrides === */
+.image-count-subheader .mode-toggle {
+  width: 2.25rem;
+  height: 2rem;
+  margin-left: 0.5rem;
+  margin-right: 0.1rem;
+  padding: 0;
+}
+
+.image-count-subheader .mode-toggle i {
+  font-size: 1.05rem;
+}
+
