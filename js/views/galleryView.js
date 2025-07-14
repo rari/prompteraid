@@ -2018,6 +2018,14 @@ export default class GalleryView {
         controlsContainer.style.display = 'inline-flex';
         controlsContainer.style.alignItems = 'center';
         controlsContainer.style.gap = '0.5rem';
+      }
+
+      // On small screens, append controls into the second line so they share a row with the model pill
+      const secondLine = subheader.querySelector('.second-line');
+      if (secondLine && !secondLine.contains(controlsContainer)) {
+        secondLine.appendChild(controlsContainer);
+      } else if (!subheader.contains(controlsContainer)) {
+        // Fallback: append to subheader if not present anywhere
         subheader.appendChild(controlsContainer);
       }
 
