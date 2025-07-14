@@ -465,6 +465,7 @@ class SelectionManager {
       console.log(`[DEBUG] getCurrentConfiguration: Base prompt: "${basePrompt}"`);
 
       // Check base prompt length limit (500 characters - increased from 300)
+      console.log(`[DEBUG] getCurrentConfiguration: Base prompt length: ${basePrompt.length} chars`);
       if (basePrompt.length > 500) {
         console.error(`[DEBUG] getCurrentConfiguration: Base prompt too long (${basePrompt.length} chars)`);
         this.showNotification('Base prompt is too long. Please keep it under 500 characters.', 'error');
@@ -544,6 +545,12 @@ class SelectionManager {
         console.warn(`[DEBUG] getCurrentConfiguration: Configuration has no prompt and no selected images`);
         this.showNotification('Please add a prompt or select at least one image before saving.', 'warning');
         return null;
+      }
+      
+      // Test notification system (remove this after testing)
+      if (basePrompt.length > 100) {
+        console.log(`[DEBUG] getCurrentConfiguration: Testing notification system with long prompt (${basePrompt.length} chars)`);
+        this.showNotification(`Test: Your prompt is ${basePrompt.length} characters long.`, 'info');
       }
       
       return config;
