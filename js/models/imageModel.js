@@ -128,10 +128,12 @@ export default class ImageModel {
   }
 
   async loadImages() {
+    console.log('🖼️  loadImages: Starting image loading process...');
     try {
       // Use error boundary if available, otherwise fall back to direct call
       let imagePaths;
       if (window.errorBoundary && window.errorBoundary.wrapAsyncWithRetry) {
+        console.log('🖼️  loadImages: Using error boundary for image loading');
         imagePaths = await window.errorBoundary.wrapAsyncWithRetry(
           () => this.getImageFiles(),
           3,
@@ -139,15 +141,23 @@ export default class ImageModel {
         ) || [];
       } else {
         // Fallback to direct call if error boundary not available
+        console.log('🖼️  loadImages: Using direct call for image loading');
         imagePaths = await this.getImageFiles();
       }
+      
+      console.log('🖼️  loadImages: Received imagePaths:', imagePaths);
+      console.log('🖼️  loadImages: Number of imagePaths:', imagePaths ? imagePaths.length : 0);
       
       this.images = imagePaths
         .filter(p => {
           // If object, examine .path, else string
           const testPath = typeof p === 'object' && p !== null ? p.path : p;
           const fname = testPath.split('/').pop().split('\\').pop();
-          return !fname.startsWith('_');
+          const shouldKeep = !fname.startsWith('_');
+          if (!shouldKeep) {
+            console.log('🖼️  loadImages: Filtering out image with underscore prefix:', fname);
+          }
+          return shouldKeep;
         })
         .map(pathOrObj => {
         // If the entry is an object (new format), preserve all fields
@@ -175,6 +185,10 @@ export default class ImageModel {
           };
         }
       });
+      
+      console.log('🖼️  loadImages: Processed images:', this.images.length);
+      console.log('🖼️  loadImages: First few images:', this.images.slice(0, 3));
+      
       this.shuffleImages();
       return this.images;
     } catch (error) {

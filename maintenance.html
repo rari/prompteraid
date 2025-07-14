@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Under Maintenance - PrompterAid</title>
+    <meta name="description" content="PrompterAid is currently under maintenance. We'll be back soon!">
+    <meta name="robots" content="noindex,nofollow">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://www.prompteraid.com/#website",
+          "name": "PrompterAid",
+          "url": "https://www.prompteraid.com/",
+          "description": "Free style-code library and 1-click prompt generator for NijiJourney 6 & Midjourney 7.",
+          "publisher": {
+            "@type": "Person",
+            "name": "Jenna Juffuffles",
+            "url": "https://jennajuffuffles.com/"
+          },
+          "sameAs": [
+            "https://www.instagram.com/prompteraid/",
+            "https://hub.prompteraid.com/"
+          ]
+        }
+      ]
+    }
+    </script>
+    <style>
+      :root {
+        --background: hsl(210, 30%, 95%);
+        --text-primary: hsl(210, 30%, 20%);
+        --primary: hsl(330, 100%, 70%);
+        --secondary: hsl(190, 100%, 50%);
+        --accent: hsl(280, 100%, 80%);
+        --ocean-dark: hsl(200, 100%, 20%);
+        --ocean-medium: hsl(195, 100%, 40%);
+        --ocean-light: hsl(190, 100%, 80%);
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --background: hsl(210, 30%, 8%);
+          --text-primary: hsl(210, 20%, 92%);
+          --ocean-light: hsl(190, 70%, 40%);
+        }
+      }
+      
+      /* Skip link for accessibility */
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 6px;
+        background: var(--primary);
+        color: white;
+        padding: 8px;
+        text-decoration: none;
+        border-radius: 4px;
+        z-index: 1000;
+        transition: top 0.3s;
+      }
+      
+      .skip-link:focus {
+        top: 6px;
+      }
+      
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-family);
+        background-color: var(--background);
+        color: var(--text-primary);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        overflow-x: hidden;
+      }
+      
+      .container {
+        max-width: 600px;
+        padding: 2rem;
+        z-index: 10;
+      }
+      
+      .logo {
+        max-width: 300px;
+        height: auto;
+        margin-bottom: 2rem;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        animation: float 3s ease-in-out infinite;
+      }
+      
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: gradient-rotate 6s ease infinite;
+      }
+      
+      .emoji {
+        font-size: 4rem;
+        margin: 1rem 0;
+        animation: float 3s ease-in-out infinite;
+      }
+      
+      .emoji-small {
+        font-size: 1.5rem;
+        display: inline-block;
+        margin: 0 0.3rem;
+        animation: float 3s ease-in-out infinite;
+      }
+      
+      .emoji-small:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+      
+      .emoji-small:nth-child(3) {
+        animation-delay: 1s;
+      }
+      
+      p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+      
+      .status-link {
+        display: inline-block;
+        padding: 0.8rem 1.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        text-decoration: none;
+        border-radius: 2rem;
+        font-weight: 600;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 0.5rem;
+      }
+      
+      .status-link:hover,
+      .status-link:focus {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 10px rgba(0, 0, 0, 0.15);
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      
+      /* Hide decorative elements from screen readers */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      
+      .ocean {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, var(--ocean-light) 0%, var(--ocean-medium) 50%, var(--ocean-dark) 100%);
+        opacity: 0.15;
+        z-index: -2;
+      }
+      
+      .wave {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' fill='%23a0e4f1' opacity='.15'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+        background-size: 100% 100%;
+        animation: wave 15s linear infinite;
+        z-index: -1;
+      }
+      
+      .wave:nth-child(2) {
+        animation: wave 17s linear reverse infinite;
+        opacity: 0.2;
+      }
+      
+      .wave:nth-child(3) {
+        animation: wave 20s linear infinite;
+        opacity: 0.1;
+      }
+      
+      .bubbles {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+      
+      .bubble {
+        position: absolute;
+        bottom: -100px;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        opacity: 0.5;
+        animation: rise 10s infinite ease-in;
+      }
+      
+      .bubble:nth-child(1) {
+        width: 40px;
+        height: 40px;
+        left: 10%;
+        animation-duration: 8s;
+      }
+      
+      .bubble:nth-child(2) {
+        width: 20px;
+        height: 20px;
+        left: 20%;
+        animation-duration: 5s;
+        animation-delay: 1s;
+      }
+      
+      .bubble:nth-child(3) {
+        width: 50px;
+        height: 50px;
+        left: 35%;
+        animation-duration: 7s;
+        animation-delay: 2s;
+      }
+      
+      .bubble:nth-child(4) {
+        width: 80px;
+        height: 80px;
+        left: 50%;
+        animation-duration: 11s;
+        animation-delay: 0s;
+      }
+      
+      .bubble:nth-child(5) {
+        width: 35px;
+        height: 35px;
+        left: 55%;
+        animation-duration: 6s;
+        animation-delay: 1s;
+      }
+      
+      .bubble:nth-child(6) {
+        width: 45px;
+        height: 45px;
+        left: 65%;
+        animation-duration: 8s;
+        animation-delay: 3s;
+      }
+      
+      .bubble:nth-child(7) {
+        width: 25px;
+        height: 25px;
+        left: 75%;
+        animation-duration: 7s;
+        animation-delay: 2s;
+      }
+      
+      .bubble:nth-child(8) {
+        width: 80px;
+        height: 80px;
+        left: 80%;
+        animation-duration: 10s;
+        animation-delay: 4s;
+      }
+      
+      .fish {
+        position: fixed;
+        font-size: 1.5rem;
+        animation: swim 15s linear infinite;
+        z-index: -1;
+      }
+      
+      .fish:nth-child(1) {
+        top: 20%;
+        left: -5%;
+        animation-duration: 15s;
+      }
+      
+      .fish:nth-child(2) {
+        top: 40%;
+        left: -5%;
+        animation-duration: 20s;
+        animation-delay: 5s;
+      }
+      
+      .fish:nth-child(3) {
+        top: 60%;
+        left: -5%;
+        animation-duration: 18s;
+        animation-delay: 8s;
+      }
+      
+      .fish:nth-child(4) {
+        top: 85%; left: -5%; font-size: 1.5rem; opacity: 0.6;
+        animation-duration: 28s; animation-delay: 2s;
+      }
+      .fish:nth-child(5) {
+        top: 30%; left: -5%; font-size: 1.2rem; opacity: 0.4;
+        animation-duration: 25s; animation-delay: 5s;
+      }
+      .fish:nth-child(6) {
+        top: 50%; left: -5%; font-size: 1.8rem; opacity: 0.7;
+        animation-duration: 18s; animation-delay: 8s;
+      }
+      .fish:nth-child(7) {
+        top: 70%; left: -5%; font-size: 1.1rem; opacity: 0.3;
+        animation-duration: 35s; animation-delay: 1s;
+      }
+      .fish:nth-child(8) {
+        top: 15%; left: -5%; font-size: 1.6rem; opacity: 0.8;
+        animation-duration: 15s; animation-delay: 10s;
+      }
+      .fish:nth-child(9) {
+        top: 90%; left: -5%; font-size: 1.3rem; opacity: 0.5;
+        animation-duration: 22s; animation-delay: 12s;
+      }
+      .fish:nth-child(10) {
+        top: 25%; left: -5%; font-size: 2.0rem; opacity: 0.9;
+        animation-duration: 12s; animation-delay: 15s;
+      }
+      .fish:nth-child(11) {
+        top: 55%; left: -5%; font-size: 1.4rem; opacity: 0.6;
+        animation-duration: 30s; animation-delay: 3s;
+      }
+      .fish:nth-child(12) {
+        top: 75%; left: -5%; font-size: 1.7rem; opacity: 0.7;
+        animation-duration: 20s; animation-delay: 7s;
+      }
+      .fish:nth-child(13) {
+        top: 40%; left: -5%; font-size: 1.0rem; opacity: 0.4;
+        animation-duration: 40s; animation-delay: 0s;
+      }
+      .fish:nth-child(14) {
+        top: 65%; left: -5%; font-size: 1.9rem; opacity: 0.8;
+        animation-duration: 17s; animation-delay: 9s;
+      }
+      .fish:nth-child(15) {
+        top: 20%; left: -5%; font-size: 1.2rem; opacity: 0.5;
+        animation-duration: 26s; animation-delay: 11s;
+      }
+      .fish:nth-child(16) {
+        top: 80%; left: -5%; font-size: 1.5rem; opacity: 0.7;
+        animation-duration: 23s; animation-delay: 4s;
+      }
+      .fish:nth-child(17) {
+        top: 35%; left: -5%; font-size: 1.8rem; opacity: 0.9;
+        animation-duration: 14s; animation-delay: 14s;
+      }
+      .fish:nth-child(18) {
+        top: 60%; left: -5%; font-size: 1.1rem; opacity: 0.3;
+        animation-duration: 32s; animation-delay: 6s;
+      }
+      .fish:nth-child(19) {
+        top: 45%; left: -5%; font-size: 1.6rem; opacity: 0.8;
+        animation-duration: 19s; animation-delay: 13s;
+      }
+      .fish:nth-child(20) {
+        top: 10%; left: -5%; font-size: 1.3rem; opacity: 0.6;
+        animation-duration: 29s; animation-delay: 1s;
+      }
+      .fish:nth-child(21) {
+        top: 95%; left: -5%; font-size: 1.7rem; opacity: 0.7;
+        animation-duration: 16s; animation-delay: 8s;
+      }
+      .fish:nth-child(22) {
+        top: 28%; left: -5%; font-size: 1.4rem; opacity: 0.5;
+        animation-duration: 38s; animation-delay: 3s;
+      }
+      .fish:nth-child(23) {
+        top: 78%; left: -5%; font-size: 1.9rem; opacity: 0.9;
+        animation-duration: 21s; animation-delay: 5s;
+      }
+      
+      @keyframes swim {
+        0% {
+          left: -5%;
+          transform: scaleX(-1);
+        }
+        49% {
+          transform: scaleX(-1);
+        }
+        50% {
+          left: 105%;
+          transform: scaleX(1);
+        }
+        99% {
+          transform: scaleX(1);
+        }
+        100% {
+          left: -5%;
+          transform: scaleX(-1);
+        }
+      }
+      
+      @keyframes wave {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+      
+      @keyframes rise {
+        0% {
+          bottom: -100px;
+          transform: translateX(0);
+        }
+        50% {
+          transform: translateX(100px);
+        }
+        100% {
+          bottom: 100%;
+          transform: translateX(-20px);
+        }
+      }
+      
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+      
+      @keyframes gradient-rotate {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Skip link for keyboard navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Decorative background elements -->
+    <div class="ocean" aria-hidden="true"></div>
+    <div class="wave" aria-hidden="true"></div>
+    <div class="wave" aria-hidden="true"></div>
+    <div class="wave" aria-hidden="true"></div>
+    
+    <!-- Decorative fish animations -->
+    <div class="fish" aria-hidden="true">🐠</div>
+    <div class="fish" aria-hidden="true">🐟</div>
+    <div class="fish" aria-hidden="true">🐡</div>
+    <div class="fish" aria-hidden="true">🐟</div>
+    <div class="fish" aria-hidden="true">🐠</div>
+    <div class="fish" aria-hidden="true">🐡</div>
+    <div class="fish" aria-hidden="true">🦈</div>
+    <div class="fish" aria-hidden="true">🐠</div>
+    <div class="fish" aria-hidden="true">🐟</div>
+    <div class="fish" aria-hidden="true">🐡</div>
+    <div class="fish" aria-hidden="true">🐟</div>
+    <div class="fish" aria-hidden="true">🐠</div>
+    <div class="fish" aria-hidden="true">🦈</div>
+    <div class="fish" aria-hidden="true">🐡</div>
+    <div class="fish" aria-hidden="true">🐠</div>
+    <div class="fish" aria-hidden="true">🐟</div>
+    <div class="fish" aria-hidden="true">🐡</div>
+    <div class="fish" aria-hidden="true">🦈</div>
+    <div class="fish" aria-hidden="true">🐠</div>
+    <div class="fish" aria-hidden="true">🐟</div>
+    
+    <!-- Decorative bubbles -->
+    <div class="bubbles" aria-hidden="true">
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+    </div>
+    
+    <!-- Main content -->
+    <main id="main-content" class="container" role="main">
+      <img src="img/wordmark.png" alt="PrompterAid" class="logo">
+      <h1>Under Maintenance</h1>
+      <div class="emoji" aria-hidden="true">🔧</div>
+      <p>We're currently performing some maintenance on PrompterAid to make it even better! Our team is working hard to bring you an improved experience.</p>
+      <p>We'll be back soon with new features and improvements! <span class="emoji-small" aria-hidden="true">✨</span><span class="emoji-small" aria-hidden="true">🚀</span><span class="emoji-small" aria-hidden="true">🎨</span></p>
+      <div>
+        <a href="https://www.instagram.com/prompteraid/" class="status-link">Follow for Updates</a>
+        <a href="https://hub.prompteraid.com/" class="status-link">Visit Hub</a>
+      </div>
+    </main>
+  </body>
+</html> 

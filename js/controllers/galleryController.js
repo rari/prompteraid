@@ -109,6 +109,7 @@ export default class GalleryController {
       this.view.renderNewStylesSection(this.model.getNewImages(), this.model.selectedImages, this.model.favoriteImages, this.model.currentModel);
       
       // Render initial gallery
+      console.log('🎯 Gallery Controller: About to render gallery with', this.model.images.length, 'images');
       this.renderGallery();
       
       // Bind event handlers
@@ -224,7 +225,9 @@ export default class GalleryController {
    * - Uses efficient data structures (Set, Map) for lookups
    */
   renderGallery() {
-    console.debug('renderGallery: searchNumber is', this.searchNumber);
+    console.log('🎯 renderGallery: Starting gallery render');
+    console.log('🎯 renderGallery: searchNumber is', this.searchNumber);
+    console.log('🎯 renderGallery: model.images.length is', this.model.images.length);
     // Ensure only one filter is active at a time
     if (this.model.showOnlyFavorites && this.showOnlySelected) {
       // If both filters are somehow active, prioritize the most recently activated one
