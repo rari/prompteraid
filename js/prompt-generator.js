@@ -67,6 +67,13 @@ class PromptGenerator {
     const settingsPanel = document.getElementById('prompt-settings-panel');
     const settingsBtn = document.getElementById('prompt-settings-btn');
     const icon = settingsBtn.querySelector('i');
+
+    // If we are about to OPEN the panel, ensure preview row is visible first
+    const willOpen = settingsPanel.classList.contains('hidden');
+    if (willOpen) {
+      this.ensurePromptMenuVisible();
+    }
+
     settingsPanel.classList.toggle('hidden');
     settingsBtn.classList.toggle('active');
     if (settingsPanel.classList.contains('hidden')) {
