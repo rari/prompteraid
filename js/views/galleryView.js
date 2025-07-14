@@ -1983,13 +1983,14 @@ export default class GalleryView {
     
     // Combine the text and model selector into a single span for no-break
     const innerHTML = `
-      <span class=\"image-count-number\">${totalCount}</span>
-      <span class=\"subheader-inline\">pregenerated style references <span class=\"hide-mobile\">for</span>
-        <span class=\"model-selector-inline model-selector\">
-          <span class=\"current-model\" tabindex=\"0\" role=\"button\">${modelDisplayName}</span>
-          <span class=\"model-dropdown\" role=\"listbox\">
-            ${otherModels.map(model => `<span class=\"model-option\" data-model=\"${model.id}\" tabindex=\"0\" role=\"option\">${model.icon}<span>${model.name}</span></span>`).join('')}
-          </span>
+      <span class=\"subheader-inline first-line\">
+        <span class=\"image-count-number\">${totalCount}</span>
+        <span>&nbsp;pregenerated style references <span class=\"hide-mobile\">for</span></span>
+      </span>
+      <span class=\"model-selector-inline model-selector second-line\">
+        <span class=\"current-model\" tabindex=\"0\" role=\"button\">${modelDisplayName}</span>
+        <span class=\"model-dropdown\" role=\"listbox\">
+          ${otherModels.map(model => `<span class=\"model-option\" data-model=\"${model.id}\" tabindex=\"0\" role=\"option\">${model.icon}<span>${model.name}</span></span>`).join('')}
         </span>
       </span>
     `;
