@@ -2044,20 +2044,8 @@ export default class GalleryView {
         themeBtn.style.display = ''; // ensure visible
       }
 
-      // Swap prompt generator & options buttons into former toggle containers
-      const themeContainer = document.querySelector('.theme-toggle-container');
-      const modeContainer = document.querySelector('.mode-toggle-container');
-      const genBtn = document.getElementById('generate-prompt-btn');
-      const settingsBtn = document.getElementById('prompt-settings-btn');
-
-      if (themeContainer && genBtn && !themeContainer.contains(genBtn)) {
-        themeContainer.innerHTML = '';
-        themeContainer.appendChild(genBtn);
-      }
-      if (modeContainer && settingsBtn && !modeContainer.contains(settingsBtn)) {
-        modeContainer.innerHTML = '';
-        modeContainer.appendChild(settingsBtn);
-      }
+      // Prompt generator buttons are now permanently placed in index.html,
+      // so we no longer swap them into the old toggle containers.
     } catch (err) {
       console.error('Error repositioning header controls:', err);
     }
