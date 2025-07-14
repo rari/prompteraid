@@ -142,7 +142,14 @@ export default class ImageModel {
         imagePaths = await this.getImageFiles();
       }
       
-      this.images = imagePaths.map(pathOrObj => {
+      this.images = imagePaths
+        .filter(p => {
+          // If object, examine .path, else string
+          const testPath = typeof p === 'object' && p !== null ? p.path : p;
+          const fname = testPath.split('/').pop().split('\\').pop();
+          return !fname.startsWith('_');
+        })
+        .map(pathOrObj => {
         // If the entry is an object (new format), preserve all fields
         if (typeof pathOrObj === 'object' && pathOrObj !== null) {
           // Extract sref as before
