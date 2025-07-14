@@ -2,7 +2,7 @@
 /* Displays current image count and selection status */
 .image-count-subheader {
   display: flex;
-  align-items: baseline; /* Align to baseline */
+  align-items: center; /* vertically center all children */
   justify-content: center;
   gap: 0.65rem; /* tighter spacing */
   margin-bottom: var(--space-6);
@@ -60,7 +60,7 @@
 
 .image-count-subheader .header-controls button {
   position: relative;
-  top: 2px; /* nudge up to align with baseline text */
+  top: 0;
 }
 
 /* Remove unintended extra space around inline elements */
