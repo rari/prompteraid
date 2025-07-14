@@ -243,6 +243,13 @@ class SelectionManager {
       return;
     }
     
+    // Additional validation
+    if (!currentConfig.basePrompt && (!currentConfig.selectedImages || currentConfig.selectedImages.length === 0)) {
+      console.error(`[DEBUG] saveToSlot: Configuration has no prompt and no selected images`);
+      this.showNotification('Please add a prompt or select at least one image before saving.', 'error');
+      return;
+    }
+    
     // Save to selections
     this.selections[slotNumber] = currentConfig;
     console.log(`[DEBUG] saveToSlot: Saved to in-memory selections:`, this.selections);
@@ -457,10 +464,10 @@ class SelectionManager {
       const basePrompt = promptInput ? this.sanitizePrompt(promptInput.value) : '';
       console.log(`[DEBUG] getCurrentConfiguration: Base prompt: "${basePrompt}"`);
 
-      // Check base prompt length limit (300 characters)
-      if (basePrompt.length > 300) {
+      // Check base prompt length limit (500 characters - increased from 300)
+      if (basePrompt.length > 500) {
         console.error(`[DEBUG] getCurrentConfiguration: Base prompt too long (${basePrompt.length} chars)`);
-        this.showNotification('Base prompt is too long. Please keep it under 300 characters.', 'error');
+        this.showNotification('Base prompt is too long. Please keep it under 500 characters.', 'error');
         return null;
       }
 
@@ -531,9 +538,18 @@ class SelectionManager {
       };
       
       console.log(`[DEBUG] getCurrentConfiguration: Final config:`, config);
+      
+      // Additional validation before returning
+      if (!config.basePrompt && (!config.selectedImages || config.selectedImages.length === 0)) {
+        console.warn(`[DEBUG] getCurrentConfiguration: Configuration has no prompt and no selected images`);
+        this.showNotification('Please add a prompt or select at least one image before saving.', 'warning');
+        return null;
+      }
+      
       return config;
     } catch (error) {
       console.error('Error getting current configuration:', error);
+      this.showNotification('Failed to create configuration. Please try again.', 'error');
       return null;
     }
   }
@@ -1133,7 +1149,7 @@ class SelectionManager {
    * @returns {string} Sanitized prompt text
    */
   sanitizePrompt(prompt) {
-    return this.sanitizeText(prompt, 300); // 300 character limit for prompts
+    return this.sanitizeText(prompt, 500); // 500 character limit for prompts (increased from 300)
   }
 
   /**
@@ -1165,7 +1181,7 @@ class SelectionManager {
       selectedImages.forEach(([imageId, colorIndex]) => {
         console.log(`[DEBUG] sanitizeImageData: Processing imageId: "${imageId}", colorIndex: ${colorIndex}`);
         // Validate imageId is a string and contains only safe characters for file paths
-        if (typeof imageId === 'string' && /^[a-zA-Z0-9\/\-_.]+$/.test(imageId)) {
+        if (typeof imageId === 'string' && /^[a-zA-Z0-9\/\-_.]+$/.test(imageId) && imageId.length > 0) {
           // Validate colorIndex is a number between 0 and 4
           const validColorIndex = typeof colorIndex === 'number' && colorIndex >= 0 && colorIndex <= 4 ? colorIndex : 0;
           sanitizedImages.push([imageId, validColorIndex]);
