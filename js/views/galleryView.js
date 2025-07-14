@@ -1998,6 +1998,55 @@ export default class GalleryView {
     
     // Always set up events after re-rendering the HTML
     this.setupModelSelectorEvents();
+
+    // Reposition mode/theme toggles and prompt generator/options buttons
+    this.repositionHeaderControls();
+  }
+
+  // New method: move mode/theme toggles to subheader and swap generator/settings buttons
+  repositionHeaderControls() {
+    try {
+      const subheader = this.imageCountSubheader;
+      if (!subheader) return;
+
+      // Ensure a container exists for the controls
+      let controlsContainer = subheader.querySelector('.header-controls');
+      if (!controlsContainer) {
+        controlsContainer = document.createElement('span');
+        controlsContainer.className = 'header-controls';
+        controlsContainer.style.display = 'inline-flex';
+        controlsContainer.style.alignItems = 'center';
+        controlsContainer.style.gap = '0.5rem';
+        subheader.appendChild(controlsContainer);
+      }
+
+      // Move mode and theme toggle buttons into the subheader
+      const modeBtn = document.getElementById('mode-toggle');
+      const themeBtn = document.getElementById('theme-toggle');
+      if (modeBtn && !controlsContainer.contains(modeBtn)) {
+        controlsContainer.appendChild(modeBtn);
+      }
+      if (themeBtn && !controlsContainer.contains(themeBtn)) {
+        controlsContainer.appendChild(themeBtn);
+      }
+
+      // Swap prompt generator & options buttons into former toggle containers
+      const themeContainer = document.querySelector('.theme-toggle-container');
+      const modeContainer = document.querySelector('.mode-toggle-container');
+      const genBtn = document.getElementById('generate-prompt-btn');
+      const settingsBtn = document.getElementById('prompt-settings-btn');
+
+      if (themeContainer && genBtn && !themeContainer.contains(genBtn)) {
+        themeContainer.innerHTML = '';
+        themeContainer.appendChild(genBtn);
+      }
+      if (modeContainer && settingsBtn && !modeContainer.contains(settingsBtn)) {
+        modeContainer.innerHTML = '';
+        modeContainer.appendChild(settingsBtn);
+      }
+    } catch (err) {
+      console.error('Error repositioning header controls:', err);
+    }
   }
 
   setupModelSelectorEvents() {
