@@ -51,3 +51,15 @@
   align-self: center; /* ensure vertical centering in flex */
 }
 
+/* Control alignment (mode & theme toggles) */
+.image-count-subheader .header-controls {
+  display: inline-flex;
+  align-items: center; /* vertical centering */
+  vertical-align: middle;
+}
+
+.image-count-subheader .header-controls button {
+  position: relative;
+  top: 2px; /* nudge up to align with baseline text */
+}
+
