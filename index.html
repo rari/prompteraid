@@ -234,10 +234,13 @@
       <div class="prompt-container">
         <div class="input-group">
           <div class="mode-toggle-container">
-            <button id="mode-toggle" class="mode-toggle" title="Toggle between Discord and Website modes" aria-label="Toggle between Discord and Website modes" aria-pressed="true">
+            <!-- Hidden at load; moved into subheader by JS to avoid initial flicker -->
+            <button id="mode-toggle" class="mode-toggle" style="display:none;" title="Toggle between Discord and Website modes" aria-label="Toggle between Discord and Website modes" aria-pressed="true">
               <i class="fab fa-discord discord-icon active"></i>
               <i class="fas fa-globe website-icon"></i>
             </button>
+            <!-- Prompt generator settings cog lives here permanently -->
+            <button id="prompt-settings-btn" class="action-button prompt-settings" title="Prompt generator settings" aria-controls="prompt-settings-panel" aria-expanded="false"><i class="fas fa-cog"></i></button>
           </div>
           
           <input type="text" id="prompt-input" placeholder="Enter your base prompt..." aria-label="Base prompt input" aria-describedby="prompt-help">
@@ -245,8 +248,14 @@
           
           <!-- Theme toggle moved inside input group on the right -->
           <div class="theme-toggle-container">
-            <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+            <!-- Hidden at load; moved into subheader by JS to avoid initial flicker -->
+            <button id="theme-toggle" class="theme-toggle" style="display:none;" title="Toggle dark mode" aria-label="Toggle dark mode">
               <i class="fas fa-moon"></i>
+            </button>
+            <!-- Prompt generator wand lives here permanently -->
+            <button id="generate-prompt-btn" class="action-button prompt-gen" title="Generate random prompt">
+              <i class="fa-solid fa-wand-magic wand-magic-icon"></i>
+              <i class="fa-solid fa-wand-magic-sparkles sparkle-wand-icon"></i>
             </button>
           </div>
           
@@ -285,13 +294,9 @@
               <div class="prompt-preview" style="flex: 1 1 auto; display: flex; align-items: center;">
             <p id="final-prompt" style="flex: 1 1 auto;"></p>
               </div>
-            <div class="prompt-gen-inline-buttons">
-              <button id="generate-prompt-btn" class="action-button prompt-gen" title="Generate random prompt">
-                <i class="fa-solid fa-wand-magic wand-magic-icon"></i>
-                <i class="fa-solid fa-wand-magic-sparkles sparkle-wand-icon"></i>
-              </button>
-              <button id="prompt-settings-btn" class="action-button prompt-settings" title="Prompt generator settings" aria-controls="prompt-settings-panel" aria-expanded="false"><i class="fas fa-cog"></i></button>
-            </div>
+            <!-- Prompt generator buttons moved to top input group to avoid flash -->
+            <!-- (Empty placeholder preserved for flex spacing) -->
+            <div class="prompt-gen-inline-buttons"></div>
           </div>
           <div id="prompt-settings-panel" class="prompt-settings-panel hidden" aria-hidden="true">
             <h3>Prompt Options</h3>
