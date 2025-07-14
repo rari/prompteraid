@@ -154,3 +154,27 @@
   }
 }
 
+@media (max-width: 600px) {
+  /* Improve image-count-subheader readability on narrow screens */
+  .image-count-subheader {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  /* Hide decorative lines to save horizontal space */
+  .image-count-subheader::before,
+  .image-count-subheader::after {
+    display: none;
+  }
+  /* Stack header controls on their own row */
+  .image-count-subheader .header-controls {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.4rem;
+  }
+  .image-count-subheader .header-controls button {
+    margin: 0 0.25rem;
+  }
+  /* Slightly reduce font-size */
+  .image-count-subheader { font-size: 0.9rem; }
+}
+
