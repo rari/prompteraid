@@ -47,3 +47,14 @@
   transform: scale(1.1);
 }
 
+/* === Subheader Placement Overrides === */
+.image-count-subheader .theme-toggle {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: 2.5rem;
+  height: 2.25rem;
+  margin: 0 0 0 0.5rem; /* match spacing of other controls */
+  box-shadow: none;
+}
+
