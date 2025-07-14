@@ -52,8 +52,9 @@
   width: 2.25rem;
   height: 2rem;
   margin-left: 0.1rem;
-  margin-right: 0.5rem;
+  margin-right: 0.25rem; /* smaller gap */
   padding: 0;
+  box-shadow: none;
 }
 
 .image-count-subheader .theme-toggle i {
