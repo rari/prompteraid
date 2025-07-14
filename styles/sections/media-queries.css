@@ -152,25 +152,61 @@
     margin-top: 0.5rem;
     text-align: center;
   }
+
+  .hide-mobile {
+    display: none !important;
+  }
 }
 
 @media (max-width: 600px) {
-  /* Override earlier column layout – keep row but allow wrapping */
+  /* Improve image-count-subheader readability on narrow screens */
   .image-count-subheader {
-    flex-direction: row;
     flex-wrap: wrap;
-    align-items: center;
+    gap: 0.4rem;
   }
-  /* Ensure first two elements stay inline (default inline) */
-  .image-count-number, .subheader-inline { flex: 0 0 auto; }
-
-  /* Second line items */
-  .model-selector-inline, .image-count-subheader .header-controls {
+  /* Hide decorative lines to save horizontal space */
+  .image-count-subheader::before,
+  .image-count-subheader::after {
+    display: none;
+  }
+  /* Stack header controls on their own row */
+  .image-count-subheader .header-controls {
     width: 100%;
     justify-content: center;
+    margin-top: 0.4rem;
+  }
+  .image-count-subheader .header-controls button {
+    margin: 0 0.25rem;
+  }
+  /* Slightly reduce font-size */
+  .image-count-subheader { font-size: 0.9rem; }
+  
+  /* Stack overall container, but keep first line inline */
+  .image-count-subheader {
+    flex-direction: column;
+    align-items: center;
+  }
+  /* First line: number + text stay inline (already inline elements) */
+  .image-count-subheader .subheader-inline {
+    display: inline-block;
+    margin-top: 0;
+  }
+  /* Second line: model pill + icons */
+  .model-selector-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
     margin-top: 0.5rem;
   }
-  .model-selector-inline { display: inline-flex; gap: 0.6rem; }
-  .image-count-subheader .header-controls { display: inline-flex; gap: 0.6rem; }
+  .image-count-subheader .header-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: auto;
+    margin: 0 0 0 0.6rem; /* small gap after model pill */
+  }
+  .image-count-subheader .header-controls button {
+    margin: 0;
+  }
 }
 

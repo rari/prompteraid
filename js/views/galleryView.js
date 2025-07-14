@@ -1984,7 +1984,7 @@ export default class GalleryView {
     // Combine the text and model selector into a single span for no-break
     const innerHTML = `
       <span class=\"image-count-number\">${totalCount}</span>
-      <span class=\"subheader-inline\">pregenerated style references for
+      <span class=\"subheader-inline\">pregenerated style references <span class=\"hide-mobile\">for</span>
         <span class=\"model-selector-inline model-selector\">
           <span class=\"current-model\" tabindex=\"0\" role=\"button\">${modelDisplayName}</span>
           <span class=\"model-dropdown\" role=\"listbox\">
