@@ -44,6 +44,7 @@ class PromptGenerator {
     });
 
     settingsBtn.addEventListener('click', () => {
+      console.log('[PromptGen] Settings button clicked');
       // Always expand the prompt preview menu when opening settings on mobile/desktop
       this.ensurePromptMenuVisible();
       this.toggleSettings();
@@ -64,13 +65,24 @@ class PromptGenerator {
   }
 
   toggleSettings() {
+    console.log('[PromptGen] toggleSettings() called');
+    
     const settingsPanel = document.getElementById('prompt-settings-panel');
     const settingsBtn = document.getElementById('prompt-settings-btn');
     const icon = settingsBtn.querySelector('i');
 
+    console.log('[PromptGen] Settings elements found:', {
+      settingsPanel: !!settingsPanel,
+      settingsBtn: !!settingsBtn,
+      icon: !!icon
+    });
+
     // If we are about to OPEN the panel, ensure preview row is visible first
     const willOpen = settingsPanel.classList.contains('hidden');
+    console.log('[PromptGen] Will open settings panel:', willOpen);
+    
     if (willOpen) {
+      console.log('[PromptGen] Calling ensurePromptMenuVisible() from toggleSettings');
       this.ensurePromptMenuVisible();
     }
 
@@ -81,6 +93,8 @@ class PromptGenerator {
     } else {
       icon.className = 'fas fa-times';
     }
+    
+    console.log('[PromptGen] Settings panel toggled, hidden:', settingsPanel.classList.contains('hidden'));
   }
 
   toggleRandomize(enabled) {
@@ -335,16 +349,32 @@ class PromptGenerator {
    * if it is currently collapsed (simulates clicking the chevron button).
    */
   ensurePromptMenuVisible() {
+    console.log('[PromptGen] ensurePromptMenuVisible() called');
+    
     const mainPreviewRow = document.querySelector('.prompt-preview-row');
     const stickyPreviewRow = document.querySelector('.sticky-prompt-preview-row');
     const mainToggle = document.getElementById('toggle-preview-button');
     const stickyToggle = document.getElementById('sticky-toggle-preview-button');
     
+    console.log('[PromptGen] Elements found:', {
+      mainPreviewRow: !!mainPreviewRow,
+      stickyPreviewRow: !!stickyPreviewRow,
+      mainToggle: !!mainToggle,
+      stickyToggle: !!stickyToggle
+    });
+    
     // Match the same logic as togglePreview - require all elements
-    if (!mainPreviewRow || !stickyPreviewRow || !mainToggle || !stickyToggle) return;
+    if (!mainPreviewRow || !stickyPreviewRow || !mainToggle || !stickyToggle) {
+      console.log('[PromptGen] Missing required elements, returning early');
+      return;
+    }
     
     const isHidden = mainPreviewRow.classList.contains('hidden');
+    console.log('[PromptGen] Preview row is hidden:', isHidden);
+    
     if (isHidden) {
+      console.log('[PromptGen] Showing preview rows and activating toggles');
+      
       // Show both preview rows
       mainPreviewRow.classList.remove('hidden');
       stickyPreviewRow.classList.remove('hidden');
@@ -352,6 +382,10 @@ class PromptGenerator {
       // Mark both toggle buttons as active (CSS handles icon rotation)
       mainToggle.classList.add('active');
       stickyToggle.classList.add('active');
+      
+      console.log('[PromptGen] Preview rows should now be visible');
+    } else {
+      console.log('[PromptGen] Preview rows are already visible');
     }
   }
 }

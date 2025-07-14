@@ -24,7 +24,10 @@ class PromptInjector{
     
     const settingsBtn = document.getElementById('prompt-settings-btn');
     if (settingsBtn) {
-      settingsBtn.addEventListener('click',()=>this.togglePanel());
+      settingsBtn.addEventListener('click',()=>{
+        console.log('[PromptInjector] Settings button clicked');
+        this.togglePanel();
+      });
     }
     
     // Keyboard shortcuts are now handled by the centralized KeyboardShortcutManager
@@ -125,9 +128,26 @@ class PromptInjector{
   }
   
   togglePanel(){
+    console.log('[PromptInjector] togglePanel() called');
+    
     const panel = document.getElementById('prompt-settings-panel');
     const stickyPanel = document.getElementById('sticky-prompt-settings-panel');
     const stickyActionBar = document.getElementById('sticky-action-bar');
+    
+    console.log('[PromptInjector] Panel elements found:', {
+      panel: !!panel,
+      stickyPanel: !!stickyPanel,
+      stickyActionBar: !!stickyActionBar
+    });
+    
+    // If we are about to OPEN the panel, ensure preview row is visible first
+    const willOpen = panel && panel.classList.contains('hidden');
+    console.log('[PromptInjector] Will open settings panel:', willOpen);
+    
+    if (willOpen) {
+      console.log('[PromptInjector] Calling ensurePromptMenuVisible() from togglePanel');
+      this.ensurePromptMenuVisible();
+    }
     
     if (panel) {
       panel.classList.toggle('hidden');
@@ -153,6 +173,8 @@ class PromptInjector{
     if (stickySettingsBtn) {
       stickySettingsBtn.classList.toggle('active');
     }
+    
+    console.log('[PromptInjector] Settings panel toggled, hidden:', panel ? panel.classList.contains('hidden') : 'panel not found');
   }
   
 
@@ -186,10 +208,21 @@ class PromptInjector{
   }
 
   ensurePromptMenuVisible(){
+    console.log('[PromptInjector] ensurePromptMenuVisible() called');
+    
     const previewRow=document.querySelector('.prompt-preview-row');
     const toggleBtn=document.getElementById('toggle-preview-button');
+    
+    console.log('[PromptInjector] Elements found:', {
+      previewRow: !!previewRow,
+      toggleBtn: !!toggleBtn
+    });
+    
     if(previewRow&&previewRow.classList.contains('hidden')&&toggleBtn){
+      console.log('[PromptInjector] Preview row is hidden, clicking toggle button');
       toggleBtn.click();
+    } else {
+      console.log('[PromptInjector] Preview row not hidden or toggle button not found');
     }
   }
 

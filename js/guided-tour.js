@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
   tour.addStep({
     title: 'Select Mode',
     text: 'Switch between Discord and Website modes to get the right format for your platform.',
-    attachTo: { element: '#mode-toggle', on: 'bottom' },
+    attachTo: { element: '#mode-toggle-sub', on: 'bottom' },
     buttons: [
       { text: 'Next', action: tour.next }
     ]
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   tour.addStep({
     title: 'Generate Prompt',
-    text: 'Use the prompt generator or create your own.',
+    text: 'Use the 🪄 prompt generator or create your own.',
     attachTo: { element: '#prompt-input', on: 'top' },
     scrollTo: false,
     scrollToHandler: () => {
