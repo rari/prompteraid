@@ -4,7 +4,7 @@
   display: flex;
   align-items: baseline; /* Align to baseline */
   justify-content: center;
-  gap: var(--space-2);
+  gap: 0.65rem; /* tighter spacing */
   margin-bottom: var(--space-6);
   color: var(--gray-600);
   font-size: var(--font-size-sm);
@@ -45,9 +45,9 @@
   content: "";
   display: inline-block;
   height: 2px; /* was 1px */
-  width: 30px;
+  width: 24px; /* was 30 */
   background: linear-gradient(90deg, transparent, rgba(0, 180, 216, 0.3), transparent);
-  margin: 0 10px;
+  margin: 0 6px; /* reduce horizontal margin */
   align-self: center; /* ensure vertical centering in flex */
 }
 
@@ -61,5 +61,10 @@
 .image-count-subheader .header-controls button {
   position: relative;
   top: 2px; /* nudge up to align with baseline text */
+}
+
+/* Remove unintended extra space around inline elements */
+.image-count-subheader > * {
+  margin: 0;
 }
 
