@@ -335,22 +335,23 @@ class PromptGenerator {
    * if it is currently collapsed (simulates clicking the chevron button).
    */
   ensurePromptMenuVisible() {
-    const previewRow = document.querySelector('.prompt-preview-row');
+    const mainPreviewRow = document.querySelector('.prompt-preview-row');
     const stickyPreviewRow = document.querySelector('.sticky-prompt-preview-row');
-    const toggleBtn = document.getElementById('toggle-preview-button');
+    const mainToggle = document.getElementById('toggle-preview-button');
     const stickyToggle = document.getElementById('sticky-toggle-preview-button');
-
-    if (!previewRow) return;
-
-    const isHidden = previewRow.classList.contains('hidden');
+    
+    // Match the same logic as togglePreview - require all elements
+    if (!mainPreviewRow || !stickyPreviewRow || !mainToggle || !stickyToggle) return;
+    
+    const isHidden = mainPreviewRow.classList.contains('hidden');
     if (isHidden) {
       // Show both preview rows
-      previewRow.classList.remove('hidden');
-      if (stickyPreviewRow) stickyPreviewRow.classList.remove('hidden');
-
+      mainPreviewRow.classList.remove('hidden');
+      stickyPreviewRow.classList.remove('hidden');
+      
       // Mark both toggle buttons as active (CSS handles icon rotation)
-      if (toggleBtn) toggleBtn.classList.add('active');
-      if (stickyToggle) stickyToggle.classList.add('active');
+      mainToggle.classList.add('active');
+      stickyToggle.classList.add('active');
     }
   }
 }
