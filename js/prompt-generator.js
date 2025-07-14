@@ -44,6 +44,8 @@ class PromptGenerator {
     });
 
     settingsBtn.addEventListener('click', () => {
+      // Always expand the prompt preview menu when opening settings on mobile/desktop
+      this.ensurePromptMenuVisible();
       this.toggleSettings();
     });
 
