@@ -110,7 +110,7 @@
   width: 2.25rem;
   height: 2rem;
   margin-left: 0.5rem;
-  margin-right: 0.1rem;
+  margin-right: 0.75rem; /* Increased gap between mode and theme toggles */
   padding: 0;
   border: none;
   box-shadow: none;

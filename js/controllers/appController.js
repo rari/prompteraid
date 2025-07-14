@@ -446,7 +446,8 @@ export default class AppController {
     // Update theme toggle icons (both main and sticky)
     const themeToggles = [
       this.themeToggle,
-      document.getElementById('sticky-theme-toggle')
+      document.getElementById('sticky-theme-toggle'),
+      document.getElementById('theme-toggle-sub') // Add subheader clone
     ].filter(Boolean);
     
     themeToggles.forEach(toggle => {
