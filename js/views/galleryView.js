@@ -2032,20 +2032,37 @@ export default class GalleryView {
         subheader.appendChild(controlsContainer);
       }
 
-      // Move mode and theme toggle buttons into the subheader
-      const modeBtn = document.getElementById('mode-toggle');
-      const themeBtn = document.getElementById('theme-toggle');
-      if (modeBtn && !controlsContainer.contains(modeBtn)) {
-        controlsContainer.appendChild(modeBtn);
-        modeBtn.style.display = ''; // ensure visible
-      }
-      if (themeBtn && !controlsContainer.contains(themeBtn)) {
-        controlsContainer.appendChild(themeBtn);
-        themeBtn.style.display = ''; // ensure visible
-      }
+      // Always rebuild fresh clones so originals stay in their containers
+      controlsContainer.innerHTML = '';
+      const modeBtnOriginal = document.getElementById('mode-toggle');
+      const themeBtnOriginal = document.getElementById('theme-toggle');
 
-      // Prompt generator buttons are now permanently placed in index.html,
-      // so we no longer swap them into the old toggle containers.
+      const cloneAndWire = (origBtn, newIdSuffix) => {
+        if (!origBtn) return null;
+        const clone = origBtn.cloneNode(true);
+        // Duplicate IDs are invalid, so create unique id for clone
+        clone.id = origBtn.id + '-' + newIdSuffix;
+        // Remove any inline styles that hide it
+        clone.style.display = '';
+        // Forward click & keydown to original
+        const forward = (e) => {
+          e.preventDefault();
+          origBtn.click();
+        };
+        clone.addEventListener('click', forward);
+        clone.addEventListener('keydown', (e)=>{
+          if (e.key==='Enter' || e.key===' ') {
+            forward(e);
+          }
+        });
+        return clone;
+      };
+
+      const modeClone = cloneAndWire(modeBtnOriginal, 'sub');
+      const themeClone = cloneAndWire(themeBtnOriginal, 'sub');
+
+      if (modeClone) controlsContainer.appendChild(modeClone);
+      if (themeClone) controlsContainer.appendChild(themeClone);
     } catch (err) {
       console.error('Error repositioning header controls:', err);
     }
