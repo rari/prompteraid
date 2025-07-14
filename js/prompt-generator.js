@@ -336,9 +336,21 @@ class PromptGenerator {
    */
   ensurePromptMenuVisible() {
     const previewRow = document.querySelector('.prompt-preview-row');
+    const stickyPreviewRow = document.querySelector('.sticky-prompt-preview-row');
     const toggleBtn = document.getElementById('toggle-preview-button');
-    if (previewRow && previewRow.classList.contains('hidden') && toggleBtn) {
-      toggleBtn.click();
+    const stickyToggle = document.getElementById('sticky-toggle-preview-button');
+
+    if (!previewRow) return;
+
+    const isHidden = previewRow.classList.contains('hidden');
+    if (isHidden) {
+      // Show both preview rows
+      previewRow.classList.remove('hidden');
+      if (stickyPreviewRow) stickyPreviewRow.classList.remove('hidden');
+
+      // Mark both toggle buttons as active (CSS handles icon rotation)
+      if (toggleBtn) toggleBtn.classList.add('active');
+      if (stickyToggle) stickyToggle.classList.add('active');
     }
   }
 }
