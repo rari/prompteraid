@@ -3558,10 +3558,18 @@ export default class GalleryView {
         aspectDropdown.classList.add('disabled');
       }
       localStorage.setItem('prompteraid_enable_aspect_ratio', enableCheckbox.checked);
+      
       // Update the prompt when the aspect ratio enable state changes
-      if (window.galleryController && typeof window.galleryController.updatePrompt === 'function') {
-        window.galleryController.updatePrompt();
-      }
+      // Use a more robust approach that waits for the controller to be available
+      const updatePrompt = () => {
+        if (window.galleryController && typeof window.galleryController.updatePrompt === 'function') {
+          window.galleryController.updatePrompt();
+        } else {
+          // If controller not available yet, try again in a short delay
+          setTimeout(updatePrompt, 100);
+        }
+      };
+      updatePrompt();
     }
 
     enableCheckbox.addEventListener('change', updateDropdownState);
