@@ -17,3 +17,5 @@ docs/**
 package-lock.json
 server.js
 process.py
+scripts/monitor.py
+scripts/unified-pipeline.py
