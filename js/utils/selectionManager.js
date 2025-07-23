@@ -20,6 +20,11 @@ class SelectionManager {
     this.selections = {};
     // Get current model from gallery controller if available, otherwise default
     this.currentModel = window.galleryController?.model?.currentModel || 'niji-6';
+    
+    // If gallery controller is available, also get the model reference
+    if (window.galleryController?.model) {
+      this.model = window.galleryController.model;
+    }
   }
 
   /**
@@ -1276,11 +1281,7 @@ class SelectionManager {
   }
 }
 
-// Initialize the selection manager when the DOM is loaded
-document.addEventListener('DOMContentLoaded', async () => {
-  window.selectionManager = new SelectionManager();
-  await window.selectionManager.init();
-});
+// SelectionManager is now initialized by app.js after gallery controller is ready
 
 // Export for module usage
 export default SelectionManager; 

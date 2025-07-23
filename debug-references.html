@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>References Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>References Debug Page</h1>
+    
+    <div class="debug-section">
+        <h2>LocalStorage Contents</h2>
+        <pre id="localStorage-dump"></pre>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Window Objects</h2>
+        <pre id="window-objects"></pre>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Test References Save/Load</h2>
+        <button onclick="testSave()">Test Save</button>
+        <button onclick="testLoad()">Test Load</button>
+        <pre id="test-results"></pre>
+    </div>
+
+    <script>
+        // Dump localStorage
+        function dumpLocalStorage() {
+            const obj = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('prompteraid')) {
+                    try {
+                        obj[key] = JSON.parse(localStorage.getItem(key));
+                    } catch (e) {
+                        obj[key] = localStorage.getItem(key);
+                    }
+                }
+            }
+            document.getElementById('localStorage-dump').textContent = JSON.stringify(obj, null, 2);
+        }
+        
+        // Dump window objects
+        function dumpWindowObjects() {
+            const obj = {
+                'window.galleryController': !!window.galleryController,
+                'window.selectionManager': !!window.selectionManager,
+                'window.appController': !!window.appController,
+                'window.model': !!window.galleryController?.model,
+                'currentModel': window.galleryController?.model?.currentModel || 'undefined'
+            };
+            document.getElementById('window-objects').textContent = JSON.stringify(obj, null, 2);
+        }
+        
+        // Test save functionality
+        function testSave() {
+            const results = [];
+            try {
+                // Test basic localStorage
+                localStorage.setItem('prompteraid_test', JSON.stringify({test: 'data'}));
+                results.push('✅ Basic localStorage save works');
+                
+                // Test selection manager if available
+                if (window.selectionManager) {
+                    results.push('✅ SelectionManager exists');
+                    
+                    // Test getting current configuration
+                    const config = window.selectionManager.getCurrentConfiguration();
+                    results.push(`✅ getCurrentConfiguration: ${config ? 'works' : 'returns null'}`);
+                    
+                    // Test saving to slot 1
+                    window.selectionManager.saveToSlot(1).then(() => {
+                        results.push('✅ saveToSlot works');
+                        document.getElementById('test-results').textContent = results.join('\n');
+                    }).catch(e => {
+                        results.push(`❌ saveToSlot failed: ${e.message}`);
+                        document.getElementById('test-results').textContent = results.join('\n');
+                    });
+                } else {
+                    results.push('❌ SelectionManager not available');
+                }
+            } catch (e) {
+                results.push(`❌ Error: ${e.message}`);
+            }
+            
+            if (!window.selectionManager) {
+                document.getElementById('test-results').textContent = results.join('\n');
+            }
+        }
+        
+        // Test load functionality
+        function testLoad() {
+            const results = [];
+            try {
+                // Test basic localStorage
+                const testData = localStorage.getItem('prompteraid_test');
+                results.push(`✅ Basic localStorage load: ${testData ? 'works' : 'no data'}`);
+                
+                // Test selection manager if available
+                if (window.selectionManager) {
+                    results.push('✅ SelectionManager exists');
+                    
+                    // Test loading from slot 1
+                    const slot1 = window.selectionManager.selections[1];
+                    results.push(`✅ Slot 1 data: ${slot1 ? 'exists' : 'empty'}`);
+                    
+                    // Test storage key generation
+                    const storageKey = window.selectionManager.getStorageKey();
+                    results.push(`✅ Storage key: ${storageKey}`);
+                } else {
+                    results.push('❌ SelectionManager not available');
+                }
+            } catch (e) {
+                results.push(`❌ Error: ${e.message}`);
+            }
+            
+            document.getElementById('test-results').textContent = results.join('\n');
+        }
+        
+        // Initialize
+        dumpLocalStorage();
+        dumpWindowObjects();
+        
+        // Update every 2 seconds
+        setInterval(() => {
+            dumpLocalStorage();
+            dumpWindowObjects();
+        }, 2000);
+    </script>
+</body>
+</html> 

@@ -90,6 +90,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Make controllers accessible globally for URL parameter handling and debugging
   window.appController = appController;
   window.galleryController = galleryController;
+  
+  // Initialize SelectionManager after gallery controller is ready
+  import('./utils/selectionManager.js').then(async (SelectionManagerModule) => {
+    const SelectionManager = SelectionManagerModule.default;
+    window.selectionManager = new SelectionManager();
+    await window.selectionManager.init();
+    console.log('✅ SelectionManager initialized successfully');
+  }).catch(error => {
+    console.error('❌ Failed to initialize SelectionManager:', error);
+  });
 
   const discordLoginBtn = document.getElementById('discord-login-btn');
   const emailLoginBtn = document.getElementById('email-login-btn');
