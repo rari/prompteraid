@@ -91,11 +91,6 @@
 .gallery-item.selected.selected-color-2::before { border-color: var(--neon-yellow); }
 .gallery-item.selected.selected-color-3::before { border-color: var(--neon-teal); }
 .gallery-item.selected.selected-color-4::before { border-color: var(--neon-blue); }
-.gallery-item.selected.selected-color-5::before { border-color: var(--neon-purple); }
-.gallery-item.selected.selected-color-6::before { border-color: var(--neon-green); }
-.gallery-item.selected.selected-color-7::before { border-color: var(--neon-red); }
-.gallery-item.selected.selected-color-8::before { border-color: var(--neon-cyan); }
-.gallery-item.selected.selected-color-9::before { border-color: var(--neon-magenta); }
 
 /* Quadrant image positioning for 4-quadrant view */
 .gallery-item img.quadrant {
