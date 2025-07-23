@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selection Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+        .error { color: red; }
+        .success { color: green; }
+        button { margin: 5px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Selection Debug Test</h1>
+    
+    <div class="debug-section">
+        <h2>Current Selection State</h2>
+        <button onclick="checkSelection()">Check Current Selection</button>
+        <button onclick="testSave()">Test Save to Slot 1</button>
+        <button onclick="testLoad()">Test Load from Slot 1</button>
+        <pre id="selection-info"></pre>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Image ID Validation Test</h2>
+        <button onclick="testImageIds()">Test Image ID Validation</button>
+        <pre id="validation-results"></pre>
+    </div>
+
+    <script>
+        function checkSelection() {
+            const info = {
+                'galleryController exists': !!window.galleryController,
+                'model exists': !!window.galleryController?.model,
+                'selectedImages exists': !!window.galleryController?.model?.selectedImages,
+                'selectedImages size': window.galleryController?.model?.selectedImages?.size || 0,
+                'selectedImages content': Array.from(window.galleryController?.model?.selectedImages?.entries() || []),
+                'imageWeights size': window.galleryController?.model?.imageWeights?.size || 0,
+                'imageWeights content': Array.from(window.galleryController?.model?.imageWeights?.entries() || []),
+                'weightColorIndices size': window.galleryController?.model?.weightColorIndices?.size || 0,
+                'weightColorIndices content': Array.from(window.galleryController?.model?.weightColorIndices?.entries() || [])
+            };
+            
+            document.getElementById('selection-info').textContent = JSON.stringify(info, null, 2);
+        }
+        
+        function testSave() {
+            if (!window.selectionManager) {
+                document.getElementById('selection-info').textContent = '❌ SelectionManager not available';
+                return;
+            }
+            
+            const config = window.selectionManager.getCurrentConfiguration();
+            document.getElementById('selection-info').textContent = 
+                '✅ Save Test - Configuration:\n' + JSON.stringify(config, null, 2);
+        }
+        
+        function testLoad() {
+            if (!window.selectionManager) {
+                document.getElementById('selection-info').textContent = '❌ SelectionManager not available';
+                return;
+            }
+            
+            const slot1 = window.selectionManager.selections[1];
+            document.getElementById('selection-info').textContent = 
+                '✅ Load Test - Slot 1:\n' + JSON.stringify(slot1, null, 2);
+        }
+        
+        function testImageIds() {
+            const results = [];
+            
+            if (!window.galleryController?.model?.selectedImages) {
+                results.push('❌ No selected images found');
+                document.getElementById('validation-results').textContent = results.join('\n');
+                return;
+            }
+            
+            const selectedImages = window.galleryController.model.selectedImages;
+            results.push(`📊 Testing ${selectedImages.size} selected images:`);
+            
+            selectedImages.forEach((colorIndex, imageId) => {
+                const isString = typeof imageId === 'string';
+                const hasValidChars = /^[a-zA-Z0-9\/\-_.]+$/.test(imageId);
+                const hasLength = imageId.length > 0;
+                const isValid = isString && hasValidChars && hasLength;
+                
+                results.push(`\n🖼️ Image ID: "${imageId}"`);
+                results.push(`   Type: ${typeof imageId} ${isString ? '✅' : '❌'}`);
+                results.push(`   Valid chars: ${hasValidChars ? '✅' : '❌'} (pattern: /^[a-zA-Z0-9\/\-_.]+$/)`);
+                results.push(`   Has length: ${hasLength ? '✅' : '❌'}`);
+                results.push(`   Overall valid: ${isValid ? '✅' : '❌'}`);
+                results.push(`   Color index: ${colorIndex}`);
+            });
+            
+            document.getElementById('validation-results').textContent = results.join('\n');
+        }
+        
+        // Auto-check every 2 seconds
+        setInterval(checkSelection, 2000);
+    </script>
+</body>
+</html> 

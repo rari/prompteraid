@@ -3562,12 +3562,12 @@ export default class GalleryView {
       // Update the prompt when the aspect ratio enable state changes
       // Use a more robust approach that waits for the controller to be available
       const updatePrompt = () => {
-        if (window.galleryController && typeof window.galleryController.updatePrompt === 'function') {
-          window.galleryController.updatePrompt();
+      if (window.galleryController && typeof window.galleryController.updatePrompt === 'function') {
+        window.galleryController.updatePrompt();
         } else {
           // If controller not available yet, try again in a short delay
           setTimeout(updatePrompt, 100);
-        }
+      }
       };
       updatePrompt();
     }

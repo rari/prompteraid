@@ -45,6 +45,9 @@
   --neon-teal: #00e5ff;    /* View toggles (search, eye) */
   --neon-blue: #007bff;    /* Clipboard operations (copy, paste) */
   --neon-green: #00ff88;   /* Success/positive actions (check, confirm) */
+  --neon-red: #ff4444;     /* Error/alert actions */
+  --neon-cyan: #00ffff;    /* Information/help actions */
+  --neon-magenta: #ff00ff; /* Special/unique actions */
   
   /* RGB versions for use with opacity/alpha channels */
   --neon-pink-rgb: 255, 26, 117;

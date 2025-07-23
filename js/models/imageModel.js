@@ -48,7 +48,7 @@ export default class ImageModel {
     this.suffix = '';
     this.aspectRatio = '1:1'; // Default aspect ratio
     this.currentColorIndex = 0;
-    this.numSelectionColors = 5; // Pink, Orange, Yellow, Teal, Blue
+    this.numSelectionColors = 10; // Increased from 5 to 10 for more selections
     this.numWeightColors = 7; // Pink, Orange, Yellow, Green, Teal, Blue, Purple
     this.isDiscordMode = true; // Default to Discord mode
     this.imageWeights = new Map(); // Store weights for each selected image
